@@ -1,12 +1,16 @@
-# Academic website for BarCodeR + OpenMetaBar
+# BarCodeR + OpenMetaBar scientific website
 
 This repository contains the public academic website for the BarCodeR R/Shiny
 application and its integration with the OpenMetaBar Nextflow pipeline.
 
-The site is intentionally written as a scientific software presentation rather
-than a commercial landing page. Claims are separated from limitations, methods
-are stated explicitly, and every analytical figure is generated from a cited
-public dataset.
+The site combines an accessible, visual introduction with an evidence-backed
+scientific software presentation. Its workflow, module names and feature claims
+were checked directly against `BarCodeR_app/app.R` and the current application
+modules (version reported by the source: `BarCodeR_v2.12.8`).
+
+Interface-preview images in `public/app-previews/` are copied from
+`BarCodeR_app/www/home_previews/` and are labelled as illustrative application
+outputs. They are kept separate from the scientific demonstration below.
 
 ## Public demonstration data
 

@@ -1,256 +1,321 @@
 import { useEffect, useState } from "react";
 
-type Language = "en" | "fr";
+type Language = "fr" | "en";
+type Localized = { fr: string; en: string };
 
-const content = {
-  en: {
-    status: "Research software · manuscript in preparation",
-    navigation: [
-      ["Overview", "#overview"],
-      ["Architecture", "#architecture"],
-      ["Demonstration", "#demonstration"],
-      ["Reproducibility", "#reproducibility"],
-      ["Availability", "#availability"],
-    ],
-    title: "OpenMetaBar–BarCodeR",
-    subtitle: "A modular software ecosystem for reproducible and interactive metabarcoding analysis",
-    authors: "M. Léger-Pigout · S. Marguerit · S. Warot · I.-M. Viciriuc · N. Ris · E. G. J. Danchin · C. Rancurel",
-    affiliations: "Institut Sophia Agrobiotech (INRAE, Université Côte d’Azur) · PHYBAC (CNRS, INRAE, Université Côte d’Azur)",
-    summaryLabel: "Summary",
-    summary:
-      "OpenMetaBar–BarCodeR connects reproducible upstream sequence processing with interactive downstream analysis. OpenMetaBar organizes and executes marker-specific workflows in Nextflow; BarCodeR provides the graphical environment used to configure runs, retrieve phyloseq objects, inspect and edit data, perform ecological analyses, and export figures, tables and parameters. The contribution lies in analytical continuity and provenance rather than in a new statistical algorithm.",
-    availabilityLabel: "Availability and implementation",
-    availability:
-      "OpenMetaBar is implemented in Nextflow DSL2. BarCodeR is implemented in R/Shiny and can also analyse compatible phyloseq objects generated elsewhere. Source code and development history are available on GitHub. The software license and archival release DOI must be finalized before manuscript submission.",
-    source: "Source code",
-    contact: "Correspondence",
-    keyFacts: [
-      ["UPSTREAM", "Nextflow DSL2", "Structured design file, validated inputs and execution on configured computing infrastructure."],
-      ["INTEROPERABILITY", "phyloseq", "A standard object linking abundance, taxonomy, sample metadata and optional sequences or trees."],
-      ["DOWNSTREAM", "R / Shiny", "Interactive inspection, filtering, visualization, statistics, multiview composition and exports."],
-      ["PROVENANCE", "Two complementary levels", "OpenMetaBar records processing; BarCodeR records downstream choices and generated outputs."],
-    ],
-    overviewKicker: "Scientific rationale",
-    overviewTitle: "The practical gap is between computation and interpretation.",
-    overviewBody:
-      "Metabarcoding studies often separate upstream processing on a cluster from downstream analysis in R. Files are transferred manually, objects are reconstructed from multiple tables, and the connection between a pipeline run and a final figure can become difficult to recover. OpenMetaBar–BarCodeR was developed to maintain that connection within a project-oriented workflow.",
-    contributionTitle: "What the ecosystem contributes",
-    contributionItems: [
-      ["Explicit project design", "FASTQ files, primers, barcodes, markers and sample metadata are described before computation in a structured design file."],
-      ["A controlled handover", "OpenMetaBar generates standardized outputs, including phyloseq objects that BarCodeR can retrieve directly."],
-      ["Interactive but traceable analyses", "Downstream modules expose datasets, variables and parameters while preserving analysis histories and exports."],
-    ],
-    boundaryTitle: "What is not claimed",
-    boundaryItems: [
-      "The ecosystem does not introduce a new denoising, taxonomic assignment or statistical method.",
-      "A graphical interface does not replace experimental design or expert statistical interpretation.",
-      "Performance and biological conclusions remain dependent on input quality, reference databases and selected parameters.",
-    ],
-    architectureKicker: "Software architecture",
-    architectureTitle: "A standardized phyloseq object joins two independently usable components.",
-    architectureIntro:
-      "BarCodeR can launch and monitor OpenMetaBar on a configured remote environment, then retrieve its results. It can also be used independently with external phyloseq objects.",
-    architectureCaption: "Figure A. Logical data flow from project inputs to research outputs. The phyloseq object is the interoperability layer, not a proprietary intermediate format.",
-    architectureSteps: [
-      ["01", "Project inputs", "Design file · FASTQ · primers · barcodes · metadata"],
-      ["02", "OpenMetaBar", "Validation · QC · ASV/OTU workflow · taxonomy · reports"],
-      ["03", "phyloseq", "Abundance · taxonomy · sample data · sequences / tree"],
-      ["04", "BarCodeR", "Inspection · edition · filtering · exploration · statistics"],
-      ["05", "Research outputs", "Figures · result tables · parameter sets · histories"],
-    ],
-    scopeTitle: "Supported analytical scope",
-    scopeGroups: [
-      ["Input and curation", "Coherence checks, project restoration, metadata/abundance/taxonomy editing, external component import, non-destructive derived datasets."],
-      ["Exploration", "Sequencing depth, richness, sparsity, taxonomic completeness, relative composition, alpha diversity and ordination."],
-      ["Statistical analysis", "PERMANOVA and dispersion, differential-abundance workflows, matrix comparisons, clustering and association-network exploration."],
-      ["Interpretation and reporting", "Heat trees, multiview figure composition, parameter histories, figure/table export and embedded multilingual documentation."],
-    ],
-    demoKicker: "Reproducible public-data demonstration",
-    demoTitle: "Every figure below is computed from a cited public phyloseq dataset.",
-    demoIntro:
-      "The website uses phyloseq::GlobalPatterns, derived from the cross-environment 16S rRNA survey published by Caporaso et al. (2011). The source object contains 19,216 taxa; 18,988 nonzero taxa remain after the explicit pruning step used for these calculations. The supplied synthetic ps_marine_exotic.rds object is not used in these scientific figures. This demonstration illustrates possible BarCodeR outputs; it is not a software benchmark or a biological reanalysis of the original study.",
-    datasetFacts: [["26", "samples"], ["19,216", "source taxa"], ["18,988", "nonzero taxa analysed"], ["9", "environment types"]],
-    figures: [
-      ["Figure 1", "globalpatterns-composition.png", "Taxonomic composition", "Sample-wise counts were converted to relative abundances, agglomerated at phylum level and collapsed to the eight most abundant phyla overall. Bars show mean composition within each environment type; remaining taxa are grouped as Other."],
-      ["Figure 2", "globalpatterns-ordination.png", "Between-sample structure", "Principal coordinates analysis of Bray–Curtis dissimilarities computed on sample-wise relative abundances. Points are individual samples and colours indicate the environment metadata supplied with GlobalPatterns."],
-      ["Figure 3", "globalpatterns-alpha-diversity.png", "Within-sample diversity", "Observed richness and Shannon diversity were calculated from the untransformed phyloseq counts. Every point is shown; boxplots are descriptive summaries and no hypothesis test is reported."],
-    ],
-    methodsTitle: "Exact transformations used on this page",
-    scriptLink: "View the figure-generation script",
-    methods: [
-      ["Composition", "Total-sum scaling per sample → tax_glom(Phylum) → top eight phyla by overall mean abundance → mean within SampleType."],
-      ["Ordination", "Total-sum scaling per sample → Bray–Curtis dissimilarity → principal coordinates analysis (PCoA)."],
-      ["Alpha diversity", "estimate_richness on raw counts → Observed and Shannon indices → all samples displayed without inferential testing."],
-    ],
-    reproKicker: "Reproducibility",
-    reproTitle: "The figures are outputs of code, not decorative approximations.",
-    reproText:
-      "A versioned R script loads the public object directly from phyloseq, applies the stated transformations, verifies that composition summaries sum to one and writes the three image files plus a machine-readable provenance manifest. Re-running the script rebuilds the evidence shown here.",
-    reproCards: [
-      ["Data provenance", "Dataset name, primary DOI, sample count, taxa count and package versions are written to data-provenance.tsv."],
-      ["Method visibility", "Captions and a methods table state transformations, distance, ordination and diversity measures without implying unperformed tests."],
-      ["Separation of evidence", "Synthetic test objects remain useful for interface testing but are excluded from claims based on public scientific data."],
-    ],
-    limitationsTitle: "Current limitations and interpretation",
-    limitations: [
-      "Cluster execution requires an initial configuration of SSH, scheduler profiles, paths and software environments.",
-      "Large objects and complex interactive views may require additional computational resources and performance tuning.",
-      "Taxonomic results depend on marker choice, database coverage and assignment parameters.",
-      "Network and differential results require method-aware interpretation; compositional associations are exploratory.",
-      "The public demonstration uses a legacy 16S example dataset for reproducibility and breadth, not to represent every marker supported by OpenMetaBar.",
-    ],
-    availabilityKicker: "Software availability",
-    availabilityTitle: "Public source, documented provenance and a path to an archival release.",
-    resources: [
-      ["BarCodeR source", "Current R/Shiny application, module history and OpenMetaBar integration.", "https://github.com/MLPosuphy/BarCodeR"],
-      ["Website source", "Static academic website, R figure-generation script and GitHub Pages workflow.", "https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application"],
-      ["Public demonstration data", "GlobalPatterns object distributed with phyloseq; primary study by Caporaso et al. (2011).", "https://doi.org/10.1073/pnas.1000080107"],
-    ],
-    roadmapTitle: "Before journal submission",
-    roadmap: ["Select and state the software license", "Create a versioned release", "Archive the release and example data", "Add the resulting DOI", "Document tested operating environments"],
-    citationTitle: "References and citation",
-    references: [
-      "Caporaso, J. G. et al. (2011). Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample. Proceedings of the National Academy of Sciences. doi:10.1073/pnas.1000080107.",
-      "McMurdie, P. J. & Holmes, S. (2013). phyloseq: An R package for reproducible interactive analysis and graphics of microbiome census data. PLOS ONE 8(4): e61217. doi:10.1371/journal.pone.0061217.",
-      "Di Tommaso, P. et al. (2017). Nextflow enables reproducible computational workflows. Nature Biotechnology 35, 316–319. doi:10.1038/nbt.3820.",
-    ],
-    citeUs: "OpenMetaBar–BarCodeR manuscript",
-    citeUsText: "The software manuscript is in preparation. A formatted citation and DOI will be added here after publication; until then, please cite the software version used and the public repository URL.",
-    footer: "OpenMetaBar–BarCodeR · research software developed at Institut Sophia Agrobiotech and PHYBAC",
+const tr = (value: Localized, language: Language) => value[language];
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
+const moduleGroups = [
+  {
+    key: "prepare",
+    eyebrow: { fr: "01 · Préparer", en: "01 · Prepare" },
+    title: { fr: "Un projet propre avant toute statistique", en: "A clean project before any statistics" },
+    text: {
+      fr: "Importer un objet phyloseq ou les tables qui le composent, contrôler leur cohérence, éditer les métadonnées et produire des jeux dérivés sans écraser l’original.",
+      en: "Import a phyloseq object or its component tables, check their consistency, edit metadata and create derived datasets without overwriting the original.",
+    },
+    bullets: {
+      fr: ["Import phyloseq et tables séparées", "Édition OTU, taxonomie et métadonnées", "Filtration taxonomique, ASV, échantillons et séquences", "Registre de jeux de données par projet"],
+      en: ["phyloseq and component-table import", "OTU, taxonomy and metadata edition", "Taxonomic, ASV, sample and sequence filtering", "Project-level dataset registry"],
+    },
+    code: "modules/data · datasets · dataedition · filtration",
+    image: "app-previews/qualite_assignation_taxonomique.png",
   },
-  fr: {
-    status: "Logiciel de recherche · manuscrit en préparation",
-    navigation: [["Vue d’ensemble", "#overview"], ["Architecture", "#architecture"], ["Démonstration", "#demonstration"], ["Reproductibilité", "#reproducibility"], ["Disponibilité", "#availability"]],
-    title: "OpenMetaBar–BarCodeR",
-    subtitle: "Un écosystème logiciel modulaire pour l’analyse reproductible et interactive de données de métabarcoding",
-    authors: "M. Léger-Pigout · S. Marguerit · S. Warot · I.-M. Viciriuc · N. Ris · E. G. J. Danchin · C. Rancurel",
-    affiliations: "Institut Sophia Agrobiotech (INRAE, Université Côte d’Azur) · PHYBAC (CNRS, INRAE, Université Côte d’Azur)",
-    summaryLabel: "Résumé",
-    summary: "OpenMetaBar–BarCodeR relie le traitement reproductible des séquences à l’analyse interactive en aval. OpenMetaBar organise et exécute des workflows spécifiques aux marqueurs dans Nextflow ; BarCodeR fournit l’environnement graphique pour configurer les runs, récupérer les objets phyloseq, inspecter et éditer les données, mener les analyses écologiques et exporter figures, tables et paramètres. La contribution porte sur la continuité analytique et la provenance, non sur un nouvel algorithme statistique.",
-    availabilityLabel: "Disponibilité et implémentation",
-    availability: "OpenMetaBar est implémenté en Nextflow DSL2. BarCodeR est développé en R/Shiny et peut également analyser des objets phyloseq compatibles provenant d’autres workflows. Le code source et l’historique de développement sont disponibles sur GitHub. La licence et le DOI d’archivage restent à finaliser avant la soumission du manuscrit.",
-    source: "Code source", contact: "Correspondance",
-    keyFacts: [["AMONT", "Nextflow DSL2", "Design file structuré, validation des entrées et exécution sur une infrastructure de calcul configurée."], ["INTEROPÉRABILITÉ", "phyloseq", "Un objet standard réunissant abondance, taxonomie, métadonnées et, si disponibles, séquences ou arbre."], ["AVAL", "R / Shiny", "Inspection, filtration, visualisation, statistiques, composition multivue et exports interactifs."], ["PROVENANCE", "Deux niveaux complémentaires", "OpenMetaBar trace le traitement ; BarCodeR enregistre les choix en aval et les sorties générées."]],
-    overviewKicker: "Rationnel scientifique", overviewTitle: "Le verrou pratique se situe entre le calcul et l’interprétation.",
-    overviewBody: "Les études de métabarcoding séparent souvent le traitement amont sur cluster et l’analyse aval dans R. Les fichiers sont transférés manuellement, les objets reconstruits à partir de plusieurs tables et le lien entre un run de pipeline et une figure finale devient difficile à retrouver. OpenMetaBar–BarCodeR vise à maintenir ce lien dans un workflow organisé par projet.",
-    contributionTitle: "Contribution de l’écosystème",
-    contributionItems: [["Plan de projet explicite", "FASTQ, amorces, barcodes, marqueurs et métadonnées sont décrits avant le calcul dans un design file structuré."], ["Passage de relais contrôlé", "OpenMetaBar produit des sorties standardisées, dont des objets phyloseq directement récupérables par BarCodeR."], ["Analyses interactives et traçables", "Les modules aval exposent jeux de données, variables et paramètres tout en conservant historiques et exports."]],
-    boundaryTitle: "Ce qui n’est pas revendiqué", boundaryItems: ["L’écosystème n’introduit pas de nouvelle méthode de débruitage, d’assignation taxonomique ou de statistique.", "Une interface graphique ne remplace pas la conception expérimentale ni l’interprétation statistique experte.", "Performances et conclusions biologiques restent dépendantes de la qualité des entrées, des bases de référence et des paramètres choisis."],
-    architectureKicker: "Architecture logicielle", architectureTitle: "Un objet phyloseq standardisé relie deux composants utilisables indépendamment.",
-    architectureIntro: "BarCodeR peut lancer et suivre OpenMetaBar sur un environnement distant configuré, puis en récupérer les résultats. Il peut aussi être utilisé seul avec des objets phyloseq externes.",
-    architectureCaption: "Figure A. Flux logique des entrées du projet vers les sorties scientifiques. L’objet phyloseq constitue la couche d’interopérabilité, non un format intermédiaire propriétaire.",
-    architectureSteps: [["01", "Entrées du projet", "Design file · FASTQ · amorces · barcodes · métadonnées"], ["02", "OpenMetaBar", "Validation · QC · workflow ASV/OTU · taxonomie · rapports"], ["03", "phyloseq", "Abondance · taxonomie · données échantillons · séquences / arbre"], ["04", "BarCodeR", "Inspection · édition · filtration · exploration · statistiques"], ["05", "Sorties scientifiques", "Figures · tables de résultats · paramètres · historiques"]],
-    scopeTitle: "Périmètre analytique", scopeGroups: [["Entrées et curation", "Contrôles de cohérence, restauration de projet, édition des métadonnées/abondances/taxonomie, import de composants et objets dérivés non destructifs."], ["Exploration", "Profondeur de séquençage, richesse, parcimonie, complétude taxonomique, composition relative, diversité alpha et ordination."], ["Analyse statistique", "PERMANOVA et dispersion, abondance différentielle, comparaison de matrices, clustering et réseaux d’association exploratoires."], ["Interprétation et rapport", "Heat trees, composition multivue, historique des paramètres, exports de figures/tables et documentation multilingue embarquée."]],
-    demoKicker: "Démonstration reproductible sur données publiques", demoTitle: "Chaque figure ci-dessous est calculée à partir d’un jeu phyloseq public et cité.",
-    demoIntro: "Le site utilise phyloseq::GlobalPatterns, dérivé de l’étude 16S multi-environnements publiée par Caporaso et al. (2011). L’objet source contient 19 216 taxons ; 18 988 taxons non nuls restent après l’étape explicite de filtration utilisée pour ces calculs. L’objet synthétique ps_marine_exotic.rds fourni n’est pas utilisé dans ces figures scientifiques. Cette démonstration illustre des sorties possibles de BarCodeR ; elle ne constitue ni un benchmark logiciel ni une réanalyse biologique de l’étude originale.",
-    datasetFacts: [["26", "échantillons"], ["19 216", "taxons source"], ["18 988", "taxons non nuls analysés"], ["9", "types d’environnements"]],
-    figures: [["Figure 1", "globalpatterns-composition.png", "Composition taxonomique", "Les comptes sont convertis en abondances relatives par échantillon, agglomérés au phylum et regroupés selon les huit phyla les plus abondants. Les barres montrent la composition moyenne par environnement ; les taxons restants sont regroupés dans Other."], ["Figure 2", "globalpatterns-ordination.png", "Structure inter-échantillons", "Analyse en coordonnées principales des dissimilarités de Bray–Curtis calculées sur les abondances relatives. Chaque point représente un échantillon et la couleur indique l’environnement fourni avec GlobalPatterns."], ["Figure 3", "globalpatterns-alpha-diversity.png", "Diversité intra-échantillon", "La richesse observée et l’indice de Shannon sont calculés sur les comptes non transformés. Tous les points sont affichés ; les boîtes sont descriptives et aucun test d’hypothèse n’est rapporté."]],
-    methodsTitle: "Transformations exactes utilisées sur cette page", methods: [["Composition", "Normalisation par somme totale → tax_glom(Phylum) → huit phyla dominants selon l’abondance moyenne globale → moyenne par SampleType."], ["Ordination", "Normalisation par somme totale → dissimilarité de Bray–Curtis → analyse en coordonnées principales (PCoA)."], ["Diversité alpha", "estimate_richness sur les comptes bruts → indices Observed et Shannon → tous les échantillons affichés sans test inférentiel."]],
-    scriptLink: "Voir le script de génération des figures",
-    reproKicker: "Reproductibilité", reproTitle: "Les figures sont des sorties de code, pas des approximations décoratives.",
-    reproText: "Un script R versionné charge directement l’objet public depuis phyloseq, applique les transformations annoncées, vérifie que les compositions somment à un et écrit les trois images ainsi qu’un manifeste de provenance lisible par machine. Relancer ce script reconstruit les preuves présentées ici.",
-    reproCards: [["Provenance des données", "Nom du jeu, DOI primaire, nombre d’échantillons, nombre de taxons et versions des packages sont écrits dans data-provenance.tsv."], ["Méthodes visibles", "Les légendes et le tableau méthodologique indiquent transformations, distance, ordination et mesures de diversité sans suggérer de tests non réalisés."], ["Séparation des preuves", "Les objets synthétiques restent utiles pour tester l’interface mais sont exclus des affirmations reposant sur des données scientifiques publiques."]],
-    limitationsTitle: "Limites actuelles et interprétation", limitations: ["L’exécution sur cluster nécessite une configuration initiale de SSH, du scheduler, des chemins et des environnements logiciels.", "Les gros objets et vues interactives complexes peuvent nécessiter davantage de ressources et d’optimisation.", "Les résultats taxonomiques dépendent du marqueur, de la couverture de la base et des paramètres d’assignation.", "Les réseaux et analyses différentielles exigent une interprétation adaptée ; les associations compositionnelles restent exploratoires.", "La démonstration publique utilise un ancien jeu 16S pour sa reproductibilité et sa diversité, pas pour représenter tous les marqueurs pris en charge."],
-    availabilityKicker: "Disponibilité du logiciel", availabilityTitle: "Code public, provenance documentée et trajectoire vers une version archivée.",
-    resources: [["Code BarCodeR", "Application R/Shiny actuelle, historique des modules et intégration OpenMetaBar.", "https://github.com/MLPosuphy/BarCodeR"], ["Code du site", "Site académique statique, script R des figures et workflow GitHub Pages.", "https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application"], ["Données publiques", "Objet GlobalPatterns distribué avec phyloseq ; étude primaire de Caporaso et al. (2011).", "https://doi.org/10.1073/pnas.1000080107"]],
-    roadmapTitle: "Avant soumission à la revue", roadmap: ["Choisir et déclarer la licence", "Créer une version numérotée", "Archiver version et données d’exemple", "Ajouter le DOI obtenu", "Documenter les environnements testés"],
-    citationTitle: "Références et citation", references: ["Caporaso, J. G. et al. (2011). Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample. Proceedings of the National Academy of Sciences. doi:10.1073/pnas.1000080107.", "McMurdie, P. J. & Holmes, S. (2013). phyloseq: An R package for reproducible interactive analysis and graphics of microbiome census data. PLOS ONE 8(4): e61217. doi:10.1371/journal.pone.0061217.", "Di Tommaso, P. et al. (2017). Nextflow enables reproducible computational workflows. Nature Biotechnology 35, 316–319. doi:10.1038/nbt.3820."],
-    citeUs: "Manuscrit OpenMetaBar–BarCodeR", citeUsText: "Le manuscrit logiciel est en préparation. Une citation mise en forme et un DOI seront ajoutés après publication ; jusque-là, citez la version logicielle utilisée et l’URL du dépôt public.",
-    footer: "OpenMetaBar–BarCodeR · logiciel de recherche développé à l’Institut Sophia Agrobiotech et PHYBAC",
+  {
+    key: "explore",
+    eyebrow: { fr: "02 · Explorer", en: "02 · Explore" },
+    title: { fr: "Lire la structure biologique des données", en: "Read the biological structure of the data" },
+    text: {
+      fr: "Composer des barplots, comparer la diversité alpha, explorer les intersections, la taxonomie et les arbres — avec paramètres visibles et historiques sauvegardés.",
+      en: "Build barplots, compare alpha diversity, explore intersections, taxonomy and trees—with visible parameters and saved histories.",
+    },
+    bullets: {
+      fr: ["Barplots taxonomiques configurables", "Diversité alpha et statistiques associées", "Venn / UpSet, Heat Tree et arbre phylogénétique", "Qualité d’assignation taxonomique"],
+      en: ["Configurable taxonomic barplots", "Alpha diversity and associated statistics", "Venn / UpSet, Heat Tree and phylogenetic tree", "Taxonomic-assignment quality"],
+    },
+    code: "modules/exploration/*",
+    image: "app-previews/barplot.png",
   },
-} as const;
+  {
+    key: "test",
+    eyebrow: { fr: "03 · Analyser", en: "03 · Analyse" },
+    title: { fr: "Tester les hypothèses, pas seulement produire des graphiques", en: "Test hypotheses, not only generate plots" },
+    text: {
+      fr: "Les modules d’analyse réunissent ordinations, PERMANOVA et dispersion, ANCOM-BC, clustering, comparaison de matrices et réseaux d’association exploratoires.",
+      en: "Analysis modules bring together ordinations, PERMANOVA and dispersion, ANCOM-BC, clustering, matrix comparison and exploratory association networks.",
+    },
+    bullets: {
+      fr: ["Ordinations et diagnostics", "PERMANOVA / dispersion", "Abondance différentielle ANCOM-BC", "Clustering, matrices et réseaux"],
+      en: ["Ordinations and diagnostics", "PERMANOVA / dispersion", "ANCOM-BC differential abundance", "Clustering, matrices and networks"],
+    },
+    code: "modules/analyse/*",
+    image: "app-previews/ordinations.png",
+  },
+  {
+    key: "compose",
+    eyebrow: { fr: "04 · Restituer", en: "04 · Report" },
+    title: { fr: "Transformer les analyses en résultats traçables", en: "Turn analyses into traceable results" },
+    text: {
+      fr: "MultiView retrouve les figures du projet, les organise en compositions et exporte un rendu composite. Les historiques conservent paramètres, provenance et, pour 14 familles de sorties, un script R reproductible.",
+      en: "MultiView retrieves project figures, arranges them into compositions and exports a composite. Histories preserve parameters, provenance and, for 14 output families, reproducible R code.",
+    },
+    bullets: {
+      fr: ["Bibliothèque de figures par projet", "Grilles et compositions sauvegardées", "Export PNG composite", "Code R et provenance rattachés aux historiques"],
+      en: ["Project-level figure library", "Saved grids and compositions", "Composite PNG export", "R code and provenance attached to histories"],
+    },
+    code: "modules/multiview · _shared/_provenance.R",
+    image: "app-previews/comparaison_matrices.png",
+  },
+] as const;
 
-const figurePath = (name: string) => `${import.meta.env.BASE_URL}figures/${name}`;
+const gallery = [
+  { image: "barplot.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, group: "Exploration" },
+  { image: "alpha_diversite.png", title: { fr: "Diversité alpha", en: "Alpha diversity" }, group: "Exploration" },
+  { image: "heat_tree.png", title: { fr: "Heat Tree", en: "Heat Tree" }, group: "Exploration" },
+  { image: "ordinations.png", title: { fr: "Ordinations", en: "Ordinations" }, group: "Analyse" },
+  { image: "analyses_differentielles.png", title: { fr: "Abondance différentielle", en: "Differential abundance" }, group: "Analyse" },
+  { image: "permanova_dispersion.png", title: { fr: "PERMANOVA / dispersion", en: "PERMANOVA / dispersion" }, group: "Analyse" },
+] as const;
 
-function Wordmark() {
-  return <span className="wordmark"><i aria-hidden="true">B|R</i><b>BarCodeR</b><span>+</span><b>OpenMetaBar</b></span>;
+const publicFigures = [
+  {
+    image: "globalpatterns-composition.png",
+    title: { fr: "Composition taxonomique", en: "Taxonomic composition" },
+    method: { fr: "Abondances relatives · agglomération au phylum · moyenne par environnement", en: "Relative abundance · phylum agglomeration · mean by environment" },
+  },
+  {
+    image: "globalpatterns-ordination.png",
+    title: { fr: "Structure inter-échantillons", en: "Between-sample structure" },
+    method: { fr: "Bray–Curtis sur abondances relatives · PCoA", en: "Bray–Curtis on relative abundances · PCoA" },
+  },
+  {
+    image: "globalpatterns-alpha-diversity.png",
+    title: { fr: "Diversité intra-échantillon", en: "Within-sample diversity" },
+    method: { fr: "Richesse observée et Shannon sur comptes bruts", en: "Observed richness and Shannon on raw counts" },
+  },
+] as const;
+
+function Logo({ compact = false }: { compact?: boolean }) {
+  return (
+    <a className={`brand ${compact ? "brand--compact" : ""}`} href="#top" aria-label="BarCodeR + OpenMetaBar">
+      <img src={asset("app-previews/barcoder-logo.png")} alt="" />
+      <span><b>BarCodeR</b><i>+</i><b>OpenMetaBar</b></span>
+    </a>
+  );
 }
 
-export default function App() {
-  const [language, setLanguage] = useState<Language>("en");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const t = content[language];
-
-  useEffect(() => { document.documentElement.lang = language; }, [language]);
+function AppPreview({ language }: { language: Language }) {
+  const steps = language === "fr"
+    ? ["Données", "Description", "Édition", "Filtration", "Exploration", "Analyse"]
+    : ["Input", "Description", "Edition", "Filtering", "Exploration", "Analysis"];
 
   return (
-    <div className="site-shell">
-      <div className="utility-bar"><span>{t.affiliations}</span><span>{t.status}</span></div>
+    <div className="app-window" aria-label={language === "fr" ? "Aperçu du tableau de bord BarCodeR" : "BarCodeR dashboard preview"}>
+      <div className="window-top"><span /><span /><span /><b>BarCodeR · GlobalPatterns</b><em>FR⌄</em></div>
+      <div className="window-body">
+        <aside className="mini-sidebar">
+          <div className="mini-mark">B|R</div>
+          {["⌂", "◫", "▦", "✎", "⌁", "◉", "⌬", "▤"].map((icon, index) => <span className={index === 0 ? "active" : ""} key={`${icon}-${index}`}>{icon}</span>)}
+        </aside>
+        <div className="mini-main">
+          <div className="project-line"><span>{language === "fr" ? "PROJET ACTIF" : "ACTIVE PROJECT"}</span><b>Public demo · GlobalPatterns</b><i>● {language === "fr" ? "enregistré" : "saved"}</i></div>
+          <div className="dataset-panel">
+            <div><small>{language === "fr" ? "JEU ACTIF" : "ACTIVE DATASET"}</small><strong>GlobalPatterns</strong><p>phyloseq · public dataset</p></div>
+            <div className="mini-stats"><span><b>26</b><small>{language === "fr" ? "échantillons" : "samples"}</small></span><span><b>19 216</b><small>taxa</small></span><span><b>9</b><small>{language === "fr" ? "milieux" : "environments"}</small></span></div>
+          </div>
+          <div className="journey-title"><b>{language === "fr" ? "Parcours d’analyse" : "Analysis journey"}</b><span>4 / 6</span></div>
+          <div className="journey-grid">{steps.map((step, index) => <div className={index < 4 ? "done" : ""} key={step}><span>{index < 4 ? "✓" : index + 1}</span><b>{step}</b></div>)}</div>
+          <div className="recent-row"><div><small>{language === "fr" ? "FIGURES RÉCENTES" : "RECENT FIGURES"}</small><b>{language === "fr" ? "Reprendre là où vous étiez" : "Resume where you left off"}</b></div><img src={asset("app-previews/ordinations.png")} alt="" /><img src={asset("app-previews/alpha_diversite.png")} alt="" /></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [language, setLanguage] = useState<Language>(() => navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en");
+  const [activeModule, setActiveModule] = useState("prepare");
+  const [activeGallery, setActiveGallery] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const currentModule = moduleGroups.find((item) => item.key === activeModule) ?? moduleGroups[0];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = language === "fr"
+      ? "BarCodeR + OpenMetaBar | Analyse reproductible du métabarcoding"
+      : "BarCodeR + OpenMetaBar | Reproducible metabarcoding analysis";
+  }, [language]);
+
+  const c = language === "fr" ? {
+    nav: [["Parcours", "#workflow"], ["Dans l’application", "#inside"], ["Données publiques", "#evidence"], ["Open source", "#availability"]],
+    badge: "Logiciel scientifique · R/Shiny + Nextflow",
+    heroTitle: <>Du <em>read</em> à la figure,<br />un parcours scientifique continu.</>,
+    heroText: "OpenMetaBar automatise le traitement des séquences. BarCodeR transforme les objets phyloseq en un espace de travail interactif, organisé par projet et conçu pour garder les choix analytiques visibles.",
+    primary: "Explorer le parcours",
+    secondary: "Voir le code",
+    version: "Version observée dans le code : v2.12.8",
+    facts: [["5", "langues intégrées"], ["30", "thèmes d’interface"], ["14", "familles de sorties avec code R"], ["2", "composants indépendants et connectés"]],
+    workflowKicker: "Une chaîne cohérente",
+    workflowTitle: "Deux outils, une même histoire analytique.",
+    workflowText: "Le code de l’application ne présente pas BarCodeR comme un simple catalogue de graphiques : il organise le passage entre calcul amont, objet scientifique, décisions en aval et restitution.",
+    insideKicker: "Dans BarCodeR",
+    insideTitle: "Une interface guidée, sans masquer les méthodes.",
+    insideText: "Ces fonctionnalités et intitulés proviennent directement des modules de l’application. Sélectionnez une étape pour découvrir le parcours réel.",
+    inspectCode: "Inspecter le module source",
+    galleryKicker: "Sorties disponibles",
+    galleryTitle: "Voir ce que l’application sait réellement produire.",
+    galleryNote: "Aperçus présents dans le dépôt de l’application. Ils illustrent les interfaces et familles de sorties ; les preuves scientifiques fondées sur données publiques sont présentées ensuite.",
+    previous: "Précédent",
+    next: "Suivant",
+    evidenceKicker: "Démonstration reproductible",
+    evidenceTitle: "L’attractivité ne remplace pas la preuve.",
+    evidenceText: "Cette section est calculée par un script R versionné à partir de phyloseq::GlobalPatterns, issu de l’étude publique de Caporaso et al. (2011). L’objet synthétique fourni pour tester BarCodeR n’est pas utilisé ici.",
+    sourceData: "Données et méthode",
+    script: "Script de génération",
+    sourceObject: "objet source",
+    nonzero: "taxons non nuls analysés",
+    environments: "types d’environnements",
+    samples: "échantillons",
+    provenanceTitle: "La traçabilité est une fonctionnalité de l’application.",
+    provenanceText: "Le code actuel rattache les objets dérivés à leur projet, enregistre les historiques de figures, restaure l’état de navigation et injecte la provenance du chemin FASTQ → phyloseq → figure dans les scripts reproductibles.",
+    provenanceItems: [["Objets dérivés", "L’original reste disponible pendant que filtration et édition créent des jeux identifiés."], ["Historique", "Figures, paramètres et versions restent associés au projet."], ["Code R", "Le dispatcher couvre 14 familles de sorties d’Exploration et d’Analyse."], ["MultiView", "La bibliothèque rassemble, compare et compose les figures sauvegardées."]],
+    availabilityKicker: "Disponibilité",
+    availabilityTitle: "Un logiciel de recherche ouvert, encore en préparation éditoriale.",
+    availabilityText: "Le code source est public. La licence définitive, une version numérotée archivée et son DOI restent à finaliser avant la soumission du manuscrit.",
+    appSource: "Code de BarCodeR",
+    websiteSource: "Code de ce site",
+    correspondence: "Correspondance",
+    limitations: "Périmètre et limites",
+    limitationText: "L’exécution OpenMetaBar nécessite une infrastructure distante configurée. Les résultats dépendent de la qualité des données, des bases taxonomiques et des paramètres. Les analyses différentielles, multivariées et de réseaux demandent une interprétation experte.",
+    footer: "Logiciel de recherche développé à l’Institut Sophia Agrobiotech et PHYBAC.",
+  } : {
+    nav: [["Workflow", "#workflow"], ["Inside the app", "#inside"], ["Public data", "#evidence"], ["Open source", "#availability"]],
+    badge: "Scientific software · R/Shiny + Nextflow",
+    heroTitle: <>From <em>reads</em> to figures,<br />one continuous scientific workflow.</>,
+    heroText: "OpenMetaBar automates sequence processing. BarCodeR turns phyloseq objects into an interactive, project-based workspace designed to keep analytical choices visible.",
+    primary: "Explore the workflow",
+    secondary: "View source",
+    version: "Version observed in source: v2.12.8",
+    facts: [["5", "integrated languages"], ["30", "interface themes"], ["14", "output families with R code"], ["2", "independent, connected components"]],
+    workflowKicker: "A coherent chain",
+    workflowTitle: "Two tools, one analytical history.",
+    workflowText: "The application code does not present BarCodeR as a simple plot catalogue: it structures the path from upstream computing to scientific object, downstream decisions and reporting.",
+    insideKicker: "Inside BarCodeR",
+    insideTitle: "A guided interface that keeps methods visible.",
+    insideText: "These features and labels come directly from application modules. Select a step to explore the actual workflow.",
+    inspectCode: "Inspect the source module",
+    galleryKicker: "Available outputs",
+    galleryTitle: "See what the application can actually produce.",
+    galleryNote: "Previews stored in the application repository. They illustrate interfaces and output families; evidence based on public scientific data follows below.",
+    previous: "Previous",
+    next: "Next",
+    evidenceKicker: "Reproducible demonstration",
+    evidenceTitle: "Visual appeal does not replace evidence.",
+    evidenceText: "This section is computed by a versioned R script from phyloseq::GlobalPatterns, derived from the public study by Caporaso et al. (2011). The synthetic object supplied to test BarCodeR is not used here.",
+    sourceData: "Data and method",
+    script: "Figure-generation script",
+    sourceObject: "source object",
+    nonzero: "nonzero taxa analysed",
+    environments: "environment types",
+    samples: "samples",
+    provenanceTitle: "Traceability is an application feature.",
+    provenanceText: "Current code links derived objects to their project, records figure histories, restores navigation state and injects FASTQ → phyloseq → figure provenance into reproducible scripts.",
+    provenanceItems: [["Derived objects", "The original remains available while filtering and edition create identified datasets."], ["History", "Figures, parameters and versions remain associated with the project."], ["R code", "The dispatcher covers 14 output families across Exploration and Analysis."], ["MultiView", "The library collects, compares and composes saved figures."]],
+    availabilityKicker: "Availability",
+    availabilityTitle: "Open research software, still in editorial preparation.",
+    availabilityText: "Source code is public. A final license, archived versioned release and DOI remain to be completed before manuscript submission.",
+    appSource: "BarCodeR source",
+    websiteSource: "Website source",
+    correspondence: "Correspondence",
+    limitations: "Scope and limitations",
+    limitationText: "OpenMetaBar execution requires a configured remote infrastructure. Results depend on data quality, taxonomic databases and parameters. Differential, multivariate and network analyses require expert interpretation.",
+    footer: "Research software developed at Institut Sophia Agrobiotech and PHYBAC.",
+  };
+
+  const moveGallery = (direction: number) => setActiveGallery((activeGallery + direction + gallery.length) % gallery.length);
+
+  return (
+    <div className="site-shell" id="top">
       <header className="site-header">
-        <a href="#top" aria-label="BarCodeR and OpenMetaBar home"><Wordmark /></a>
-        <button className="menu-toggle" aria-expanded={menuOpen} aria-label="Toggle navigation" onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-        <nav className={menuOpen ? "open" : ""} aria-label="Primary navigation">
-          {t.navigation.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
-          <div className="language" role="group" aria-label="Language"><button className={language === "en" ? "selected" : ""} onClick={() => setLanguage("en")}>EN</button><button className={language === "fr" ? "selected" : ""} onClick={() => setLanguage("fr")}>FR</button></div>
+        <Logo compact />
+        <button className="menu-button" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
+        <nav className={menuOpen ? "open" : ""}>
+          {c.nav.map(([label, href]) => <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          <div className="language-switch" aria-label="Language"><button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button></div>
         </nav>
       </header>
 
       <main>
-        <section className="hero" id="top">
-          <div className="article-type">Application note <span>·</span> Bioinformatics software</div>
-          <h1>{t.title}</h1>
-          <p className="hero-subtitle">{t.subtitle}</p>
-          <p className="authors">{t.authors}</p>
-          <p className="affiliations">{t.affiliations}</p>
-          <div className="abstract-grid">
-            <article><h2>{t.summaryLabel}</h2><p>{t.summary}</p></article>
-            <article><h2>{t.availabilityLabel}</h2><p>{t.availability}</p><div className="abstract-links"><a href="https://github.com/MLPosuphy/BarCodeR">{t.source} ↗</a><a href="mailto:corinne.rancurel@inrae.fr">{t.contact} ↗</a></div></article>
+        <section className="hero">
+          <div className="hero-glow" />
+          <div className="hero-copy">
+            <p className="eyebrow"><span />{c.badge}</p>
+            <h1>{c.heroTitle}</h1>
+            <p className="hero-text">{c.heroText}</p>
+            <div className="hero-actions"><a className="button button--primary" href="#workflow">{c.primary}<span>↓</span></a><a className="button button--ghost" href="https://github.com/MLPosuphy/BarCodeR">{c.secondary}<span>↗</span></a></div>
+            <div className="tech-line"><span>R / Shiny</span><span>phyloseq</span><span>Nextflow DSL2</span></div>
+            <small className="version-note">{c.version}</small>
           </div>
+          <div className="hero-visual"><AppPreview language={language} /><div className="floating-card floating-card--one"><span>✓</span><div><b>{language === "fr" ? "Provenance attachée" : "Provenance attached"}</b><small>FASTQ → phyloseq → figure</small></div></div><div className="floating-card floating-card--two"><span>R</span><div><b>{language === "fr" ? "Code reproductible" : "Reproducible code"}</b><small>14 output families</small></div></div></div>
         </section>
 
-        <section className="facts" aria-label="Implementation summary">
-          {t.keyFacts.map(([label, value, detail]) => <article key={label}><span>{label}</span><h3>{value}</h3><p>{detail}</p></article>)}
-        </section>
+        <section className="facts" aria-label="Code-derived facts">{c.facts.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
 
-        <section className="section overview" id="overview">
-          <div className="section-lead"><p className="kicker">01 — {t.overviewKicker}</p><h2>{t.overviewTitle}</h2><p>{t.overviewBody}</p></div>
-          <div className="claims-grid">
-            <article><h3>{t.contributionTitle}</h3>{t.contributionItems.map(([title, text], i) => <div className="claim" key={title}><span>{i + 1}</span><p><b>{title}.</b> {text}</p></div>)}</article>
-            <article className="boundary"><h3>{t.boundaryTitle}</h3><ul>{t.boundaryItems.map((item) => <li key={item}>{item}</li>)}</ul></article>
+        <section className="section workflow" id="workflow">
+          <div className="section-heading"><p className="eyebrow"><span />{c.workflowKicker}</p><h2>{c.workflowTitle}</h2><p>{c.workflowText}</p></div>
+          <div className="workflow-track">
+            <article><span className="step-icon">01</span><small>INPUT</small><h3>FASTQ + design file</h3><p>{language === "fr" ? "Échantillons, marqueurs, amorces et métadonnées structurés avant calcul." : "Samples, markers, primers and metadata structured before computation."}</p></article>
+            <i>→</i>
+            <article className="workflow-accent"><span className="step-icon">02</span><small>OPENMETABAR</small><h3>Nextflow DSL2</h3><p>{language === "fr" ? "Configuration, lancement distant, suivi SLURM et récupération des résultats." : "Configuration, remote launch, SLURM monitoring and result retrieval."}</p></article>
+            <i>→</i>
+            <article><span className="step-icon">03</span><small>INTEROPERABILITY</small><h3>phyloseq</h3><p>{language === "fr" ? "Abondances, taxonomie, métadonnées, séquences et arbre dans un objet standard." : "Abundance, taxonomy, metadata, sequences and tree in a standard object."}</p></article>
+            <i>→</i>
+            <article className="workflow-accent-alt"><span className="step-icon">04</span><small>BARCODER</small><h3>R / Shiny</h3><p>{language === "fr" ? "Curation, exploration, tests, historiques, compositions et exports." : "Curation, exploration, tests, histories, compositions and exports."}</p></article>
           </div>
+          <p className="source-strip"><span>{language === "fr" ? "Vérifié dans" : "Verified in"}</span><a href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/app.R">app.R ↗</a><a href="https://github.com/MLPosuphy/BarCodeR/tree/main/BarCodeR_app/modules/openmetabar">modules/openmetabar ↗</a><a href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/modules/_shared/_provenance.R">_provenance.R ↗</a></p>
         </section>
 
-        <section className="section architecture" id="architecture">
-          <div className="section-lead narrow"><p className="kicker">02 — {t.architectureKicker}</p><h2>{t.architectureTitle}</h2><p>{t.architectureIntro}</p></div>
-          <figure className="architecture-figure">
-            <div className="architecture-track">
-              {t.architectureSteps.map(([number, title, detail], i) => <article key={number} className={i === 2 ? "bridge" : ""}><span>{number}</span><h3>{title}</h3><p>{detail}</p></article>)}
+        <section className="section inside" id="inside">
+          <div className="section-heading section-heading--split"><div><p className="eyebrow"><span />{c.insideKicker}</p><h2>{c.insideTitle}</h2></div><p>{c.insideText}</p></div>
+          <div className="module-explorer">
+            <div className="module-tabs" role="tablist">{moduleGroups.map((item) => <button role="tab" aria-selected={activeModule === item.key} className={activeModule === item.key ? "active" : ""} onClick={() => setActiveModule(item.key)} key={item.key}><small>{tr(item.eyebrow, language)}</small><b>{tr(item.title, language)}</b><span>→</span></button>)}</div>
+            <div className="module-detail" role="tabpanel">
+              <div className="module-copy"><p className="eyebrow"><span />{tr(currentModule.eyebrow, language)}</p><h3>{tr(currentModule.title, language)}</h3><p>{tr(currentModule.text, language)}</p><ul>{currentModule.bullets[language].map((item) => <li key={item}><span>✓</span>{item}</li>)}</ul><a href={`https://github.com/MLPosuphy/BarCodeR/tree/main/BarCodeR_app/${currentModule.code.split(" · ")[0].replace("/*", "")}`}>{c.inspectCode} <span>↗</span></a><code>{currentModule.code}</code></div>
+              <div className="module-image"><img src={asset(currentModule.image)} alt={tr(currentModule.title, language)} /><span>{language === "fr" ? "Aperçu issu de l’application" : "Preview from the application"}</span></div>
             </div>
-            <figcaption>{t.architectureCaption}</figcaption>
-          </figure>
-          <div className="scope"><h3>{t.scopeTitle}</h3><div>{t.scopeGroups.map(([title, detail]) => <article key={title}><h4>{title}</h4><p>{detail}</p></article>)}</div></div>
-        </section>
-
-        <section className="section demonstration" id="demonstration">
-          <div className="section-lead"><p className="kicker">03 — {t.demoKicker}</p><h2>{t.demoTitle}</h2><p>{t.demoIntro}</p></div>
-          <div className="dataset-facts">{t.datasetFacts.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
-          <div className="figures">
-            {t.figures.map(([number, file, title, caption]) => <figure key={file}><img src={figurePath(file)} alt={`${title}, generated from phyloseq GlobalPatterns`} loading="lazy" /><figcaption><span>{number}</span><div><h3>{title}</h3><p>{caption}</p><p className="source-note">Data: phyloseq::GlobalPatterns · Caporaso et al. 2011 · <a href="https://doi.org/10.1073/pnas.1000080107">doi:10.1073/pnas.1000080107 ↗</a></p></div></figcaption></figure>)}
           </div>
-          <div className="methods"><h3>{t.methodsTitle}</h3><div className="methods-table">{t.methods.map(([name, description]) => <div key={name}><b>{name}</b><p>{description}</p></div>)}</div><a className="text-link" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{t.scriptLink} ↗</a></div>
         </section>
 
-        <section className="section reproducibility" id="reproducibility">
-          <div className="section-lead narrow"><p className="kicker">04 — {t.reproKicker}</p><h2>{t.reproTitle}</h2><p>{t.reproText}</p></div>
-          <div className="repro-grid">{t.reproCards.map(([title, text], i) => <article key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-          <div className="limitations"><h3>{t.limitationsTitle}</h3><ol>{t.limitations.map((item) => <li key={item}>{item}</li>)}</ol></div>
+        <section className="gallery-section">
+          <div className="gallery-head"><div><p className="eyebrow"><span />{c.galleryKicker}</p><h2>{c.galleryTitle}</h2></div><div className="gallery-controls"><button onClick={() => moveGallery(-1)} aria-label={c.previous}>←</button><span>{String(activeGallery + 1).padStart(2, "0")} / {String(gallery.length).padStart(2, "0")}</span><button onClick={() => moveGallery(1)} aria-label={c.next}>→</button></div></div>
+          <div className="gallery-stage">
+            <div className="gallery-main"><img src={asset(`app-previews/${gallery[activeGallery].image}`)} alt={tr(gallery[activeGallery].title, language)} /></div>
+            <div className="gallery-caption"><span>{gallery[activeGallery].group}</span><h3>{tr(gallery[activeGallery].title, language)}</h3><p>{c.galleryNote}</p><div className="gallery-dots">{gallery.map((item, index) => <button aria-label={tr(item.title, language)} className={index === activeGallery ? "active" : ""} onClick={() => setActiveGallery(index)} key={item.image} />)}</div></div>
+          </div>
+        </section>
+
+        <section className="section evidence" id="evidence">
+          <div className="section-heading section-heading--split"><div><p className="eyebrow"><span />{c.evidenceKicker}</p><h2>{c.evidenceTitle}</h2></div><div><p>{c.evidenceText}</p><div className="inline-links"><a href="https://doi.org/10.1073/pnas.1000080107">{c.sourceData} ↗</a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script} ↗</a></div></div></div>
+          <div className="evidence-stats"><div><strong>26</strong><span>{c.samples}</span></div><div><strong>19 216</strong><span>taxa · {c.sourceObject}</span></div><div><strong>18 988</strong><span>{c.nonzero}</span></div><div><strong>9</strong><span>{c.environments}</span></div></div>
+          <div className="evidence-grid">{publicFigures.map((figure, index) => <figure key={figure.image}><div className="figure-image"><img src={asset(`figures/${figure.image}`)} alt={tr(figure.title, language)} /></div><figcaption><span>0{index + 1}</span><div><h3>{tr(figure.title, language)}</h3><p>{tr(figure.method, language)}</p></div></figcaption></figure>)}</div>
+          <p className="evidence-note"><b>GlobalPatterns</b> · Caporaso et al. 2011 · <a href="https://doi.org/10.1073/pnas.1000080107">doi:10.1073/pnas.1000080107 ↗</a> · {language === "fr" ? "aucun test inférentiel ajouté aux figures descriptives" : "no inferential test added to descriptive figures"}</p>
+        </section>
+
+        <section className="provenance-section">
+          <div className="provenance-copy"><p className="eyebrow"><span />PROVENANCE</p><h2>{c.provenanceTitle}</h2><p>{c.provenanceText}</p><a className="button button--light" href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/modules/exploration/barplot/fct_barplot_repro_code.R">{c.inspectCode}<span>↗</span></a></div>
+          <div className="provenance-list">{c.provenanceItems.map(([title, text], index) => <article key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
         </section>
 
         <section className="section availability" id="availability">
-          <div className="section-lead"><p className="kicker">05 — {t.availabilityKicker}</p><h2>{t.availabilityTitle}</h2></div>
-          <div className="availability-grid">
-            <div className="resource-list">{t.resources.map(([title, detail, url]) => <a key={title} href={url}><span><b>{title}</b><small>{detail}</small></span><i>↗</i></a>)}</div>
-            <aside><h3>{t.roadmapTitle}</h3><ol>{t.roadmap.map((item, i) => <li key={item}><span>{String(i + 1).padStart(2, "0")}</span>{item}</li>)}</ol></aside>
-          </div>
-        </section>
-
-        <section className="section citations">
-          <div className="section-lead"><p className="kicker">06 — {t.citationTitle}</p></div>
-          <div className="citation-grid"><div>{t.references.map((reference, i) => <p key={reference}><span>[{i + 1}]</span>{reference}</p>)}</div><aside><h3>{t.citeUs}</h3><p>{t.citeUsText}</p><a href="mailto:corinne.rancurel@inrae.fr">corinne.rancurel@inrae.fr ↗</a></aside></div>
+          <div className="availability-main"><p className="eyebrow"><span />{c.availabilityKicker}</p><h2>{c.availabilityTitle}</h2><p>{c.availabilityText}</p><div className="availability-links"><a className="resource-card" href="https://github.com/MLPosuphy/BarCodeR"><small>01 · GITHUB</small><b>{c.appSource}</b><span>R / Shiny · OpenMetaBar · modules ↗</span></a><a className="resource-card" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application"><small>02 · GITHUB PAGES</small><b>{c.websiteSource}</b><span>React · figures publiques · déploiement ↗</span></a><a className="resource-card" href="mailto:corinne.rancurel@inrae.fr"><small>03 · EMAIL</small><b>{c.correspondence}</b><span>corinne.rancurel@inrae.fr ↗</span></a></div></div>
+          <aside className="availability-aside"><details open><summary>{c.limitations}<span>+</span></summary><p>{c.limitationText}</p></details><details><summary>{language === "fr" ? "Références principales" : "Core references"}<span>+</span></summary><ol><li>Caporaso et al. (2011), PNAS. doi:10.1073/pnas.1000080107</li><li>McMurdie & Holmes (2013), PLOS ONE. doi:10.1371/journal.pone.0061217</li><li>Di Tommaso et al. (2017), Nature Biotechnology. doi:10.1038/nbt.3820</li></ol></details><details><summary>{language === "fr" ? "Avant publication" : "Before publication"}<span>+</span></summary><p>{language === "fr" ? "Déclarer la licence, créer une release versionnée, l’archiver et ajouter son DOI ainsi que les environnements testés." : "Declare the license, create and archive a versioned release, then add its DOI and tested environments."}</p></details></aside>
         </section>
       </main>
 
-      <footer><Wordmark /><p>{t.footer}</p><div><a href="https://github.com/MLPosuphy/BarCodeR">GitHub</a><a href="#top">↑ Top</a></div></footer>
+      <footer><Logo compact /><p>{c.footer}<br />M. Léger-Pigout · S. Marguerit · S. Warot · I.-M. Viciriuc · N. Ris · E. G. J. Danchin · C. Rancurel</p><div><a href="https://github.com/MLPosuphy/BarCodeR">GitHub ↗</a><a href="#top">↑ Top</a></div></footer>
     </div>
   );
 }
+
+export default App;
