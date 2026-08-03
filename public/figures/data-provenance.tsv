@@ -1,0 +1,9 @@
+field	value
+dataset	GlobalPatterns
+source_object	phyloseq::GlobalPatterns
+primary_reference	Caporaso et al. 2011; doi:10.1073/pnas.1000080107
+samples	26
+source_taxa	19216
+analyzed_nonzero_taxa	18988
+environment_types	9
+generated_with	R 4.6.0; phyloseq 1.56.0; ggplot2 4.0.3

@@ -1,0 +1,60 @@
+# Academic website for BarCodeR + OpenMetaBar
+
+This repository contains the public academic website for the BarCodeR R/Shiny
+application and its integration with the OpenMetaBar Nextflow pipeline.
+
+The site is intentionally written as a scientific software presentation rather
+than a commercial landing page. Claims are separated from limitations, methods
+are stated explicitly, and every analytical figure is generated from a cited
+public dataset.
+
+## Public demonstration data
+
+The three website figures use `phyloseq::GlobalPatterns`:
+
+- 26 samples;
+- 19,216 taxa in the source object;
+- 18,988 nonzero taxa retained for the website calculations;
+- 9 environment types;
+- primary reference: Caporaso et al. (2011),
+  <https://doi.org/10.1073/pnas.1000080107>.
+
+The supplied `ps_marine_exotic.rds` object is synthetic and is deliberately not
+used as scientific evidence on the site.
+
+## Rebuild the figures
+
+The script `scripts/generate_public_data_figures.R` loads GlobalPatterns from
+the installed phyloseq package, performs the documented transformations and
+writes the figures plus `public/figures/data-provenance.tsv`.
+
+```powershell
+Rscript scripts/generate_public_data_figures.R
+```
+
+Required R packages: `phyloseq` and `ggplot2`.
+
+## Run the website locally
+
+```powershell
+npm install
+npm run dev
+npm run build
+```
+
+## GitHub Pages
+
+Pushing to `main` triggers `.github/workflows/deploy-pages.yml`, which builds
+the static Vite site and deploys `dist/` with the official GitHub Pages actions.
+
+## References
+
+- Caporaso JG et al. (2011). *Global patterns of 16S rRNA diversity at a depth
+  of millions of sequences per sample.* PNAS.
+  <https://doi.org/10.1073/pnas.1000080107>
+- McMurdie PJ, Holmes S (2013). *phyloseq: An R Package for Reproducible
+  Interactive Analysis and Graphics of Microbiome Census Data.* PLOS ONE.
+  <https://doi.org/10.1371/journal.pone.0061217>
+
+No reuse license has yet been declared for this website repository. Add one
+explicitly before external redistribution or journal submission.
