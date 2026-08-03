@@ -238,7 +238,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Données publiques" : "Public data") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : "BarCodeR × OpenMetaBar";
+    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Données publiques" : "Public data") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Parcours de l’application" : "Application workflow") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR × OpenMetaBar`;
   }, [language, route, activeModule]);
 
