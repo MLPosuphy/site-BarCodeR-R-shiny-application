@@ -1,321 +1,262 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { groups, modules, type AppModule, type Language, type Localized } from "./content";
 
-type Language = "fr" | "en";
-type Localized = { fr: string; en: string };
-
-const tr = (value: Localized, language: Language) => value[language];
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+const tx = (value: Localized, language: Language) => value[language];
+const moduleHref = (key: string) => `#/application/${key}`;
 
-const moduleGroups = [
-  {
-    key: "prepare",
-    eyebrow: { fr: "01 · Préparer", en: "01 · Prepare" },
-    title: { fr: "Un projet propre avant toute statistique", en: "A clean project before any statistics" },
-    text: {
-      fr: "Importer un objet phyloseq ou les tables qui le composent, contrôler leur cohérence, éditer les métadonnées et produire des jeux dérivés sans écraser l’original.",
-      en: "Import a phyloseq object or its component tables, check their consistency, edit metadata and create derived datasets without overwriting the original.",
-    },
-    bullets: {
-      fr: ["Import phyloseq et tables séparées", "Édition OTU, taxonomie et métadonnées", "Filtration taxonomique, ASV, échantillons et séquences", "Registre de jeux de données par projet"],
-      en: ["phyloseq and component-table import", "OTU, taxonomy and metadata edition", "Taxonomic, ASV, sample and sequence filtering", "Project-level dataset registry"],
-    },
-    code: "modules/data · datasets · dataedition · filtration",
-    image: "app-previews/qualite_assignation_taxonomique.png",
-  },
-  {
-    key: "explore",
-    eyebrow: { fr: "02 · Explorer", en: "02 · Explore" },
-    title: { fr: "Lire la structure biologique des données", en: "Read the biological structure of the data" },
-    text: {
-      fr: "Composer des barplots, comparer la diversité alpha, explorer les intersections, la taxonomie et les arbres — avec paramètres visibles et historiques sauvegardés.",
-      en: "Build barplots, compare alpha diversity, explore intersections, taxonomy and trees—with visible parameters and saved histories.",
-    },
-    bullets: {
-      fr: ["Barplots taxonomiques configurables", "Diversité alpha et statistiques associées", "Venn / UpSet, Heat Tree et arbre phylogénétique", "Qualité d’assignation taxonomique"],
-      en: ["Configurable taxonomic barplots", "Alpha diversity and associated statistics", "Venn / UpSet, Heat Tree and phylogenetic tree", "Taxonomic-assignment quality"],
-    },
-    code: "modules/exploration/*",
-    image: "app-previews/barplot.png",
-  },
-  {
-    key: "test",
-    eyebrow: { fr: "03 · Analyser", en: "03 · Analyse" },
-    title: { fr: "Tester les hypothèses, pas seulement produire des graphiques", en: "Test hypotheses, not only generate plots" },
-    text: {
-      fr: "Les modules d’analyse réunissent ordinations, PERMANOVA et dispersion, ANCOM-BC, clustering, comparaison de matrices et réseaux d’association exploratoires.",
-      en: "Analysis modules bring together ordinations, PERMANOVA and dispersion, ANCOM-BC, clustering, matrix comparison and exploratory association networks.",
-    },
-    bullets: {
-      fr: ["Ordinations et diagnostics", "PERMANOVA / dispersion", "Abondance différentielle ANCOM-BC", "Clustering, matrices et réseaux"],
-      en: ["Ordinations and diagnostics", "PERMANOVA / dispersion", "ANCOM-BC differential abundance", "Clustering, matrices and networks"],
-    },
-    code: "modules/analyse/*",
-    image: "app-previews/ordinations.png",
-  },
-  {
-    key: "compose",
-    eyebrow: { fr: "04 · Restituer", en: "04 · Report" },
-    title: { fr: "Transformer les analyses en résultats traçables", en: "Turn analyses into traceable results" },
-    text: {
-      fr: "MultiView retrouve les figures du projet, les organise en compositions et exporte un rendu composite. Les historiques conservent paramètres, provenance et, pour 14 familles de sorties, un script R reproductible.",
-      en: "MultiView retrieves project figures, arranges them into compositions and exports a composite. Histories preserve parameters, provenance and, for 14 output families, reproducible R code.",
-    },
-    bullets: {
-      fr: ["Bibliothèque de figures par projet", "Grilles et compositions sauvegardées", "Export PNG composite", "Code R et provenance rattachés aux historiques"],
-      en: ["Project-level figure library", "Saved grids and compositions", "Composite PNG export", "R code and provenance attached to histories"],
-    },
-    code: "modules/multiview · _shared/_provenance.R",
-    image: "app-previews/comparaison_matrices.png",
-  },
-] as const;
+const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
-const gallery = [
-  { image: "barplot.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, group: "Exploration" },
-  { image: "alpha_diversite.png", title: { fr: "Diversité alpha", en: "Alpha diversity" }, group: "Exploration" },
-  { image: "heat_tree.png", title: { fr: "Heat Tree", en: "Heat Tree" }, group: "Exploration" },
-  { image: "ordinations.png", title: { fr: "Ordinations", en: "Ordinations" }, group: "Analyse" },
-  { image: "analyses_differentielles.png", title: { fr: "Abondance différentielle", en: "Differential abundance" }, group: "Analyse" },
-  { image: "permanova_dispersion.png", title: { fr: "PERMANOVA / dispersion", en: "PERMANOVA / dispersion" }, group: "Analyse" },
-] as const;
+function useHashRoute() {
+  const current = () => window.location.hash.replace(/^#/, "") || "/";
+  const [route, setRoute] = useState(current);
 
-const publicFigures = [
-  {
-    image: "globalpatterns-composition.png",
-    title: { fr: "Composition taxonomique", en: "Taxonomic composition" },
-    method: { fr: "Abondances relatives · agglomération au phylum · moyenne par environnement", en: "Relative abundance · phylum agglomeration · mean by environment" },
-  },
-  {
-    image: "globalpatterns-ordination.png",
-    title: { fr: "Structure inter-échantillons", en: "Between-sample structure" },
-    method: { fr: "Bray–Curtis sur abondances relatives · PCoA", en: "Bray–Curtis on relative abundances · PCoA" },
-  },
-  {
-    image: "globalpatterns-alpha-diversity.png",
-    title: { fr: "Diversité intra-échantillon", en: "Within-sample diversity" },
-    method: { fr: "Richesse observée et Shannon sur comptes bruts", en: "Observed richness and Shannon on raw counts" },
-  },
-] as const;
+  useEffect(() => {
+    const update = () => setRoute(current());
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
+  }, []);
 
-function Logo({ compact = false }: { compact?: boolean }) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [route]);
+
+  return route;
+}
+
+function Brand() {
   return (
-    <a className={`brand ${compact ? "brand--compact" : ""}`} href="#top" aria-label="BarCodeR + OpenMetaBar">
+    <a className="brand" href="#/" aria-label="BarCodeR et OpenMetaBar — accueil du site">
       <img src={asset("app-previews/barcoder-logo.png")} alt="" />
-      <span><b>BarCodeR</b><i>+</i><b>OpenMetaBar</b></span>
+      <span><strong>BarCodeR</strong><i>×</i><strong>OpenMetaBar</strong></span>
     </a>
   );
 }
 
-function AppPreview({ language }: { language: Language }) {
-  const steps = language === "fr"
-    ? ["Données", "Description", "Édition", "Filtration", "Exploration", "Analyse"]
-    : ["Input", "Description", "Edition", "Filtering", "Exploration", "Analysis"];
+function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
+  const [open, setOpen] = useState(false);
+  const c = language === "fr" ? {
+    overview: "Vue d’ensemble", application: "Parcours de l’application", evidence: "Données publiques", reproducibility: "Reproductibilité", code: "Code & disponibilité", appLabel: "Onglets de BarCodeR"
+  } : {
+    overview: "Overview", application: "Application workflow", evidence: "Public data", reproducibility: "Reproducibility", code: "Code & availability", appLabel: "BarCodeR tabs"
+  };
+
+  useEffect(() => setOpen(false), [route]);
+
+  useEffect(() => {
+    const activeTab = document.querySelector<HTMLElement>(".app-tabs a.active");
+    if (!activeTab) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    activeTab.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+  }, [route]);
 
   return (
-    <div className="app-window" aria-label={language === "fr" ? "Aperçu du tableau de bord BarCodeR" : "BarCodeR dashboard preview"}>
-      <div className="window-top"><span /><span /><span /><b>BarCodeR · GlobalPatterns</b><em>FR⌄</em></div>
-      <div className="window-body">
-        <aside className="mini-sidebar">
-          <div className="mini-mark">B|R</div>
-          {["⌂", "◫", "▦", "✎", "⌁", "◉", "⌬", "▤"].map((icon, index) => <span className={index === 0 ? "active" : ""} key={`${icon}-${index}`}>{icon}</span>)}
-        </aside>
-        <div className="mini-main">
-          <div className="project-line"><span>{language === "fr" ? "PROJET ACTIF" : "ACTIVE PROJECT"}</span><b>Public demo · GlobalPatterns</b><i>● {language === "fr" ? "enregistré" : "saved"}</i></div>
-          <div className="dataset-panel">
-            <div><small>{language === "fr" ? "JEU ACTIF" : "ACTIVE DATASET"}</small><strong>GlobalPatterns</strong><p>phyloseq · public dataset</p></div>
-            <div className="mini-stats"><span><b>26</b><small>{language === "fr" ? "échantillons" : "samples"}</small></span><span><b>19 216</b><small>taxa</small></span><span><b>9</b><small>{language === "fr" ? "milieux" : "environments"}</small></span></div>
+    <>
+      <header className="site-header">
+        <Brand />
+        <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={language === "fr" ? "Ouvrir le menu" : "Open menu"}>
+          <span /><span />
+        </button>
+        <nav className={open ? "primary-nav open" : "primary-nav"} aria-label="Navigation principale">
+          <a className={route === "/" ? "active" : ""} href="#/">{c.overview}</a>
+          <a className={route.startsWith("/application") ? "active" : ""} href="#/application">{c.application}</a>
+          <a className={route === "/evidence" ? "active" : ""} href="#/evidence">{c.evidence}</a>
+          <a className={route === "/reproducibility" ? "active" : ""} href="#/reproducibility">{c.reproducibility}</a>
+          <a className={route === "/availability" ? "active" : ""} href="#/availability">{c.code}</a>
+          <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
+            <button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button>
+            <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
           </div>
-          <div className="journey-title"><b>{language === "fr" ? "Parcours d’analyse" : "Analysis journey"}</b><span>4 / 6</span></div>
-          <div className="journey-grid">{steps.map((step, index) => <div className={index < 4 ? "done" : ""} key={step}><span>{index < 4 ? "✓" : index + 1}</span><b>{step}</b></div>)}</div>
-          <div className="recent-row"><div><small>{language === "fr" ? "FIGURES RÉCENTES" : "RECENT FIGURES"}</small><b>{language === "fr" ? "Reprendre là où vous étiez" : "Resume where you left off"}</b></div><img src={asset("app-previews/ordinations.png")} alt="" /><img src={asset("app-previews/alpha_diversite.png")} alt="" /></div>
+        </nav>
+      </header>
+      <nav className="app-tabs" aria-label={c.appLabel}>
+        <span className="app-tabs-label">{c.appLabel}</span>
+        <div className="app-tabs-scroll">
+          {modules.map((module) => (
+            <a key={module.key} href={moduleHref(module.key)} className={route === `/application/${module.key}` ? "active" : ""}>
+              <span>{module.order}</span>{tx(module.title, language)}
+            </a>
+          ))}
+        </div>
+      </nav>
+    </>
+  );
+}
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <p className="eyebrow"><span />{children}</p>;
+}
+
+function AppPreview({ language }: { language: Language }) {
+  const names = language === "fr" ? ["Données", "Description", "Édition", "Filtration", "Exploration", "Analyse"] : ["Input", "Description", "Edition", "Filtering", "Exploration", "Analysis"];
+  return (
+    <div className="app-preview" role="img" aria-label={language === "fr" ? "Schéma du tableau de bord BarCodeR avec projet, dataset actif et parcours analytique" : "Diagram of the BarCodeR dashboard with project, active dataset and analytical workflow"}>
+      <div className="preview-titlebar"><span /><span /><span /><b>BarCodeR · GlobalPatterns</b><em>FR</em></div>
+      <div className="preview-body">
+        <div className="preview-rail"><strong>B|R</strong>{["⌂", "?", "⇢", "↓", "▦", "◎", "✎", "≋", "◉", "∴", "▤"].map((x, i) => <span className={i === 0 ? "active" : ""} key={`${x}-${i}`}>{x}</span>)}</div>
+        <div className="preview-main">
+          <div className="preview-project"><span>{language === "fr" ? "PROJET ACTIF" : "ACTIVE PROJECT"}</span><b>Public demo · GlobalPatterns</b><i>● {language === "fr" ? "enregistré" : "saved"}</i></div>
+          <div className="preview-dataset">
+            <div><small>{language === "fr" ? "DATASET ACTIF" : "ACTIVE DATASET"}</small><strong>GlobalPatterns</strong><p>phyloseq · public dataset</p></div>
+            <div className="preview-kpis"><span><b>26</b><small>{language === "fr" ? "échantillons" : "samples"}</small></span><span><b>19 216</b><small>taxa</small></span><span><b>9</b><small>{language === "fr" ? "milieux" : "environments"}</small></span></div>
+          </div>
+          <div className="preview-section-title"><b>{language === "fr" ? "Parcours d’analyse" : "Analysis journey"}</b><span>4 / 6</span></div>
+          <div className="preview-journey">{names.map((name, index) => <div className={index < 4 ? "done" : ""} key={name}><span>{index < 4 ? "✓" : index + 1}</span><b>{name}</b></div>)}</div>
+          <div className="preview-recent"><div><small>{language === "fr" ? "FIGURES RÉCENTES" : "RECENT FIGURES"}</small><b>{language === "fr" ? "Reprendre là où vous étiez" : "Resume where you left off"}</b></div><img src={asset("app-previews/ordinations.png")} alt="" /><img src={asset("app-previews/alpha_diversite.png")} alt="" /></div>
         </div>
       </div>
     </div>
   );
 }
 
-function App() {
-  const [language, setLanguage] = useState<Language>(() => navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en");
-  const [activeModule, setActiveModule] = useState("prepare");
-  const [activeGallery, setActiveGallery] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const currentModule = moduleGroups.find((item) => item.key === activeModule) ?? moduleGroups[0];
+function Workflow({ language, compact = false }: { language: Language; compact?: boolean }) {
+  const items = [
+    ["FASTQ", "OpenMetaBar", "01"], ["phyloseq", language === "fr" ? "Objet scientifique" : "Scientific object", "02"],
+    [language === "fr" ? "Préparer" : "Prepare", language === "fr" ? "Édition & filtration" : "Edition & filtering", "03"],
+    [language === "fr" ? "Explorer" : "Explore", language === "fr" ? "Description & figures" : "Description & figures", "04"],
+    [language === "fr" ? "Tester" : "Test", language === "fr" ? "Modèles & diagnostics" : "Models & diagnostics", "05"],
+    [language === "fr" ? "Restituer" : "Report", "MultiView", "06"]
+  ];
+  return <div className={compact ? "workflow compact" : "workflow"}>{items.map(([name, detail, number], index) => <div className="workflow-step" key={number}><span>{number}</span><div><b>{name}</b><small>{detail}</small></div>{index < items.length - 1 && <i />}</div>)}</div>;
+}
+
+function Landing({ language }: { language: Language }) {
+  const c = language === "fr" ? {
+    badge: "Logiciel scientifique · R/Shiny + Nextflow DSL2",
+    title: <>Du read à la figure,<br /><em>sans perdre le fil scientifique.</em></>,
+    intro: "OpenMetaBar organise le traitement amont des séquences. BarCodeR transforme les objets phyloseq en projets explorables, analysables et documentés, avec des choix méthodologiques visibles.",
+    explore: "Parcourir les 13 onglets", proof: "Examiner la démonstration publique", version: "Code examiné · BarCodeR v2.12.8",
+    numbers: [["13", "onglets documentés"], ["12", "modules d’exploration et d’analyse"], ["14", "familles de sorties avec code R"], ["5", "langues dans l’application"]],
+    workflowK: "Le parcours", workflowT: "Deux composants, un même historique analytique.", workflowP: "Le site suit la logique réelle de l’application : produire ou importer un objet, le contrôler, le préparer, explorer ses structures, tester des hypothèses puis restituer les résultats.",
+    modulesK: "Dans l’application", modulesT: "Chaque onglet a désormais sa propre page.", modulesP: "Les pages ci-dessous décrivent les entrées, les opérations, les sorties et les points de vigilance observés directement dans le code.",
+    evidenceK: "Démonstration publique", evidenceT: "Les figures sont calculées, pas inventées.", evidenceP: "La démonstration utilise l’objet public GlobalPatterns de phyloseq. Le dataset synthétique de test n’est pas utilisé comme preuve scientifique.", details: "Voir les données et les méthodes",
+    rigourK: "Conception", rigourT: "Attractif ne veut pas dire promotionnel.", rigourCards: [["Méthodes visibles", "Les paramètres de calcul sont distingués des options de rendu."], ["Limites explicites", "Chaque module indique ses prérequis et ses risques d’interprétation."], ["Traçabilité", "Dataset, provenance, historiques et scripts restent reliés."], ["Interface réelle", "Les contenus suivent les modules effectivement présents dans BarCodeR."]]
+  } : {
+    badge: "Scientific software · R/Shiny + Nextflow DSL2",
+    title: <>From reads to figures,<br /><em>without losing the scientific thread.</em></>,
+    intro: "OpenMetaBar organizes upstream sequence processing. BarCodeR turns phyloseq objects into explorable, analysable and documented projects with visible methodological choices.",
+    explore: "Browse the 13 tabs", proof: "Inspect the public demonstration", version: "Code reviewed · BarCodeR v2.12.8",
+    numbers: [["13", "documented tabs"], ["12", "exploration and analysis modules"], ["14", "output families with R code"], ["5", "languages in the application"]],
+    workflowK: "The workflow", workflowT: "Two components, one analytical history.", workflowP: "The website follows the real application logic: produce or import an object, check it, prepare it, explore its structure, test hypotheses and report results.",
+    modulesK: "Inside the application", modulesT: "Every tab now has its own page.", modulesP: "The pages below describe inputs, operations, outputs and cautions observed directly in the code.",
+    evidenceK: "Public demonstration", evidenceT: "Figures are computed, not invented.", evidenceP: "The demonstration uses the public phyloseq GlobalPatterns object. The synthetic test dataset is not used as scientific evidence.", details: "View data and methods",
+    rigourK: "Design", rigourT: "Engaging does not mean promotional.", rigourCards: [["Visible methods", "Computation parameters are separated from display options."], ["Explicit limits", "Every module states prerequisites and interpretation risks."], ["Traceability", "Dataset, provenance, histories and scripts remain connected."], ["Real interface", "Content follows modules actually present in BarCodeR."]]
+  };
+
+  return <main>
+    <section className="hero page-width">
+      <div className="hero-copy reveal"><Eyebrow>{c.badge}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.intro}</p><div className="hero-actions"><a className="button primary" href="#/application">{c.explore}<span>→</span></a><a className="button secondary" href="#/evidence">{c.proof}<span>↘</span></a></div><p className="version-line"><span />{c.version}</p></div>
+      <div className="hero-media reveal delay-1"><div className="ambient-ring" /><AppPreview language={language} /><div className="signal-card signal-one"><span>R</span><div><b>{language === "fr" ? "Code reproductible" : "Reproducible code"}</b><small>14 output families</small></div></div><div className="signal-card signal-two"><span>✓</span><div><b>{language === "fr" ? "Provenance attachée" : "Provenance attached"}</b><small>FASTQ → phyloseq → figure</small></div></div></div>
+    </section>
+    <section className="numbers-band"><div className="page-width numbers-grid">{c.numbers.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
+    <section className="section page-width reveal"><div className="section-intro"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2><p>{c.workflowP}</p></div><Workflow language={language} /></section>
+    <section className="section section-tint"><div className="page-width"><div className="section-intro reveal"><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2><p>{c.modulesP}</p></div><ModuleGrid language={language} limit={13} /></div></section>
+    <section className="section page-width evidence-teaser reveal"><div className="evidence-copy"><Eyebrow>{c.evidenceK}</Eyebrow><h2>{c.evidenceT}</h2><p>{c.evidenceP}</p><a className="text-link" href="#/evidence">{c.details}<span>→</span></a></div><div className="evidence-figure"><img src={asset("figures/globalpatterns-ordination.png")} alt={language === "fr" ? "Ordination PCoA calculée sur le dataset GlobalPatterns" : "PCoA ordination computed on the GlobalPatterns dataset"} /><span>GlobalPatterns · Bray–Curtis · PCoA</span></div></section>
+    <section className="section dark-section"><div className="page-width"><div className="section-intro light reveal"><Eyebrow>{c.rigourK}</Eyebrow><h2>{c.rigourT}</h2></div><div className="rigour-grid">{c.rigourCards.map(([title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+  </main>;
+}
+
+function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
+  return <div className="module-grid">{modules.slice(0, limit).map((module, index) => <a href={moduleHref(module.key)} className="module-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Ouvrir la page" : "Open page"}<span>↗</span></b></a>)}</div>;
+}
+
+function ApplicationIndex({ language }: { language: Language }) {
+  const c = language === "fr" ? { k: "Parcours de l’application", title: "Treize onglets, une progression scientifique lisible.", p: "Cette carte reprend l’ordre de la barre latérale de BarCodeR. Les modules transversaux restent accessibles à tout moment, tandis que le dataset actif relie le travail de préparation aux analyses.", guide: "Choisissez un onglet pour examiner ce que l’utilisateur peut y faire, ce qu’il doit fournir et ce qu’il peut en retirer." } : { k: "Application workflow", title: "Thirteen tabs, one readable scientific progression.", p: "This map follows the BarCodeR sidebar order. Cross-cutting modules remain available at all times, while the active dataset connects preparation work to analyses.", guide: "Choose a tab to inspect what users can do, what they must provide and what they can obtain." };
+  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><Workflow language={language} compact /></section><section className="section section-tint"><div className="page-width"><p className="guide-note">{c.guide}</p>{groupOrder.map(group => <div className="module-group" key={group}><div className="group-heading"><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></div>)}</div></section></main>;
+}
+
+function ModuleVisual({ module, language }: { module: AppModule; language: Language }) {
+  if (module.image) return <div className="module-visual image"><img src={asset(`app-previews/${module.image}`)} alt={`${tx(module.title, language)} — ${tx(module.kicker, language)}`} /><div><span>{language === "fr" ? "APERÇU ISSU DU DÉPÔT" : "PREVIEW FROM THE REPOSITORY"}</span><b>{tx(module.title, language)}</b></div></div>;
+  return <div className={`module-visual schematic theme-${module.group}`} role="img" aria-label={language === "fr" ? `Schéma fonctionnel de l’onglet ${tx(module.title, language)}` : `Functional diagram of the ${tx(module.title, language)} tab`}><div className="schematic-bar"><span /><span /><span /><b>BarCodeR / {tx(module.title, language)}</b></div><div className="schematic-body"><aside><strong>{module.icon}</strong>{modules.slice(0, 8).map((m) => <i className={m.key === module.key ? "active" : ""} key={m.key} />)}</aside><div className="schematic-content"><small>{tx(module.kicker, language)}</small><h3>{tx(module.title, language)}</h3><div className="schematic-cards"><span /><span /><span /></div><div className="schematic-lines"><i /><i /><i /><i /></div></div></div></div>;
+}
+
+function ModulePage({ module, language }: { module: AppModule; language: Language }) {
+  const index = modules.findIndex(m => m.key === module.key);
+  const previous = modules[(index - 1 + modules.length) % modules.length];
+  const next = modules[(index + 1) % modules.length];
+  const c = language === "fr" ? { app: "Application", what: "Ce que l’utilisateur peut faire", io: "De l’entrée à la sortie", inputs: "Entrées", operations: "Opérations", outputs: "Sorties", question: "Question directrice", modules: "Sous-modules et questions", vigilance: "Rigueur et points d’attention", source: "Confronté au code source", sourceText: "Le contenu de cette page est dérivé du module ci-dessous, et non d’une description générique du logiciel.", previous: "Onglet précédent", next: "Onglet suivant", reproduce: "Ce qui est conservé", reproText: "Le dataset et les paramètres restent rattachés à la session ou au projet. Lorsqu’un historique est proposé, il sert à relire le contexte de production de la figure ou du résultat." } : { app: "Application", what: "What users can do", io: "From input to output", inputs: "Inputs", operations: "Operations", outputs: "Outputs", question: "Guiding question", modules: "Submodules and questions", vigilance: "Rigour and cautions", source: "Checked against source code", sourceText: "This page content is derived from the module below, not from a generic software description.", previous: "Previous tab", next: "Next tab", reproduce: "What is retained", reproText: "The dataset and parameters remain attached to the session or project. Where histories are available, they support review of the context used to produce a figure or result." };
+  return <main>
+    <section className="module-hero page-width">
+      <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/application">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div><Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p><div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
+      <div className="reveal delay-1"><ModuleVisual module={module} language={language} /></div>
+    </section>
+    <section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{module.order}</Eyebrow><h2>{c.what}</h2></div><p>{tx(module.question, language)}</p></div><div className="action-grid">{module.actions.map((action, i) => <article className="action-card reveal" style={{ "--delay": `${(i % 3) * 60}ms` } as React.CSSProperties} key={action.fr}><span>{String(i + 1).padStart(2, "0")}</span><p>{tx(action, language)}</p></article>)}</div></div></section>
+    <section className="section page-width"><div className="section-intro"><Eyebrow>{c.io}</Eyebrow><h2>{c.io}</h2></div><div className="io-grid"><InfoColumn number="01" title={c.inputs} items={module.inputs} language={language} /><InfoColumn number="02" title={c.operations} items={module.actions.slice(0, 4)} language={language} accent /><InfoColumn number="03" title={c.outputs} items={module.outputs} language={language} /></div></section>
+    {module.submodules && <section className="section submodule-section"><div className="page-width"><div className="section-intro light"><Eyebrow>{c.modules}</Eyebrow><h2>{c.modules}</h2></div><div className="submodule-grid">{module.submodules.map((sub, i) => <article className="submodule-card reveal" style={{ "--delay": `${(i % 3) * 55}ms` } as React.CSSProperties} key={sub.title.fr}>{sub.image ? <img src={asset(`app-previews/${sub.image}`)} alt="" /> : <div className="submodule-placeholder"><span>{module.icon}</span><i /></div>}<div><small>{String(i + 1).padStart(2, "0")}</small><h3>{tx(sub.title, language)}</h3><p>{tx(sub.question, language)}</p><span>{tx(sub.method, language)}</span></div></article>)}</div></div></section>}
+    <section className="section page-width method-section"><div className="method-panel caution"><Eyebrow>{c.vigilance}</Eyebrow><h2>{c.vigilance}</h2><ul>{module.cautions.map(item => <li key={item.fr}><span>!</span>{tx(item, language)}</li>)}</ul></div><div className="method-panel reproducibility"><Eyebrow>{c.reproduce}</Eyebrow><h2>{c.reproduce}</h2><p>{c.reproText}</p><div className="provenance-mini"><span>dataset</span><i>→</i><span>parameters</span><i>→</i><span>history</span><i>→</i><span>output</span></div></div></section>
+    <section className="source-band"><div className="page-width"><div><Eyebrow>{c.source}</Eyebrow><h2>{c.source}</h2><p>{c.sourceText}</p></div><a href={`https://github.com/MLPosuphy/BarCodeR/blob/main/${module.source}`} target="_blank" rel="noreferrer"><span>R</span><div><small>BarCodeR/{module.source}</small><b>{language === "fr" ? "Inspecter le module" : "Inspect module"} ↗</b></div></a></div></section>
+    <nav className="page-pagination page-width" aria-label={language === "fr" ? "Navigation entre les onglets" : "Tab navigation"}><a href={moduleHref(previous.key)}><small>← {c.previous}</small><b>{tx(previous.title, language)}</b></a><a href={moduleHref(next.key)}><small>{c.next} →</small><b>{tx(next.title, language)}</b></a></nav>
+  </main>;
+}
+
+function InfoColumn({ number, title, items, language, accent = false }: { number: string; title: string; items: Localized[]; language: Language; accent?: boolean }) {
+  return <article className={accent ? "info-column accent" : "info-column"}><span>{number}</span><h3>{title}</h3><ul>{items.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></article>;
+}
+
+const publicFigures = [
+  { file: "globalpatterns-composition.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, method: { fr: "Abondances relatives · agrégation au phylum · moyenne par environnement", en: "Relative abundance · phylum aggregation · mean by environment" } },
+  { file: "globalpatterns-ordination.png", title: { fr: "Structure inter-échantillons", en: "Between-sample structure" }, method: { fr: "Bray–Curtis sur abondances relatives · PCoA", en: "Bray–Curtis on relative abundances · PCoA" } },
+  { file: "globalpatterns-alpha-diversity.png", title: { fr: "Diversité intra-échantillon", en: "Within-sample diversity" }, method: { fr: "Richesse observée et Shannon sur les comptes", en: "Observed richness and Shannon on counts" } }
+];
+
+function EvidencePage({ language }: { language: Language }) {
+  const c = language === "fr" ? { k: "Données publiques", title: "Une démonstration qui peut être recalculée.", p: "Ces trois figures proviennent de l’objet public GlobalPatterns distribué avec phyloseq et dérivé de l’étude de Caporaso et al. (2011). Elles sont produites par un script R versionné dans le dépôt du site.", synthetic: "L’objet synthétique ps_marine_exotic.rds n’est pas utilisé dans cette démonstration.", method: "Méthode", facts: [["26", "échantillons"], ["18 988", "taxons non nuls analysés"], ["9", "types d’environnements"]], trace: "Traçabilité de la démonstration", items: [["Objet source", "phyloseq::GlobalPatterns (19 216 taxons)"], ["Prétraitement", "Filtrage des taxons nuls ; abondances relatives selon la figure"], ["Script", "scripts/generate_public_data_figures.R"], ["Provenance", "public/figures/data-provenance.tsv"]], script: "Consulter le script R", data: "Lire la provenance" } : { k: "Public data", title: "A demonstration that can be recomputed.", p: "These three figures come from the public GlobalPatterns object distributed with phyloseq and derived from Caporaso et al. (2011). They are produced by a versioned R script in the website repository.", synthetic: "The synthetic ps_marine_exotic.rds object is not used in this demonstration.", method: "Method", facts: [["26", "samples"], ["18,988", "nonzero taxa analysed"], ["9", "environment types"]], trace: "Demonstration traceability", items: [["Source object", "phyloseq::GlobalPatterns (19,216 taxa)"], ["Pre-processing", "Zero-taxa filtering; relative abundance according to figure"], ["Script", "scripts/generate_public_data_figures.R"], ["Provenance", "public/figures/data-provenance.tsv"]], script: "View R script", data: "Read provenance" };
+  return <main><section className="page-hero page-width evidence-hero"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><p className="honesty-note"><span>✓</span>{c.synthetic}</p><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></section><section className="figure-gallery page-width">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section><section className="section section-tint"><div className="page-width provenance-evidence"><div><Eyebrow>{c.trace}</Eyebrow><h2>{c.trace}</h2></div><dl>{c.items.map(([term, description]) => <div key={term}><dt>{term}</dt><dd>{description}</dd></div>)}</dl><div className="evidence-links"><a className="button primary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script}<span>↗</span></a><a className="button secondary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/public/figures/data-provenance.tsv">{c.data}<span>↗</span></a></div></div></section></main>;
+}
+
+function ReproducibilityPage({ language }: { language: Language }) {
+  const c = language === "fr" ? { k: "Reproductibilité", title: "Retrouver comment un résultat a été produit.", p: "BarCodeR traite la reproductibilité comme un chemin continu : l’objet source et ses dérivés, les paramètres, l’historique de la figure et, pour les sorties compatibles, un script R autonome.", chain: [["FASTQ", "Fichiers et design du run"], ["OpenMetaBar", "Configuration, moteur et logs"], ["phyloseq", "Objet et provenance importée"], ["Dataset dérivé", "Édition et filtration journalisées"], ["Analyse", "Paramètres, seed et versions"], ["Figure", "Historique, export et code R"]], practices: "Mécanismes observés dans le code", cards: [["Projets", "Un projet regroupe les datasets, le dataset actif et les historiques de figures."], ["Lignage", "Les objets dérivés peuvent être reliés au dataset dont ils proviennent."], ["Historiques", "Les figures sauvegardées restent associées à leurs paramètres et à leur contexte."], ["Code R", "Le dispatcher couvre quatorze familles de sorties d’Exploration et d’Analyse."], ["Préférences", "Graine, résolution d’export et reprise de session sont configurables."], ["MultiView", "Les figures enregistrées peuvent être recomposées sans perdre leur identité."]], limits: "Ce que cela ne garantit pas", limitP: "Un historique complet ne rend pas automatiquement un plan expérimental valide. La qualité de l’interprétation dépend toujours du design, des données, de la base taxonomique, des hypothèses de la méthode et des choix de filtrage." } : { k: "Reproducibility", title: "Recover how a result was produced.", p: "BarCodeR treats reproducibility as a continuous path: source and derived objects, parameters, figure history and, for compatible outputs, a standalone R script.", chain: [["FASTQ", "Run files and design"], ["OpenMetaBar", "Configuration, engine and logs"], ["phyloseq", "Object and imported provenance"], ["Derived dataset", "Logged edition and filtering"], ["Analysis", "Parameters, seed and versions"], ["Figure", "History, export and R code"]], practices: "Mechanisms observed in the code", cards: [["Projects", "A project groups datasets, the active dataset and figure histories."], ["Lineage", "Derived objects can be linked to their source dataset."], ["Histories", "Saved figures remain associated with their parameters and context."], ["R code", "The dispatcher covers fourteen Exploration and Analysis output families."], ["Preferences", "Seed, export resolution and session resume are configurable."], ["MultiView", "Saved figures can be recomposed without losing their identity."]], limits: "What this does not guarantee", limitP: "A complete history does not automatically make an experimental design valid. Interpretation still depends on design, data, taxonomic database, method assumptions and filtering choices." };
+  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="provenance-chain page-width">{c.chain.map(([title, text], i) => <article className="reveal" style={{ "--delay": `${i * 60}ms` } as React.CSSProperties} key={title}><span>{String(i + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p>{i < c.chain.length - 1 && <i>→</i>}</article>)}</section><section className="section section-tint"><div className="page-width"><div className="section-intro"><Eyebrow>{c.practices}</Eyebrow><h2>{c.practices}</h2></div><div className="practice-grid">{c.cards.map(([title, text], i) => <article className="reveal" style={{ "--delay": `${(i % 3) * 55}ms` } as React.CSSProperties} key={title}><span>{String(i + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="limits-panel page-width"><span>!</span><div><Eyebrow>{c.limits}</Eyebrow><h2>{c.limits}</h2><p>{c.limitP}</p></div></section></main>;
+}
+
+function AvailabilityPage({ language }: { language: Language }) {
+  const c = language === "fr" ? { k: "Code & disponibilité", title: "Un logiciel de recherche ouvert, documenté avec prudence.", p: "Le code source de BarCodeR et celui de ce site sont consultables sur GitHub. Le site décrit l’état observé dans la version v2.12.8 et signale les éléments éditoriaux encore à finaliser.", app: "Dépôt BarCodeR", appP: "Application R/Shiny, modules d’analyse, intégration OpenMetaBar et mécanismes de projet.", site: "Dépôt du site", siteP: "Code React/Vite, figures publiques, scripts de génération et déploiement GitHub Pages.", open: "Ouvrir sur GitHub", status: "État éditorial", items: [["Version examinée", "BarCodeR v2.12.8"], ["Hébergement du site", "GitHub Pages"], ["Licence définitive", "À confirmer dans la préparation de la publication"], ["Archive versionnée et DOI", "À produire pour la version citée dans le manuscrit"], ["Infrastructure OpenMetaBar", "Cluster SSH/Slurm requis ; non fourni par ce site"]], contact: "Correspondance scientifique", contactP: "Pour citer, tester ou discuter du logiciel, utiliser le dépôt GitHub et les coordonnées institutionnelles maintenues par le projet." } : { k: "Code & availability", title: "Open research software, documented with care.", p: "BarCodeR source code and this website are available on GitHub. The website describes the state observed in version v2.12.8 and identifies editorial elements that remain to be finalized.", app: "BarCodeR repository", appP: "R/Shiny application, analysis modules, OpenMetaBar integration and project mechanisms.", site: "Website repository", siteP: "React/Vite code, public figures, generation scripts and GitHub Pages deployment.", open: "Open on GitHub", status: "Editorial status", items: [["Version reviewed", "BarCodeR v2.12.8"], ["Website hosting", "GitHub Pages"], ["Final license", "To be confirmed during publication preparation"], ["Versioned archive and DOI", "To be produced for the version cited in the manuscript"], ["OpenMetaBar infrastructure", "SSH/Slurm cluster required; not provided by this website"]], contact: "Scientific correspondence", contactP: "To cite, test or discuss the software, use the GitHub repository and institutional contact details maintained by the project." };
+  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="repository-grid page-width"><a href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer"><span>R</span><small>github.com/MLPosuphy/BarCodeR</small><h2>{c.app}</h2><p>{c.appP}</p><b>{c.open} ↗</b></a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application" target="_blank" rel="noreferrer"><span>WEB</span><small>github.com/MLPosuphy/site-BarCodeR-R-shiny-application</small><h2>{c.site}</h2><p>{c.siteP}</p><b>{c.open} ↗</b></a></section><section className="section section-tint"><div className="page-width availability-status"><div><Eyebrow>{c.status}</Eyebrow><h2>{c.status}</h2></div><dl>{c.items.map(([term, description]) => <div key={term}><dt>{term}</dt><dd>{description}</dd></div>)}</dl></div></section><section className="contact-band page-width"><span>@</span><div><Eyebrow>{c.contact}</Eyebrow><h2>{c.contact}</h2><p>{c.contactP}</p></div></section></main>;
+}
+
+function Footer({ language }: { language: Language }) {
+  return <footer><div className="page-width footer-main"><Brand /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/application">{language === "fr" ? "Application" : "Application"}</a><a href="#/evidence">{language === "fr" ? "Données" : "Data"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/availability">GitHub</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+}
+
+export default function App() {
+  const route = useHashRoute();
+  const [language, setLanguageState] = useState<Language>(() => {
+    const stored = localStorage.getItem("barcoder-site-language");
+    if (stored === "fr" || stored === "en") return stored;
+    return navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en";
+  });
+
+  const setLanguage = (next: Language) => { localStorage.setItem("barcoder-site-language", next); setLanguageState(next); };
+  const activeModule = useMemo(() => {
+    const match = route.match(/^\/application\/([^/]+)/);
+    return match ? modules.find(module => module.key === match[1]) : undefined;
+  }, [route]);
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = language === "fr"
-      ? "BarCodeR + OpenMetaBar | Analyse reproductible du métabarcoding"
-      : "BarCodeR + OpenMetaBar | Reproducible metabarcoding analysis";
-  }, [language]);
+    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Données publiques" : "Public data") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : "BarCodeR × OpenMetaBar";
+    document.title = `${label} | BarCodeR × OpenMetaBar`;
+  }, [language, route, activeModule]);
 
-  const c = language === "fr" ? {
-    nav: [["Parcours", "#workflow"], ["Dans l’application", "#inside"], ["Données publiques", "#evidence"], ["Open source", "#availability"]],
-    badge: "Logiciel scientifique · R/Shiny + Nextflow",
-    heroTitle: <>Du <em>read</em> à la figure,<br />un parcours scientifique continu.</>,
-    heroText: "OpenMetaBar automatise le traitement des séquences. BarCodeR transforme les objets phyloseq en un espace de travail interactif, organisé par projet et conçu pour garder les choix analytiques visibles.",
-    primary: "Explorer le parcours",
-    secondary: "Voir le code",
-    version: "Version observée dans le code : v2.12.8",
-    facts: [["5", "langues intégrées"], ["30", "thèmes d’interface"], ["14", "familles de sorties avec code R"], ["2", "composants indépendants et connectés"]],
-    workflowKicker: "Une chaîne cohérente",
-    workflowTitle: "Deux outils, une même histoire analytique.",
-    workflowText: "Le code de l’application ne présente pas BarCodeR comme un simple catalogue de graphiques : il organise le passage entre calcul amont, objet scientifique, décisions en aval et restitution.",
-    insideKicker: "Dans BarCodeR",
-    insideTitle: "Une interface guidée, sans masquer les méthodes.",
-    insideText: "Ces fonctionnalités et intitulés proviennent directement des modules de l’application. Sélectionnez une étape pour découvrir le parcours réel.",
-    inspectCode: "Inspecter le module source",
-    galleryKicker: "Sorties disponibles",
-    galleryTitle: "Voir ce que l’application sait réellement produire.",
-    galleryNote: "Aperçus présents dans le dépôt de l’application. Ils illustrent les interfaces et familles de sorties ; les preuves scientifiques fondées sur données publiques sont présentées ensuite.",
-    previous: "Précédent",
-    next: "Suivant",
-    evidenceKicker: "Démonstration reproductible",
-    evidenceTitle: "L’attractivité ne remplace pas la preuve.",
-    evidenceText: "Cette section est calculée par un script R versionné à partir de phyloseq::GlobalPatterns, issu de l’étude publique de Caporaso et al. (2011). L’objet synthétique fourni pour tester BarCodeR n’est pas utilisé ici.",
-    sourceData: "Données et méthode",
-    script: "Script de génération",
-    sourceObject: "objet source",
-    nonzero: "taxons non nuls analysés",
-    environments: "types d’environnements",
-    samples: "échantillons",
-    provenanceTitle: "La traçabilité est une fonctionnalité de l’application.",
-    provenanceText: "Le code actuel rattache les objets dérivés à leur projet, enregistre les historiques de figures, restaure l’état de navigation et injecte la provenance du chemin FASTQ → phyloseq → figure dans les scripts reproductibles.",
-    provenanceItems: [["Objets dérivés", "L’original reste disponible pendant que filtration et édition créent des jeux identifiés."], ["Historique", "Figures, paramètres et versions restent associés au projet."], ["Code R", "Le dispatcher couvre 14 familles de sorties d’Exploration et d’Analyse."], ["MultiView", "La bibliothèque rassemble, compare et compose les figures sauvegardées."]],
-    availabilityKicker: "Disponibilité",
-    availabilityTitle: "Un logiciel de recherche ouvert, encore en préparation éditoriale.",
-    availabilityText: "Le code source est public. La licence définitive, une version numérotée archivée et son DOI restent à finaliser avant la soumission du manuscrit.",
-    appSource: "Code de BarCodeR",
-    websiteSource: "Code de ce site",
-    correspondence: "Correspondance",
-    limitations: "Périmètre et limites",
-    limitationText: "L’exécution OpenMetaBar nécessite une infrastructure distante configurée. Les résultats dépendent de la qualité des données, des bases taxonomiques et des paramètres. Les analyses différentielles, multivariées et de réseaux demandent une interprétation experte.",
-    footer: "Logiciel de recherche développé à l’Institut Sophia Agrobiotech et PHYBAC.",
-  } : {
-    nav: [["Workflow", "#workflow"], ["Inside the app", "#inside"], ["Public data", "#evidence"], ["Open source", "#availability"]],
-    badge: "Scientific software · R/Shiny + Nextflow",
-    heroTitle: <>From <em>reads</em> to figures,<br />one continuous scientific workflow.</>,
-    heroText: "OpenMetaBar automates sequence processing. BarCodeR turns phyloseq objects into an interactive, project-based workspace designed to keep analytical choices visible.",
-    primary: "Explore the workflow",
-    secondary: "View source",
-    version: "Version observed in source: v2.12.8",
-    facts: [["5", "integrated languages"], ["30", "interface themes"], ["14", "output families with R code"], ["2", "independent, connected components"]],
-    workflowKicker: "A coherent chain",
-    workflowTitle: "Two tools, one analytical history.",
-    workflowText: "The application code does not present BarCodeR as a simple plot catalogue: it structures the path from upstream computing to scientific object, downstream decisions and reporting.",
-    insideKicker: "Inside BarCodeR",
-    insideTitle: "A guided interface that keeps methods visible.",
-    insideText: "These features and labels come directly from application modules. Select a step to explore the actual workflow.",
-    inspectCode: "Inspect the source module",
-    galleryKicker: "Available outputs",
-    galleryTitle: "See what the application can actually produce.",
-    galleryNote: "Previews stored in the application repository. They illustrate interfaces and output families; evidence based on public scientific data follows below.",
-    previous: "Previous",
-    next: "Next",
-    evidenceKicker: "Reproducible demonstration",
-    evidenceTitle: "Visual appeal does not replace evidence.",
-    evidenceText: "This section is computed by a versioned R script from phyloseq::GlobalPatterns, derived from the public study by Caporaso et al. (2011). The synthetic object supplied to test BarCodeR is not used here.",
-    sourceData: "Data and method",
-    script: "Figure-generation script",
-    sourceObject: "source object",
-    nonzero: "nonzero taxa analysed",
-    environments: "environment types",
-    samples: "samples",
-    provenanceTitle: "Traceability is an application feature.",
-    provenanceText: "Current code links derived objects to their project, records figure histories, restores navigation state and injects FASTQ → phyloseq → figure provenance into reproducible scripts.",
-    provenanceItems: [["Derived objects", "The original remains available while filtering and edition create identified datasets."], ["History", "Figures, parameters and versions remain associated with the project."], ["R code", "The dispatcher covers 14 output families across Exploration and Analysis."], ["MultiView", "The library collects, compares and composes saved figures."]],
-    availabilityKicker: "Availability",
-    availabilityTitle: "Open research software, still in editorial preparation.",
-    availabilityText: "Source code is public. A final license, archived versioned release and DOI remain to be completed before manuscript submission.",
-    appSource: "BarCodeR source",
-    websiteSource: "Website source",
-    correspondence: "Correspondence",
-    limitations: "Scope and limitations",
-    limitationText: "OpenMetaBar execution requires a configured remote infrastructure. Results depend on data quality, taxonomic databases and parameters. Differential, multivariate and network analyses require expert interpretation.",
-    footer: "Research software developed at Institut Sophia Agrobiotech and PHYBAC.",
-  };
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { nodes.forEach(node => node.classList.add("visible")); return; }
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); } }), { threshold: 0.08, rootMargin: "0px 0px -30px" });
+    nodes.forEach(node => observer.observe(node));
+    return () => observer.disconnect();
+  }, [route, language]);
 
-  const moveGallery = (direction: number) => setActiveGallery((activeGallery + direction + gallery.length) % gallery.length);
+  let page: React.ReactNode;
+  if (activeModule) page = <ModulePage module={activeModule} language={language} />;
+  else if (route === "/application") page = <ApplicationIndex language={language} />;
+  else if (route === "/evidence") page = <EvidencePage language={language} />;
+  else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
+  else if (route === "/availability") page = <AvailabilityPage language={language} />;
+  else page = <Landing language={language} />;
 
-  return (
-    <div className="site-shell" id="top">
-      <header className="site-header">
-        <Logo compact />
-        <button className="menu-button" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-        <nav className={menuOpen ? "open" : ""}>
-          {c.nav.map(([label, href]) => <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
-          <div className="language-switch" aria-label="Language"><button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button><button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button></div>
-        </nav>
-      </header>
-
-      <main>
-        <section className="hero">
-          <div className="hero-glow" />
-          <div className="hero-copy">
-            <p className="eyebrow"><span />{c.badge}</p>
-            <h1>{c.heroTitle}</h1>
-            <p className="hero-text">{c.heroText}</p>
-            <div className="hero-actions"><a className="button button--primary" href="#workflow">{c.primary}<span>↓</span></a><a className="button button--ghost" href="https://github.com/MLPosuphy/BarCodeR">{c.secondary}<span>↗</span></a></div>
-            <div className="tech-line"><span>R / Shiny</span><span>phyloseq</span><span>Nextflow DSL2</span></div>
-            <small className="version-note">{c.version}</small>
-          </div>
-          <div className="hero-visual"><AppPreview language={language} /><div className="floating-card floating-card--one"><span>✓</span><div><b>{language === "fr" ? "Provenance attachée" : "Provenance attached"}</b><small>FASTQ → phyloseq → figure</small></div></div><div className="floating-card floating-card--two"><span>R</span><div><b>{language === "fr" ? "Code reproductible" : "Reproducible code"}</b><small>14 output families</small></div></div></div>
-        </section>
-
-        <section className="facts" aria-label="Code-derived facts">{c.facts.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
-
-        <section className="section workflow" id="workflow">
-          <div className="section-heading"><p className="eyebrow"><span />{c.workflowKicker}</p><h2>{c.workflowTitle}</h2><p>{c.workflowText}</p></div>
-          <div className="workflow-track">
-            <article><span className="step-icon">01</span><small>INPUT</small><h3>FASTQ + design file</h3><p>{language === "fr" ? "Échantillons, marqueurs, amorces et métadonnées structurés avant calcul." : "Samples, markers, primers and metadata structured before computation."}</p></article>
-            <i>→</i>
-            <article className="workflow-accent"><span className="step-icon">02</span><small>OPENMETABAR</small><h3>Nextflow DSL2</h3><p>{language === "fr" ? "Configuration, lancement distant, suivi SLURM et récupération des résultats." : "Configuration, remote launch, SLURM monitoring and result retrieval."}</p></article>
-            <i>→</i>
-            <article><span className="step-icon">03</span><small>INTEROPERABILITY</small><h3>phyloseq</h3><p>{language === "fr" ? "Abondances, taxonomie, métadonnées, séquences et arbre dans un objet standard." : "Abundance, taxonomy, metadata, sequences and tree in a standard object."}</p></article>
-            <i>→</i>
-            <article className="workflow-accent-alt"><span className="step-icon">04</span><small>BARCODER</small><h3>R / Shiny</h3><p>{language === "fr" ? "Curation, exploration, tests, historiques, compositions et exports." : "Curation, exploration, tests, histories, compositions and exports."}</p></article>
-          </div>
-          <p className="source-strip"><span>{language === "fr" ? "Vérifié dans" : "Verified in"}</span><a href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/app.R">app.R ↗</a><a href="https://github.com/MLPosuphy/BarCodeR/tree/main/BarCodeR_app/modules/openmetabar">modules/openmetabar ↗</a><a href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/modules/_shared/_provenance.R">_provenance.R ↗</a></p>
-        </section>
-
-        <section className="section inside" id="inside">
-          <div className="section-heading section-heading--split"><div><p className="eyebrow"><span />{c.insideKicker}</p><h2>{c.insideTitle}</h2></div><p>{c.insideText}</p></div>
-          <div className="module-explorer">
-            <div className="module-tabs" role="tablist">{moduleGroups.map((item) => <button role="tab" aria-selected={activeModule === item.key} className={activeModule === item.key ? "active" : ""} onClick={() => setActiveModule(item.key)} key={item.key}><small>{tr(item.eyebrow, language)}</small><b>{tr(item.title, language)}</b><span>→</span></button>)}</div>
-            <div className="module-detail" role="tabpanel">
-              <div className="module-copy"><p className="eyebrow"><span />{tr(currentModule.eyebrow, language)}</p><h3>{tr(currentModule.title, language)}</h3><p>{tr(currentModule.text, language)}</p><ul>{currentModule.bullets[language].map((item) => <li key={item}><span>✓</span>{item}</li>)}</ul><a href={`https://github.com/MLPosuphy/BarCodeR/tree/main/BarCodeR_app/${currentModule.code.split(" · ")[0].replace("/*", "")}`}>{c.inspectCode} <span>↗</span></a><code>{currentModule.code}</code></div>
-              <div className="module-image"><img src={asset(currentModule.image)} alt={tr(currentModule.title, language)} /><span>{language === "fr" ? "Aperçu issu de l’application" : "Preview from the application"}</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="gallery-section">
-          <div className="gallery-head"><div><p className="eyebrow"><span />{c.galleryKicker}</p><h2>{c.galleryTitle}</h2></div><div className="gallery-controls"><button onClick={() => moveGallery(-1)} aria-label={c.previous}>←</button><span>{String(activeGallery + 1).padStart(2, "0")} / {String(gallery.length).padStart(2, "0")}</span><button onClick={() => moveGallery(1)} aria-label={c.next}>→</button></div></div>
-          <div className="gallery-stage">
-            <div className="gallery-main"><img src={asset(`app-previews/${gallery[activeGallery].image}`)} alt={tr(gallery[activeGallery].title, language)} /></div>
-            <div className="gallery-caption"><span>{gallery[activeGallery].group}</span><h3>{tr(gallery[activeGallery].title, language)}</h3><p>{c.galleryNote}</p><div className="gallery-dots">{gallery.map((item, index) => <button aria-label={tr(item.title, language)} className={index === activeGallery ? "active" : ""} onClick={() => setActiveGallery(index)} key={item.image} />)}</div></div>
-          </div>
-        </section>
-
-        <section className="section evidence" id="evidence">
-          <div className="section-heading section-heading--split"><div><p className="eyebrow"><span />{c.evidenceKicker}</p><h2>{c.evidenceTitle}</h2></div><div><p>{c.evidenceText}</p><div className="inline-links"><a href="https://doi.org/10.1073/pnas.1000080107">{c.sourceData} ↗</a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script} ↗</a></div></div></div>
-          <div className="evidence-stats"><div><strong>26</strong><span>{c.samples}</span></div><div><strong>19 216</strong><span>taxa · {c.sourceObject}</span></div><div><strong>18 988</strong><span>{c.nonzero}</span></div><div><strong>9</strong><span>{c.environments}</span></div></div>
-          <div className="evidence-grid">{publicFigures.map((figure, index) => <figure key={figure.image}><div className="figure-image"><img src={asset(`figures/${figure.image}`)} alt={tr(figure.title, language)} /></div><figcaption><span>0{index + 1}</span><div><h3>{tr(figure.title, language)}</h3><p>{tr(figure.method, language)}</p></div></figcaption></figure>)}</div>
-          <p className="evidence-note"><b>GlobalPatterns</b> · Caporaso et al. 2011 · <a href="https://doi.org/10.1073/pnas.1000080107">doi:10.1073/pnas.1000080107 ↗</a> · {language === "fr" ? "aucun test inférentiel ajouté aux figures descriptives" : "no inferential test added to descriptive figures"}</p>
-        </section>
-
-        <section className="provenance-section">
-          <div className="provenance-copy"><p className="eyebrow"><span />PROVENANCE</p><h2>{c.provenanceTitle}</h2><p>{c.provenanceText}</p><a className="button button--light" href="https://github.com/MLPosuphy/BarCodeR/blob/main/BarCodeR_app/modules/exploration/barplot/fct_barplot_repro_code.R">{c.inspectCode}<span>↗</span></a></div>
-          <div className="provenance-list">{c.provenanceItems.map(([title, text], index) => <article key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
-        </section>
-
-        <section className="section availability" id="availability">
-          <div className="availability-main"><p className="eyebrow"><span />{c.availabilityKicker}</p><h2>{c.availabilityTitle}</h2><p>{c.availabilityText}</p><div className="availability-links"><a className="resource-card" href="https://github.com/MLPosuphy/BarCodeR"><small>01 · GITHUB</small><b>{c.appSource}</b><span>R / Shiny · OpenMetaBar · modules ↗</span></a><a className="resource-card" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application"><small>02 · GITHUB PAGES</small><b>{c.websiteSource}</b><span>React · figures publiques · déploiement ↗</span></a><a className="resource-card" href="mailto:corinne.rancurel@inrae.fr"><small>03 · EMAIL</small><b>{c.correspondence}</b><span>corinne.rancurel@inrae.fr ↗</span></a></div></div>
-          <aside className="availability-aside"><details open><summary>{c.limitations}<span>+</span></summary><p>{c.limitationText}</p></details><details><summary>{language === "fr" ? "Références principales" : "Core references"}<span>+</span></summary><ol><li>Caporaso et al. (2011), PNAS. doi:10.1073/pnas.1000080107</li><li>McMurdie & Holmes (2013), PLOS ONE. doi:10.1371/journal.pone.0061217</li><li>Di Tommaso et al. (2017), Nature Biotechnology. doi:10.1038/nbt.3820</li></ol></details><details><summary>{language === "fr" ? "Avant publication" : "Before publication"}<span>+</span></summary><p>{language === "fr" ? "Déclarer la licence, créer une release versionnée, l’archiver et ajouter son DOI ainsi que les environnements testés." : "Declare the license, create and archive a versioned release, then add its DOI and tested environments."}</p></details></aside>
-        </section>
-      </main>
-
-      <footer><Logo compact /><p>{c.footer}<br />M. Léger-Pigout · S. Marguerit · S. Warot · I.-M. Viciriuc · N. Ris · E. G. J. Danchin · C. Rancurel</p><div><a href="https://github.com/MLPosuphy/BarCodeR">GitHub ↗</a><a href="#top">↑ Top</a></div></footer>
-    </div>
-  );
+  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} />{page}<Footer language={language} /></div>;
 }
-
-export default App;
