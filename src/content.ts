@@ -78,7 +78,7 @@ export const modules: AppModule[] = [
     key: "input-data", order: "04", group: "input", icon: "↓",
     title: l("Input data", "Input data"),
     kicker: l("Importer un objet ou restaurer un projet", "Import an object or restore a project"),
-    purpose: l("Charger un dataset phyloseq ou un projet BarCodeR sauvegardé, avec détection automatique et compte rendu des normalisations appliquées.", "Load a phyloseq dataset or saved BarCodeR project, with automatic detection and a report of applied normalizations."),
+    purpose: l("Importer un dataset phyloseq ou un projet BarCodeR sauvegardé, avec une détection automatique et un compte rendu des normalisations appliquées.", "Import a phyloseq dataset or saved BarCodeR project, with automatic detection and a report of applied normalizations."),
     question: l("Comment introduire proprement un objet existant dans la session ?", "How can an existing object be cleanly introduced into the session?"),
     inputs: [l("Fichier .rds", ".rds file"), l("Fichier .RData ou .rda", ".RData or .rda file")],
     actions: [l("Détecter dataset unique ou projet complet", "Detect a single dataset or full project"), l("Standardiser les caractères spéciaux des identifiants", "Standardize special characters in identifiers"), l("Remplacer les cellules vides des métadonnées par NA", "Replace empty metadata cells with NA"), l("Examiner le récapitulatif après import", "Review the post-import summary")],
@@ -127,7 +127,7 @@ export const modules: AppModule[] = [
     key: "filtration", order: "08", group: "prepare", icon: "≋",
     title: l("Filtration", "Filtering"),
     kicker: l("Construire un sous-dataset explicite", "Build an explicit subset"),
-    purpose: l("Combiner des critères taxonomiques, d’abondance, de prévalence, d’échantillons et de séquences pour produire un dataset dérivé documenté.", "Combine taxonomic, abundance, prevalence, sample and sequence criteria to produce a documented derived dataset."),
+    purpose: l("Combiner des critères taxonomiques, d’abondance, de prévalence, d’échantillons et de séquences pour produire un dataset dérivé dont les modifications restent tracées.", "Combine taxonomic, abundance, prevalence, sample and sequence criteria to produce a derived dataset whose modifications remain traceable."),
     question: l("Quelles observations doivent être conservées pour répondre proprement à la question étudiée ?", "Which observations should be retained to properly address the research question?"),
     inputs: [l("Dataset source", "Source dataset"), l("Taxonomie", "Taxonomy"), l("Métadonnées", "Metadata"), l("Séquences", "Sequences")],
     actions: [l("Garder ou exclure des groupes taxonomiques", "Keep or exclude taxonomic groups"), l("Filtrer les ASV par reads, prévalence ou abondance relative", "Filter ASVs by reads, prevalence or relative abundance"), l("Filtrer les échantillons par profondeur, richesse, nom ou métadonnée", "Filter samples by depth, richness, name or metadata"), l("Combiner plusieurs conditions de métadonnées", "Combine multiple metadata conditions"), l("Filtrer longueur, GC, ambiguïtés et homopolymères", "Filter length, GC, ambiguities and homopolymers"), l("Relire le résumé recalculé", "Review the recalculated summary")],
@@ -218,9 +218,8 @@ export const modules: AppModule[] = [
 
 export const groups = {
   orient: l("S’orienter", "Orient"),
-  input: l("Produire et importer", "Produce and import"),
+  input: l("Importer", "Import"),
   prepare: l("Contrôler et préparer", "Check and prepare"),
   analyse: l("Explorer et tester", "Explore and test"),
   report: l("Restituer et configurer", "Report and configure")
 };
-
