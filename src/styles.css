@@ -308,6 +308,49 @@ h1 em { color: var(--violet); font-style: normal; }
 .page-pagination small { color: var(--muted); display: block; font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; }
 .page-pagination b { display: block; font-family: var(--font-display); font-size: 20px; margin-top: 10px; }
 
+/* OpenMetaBar keeps its own visual identity within the shared BarCodeR site. */
+.openmetabar-page {
+  --violet: #008060;
+  --violet-dark: #00644f;
+  --violet-pale: #eaf7e8;
+  --blue: #005c7f;
+  --cyan: #75c627;
+  --green: #38a82d;
+  --dark: #263b45;
+  --dark-soft: #304c54;
+  --tint: #f2f8f5;
+  --line: #d9e9e2;
+  --line-dark: #bed9cf;
+}
+.openmetabar-route .primary-nav > a.active::after { background: linear-gradient(90deg, #75c627, #008060, #005c7f); }
+.openmetabar-route .app-tabs a.active { background: #eef8e9; border-bottom-color: #38a82d; color: #00644f; }
+.openmetabar-page .module-hero { background: linear-gradient(135deg, #f3fae9 0%, #edf9f4 52%, #f2f8fb 100%); border: 1px solid #d5e8da; border-radius: 24px; margin-block: 28px; padding-inline: clamp(26px, 4vw, 56px); position: relative; }
+.openmetabar-page .module-hero::after { background: radial-gradient(circle, rgba(0,128,96,.16) 0 1px, transparent 1.5px); background-size: 22px 22px; content: ""; inset: 0 0 0 58%; mask-image: linear-gradient(90deg, transparent, #000); opacity: .5; pointer-events: none; position: absolute; }
+.openmetabar-page .module-hero > * { position: relative; z-index: 1; }
+.openmetabar-page-logo { height: auto; margin: -8px 0 24px; object-fit: contain; object-position: left center; width: 175px; }
+.openmetabar-page .breadcrumbs a:hover { color: #00644f; }
+.openmetabar-page .question-callout { background: rgba(117,198,39,.12); border-left-color: #38a82d; }
+.openmetabar-page .question-callout > span { color: #00644f; }
+.openmetabar-page .question-callout small { color: #00644f; }
+.openmetabar-page .module-visual { border-color: #bed9cf; box-shadow: 0 22px 70px rgba(38,59,69,.14); }
+.openmetabar-page .module-visual.schematic { background: #f1f7f4; }
+.openmetabar-page .schematic-bar { background: #e6f0ec; border-bottom-color: #cddfd8; }
+.openmetabar-page .schematic-bar > span { background: #9ebbb0; }
+.openmetabar-page .schematic-bar b { color: #47665c; }
+.openmetabar-page .schematic-body aside { background: #263b45; }
+.openmetabar-page .schematic-body aside i { background: #5a7379; }
+.openmetabar-page .schematic-body aside i.active { background: #75c627; }
+.openmetabar-page .schematic-lines i:nth-child(4) { background: #bce5ad; }
+.openmetabar-page .action-card:hover { border-color: #86c98b; }
+.openmetabar-page .info-column.accent > span { color: #a9e577; }
+.openmetabar-page .method-panel.reproducibility { background: #eef8e9; border-color: #c9e4c1; }
+.openmetabar-page .method-panel.reproducibility p { color: #3c5b50; }
+.openmetabar-page .provenance-mini span { border-color: #bcdcc1; color: #00644f; }
+.openmetabar-page .source-band { background: linear-gradient(90deg, #f2f8f5, #eff8ec); }
+.openmetabar-page .source-band a:hover { border-color: #008060; }
+.openmetabar-page .source-band a > span { background: #263b45; }
+.openmetabar-page .page-pagination a:hover { background: #eef8e9; border-color: #a9d6a2; }
+
 .tutorial-hero { padding-bottom: 68px; }
 .tutorial-summary { border-bottom: 1px solid var(--line-dark); border-top: 1px solid var(--line-dark); display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 48px; max-width: 900px; }
 .tutorial-summary > div { align-items: center; display: flex; gap: 13px; min-height: 86px; padding: 16px 20px; }
@@ -475,6 +518,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .audience-frame { border-radius: 14px; gap: 30px; padding: 28px 20px; }.audience-executable { flex-direction: column; padding: 23px 20px; }.audience-grid article { padding: 24px 18px; }
   .page-hero { padding-block: 62px 50px; }.page-hero h1 { font-size: 42px; }
   .module-hero { gap: 45px; padding-block: 48px 62px; }.module-hero h1 { font-size: 45px; }.module-kicker { font-size: 18px; }
+  .openmetabar-page .module-hero { border-radius: 16px; margin-block: 14px; padding-inline: 20px; }.openmetabar-page-logo { margin-bottom: 20px; width: 145px; }
   .module-visual { min-height: 315px; }.module-visual.image img { height: 315px; }.schematic-body { grid-template-columns: 45px 1fr; min-height: 272px; }.schematic-body aside { padding-inline: 6px; }.schematic-body aside i:nth-child(n+6) { display: none; }.schematic-content { padding: 21px 16px; }.schematic-cards span { height: 62px; }
   .action-grid, .submodule-grid { grid-template-columns: 1fr; }.action-card { min-height: 100px; }
   .info-column { padding-inline: 20px; }.submodule-card > img, .submodule-placeholder { height: 205px; }
