@@ -131,12 +131,15 @@ h1 em { color: var(--violet); font-style: normal; }
 .preview-recent > div { flex: 1; }
 .preview-recent b { display: block; font-family: var(--font-display); font-size: 9px; }
 .preview-recent img { border-radius: 5px; height: 38px; object-fit: cover; width: 58px; }
-.signal-card { align-items: center; animation: settle-in .65s cubic-bezier(.2,.8,.2,1) both; background: rgba(255,255,255,.96); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 14px 36px rgba(28,34,61,.14); display: flex; gap: 10px; padding: 12px 14px; position: absolute; }
-.signal-card > span { align-items: center; background: var(--violet-pale); border-radius: 8px; color: var(--violet-dark); display: flex; font-family: var(--font-display); font-size: 13px; font-weight: 800; height: 31px; justify-content: center; width: 31px; }
-.signal-card b { display: block; font-family: var(--font-display); font-size: 12px; }
-.signal-card small { color: var(--muted); display: block; font-family: var(--font-mono); font-size: 9px; margin-top: 1px; }
+.home-screenshot-frame { aspect-ratio: 1.46 / 1; background: #f7f8fc; border: 1px solid #dfe3ee; border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; transform: rotateY(-2deg) rotateX(1deg); }
+.home-screenshot-frame img { height: 100%; object-fit: cover; object-position: left top; width: 100%; }
+.signal-card { align-items: center; animation: settle-in .65s cubic-bezier(.2,.8,.2,1) both; background: rgba(255,255,255,.97); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 14px 36px rgba(28,34,61,.14); display: flex; gap: 11px; min-width: 176px; padding: 12px 14px; position: absolute; }
+.signal-card > span { align-items: center; background: var(--violet-pale); border-radius: 8px; color: var(--violet-dark); display: flex; flex: 0 0 auto; font-family: var(--font-display); font-size: 11px; font-weight: 800; height: 34px; justify-content: center; width: 38px; }
+.signal-card b { display: block; font-family: var(--font-display); font-size: 13px; }
+.signal-card small { color: var(--muted); display: block; font-family: var(--font-mono); font-size: 11px; line-height: 1.35; margin-top: 2px; }
 .signal-one { right: -22px; top: -30px; }
-.signal-two { animation-delay: .12s; bottom: -30px; left: 28px; }
+.signal-two { animation-delay: .12s; bottom: 82px; right: -34px; }
+.signal-three { animation-delay: .24s; bottom: -30px; left: 28px; }
 @keyframes settle-in { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
 
 .numbers-band { background: var(--dark); color: white; }
@@ -166,6 +169,8 @@ h1 em { color: var(--violet); font-style: normal; }
 .workflow-step b { display: block; font-family: var(--font-display); font-size: 18px; letter-spacing: -.02em; }
 .workflow-step small { color: var(--muted); display: block; font-size: 14px; line-height: 1.45; margin-top: 6px; }
 .workflow.compact { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-top: 48px; padding: 28px 24px 12px; }
+.workflow-independence { align-items: flex-start; border-top: 1px solid var(--line-dark); color: var(--ink-soft); display: flex; font-size: 16px; gap: 13px; line-height: 1.65; margin-top: 14px; max-width: 990px; padding-top: 24px; }
+.workflow-independence > span { align-items: center; background: var(--violet-pale); border-radius: 50%; color: var(--violet-dark); display: flex; flex: 0 0 auto; font-family: var(--font-display); font-size: 13px; font-weight: 800; height: 28px; justify-content: center; margin-top: 1px; width: 28px; }
 
 .module-grid { display: grid; gap: 15px; grid-template-columns: repeat(4, 1fr); }
 .module-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; min-height: 305px; padding: 22px; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
@@ -360,7 +365,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .hero, .module-hero { gap: 45px; }
   .module-grid { grid-template-columns: repeat(3, 1fr); }
   .workflow-step { padding-right: 14px; }.workflow-step b { font-size: 16px; }
-  .signal-one { right: -8px; }
+  .signal-one, .signal-two { right: -8px; }
 }
 
 @media (max-width: 920px) {

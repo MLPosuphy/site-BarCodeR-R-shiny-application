@@ -5,6 +5,10 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
 const moduleHref = (key: string) => `#/application/${key}`;
 
+// When the real BarCodeR home screenshot is provided, place it in `public/`
+// and set this single path (for example: "app-previews/barcoder-home-real.png").
+const HOME_SCREENSHOT_PATH: string | null = null;
+
 const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
 function useHashRoute() {
@@ -113,35 +117,59 @@ function AppPreview({ language }: { language: Language }) {
   );
 }
 
+function HomeApplicationVisual({ language }: { language: Language }) {
+  if (!HOME_SCREENSHOT_PATH) return <AppPreview language={language} />;
+
+  return (
+    <div className="home-screenshot-frame">
+      <img
+        src={asset(HOME_SCREENSHOT_PATH)}
+        alt={language === "fr" ? "Page d’accueil réelle de l’application BarCodeR" : "Real BarCodeR application home page"}
+      />
+    </div>
+  );
+}
+
 function Workflow({ language, compact = false }: { language: Language; compact?: boolean }) {
-  const items = [
+  const overviewItems = [
+    [language === "fr" ? "Entrer dans BarCodeR" : "Enter BarCodeR", language === "fr" ? "Projet · données · paramètres" : "Project · data · parameters", "01"],
+    [language === "fr" ? "Lancer OpenMetaBar" : "Launch OpenMetaBar", "FASTQ · design · reference", "02"],
+    [language === "fr" ? "Suivre le calcul HPC" : "Monitor HPC computing", "Nextflow · Slurm · monitoring", "03"],
+    [language === "fr" ? "Récupérer le phyloseq" : "Retrieve the phyloseq", language === "fr" ? "Import direct dans BarCodeR" : "Direct import into BarCodeR", "04"],
+    [language === "fr" ? "Explorer & analyser" : "Explore & analyse", language === "fr" ? "Figures · statistiques · diagnostics" : "Figures · statistics · diagnostics", "05"],
+    [language === "fr" ? "Restituer" : "Report", language === "fr" ? "Historique · code R · MultiView" : "History · R code · MultiView", "06"]
+  ];
+  const applicationItems = [
     ["FASTQ", "OpenMetaBar", "01"], ["phyloseq", language === "fr" ? "Objet scientifique" : "Scientific object", "02"],
     [language === "fr" ? "Préparer" : "Prepare", language === "fr" ? "Édition & filtration" : "Edition & filtering", "03"],
     [language === "fr" ? "Explorer" : "Explore", language === "fr" ? "Description & figures" : "Description & figures", "04"],
     [language === "fr" ? "Tester" : "Test", language === "fr" ? "Modèles & diagnostics" : "Models & diagnostics", "05"],
     [language === "fr" ? "Restituer" : "Report", "MultiView", "06"]
   ];
+  const items = compact ? applicationItems : overviewItems;
   return <div className={compact ? "workflow compact" : "workflow"}>{items.map(([name, detail, number], index) => <div className="workflow-step" key={number}><span>{number}</span><div><b>{name}</b><small>{detail}</small></div>{index < items.length - 1 && <i />}</div>)}</div>;
 }
 
 function Landing({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    badge: "Logiciel scientifique · R/Shiny + Nextflow DSL2",
+    badge: "Métabarcoding intégré · du calcul HPC à l’analyse interactive",
     title: <>Du read à la figure,<br /><em>sans perdre le fil scientifique.</em></>,
-    intro: "OpenMetaBar organise le traitement amont des séquences. BarCodeR transforme les objets phyloseq en projets explorables, analysables et documentés, avec des choix méthodologiques visibles.",
-    explore: "Parcourir les 13 onglets", proof: "Examiner la démonstration publique", version: "Code examiné · BarCodeR v2.12.8",
+    intro: "OpenMetaBar orchestre le traitement reproductible des séquences sur cluster HPC. Les objets phyloseq générés sont ensuite récupérés dans BarCodeR pour contrôler, explorer et analyser les résultats au sein d’une interface guidée, tout en conservant la traçabilité des choix et des calculs.",
+    explore: "Parcourir les 13 onglets", proof: "Explorer la démo publique pour vous convaincre", version: "Versions actuelles : BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
     numbers: [["13", "onglets documentés"], ["12", "modules d’exploration et d’analyse"], ["14", "familles de sorties avec code R"], ["5", "langues dans l’application"]],
-    workflowK: "Le parcours", workflowT: "Deux composants, un même historique analytique.", workflowP: "Le site suit la logique réelle de l’application : produire ou importer un objet, le contrôler, le préparer, explorer ses structures, tester des hypothèses puis restituer les résultats.",
+    workflowK: "Le parcours analytique de vos données", workflowT: "Deux outils en symbiose pour servir un objectif commun.", workflowP: "Depuis BarCodeR, vous pouvez lancer vos analyses de métabarcoding sur votre propre cluster de calcul avec OpenMetaBar, récupérer les objets phyloseq générés, puis explorer et analyser les résultats au sein de la même application, sans avoir à écrire une seule ligne de code.",
+    workflowNote: "Les deux outils restent également disponibles indépendamment : BarCodeR peut analyser des objets phyloseq déjà constitués, tandis qu’OpenMetaBar peut être exécuté directement sur un cluster de calcul à partir de fichiers FASTQ.",
     modulesK: "Dans l’application", modulesT: "Chaque onglet a désormais sa propre page.", modulesP: "Les pages ci-dessous décrivent les entrées, les opérations, les sorties et les points de vigilance observés directement dans le code.",
     evidenceK: "Démonstration publique", evidenceT: "Les figures sont calculées, pas inventées.", evidenceP: "La démonstration utilise l’objet public GlobalPatterns de phyloseq. Le dataset synthétique de test n’est pas utilisé comme preuve scientifique.", details: "Voir les données et les méthodes",
     rigourK: "Conception", rigourT: "Attractif ne veut pas dire promotionnel.", rigourCards: [["Méthodes visibles", "Les paramètres de calcul sont distingués des options de rendu."], ["Limites explicites", "Chaque module indique ses prérequis et ses risques d’interprétation."], ["Traçabilité", "Dataset, provenance, historiques et scripts restent reliés."], ["Interface réelle", "Les contenus suivent les modules effectivement présents dans BarCodeR."]]
   } : {
-    badge: "Scientific software · R/Shiny + Nextflow DSL2",
+    badge: "Integrated metabarcoding · from HPC computing to interactive analysis",
     title: <>From reads to figures,<br /><em>without losing the scientific thread.</em></>,
-    intro: "OpenMetaBar organizes upstream sequence processing. BarCodeR turns phyloseq objects into explorable, analysable and documented projects with visible methodological choices.",
-    explore: "Browse the 13 tabs", proof: "Inspect the public demonstration", version: "Code reviewed · BarCodeR v2.12.8",
+    intro: "OpenMetaBar orchestrates reproducible sequence processing on an HPC cluster. The resulting phyloseq objects are then retrieved in BarCodeR to check, explore and analyse results through a guided interface while preserving the traceability of choices and computations.",
+    explore: "Browse the 13 tabs", proof: "Explore the public demo and see for yourself", version: "Current versions: BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
     numbers: [["13", "documented tabs"], ["12", "exploration and analysis modules"], ["14", "output families with R code"], ["5", "languages in the application"]],
-    workflowK: "The workflow", workflowT: "Two components, one analytical history.", workflowP: "The website follows the real application logic: produce or import an object, check it, prepare it, explore its structure, test hypotheses and report results.",
+    workflowK: "The analytical journey of your data", workflowT: "Two tools working in symbiosis towards one common goal.", workflowP: "From BarCodeR, you can launch metabarcoding analyses on your own computing cluster with OpenMetaBar, retrieve the generated phyloseq objects, then explore and analyse the results within the same application without writing a single line of code.",
+    workflowNote: "Both tools also remain available independently: BarCodeR can analyse previously created phyloseq objects, while OpenMetaBar can run directly on a computing cluster from FASTQ files.",
     modulesK: "Inside the application", modulesT: "Every tab now has its own page.", modulesP: "The pages below describe inputs, operations, outputs and cautions observed directly in the code.",
     evidenceK: "Public demonstration", evidenceT: "Figures are computed, not invented.", evidenceP: "The demonstration uses the public phyloseq GlobalPatterns object. The synthetic test dataset is not used as scientific evidence.", details: "View data and methods",
     rigourK: "Design", rigourT: "Engaging does not mean promotional.", rigourCards: [["Visible methods", "Computation parameters are separated from display options."], ["Explicit limits", "Every module states prerequisites and interpretation risks."], ["Traceability", "Dataset, provenance, histories and scripts remain connected."], ["Real interface", "Content follows modules actually present in BarCodeR."]]
@@ -150,10 +178,10 @@ function Landing({ language }: { language: Language }) {
   return <main>
     <section className="hero page-width">
       <div className="hero-copy reveal"><Eyebrow>{c.badge}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.intro}</p><div className="hero-actions"><a className="button primary" href="#/application">{c.explore}<span>→</span></a><a className="button secondary" href="#/evidence">{c.proof}<span>↘</span></a></div><p className="version-line"><span />{c.version}</p></div>
-      <div className="hero-media reveal delay-1"><div className="ambient-ring" /><AppPreview language={language} /><div className="signal-card signal-one"><span>R</span><div><b>{language === "fr" ? "Code reproductible" : "Reproducible code"}</b><small>14 output families</small></div></div><div className="signal-card signal-two"><span>✓</span><div><b>{language === "fr" ? "Provenance attachée" : "Provenance attached"}</b><small>FASTQ → phyloseq → figure</small></div></div></div>
+      <div className="hero-media reveal delay-1"><div className="ambient-ring" /><HomeApplicationVisual language={language} /><div className="signal-card signal-one"><span>R</span><div><b>{language === "fr" ? "Application R/Shiny" : "R/Shiny application"}</b><small>{language === "fr" ? "Analyse interactive" : "Interactive analysis"}</small></div></div><div className="signal-card signal-two"><span>HPC</span><div><b>{language === "fr" ? "Calcul sur cluster HPC" : "HPC cluster computing"}</b><small>OpenMetaBar · Nextflow</small></div></div><div className="signal-card signal-three"><span>✓</span><div><b>{language === "fr" ? "Traçabilité complète" : "Complete traceability"}</b><small>{language === "fr" ? "Du run à la figure" : "From run to figure"}</small></div></div></div>
     </section>
     <section className="numbers-band"><div className="page-width numbers-grid">{c.numbers.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
-    <section className="section page-width reveal"><div className="section-intro"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2><p>{c.workflowP}</p></div><Workflow language={language} /></section>
+    <section className="section page-width reveal"><div className="section-intro"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2><p>{c.workflowP}</p></div><Workflow language={language} /><p className="workflow-independence"><span>↗</span>{c.workflowNote}</p></section>
     <section className="section section-tint"><div className="page-width"><div className="section-intro reveal"><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2><p>{c.modulesP}</p></div><ModuleGrid language={language} limit={13} /></div></section>
     <section className="section page-width evidence-teaser reveal"><div className="evidence-copy"><Eyebrow>{c.evidenceK}</Eyebrow><h2>{c.evidenceT}</h2><p>{c.evidenceP}</p><a className="text-link" href="#/evidence">{c.details}<span>→</span></a></div><div className="evidence-figure"><img src={asset("figures/globalpatterns-ordination.png")} alt={language === "fr" ? "Ordination PCoA calculée sur le dataset GlobalPatterns" : "PCoA ordination computed on the GlobalPatterns dataset"} /><span>GlobalPatterns · Bray–Curtis · PCoA</span></div></section>
     <section className="section dark-section"><div className="page-width"><div className="section-intro light reveal"><Eyebrow>{c.rigourK}</Eyebrow><h2>{c.rigourT}</h2></div><div className="rigour-grid">{c.rigourCards.map(([title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
