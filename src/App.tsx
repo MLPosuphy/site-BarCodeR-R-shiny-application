@@ -5,9 +5,10 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
 const moduleHref = (key: string) => `#/application/${key}`;
 
-// When the real BarCodeR home screenshot is provided, place it in `public/`
-// and set this single path (for example: "app-previews/barcoder-home-real.png").
-const HOME_SCREENSHOT_PATH: string | null = null;
+// Main BarCodeR application screenshot displayed on the overview page.
+// Replacing this file in `public/app-previews/` updates the visual without
+// changing the page component.
+const HOME_SCREENSHOT_PATH: string | null = "app-previews/barcoder-home-real.png";
 
 const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
