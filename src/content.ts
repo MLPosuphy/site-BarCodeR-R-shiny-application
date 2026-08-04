@@ -28,6 +28,12 @@ export type AppModule = {
   submodules?: SubModule[];
 };
 
+export type ModuleScreen = {
+  image: string;
+  title: Localized;
+  description: Localized;
+};
+
 export const modules: AppModule[] = [
   {
     key: "accueil", order: "01", group: "orient", icon: "⌂",
@@ -215,6 +221,105 @@ export const modules: AppModule[] = [
     source: "modules/settings/mod_settings_ui.R"
   }
 ];
+
+export const moduleScreens: Record<string, ModuleScreen> = {
+  accueil: {
+    image: "barcoder-home-real.png",
+    title: l("Reprendre le projet en un regard", "Resume the project at a glance"),
+    description: l(
+      "Le tableau de bord rassemble l’état de sauvegarde, le dataset actif et ses indicateurs clés, puis matérialise la progression dans le parcours analytique pour orienter immédiatement la prochaine action.",
+      "The dashboard combines save status, the active dataset and its key indicators, then shows progress through the analytical workflow to make the next action immediately clear."
+    )
+  },
+  documentation: {
+    image: "screen-documentation.png",
+    title: l("Une documentation située dans l’interface", "Documentation embedded in the interface"),
+    description: l(
+      "L’écran organise l’aide par onglet et sous-module, ici le Barplot d’Exploration, avec deux niveaux complémentaires : un guide méthodologique pour comprendre la logique et une référence pour retrouver chaque règle.",
+      "The screen organizes help by tab and submodule, here the Exploration Barplot, with two complementary levels: a methodological guide for understanding the logic and a reference for looking up every rule."
+    )
+  },
+  openmetabar: {
+    image: "screen-openmetabar.png",
+    title: l("Préparer un run avant sa soumission", "Prepare a run before submission"),
+    description: l(
+      "Cette première étape verrouille le contexte technique — technologie, marqueur, base de référence et connexion au cluster — avant d’autoriser le choix des FASTQ et la configuration détaillée du pipeline.",
+      "This first step locks down the technical context—technology, marker, reference database and cluster connection—before enabling FASTQ selection and detailed pipeline configuration."
+    )
+  },
+  "input-data": {
+    image: "screen-input-data.png",
+    title: l("Importer un objet existant", "Import an existing object"),
+    description: l(
+      "L’onglet reçoit un objet phyloseq ou un projet sauvegardé aux formats R, détecte automatiquement son type et annonce les normalisations appliquées aux identifiants et aux métadonnées.",
+      "The tab accepts a phyloseq object or saved project in R formats, automatically detects its type and reports the normalizations applied to identifiers and metadata."
+    )
+  },
+  datasets: {
+    image: "screen-datasets.png",
+    title: l("Piloter le dataset actif et les projets", "Manage the active dataset and projects"),
+    description: l(
+      "La partie haute définit le dataset de travail global ; le registre inférieur sert à sauvegarder, recharger, dupliquer, importer ou exporter des projets et leurs jeux de données.",
+      "The upper area defines the application-wide working dataset; the registry below is used to save, reload, duplicate, import or export projects and their datasets."
+    )
+  },
+  description: {
+    image: "screen-description.png",
+    title: l("Diagnostiquer la structure du dataset", "Diagnose dataset structure"),
+    description: l(
+      "Cette vue synthétise immédiatement richesse, nombre d’échantillons, profondeur médiane et sparsité, tout en indiquant les composantes disponibles et les points d’attention avant exploration ou test.",
+      "This view immediately summarizes richness, sample count, median depth and sparsity, while indicating available components and points to review before exploration or testing."
+    )
+  },
+  "data-edition": {
+    image: "screen-data-edition.png",
+    title: l("Organiser les corrections par composante", "Organize corrections by component"),
+    description: l(
+      "Après le choix du dataset, des panneaux séparés donnent accès aux métadonnées, à l’OTU table, à la taxonomie, aux imports et exports, aux journaux et à l’enregistrement du nouvel état.",
+      "After choosing the dataset, separate panels provide access to metadata, the OTU table, taxonomy, imports and exports, logs and saving the new state."
+    )
+  },
+  exploration: {
+    image: "screen-exploration.png",
+    title: l("Construire un Barplot de façon explicite", "Build a Barplot explicitly"),
+    description: l(
+      "Le sous-module sépare le contexte du dataset des paramètres qui déclenchent un recalcul : sélection taxonomique, définition des inconnus et regroupement restent visibles avant la génération de la figure.",
+      "The submodule separates dataset context from parameters that trigger recalculation: taxonomic selection, unknown-value definition and grouping remain visible before the figure is generated."
+    )
+  },
+  analyse: {
+    image: "screen-analyse.png",
+    title: l("Paramétrer une analyse différentielle", "Configure a differential analysis"),
+    description: l(
+      "L’écran réunit le choix des datasets, des moteurs statistiques, du modèle, des corrections multiples, des effets aléatoires et de la graine afin de rendre l’exécution relisible et reproductible.",
+      "The screen brings together dataset selection, statistical engines, model settings, multiple-testing corrections, random effects and the seed so execution remains reviewable and reproducible."
+    )
+  },
+  multiview: {
+    image: "screen-multiview.png",
+    title: l("Retrouver et comparer les figures enregistrées", "Retrieve and compare saved figures"),
+    description: l(
+      "La bibliothèque combine indicateurs, recherche, période, tri, favoris et filtres par type avec une galerie de résultats, afin de sélectionner plusieurs figures sans perdre leur dataset ni leur contexte analytique.",
+      "The library combines indicators, search, date range, sorting, favorites and type filters with a results gallery, allowing several figures to be selected without losing their dataset or analytical context."
+    )
+  },
+  "app-theme": {
+    image: "screen-app-theme.png",
+    title: l("Choisir un thème en contrôlant sa lisibilité", "Choose a theme while checking readability"),
+    description: l(
+      "Les presets sont classés par familles chromatiques et accompagnés d’un aperçu des composants ; le panneau de lisibilité vérifie en parallèle les contrastes WCAG des principaux couples texte-fond.",
+      "Presets are grouped into color families and paired with a component preview; the readability panel simultaneously checks WCAG contrast for the main text-background pairs."
+    )
+  },
+  parametres: {
+    image: "screen-parametres.png",
+    title: l("Rendre le comportement de session prévisible", "Make session behavior predictable"),
+    description: l(
+      "Les préférences globales contrôlent ici la sauvegarde automatique, la reprise du dernier onglet et les choix appliqués au démarrage, notamment la langue et le thème de l’interface.",
+      "Global preferences control automatic saving, restoration of the last tab and the choices applied at startup, including interface language and theme."
+    )
+  }
+};
 
 export const groups = {
   orient: l("S’orienter", "Orient"),

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { groups, modules, type AppModule, type Language, type Localized } from "./content";
+import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
@@ -183,6 +183,11 @@ function ApplicationIndex({ language }: { language: Language }) {
 }
 
 function ModuleVisual({ module, language }: { module: AppModule; language: Language }) {
+  const screen = moduleScreens[module.key];
+  if (screen) {
+    const imagePath = asset(`app-previews/${screen.image}`);
+    return <figure className="module-visual screen-preview"><a href={imagePath} target="_blank" rel="noreferrer"><img src={imagePath} alt={`${tx(screen.title, language)} — ${tx(screen.description, language)}`} decoding="async" /><span>{language === "fr" ? "Voir en pleine résolution" : "View full resolution"}<i>↗</i></span></a><figcaption><small>{language === "fr" ? "CAPTURE DE L’APPLICATION" : "APPLICATION SCREEN"}</small><b>{tx(screen.title, language)}</b><p>{tx(screen.description, language)}</p></figcaption></figure>;
+  }
   if (module.image) return <div className="module-visual image"><img src={asset(`app-previews/${module.image}`)} alt={`${tx(module.title, language)} — ${tx(module.kicker, language)}`} /><div><span>{language === "fr" ? "APERÇU ISSU DU DÉPÔT" : "PREVIEW FROM THE REPOSITORY"}</span><b>{tx(module.title, language)}</b></div></div>;
   return <div className={`module-visual schematic theme-${module.group}`} role="img" aria-label={language === "fr" ? `Schéma fonctionnel de l’onglet ${tx(module.title, language)}` : `Functional diagram of the ${tx(module.title, language)} tab`}><div className="schematic-bar"><span /><span /><span /><b>BarCodeR / {tx(module.title, language)}</b></div><div className="schematic-body"><aside><strong>{module.icon}</strong>{modules.slice(0, 8).map((m) => <i className={m.key === module.key ? "active" : ""} key={m.key} />)}</aside><div className="schematic-content"><small>{tx(module.kicker, language)}</small><h3>{tx(module.title, language)}</h3><div className="schematic-cards"><span /><span /><span /></div><div className="schematic-lines"><i /><i /><i /><i /></div></div></div></div>;
 }
