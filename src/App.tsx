@@ -32,8 +32,9 @@ function useHashRoute() {
 function Brand() {
   return (
     <a className="brand" href="#/" aria-label="BarCodeR et OpenMetaBar — accueil du site">
-      <img src={asset("app-previews/barcoder-logo.png")} alt="" />
-      <span><strong>BarCodeR</strong><i>×</i><strong>OpenMetaBar</strong></span>
+      <img className="brand-barcoder" src={asset("app-previews/barcoder-logo.png")} alt="BarCodeRShiny" />
+      <span className="brand-separator" aria-hidden="true">×</span>
+      <img className="brand-openmetabar" src={asset("app-previews/openmetabar-logo.png")} alt="OpenMetaBar" />
     </a>
   );
 }
@@ -41,54 +42,31 @@ function Brand() {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    overview: "Vue d’ensemble", application: "Parcours de l’application", evidence: "Données publiques", reproducibility: "Reproductibilité", code: "Code & disponibilité", appLabel: "Onglets de BarCodeR"
+    overview: "Vue d’ensemble", application: "Processus analytique", evidence: "Données publiques", reproducibility: "Reproductibilité", code: "Code & disponibilité"
   } : {
-    overview: "Overview", application: "Application workflow", evidence: "Public data", reproducibility: "Reproducibility", code: "Code & availability", appLabel: "BarCodeR tabs"
+    overview: "Overview", application: "Analytical process", evidence: "Public data", reproducibility: "Reproducibility", code: "Code & availability"
   };
 
   useEffect(() => setOpen(false), [route]);
 
-  useEffect(() => {
-    const activeTab = document.querySelector<HTMLElement>(".app-tabs a.active");
-    if (!activeTab) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    activeTab.scrollIntoView({
-      behavior: reducedMotion ? "auto" : "smooth",
-      block: "nearest",
-      inline: "center"
-    });
-  }, [route]);
-
   return (
-    <>
-      <header className="site-header">
-        <Brand />
-        <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={language === "fr" ? "Ouvrir le menu" : "Open menu"}>
-          <span /><span />
-        </button>
-        <nav className={open ? "primary-nav open" : "primary-nav"} aria-label="Navigation principale">
-          <a className={route === "/" ? "active" : ""} href="#/">{c.overview}</a>
-          <a className={route.startsWith("/application") ? "active" : ""} href="#/application">{c.application}</a>
-          <a className={route === "/evidence" ? "active" : ""} href="#/evidence">{c.evidence}</a>
-          <a className={route === "/reproducibility" ? "active" : ""} href="#/reproducibility">{c.reproducibility}</a>
-          <a className={route === "/availability" ? "active" : ""} href="#/availability">{c.code}</a>
-          <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
-            <button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button>
-            <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
-          </div>
-        </nav>
-      </header>
-      <nav className="app-tabs" aria-label={c.appLabel}>
-        <span className="app-tabs-label">{c.appLabel}</span>
-        <div className="app-tabs-scroll">
-          {modules.map((module) => (
-            <a key={module.key} href={moduleHref(module.key)} className={route === `/application/${module.key}` ? "active" : ""}>
-              <span>{module.order}</span>{tx(module.title, language)}
-            </a>
-          ))}
+    <header className="site-header">
+      <Brand />
+      <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={language === "fr" ? "Ouvrir le menu" : "Open menu"}>
+        <span /><span />
+      </button>
+      <nav className={open ? "primary-nav open" : "primary-nav"} aria-label="Navigation principale">
+        <a className={route === "/" ? "active" : ""} href="#/">{c.overview}</a>
+        <a className={route.startsWith("/application") ? "active" : ""} href="#/application">{c.application}</a>
+        <a className={route === "/evidence" ? "active" : ""} href="#/evidence">{c.evidence}</a>
+        <a className={route === "/reproducibility" ? "active" : ""} href="#/reproducibility">{c.reproducibility}</a>
+        <a className={route === "/availability" ? "active" : ""} href="#/availability">{c.code}</a>
+        <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
+          <button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button>
+          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
         </div>
       </nav>
-    </>
+    </header>
   );
 }
 
@@ -156,23 +134,29 @@ function Landing({ language }: { language: Language }) {
     badge: "Métabarcoding intégré · du calcul HPC à l’analyse interactive",
     title: <>Du read à la figure,<br /><em>sans perdre le fil scientifique.</em></>,
     intro: "OpenMetaBar orchestre le traitement reproductible des séquences sur cluster HPC. Les objets phyloseq générés sont ensuite récupérés dans BarCodeR pour contrôler, explorer et analyser les résultats au sein d’une interface guidée, tout en conservant la traçabilité des choix et des calculs.",
-    explore: "Parcourir les 13 onglets", proof: "Explorer la démo publique pour vous convaincre", version: "Versions actuelles : BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
+    explore: "Découvrir le processus analytique", proof: "Explorer la démo publique pour vous convaincre", version: "Versions actuelles : BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
     numbers: [["13", "onglets documentés"], ["12", "modules d’exploration et d’analyse"], ["14", "familles de sorties avec code R"], ["5", "langues dans l’application"]],
     workflowK: "Le parcours analytique de vos données", workflowT: "Deux outils en symbiose pour servir un objectif commun.", workflowP: "Depuis BarCodeR, vous pouvez lancer vos analyses de métabarcoding sur votre propre cluster de calcul avec OpenMetaBar, récupérer les objets phyloseq générés, puis explorer et analyser les résultats au sein de la même application, sans avoir à écrire une seule ligne de code.",
     workflowNote: "Les deux outils restent également disponibles indépendamment : BarCodeR peut analyser des objets phyloseq déjà constitués, tandis qu’OpenMetaBar peut être exécuté directement sur un cluster de calcul à partir de fichiers FASTQ.",
     modulesK: "Dans l’application", modulesT: "Chaque onglet de l’application correspond à une étape du flux analytique de vos données.", modulesP: "Les pages ci-dessous décrivent les entrées, les opérations, les sorties et les points de vigilance observés directement dans le code.",
-    rigourK: "Conception", rigourT: "Attractif ne veut pas dire promotionnel.", rigourCards: [["Méthodes visibles", "Les paramètres de calcul sont distingués des options de rendu."], ["Limites explicites", "Chaque module indique ses prérequis et ses risques d’interprétation."], ["Traçabilité", "Dataset, provenance, historiques et scripts restent reliés."], ["Interface réelle", "Les contenus suivent les modules effectivement présents dans BarCodeR."]],
+    audienceK: "Publics visés", audienceT: "Une même application pour relier expertise biologique et analyse bioinformatique.", audienceP: "BarCodeR × OpenMetaBar s’adresse aux personnes qui produisent, accompagnent ou interprètent des données de métabarcoding, qu’elles programment quotidiennement ou non.",
+    audienceExeT: "Une application Windows prête à lancer",
+    audienceExeP: "La distribution autonome au format .exe réduit la barrière d’installation : l’utilisateur accède à l’interface BarCodeR sans devoir préparer lui-même un environnement R. Le traitement des reads avec OpenMetaBar reste confié à un cluster HPC configuré ; un objet phyloseq existant peut aussi être analysé directement.",
+    audienceCards: [["Biologistes & écologues", "Explorer leurs données, tester des hypothèses et produire des figures sans écrire de code pour les analyses courantes."], ["Bioinformaticiens & plateformes", "Standardiser le passage des FASTQ aux objets phyloseq, conserver les paramètres et transmettre des résultats prêts à interpréter."], ["Équipes de recherche", "Partager un cadre commun entre profils techniques et thématiques, documenter les choix et faciliter la reprise d’un projet."]],
     citationK: "Science ouverte · communauté", citationT: "Merci de faire vivre l’écosystème BarCodeR × OpenMetaBar.", citationP: "Si BarCodeR ou OpenMetaBar contribue à vos analyses, à vos résultats ou à vos publications, merci de citer les outils concernés. Chaque citation soutient leur visibilité, leur maintenance et leur développement au service de la communauté scientifique."
   } : {
     badge: "Integrated metabarcoding · from HPC computing to interactive analysis",
     title: <>From reads to figures,<br /><em>without losing the scientific thread.</em></>,
     intro: "OpenMetaBar orchestrates reproducible sequence processing on an HPC cluster. The resulting phyloseq objects are then retrieved in BarCodeR to check, explore and analyse results through a guided interface while preserving the traceability of choices and computations.",
-    explore: "Browse the 13 tabs", proof: "Explore the public demo and see for yourself", version: "Current versions: BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
+    explore: "Explore the analytical process", proof: "Explore the public demo and see for yourself", version: "Current versions: BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
     numbers: [["13", "documented tabs"], ["12", "exploration and analysis modules"], ["14", "output families with R code"], ["5", "languages in the application"]],
     workflowK: "The analytical journey of your data", workflowT: "Two tools working in symbiosis towards one common goal.", workflowP: "From BarCodeR, you can launch metabarcoding analyses on your own computing cluster with OpenMetaBar, retrieve the generated phyloseq objects, then explore and analyse the results within the same application without writing a single line of code.",
     workflowNote: "Both tools also remain available independently: BarCodeR can analyse previously created phyloseq objects, while OpenMetaBar can run directly on a computing cluster from FASTQ files.",
     modulesK: "Inside the application", modulesT: "Each application tab represents a step in the analytical workflow of your data.", modulesP: "The pages below describe inputs, operations, outputs and cautions observed directly in the code.",
-    rigourK: "Design", rigourT: "Engaging does not mean promotional.", rigourCards: [["Visible methods", "Computation parameters are separated from display options."], ["Explicit limits", "Every module states prerequisites and interpretation risks."], ["Traceability", "Dataset, provenance, histories and scripts remain connected."], ["Real interface", "Content follows modules actually present in BarCodeR."]],
+    audienceK: "Intended users", audienceT: "One application connecting biological expertise and bioinformatics analysis.", audienceP: "BarCodeR × OpenMetaBar is designed for people who produce, support or interpret metabarcoding data, whether or not they program every day.",
+    audienceExeT: "A ready-to-launch Windows application",
+    audienceExeP: "The standalone .exe distribution lowers the installation barrier: users can access the BarCodeR interface without preparing an R environment themselves. Read processing with OpenMetaBar still relies on a configured HPC cluster; existing phyloseq objects can also be analysed directly.",
+    audienceCards: [["Biologists & ecologists", "Explore data, test hypotheses and produce figures without writing code for routine analyses."], ["Bioinformaticians & core facilities", "Standardise the path from FASTQ files to phyloseq objects, retain parameters and deliver results ready for interpretation."], ["Research teams", "Share a common framework across technical and domain profiles, document choices and make projects easier to resume."]],
     citationK: "Open science · community", citationT: "Thank you for supporting the BarCodeR × OpenMetaBar ecosystem.", citationP: "If BarCodeR or OpenMetaBar contributes to your analyses, results or publications, please cite the tools you use. Each citation supports their visibility, maintenance and continued development for the scientific community."
   };
 
@@ -184,7 +168,7 @@ function Landing({ language }: { language: Language }) {
     <section className="numbers-band"><div className="page-width numbers-grid">{c.numbers.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
     <section className="section page-width reveal"><div className="section-intro"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2><p>{c.workflowP}</p></div><Workflow language={language} /><p className="workflow-independence"><span>↗</span>{c.workflowNote}</p></section>
     <section className="section section-tint"><div className="page-width"><div className="section-intro reveal"><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2><p>{c.modulesP}</p></div><ModuleGrid language={language} limit={13} /></div></section>
-    <section className="section dark-section"><div className="page-width"><div className="section-intro light reveal"><Eyebrow>{c.rigourK}</Eyebrow><h2>{c.rigourT}</h2></div><div className="rigour-grid">{c.rigourCards.map(([title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+    <section className="section audience-section"><div className="page-width audience-frame reveal"><div className="audience-intro"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div><div className="audience-executable"><span>.exe</span><div><h3>{c.audienceExeT}</h3><p>{c.audienceExeP}</p></div></div><div className="audience-grid">{c.audienceCards.map(([title, text], index) => <article style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
     <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">×</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p></div></div></section>
   </main>;
 }
@@ -194,8 +178,8 @@ function ModuleGrid({ language, limit }: { language: Language; limit?: number })
 }
 
 function ApplicationIndex({ language }: { language: Language }) {
-  const c = language === "fr" ? { k: "Parcours de l’application", title: "Treize onglets, une progression scientifique lisible.", p: "Cette carte reprend l’ordre de la barre latérale de BarCodeR. Les modules transversaux restent accessibles à tout moment, tandis que le dataset actif relie le travail de préparation aux analyses.", guide: "Choisissez un onglet pour examiner ce que l’utilisateur peut y faire, ce qu’il doit fournir et ce qu’il peut en retirer." } : { k: "Application workflow", title: "Thirteen tabs, one readable scientific progression.", p: "This map follows the BarCodeR sidebar order. Cross-cutting modules remain available at all times, while the active dataset connects preparation work to analyses.", guide: "Choose a tab to inspect what users can do, what they must provide and what they can obtain." };
-  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><Workflow language={language} compact /></section><section className="section section-tint"><div className="page-width"><p className="guide-note">{c.guide}</p>{groupOrder.map(group => <div className="module-group" key={group}><div className="group-heading"><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></div>)}</div></section></main>;
+  const c = language === "fr" ? { k: "Processus analytique au sein de l’application", title: "Tous les onglets, organisés selon le cheminement de vos données.", p: "De l’orientation dans l’application à la restitution des résultats, cette page réunit les treize onglets de BarCodeR dans leur logique analytique. Le dataset actif assure la continuité entre préparation, exploration, analyses et sorties.", guide: "Sélectionnez un onglet pour voir ses entrées, ses opérations, ses résultats et ses points de vigilance." } : { k: "Analytical process within the application", title: "Every tab, organised around the journey of your data.", p: "From initial orientation to reporting results, this page brings together all thirteen BarCodeR tabs in their analytical sequence. The active dataset connects preparation, exploration, analyses and outputs.", guide: "Select a tab to review its inputs, operations, results and cautions." };
+  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="section section-tint process-section"><div className="page-width"><p className="guide-note">{c.guide}</p>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></div>)}</div></section></main>;
 }
 
 function ModuleVisual({ module, language }: { module: AppModule; language: Language }) {
@@ -207,7 +191,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   const index = modules.findIndex(m => m.key === module.key);
   const previous = modules[(index - 1 + modules.length) % modules.length];
   const next = modules[(index + 1) % modules.length];
-  const c = language === "fr" ? { app: "Application", what: "Ce que l’utilisateur peut faire", io: "De l’entrée à la sortie", inputs: "Entrées", operations: "Opérations", outputs: "Sorties", question: "Question directrice", modules: "Sous-modules et questions", vigilance: "Rigueur et points d’attention", source: "Confronté au code source", sourceText: "Le contenu de cette page est dérivé du module ci-dessous, et non d’une description générique du logiciel.", previous: "Onglet précédent", next: "Onglet suivant", reproduce: "Ce qui est conservé", reproText: "Le dataset et les paramètres restent rattachés à la session ou au projet. Lorsqu’un historique est proposé, il sert à relire le contexte de production de la figure ou du résultat." } : { app: "Application", what: "What users can do", io: "From input to output", inputs: "Inputs", operations: "Operations", outputs: "Outputs", question: "Guiding question", modules: "Submodules and questions", vigilance: "Rigour and cautions", source: "Checked against source code", sourceText: "This page content is derived from the module below, not from a generic software description.", previous: "Previous tab", next: "Next tab", reproduce: "What is retained", reproText: "The dataset and parameters remain attached to the session or project. Where histories are available, they support review of the context used to produce a figure or result." };
+  const c = language === "fr" ? { app: "Processus analytique", what: "Ce que l’utilisateur peut faire", io: "De l’entrée à la sortie", inputs: "Entrées", operations: "Opérations", outputs: "Sorties", question: "Question directrice", modules: "Sous-modules et questions", vigilance: "Rigueur et points d’attention", source: "Confronté au code source", sourceText: "Le contenu de cette page est dérivé du module ci-dessous, et non d’une description générique du logiciel.", previous: "Onglet précédent", next: "Onglet suivant", reproduce: "Ce qui est conservé", reproText: "Le dataset et les paramètres restent rattachés à la session ou au projet. Lorsqu’un historique est proposé, il sert à relire le contexte de production de la figure ou du résultat." } : { app: "Analytical process", what: "What users can do", io: "From input to output", inputs: "Inputs", operations: "Operations", outputs: "Outputs", question: "Guiding question", modules: "Submodules and questions", vigilance: "Rigour and cautions", source: "Checked against source code", sourceText: "This page content is derived from the module below, not from a generic software description.", previous: "Previous tab", next: "Next tab", reproduce: "What is retained", reproText: "The dataset and parameters remain attached to the session or project. Where histories are available, they support review of the context used to produce a figure or result." };
   return <main>
     <section className="module-hero page-width">
       <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/application">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div><Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p><div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
@@ -267,7 +251,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Données publiques" : "Public data") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Parcours de l’application" : "Application workflow") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
+    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Données publiques" : "Public data") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Processus analytique au sein de l’application" : "Analytical process within the application") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR × OpenMetaBar`;
   }, [language, route, activeModule]);
 
