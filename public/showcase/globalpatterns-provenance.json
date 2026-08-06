@@ -1,0 +1,33 @@
+{
+  "dataset": {
+    "name": "GlobalPatterns",
+    "source_object": "phyloseq::GlobalPatterns",
+    "primary_reference": "Caporaso et al. 2011, PNAS, doi:10.1073/pnas.1000080107",
+    "samples": 26,
+    "source_taxa": 19216,
+    "analyzed_nonzero_taxa": 18988,
+    "environment_types": 9
+  },
+  "figures": {
+    "composition": {
+      "file": "globalpatterns-composition.png",
+      "preparation": ["remove zero-sum samples", "remove zero-sum taxa", "relative abundance per sample"],
+      "analysis": ["tax_glom at Phylum rank", "retain eight most abundant phyla", "collapse remaining phyla into Other"],
+      "export": {"width_inches": 11, "height_inches": 7, "dpi": 180}
+    },
+    "ordination": {
+      "file": "globalpatterns-ordination.png",
+      "preparation": ["remove zero-sum samples", "remove zero-sum taxa", "relative abundance per sample"],
+      "analysis": ["Bray-Curtis dissimilarity", "PCoA", "colour samples by SampleType"],
+      "export": {"width_inches": 10, "height_inches": 7, "dpi": 180}
+    },
+    "alpha_diversity": {
+      "file": "globalpatterns-alpha-diversity.png",
+      "preparation": ["remove zero-sum samples", "remove zero-sum taxa", "retain count scale"],
+      "analysis": ["Observed richness", "Shannon diversity", "join SampleType metadata", "descriptive boxplots and sample points"],
+      "export": {"width_inches": 12, "height_inches": 6.8, "dpi": 180}
+    }
+  },
+  "generated_by": "scripts/generate_public_data_figures.R",
+  "site_release": "Lot 8"
+}

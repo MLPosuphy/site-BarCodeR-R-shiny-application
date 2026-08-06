@@ -58,7 +58,7 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
       <nav className={open ? "primary-nav open" : "primary-nav"} aria-label={language === "fr" ? "Navigation principale" : "Main navigation"}>
         <a className={route === "/" ? "active" : ""} href="#/">{c.home}</a>
         <a className={route === "/functioning" || route.startsWith("/application") ? "active" : ""} href="#/functioning">{c.functioning}</a>
-        <a className={route === "/analyses" ? "active" : ""} href="#/analyses">{c.analyses}</a>
+        <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
         <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
         <a className={route === "/documentation" ? "active" : ""} href="#/documentation">{c.documentation}</a>
         <a className={route === "/download" || route === "/availability" ? "active" : ""} href="#/download">{c.download}</a>
@@ -167,7 +167,7 @@ function Landing({ language }: { language: Language }) {
       ["Structure", "Comment mes échantillons s’organisent-ils ?", "Ordinations, distances, stress et robustesse."],
       ["Hypothèses", "Une variable explique-t-elle les différences ?", "PERMANOVA accompagnée du contrôle de dispersion."],
       ["Taxons", "Quels taxons sont associés à une condition ?", "Cinq moteurs différentiels et comparaison de concordance."],
-      ["Matrices", "Deux marqueurs racontent-ils la même histoire ?", "Mantel, Procrustes, RV, co-inertie et STATIS."]
+      ["Matrices", "Deux marqueurs racontent-ils la même histoire ?", "Mantel, Procrustes, RV, co-inertie et MCOA."]
     ],
     questionsAction: "Parcourir toutes les analyses",
     strengthsK: "Ce que BarCodeR ajoute aux calculs",
@@ -182,6 +182,7 @@ function Landing({ language }: { language: Language }) {
     proofT: "Vos résultats restent associés à leur contexte.",
     proofP: "MultiView rassemble les figures sauvegardées, leurs paramètres et leur provenance pour construire une planche réutilisable. L’objectif n’est pas seulement de générer une image, mais de pouvoir expliquer comment elle a été obtenue.",
     proofAction: "Découvrir MultiView",
+    showcaseAction: "Voir les cas d’usage",
     audienceK: "Quatre usages, un même socle",
     audienceT: "Un point de rencontre entre expertise biologique, statistiques et bioinformatique.",
     audienceP: "Chaque profil peut entrer par le niveau qui lui convient, tout en partageant les mêmes objets, paramètres et résultats.",
@@ -236,7 +237,7 @@ function Landing({ language }: { language: Language }) {
       ["Structure", "How are my samples organised?", "Ordinations, distances, stress and robustness."],
       ["Hypotheses", "Does a variable explain the differences?", "PERMANOVA accompanied by a dispersion check."],
       ["Taxa", "Which taxa are associated with a condition?", "Five differential engines and concordance comparison."],
-      ["Matrices", "Do two markers tell the same story?", "Mantel, Procrustes, RV, co-inertia and STATIS."]
+      ["Matrices", "Do two markers tell the same story?", "Mantel, Procrustes, RV, co-inertia and MCOA."]
     ],
     questionsAction: "Browse all analyses",
     strengthsK: "What BarCodeR adds to computations",
@@ -251,6 +252,7 @@ function Landing({ language }: { language: Language }) {
     proofT: "Your results remain linked to their context.",
     proofP: "MultiView brings together saved figures, their parameters and provenance to build a reusable panel. The aim is not only to generate an image, but to explain how it was obtained.",
     proofAction: "Discover MultiView",
+    showcaseAction: "View use cases",
     audienceK: "Four uses, one shared foundation",
     audienceT: "A meeting point for biological expertise, statistics and bioinformatics.",
     audienceP: "Each profile can enter at the appropriate level while sharing the same objects, parameters and results.",
@@ -337,7 +339,7 @@ function Landing({ language }: { language: Language }) {
     <section className="home-proof-section">
       <div className="page-width home-proof-grid reveal">
         <div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /><div className="proof-chip proof-chip-one">Barplot</div><div className="proof-chip proof-chip-two">Ordination</div><div className="proof-chip proof-chip-three">Differential</div></div>
-        <div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a></div>
+        <div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="button tertiary" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
       </div>
     </section>
 
@@ -1530,9 +1532,141 @@ type DocumentationManifest = {
   sections: string[];
 };
 
+type DocumentationSection = "guide" | "reference";
+type DocumentationProfile = "all" | "biology" | "bioinformatics" | "platform" | "development";
+
+type DocumentationTarget = {
+  id: string;
+  module: string;
+  section: DocumentationSection;
+  anchor?: string;
+  title: Localized;
+  description: Localized;
+  profiles: DocumentationProfile[];
+  keywords: Localized;
+};
+
+const documentationTargets: DocumentationTarget[] = [
+  {
+    id: "import",
+    module: "input-data",
+    section: "guide",
+    anchor: "section-5",
+    title: { fr: "Importer un objet phyloseq", en: "Import a phyloseq object" },
+    description: { fr: "Formats acceptés, détection du contenu et différence entre dataset et projet.", en: "Accepted formats, content detection and the difference between a dataset and a project." },
+    profiles: ["biology", "bioinformatics"],
+    keywords: { fr: "import rds rdata phyloseq fichier entrée", en: "import rds rdata phyloseq file input" }
+  },
+  {
+    id: "projects",
+    module: "datasets",
+    section: "guide",
+    anchor: "section-3",
+    title: { fr: "Comprendre datasets et projets", en: "Understand datasets and projects" },
+    description: { fr: "Dataset actif, registre, sessions, projets et organisation des versions dérivées.", en: "Active dataset, registry, sessions, projects and organisation of derived versions." },
+    profiles: ["biology", "bioinformatics", "platform"],
+    keywords: { fr: "dataset projet registre session actif lignée version", en: "dataset project registry session active lineage version" }
+  },
+  {
+    id: "audit",
+    module: "description",
+    section: "guide",
+    anchor: "section-6",
+    title: { fr: "Auditer les données avant analyse", en: "Audit data before analysis" },
+    description: { fr: "Profondeur, richesse, sparsité, taxonomie, métadonnées, séquences et outliers.", en: "Depth, richness, sparsity, taxonomy, metadata, sequences and outliers." },
+    profiles: ["biology", "bioinformatics"],
+    keywords: { fr: "diagnostic qualité profondeur richesse sparsité outlier taxonomie", en: "diagnostic quality depth richness sparsity outlier taxonomy" }
+  },
+  {
+    id: "edit",
+    module: "data-edition",
+    section: "guide",
+    anchor: "section-2",
+    title: { fr: "Corriger ou compléter un objet", en: "Correct or complete an object" },
+    description: { fr: "Édition des composants, modifications immédiates, historique et annulation.", en: "Component editing, immediate changes, history and undo." },
+    profiles: ["bioinformatics"],
+    keywords: { fr: "édition correction otu taxonomie métadonnées séquences arbre historique", en: "editing correction otu taxonomy metadata sequences tree history" }
+  },
+  {
+    id: "filter",
+    module: "filtration",
+    section: "guide",
+    anchor: "section-3",
+    title: { fr: "Filtrer sans perdre la provenance", en: "Filter without losing provenance" },
+    description: { fr: "Ordre des filtres, abondance, prévalence, taxonomie, séquences et création d’un dérivé.", en: "Filter order, abundance, prevalence, taxonomy, sequences and creation of a derived dataset." },
+    profiles: ["biology", "bioinformatics"],
+    keywords: { fr: "filtration abondance prévalence taxonomie séquence dérivé provenance", en: "filter abundance prevalence taxonomy sequence derived provenance" }
+  },
+  {
+    id: "explore",
+    module: "exploration",
+    section: "guide",
+    anchor: "section-4",
+    title: { fr: "Explorer les communautés", en: "Explore communities" },
+    description: { fr: "Composition taxonomique, diversité alpha, Venn, UpSet, Heat Tree et phylogénie.", en: "Taxonomic composition, alpha diversity, Venn, UpSet, Heat Tree and phylogeny." },
+    profiles: ["biology"],
+    keywords: { fr: "barplot alpha diversité venn upset heat tree phylogénie exploration", en: "barplot alpha diversity venn upset heat tree phylogeny exploration" }
+  },
+  {
+    id: "analyse",
+    module: "analyse",
+    section: "guide",
+    anchor: "section-17",
+    title: { fr: "Choisir et conduire une analyse", en: "Choose and conduct an analysis" },
+    description: { fr: "Différentiel, ordination, PERMANOVA, matrices, réseaux, clustering et checklists.", en: "Differential analysis, ordination, PERMANOVA, matrices, networks, clustering and checklists." },
+    profiles: ["biology", "bioinformatics"],
+    keywords: { fr: "analyse ordination pcoa nmds bray-curtis aitchison permanova différentiel ancom-bc2 aldex2 linda maaslin corncob réseau clustering matrice méthode", en: "analysis ordination pcoa nmds bray-curtis aitchison permanova differential ancom-bc2 aldex2 linda maaslin corncob network clustering matrix method" }
+  },
+  {
+    id: "openmetabar",
+    module: "openmetabar",
+    section: "guide",
+    anchor: "section-3",
+    title: { fr: "Lancer et suivre OpenMetaBar", en: "Launch and monitor OpenMetaBar" },
+    description: { fr: "Connexion SSH, configuration, routes, Slurm, Nextflow, monitoring et récupération du phyloseq.", en: "SSH connection, configuration, routes, Slurm, Nextflow, monitoring and phyloseq retrieval." },
+    profiles: ["bioinformatics", "platform"],
+    keywords: { fr: "openmetabar ssh cluster slurm nextflow fastq monitoring pipeline", en: "openmetabar ssh cluster slurm nextflow fastq monitoring pipeline" }
+  },
+  {
+    id: "multiview",
+    module: "multiview",
+    section: "guide",
+    anchor: "section-10",
+    title: { fr: "Composer et partager les résultats", en: "Compose and share results" },
+    description: { fr: "Bibliothèque de figures, grilles, favoris, tags, compositions et export PNG.", en: "Figure library, grids, favourites, tags, compositions and PNG export." },
+    profiles: ["biology", "platform"],
+    keywords: { fr: "multiview figure grille composition export png favori tag", en: "multiview figure grid composition export png favourite tag" }
+  },
+  {
+    id: "technical",
+    module: "analyse",
+    section: "reference",
+    anchor: "top",
+    title: { fr: "Inspecter les paramètres techniques", en: "Inspect technical parameters" },
+    description: { fr: "Référence précise des entrées, options, dépendances, sorties et mécanismes internes.", en: "Precise reference for inputs, options, dependencies, outputs and internal mechanisms." },
+    profiles: ["bioinformatics", "platform", "development"],
+    keywords: { fr: "référence technique paramètres dépendances code architecture développeur", en: "technical reference parameters dependencies code architecture developer" }
+  }
+];
+
+const documentationModuleLabels: Record<string, Localized> = {
+  "openmetabar": { fr: "OpenMetaBar", en: "OpenMetaBar" },
+  "input-data": { fr: "Import de données", en: "Input data" },
+  "datasets": { fr: "Datasets et projets", en: "Datasets and projects" },
+  "description": { fr: "Description", en: "Description" },
+  "data-edition": { fr: "Édition des données", en: "Data editing" },
+  "filtration": { fr: "Filtration", en: "Filtering" },
+  "exploration": { fr: "Exploration", en: "Exploration" },
+  "analyse": { fr: "Analyse", en: "Analysis" },
+  "multiview": { fr: "MultiView", en: "MultiView" }
+};
+
 function DocumentationPage({ language }: { language: Language }) {
   const [manifest, setManifest] = useState<DocumentationManifest | null>(null);
-  const documentationUrl = `${asset("documentation/index.html")}?lang=${language}&module=openmetabar&section=guide`;
+  const [query, setQuery] = useState("");
+  const [profile, setProfile] = useState<DocumentationProfile>("all");
+  const [activeTarget, setActiveTarget] = useState<DocumentationTarget>(documentationTargets[7]);
+  const [activeSection, setActiveSection] = useState<DocumentationSection>("guide");
 
   useEffect(() => {
     let cancelled = false;
@@ -1548,36 +1682,99 @@ function DocumentationPage({ language }: { language: Language }) {
 
   const c = language === "fr" ? {
     k: "Documentation BarCodeR",
-    title: "La documentation complète, directement dans le site.",
-    p: "Consultez les guides méthodologiques et les références techniques de BarCodeR sans quitter l’écosystème BarCodeR × OpenMetaBar. La documentation reste autonome, multilingue et utilisable hors connexion dans l’application.",
+    title: "Trouvez d’abord la bonne réponse. Ouvrez ensuite la documentation complète.",
+    p: "Entrez par votre besoin, votre profil ou le module concerné. Le site charge directement le guide méthodologique ou la référence technique correspondante, tout en conservant la recherche et le sommaire de la documentation originale.",
     modules: "modules documentés",
-    sections: "niveaux de documentation",
+    sections: "niveaux documentaires",
     languages: "langues disponibles",
     version: "version documentaire",
     open: "Ouvrir en plein écran",
     appTab: "Voir l’onglet dans l’application",
-    embedded: "Documentation intégrée",
-    embeddedP: "La navigation, la recherche, le sommaire, le changement de langue et le thème restent disponibles dans le lecteur ci-dessous.",
-    loading: "Chargement de la documentation BarCodeR",
     source: "Contenu généré pour",
-    generated: "Documentation générée le"
+    generated: "Documentation générée le",
+    finderK: "Point d’entrée",
+    finderT: "Que cherchez-vous à faire ?",
+    finderP: "La recherche ci-dessous filtre les parcours documentaires. Une fois la page ouverte, la recherche interne du lecteur permet d’explorer tout son contenu.",
+    searchLabel: "Rechercher un besoin ou une méthode",
+    searchPlaceholder: "Ex. filtrer, Bray-Curtis, import, Slurm…",
+    profiles: "Filtrer par profil",
+    all: "Tous",
+    profileLabels: { biology: "Biologiste / écologue", bioinformatics: "Bioinformaticien", platform: "Plateforme", development: "Développeur" } as Record<Exclude<DocumentationProfile, "all">, string>,
+    noResult: "Aucun parcours ne correspond à cette recherche. Utilisez la navigation par module ou ouvrez la documentation complète.",
+    openTarget: "Consulter cette section",
+    quickK: "Accès direct",
+    quickT: "Naviguer par module",
+    quickP: "Chaque module possède un guide méthodologique et une référence technique. Le choix reste modifiable dans le lecteur.",
+    guide: "Guide méthodologique",
+    reference: "Référence technique",
+    readerK: "Lecteur documentaire",
+    readerT: "Documentation intégrée",
+    readerP: "Le lecteur conserve le sommaire, la recherche plein texte dans la page, le changement de langue et le thème clair ou sombre.",
+    current: "Section affichée",
+    loading: "Chargement de la documentation BarCodeR",
+    methodsK: "Deux niveaux complémentaires",
+    methodsT: "Comprendre la méthode ou inspecter son implémentation.",
+    methods: [
+      ["01", "Guide méthodologique", "Questions scientifiques, prérequis, ordre des opérations, diagnostics, limites et interprétation."],
+      ["02", "Référence technique", "Entrées, paramètres, dépendances, événements réactifs, objets produits et détails d’implémentation."]
+    ] as [string, string, string][]
   } : {
     k: "BarCodeR documentation",
-    title: "Complete documentation, directly inside the website.",
-    p: "Browse BarCodeR methodological guides and technical references without leaving the BarCodeR × OpenMetaBar ecosystem. The documentation remains standalone, multilingual and available offline inside the application.",
+    title: "Find the right answer first. Then open the complete documentation.",
+    p: "Start from your need, profile or the relevant module. The website loads the corresponding methodological guide or technical reference directly while preserving the original documentation search and table of contents.",
     modules: "documented modules",
     sections: "documentation levels",
     languages: "available languages",
     version: "documentation version",
     open: "Open full screen",
     appTab: "View the application tab",
-    embedded: "Embedded documentation",
-    embeddedP: "Navigation, search, table of contents, language switching and theme controls remain available in the reader below.",
-    loading: "Loading BarCodeR documentation",
     source: "Content generated for",
-    generated: "Documentation generated on"
+    generated: "Documentation generated on",
+    finderK: "Entry point",
+    finderT: "What are you trying to do?",
+    finderP: "The search below filters documentation journeys. Once a page is open, the reader's internal search explores its full content.",
+    searchLabel: "Search for a need or method",
+    searchPlaceholder: "E.g. filtering, Bray-Curtis, import, Slurm…",
+    profiles: "Filter by profile",
+    all: "All",
+    profileLabels: { biology: "Biologist / ecologist", bioinformatics: "Bioinformatician", platform: "Platform", development: "Developer" } as Record<Exclude<DocumentationProfile, "all">, string>,
+    noResult: "No journey matches this search. Use module navigation or open the complete documentation.",
+    openTarget: "Open this section",
+    quickK: "Direct access",
+    quickT: "Browse by module",
+    quickP: "Each module has a methodological guide and a technical reference. The selection can still be changed inside the reader.",
+    guide: "Methodological guide",
+    reference: "Technical reference",
+    readerK: "Documentation reader",
+    readerT: "Embedded documentation",
+    readerP: "The reader retains its table of contents, full-text search within the page, language switcher and light or dark theme.",
+    current: "Displayed section",
+    loading: "Loading BarCodeR documentation",
+    methodsK: "Two complementary levels",
+    methodsT: "Understand the method or inspect its implementation.",
+    methods: [
+      ["01", "Methodological guide", "Scientific questions, requirements, operation order, diagnostics, limitations and interpretation."],
+      ["02", "Technical reference", "Inputs, parameters, dependencies, reactive events, produced objects and implementation details."]
+    ] as [string, string, string][]
   };
 
+  const filteredTargets = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase(language);
+    return documentationTargets.filter(target => {
+      const profileMatch = profile === "all" || target.profiles.includes(profile);
+      const haystack = `${tx(target.title, language)} ${tx(target.description, language)} ${tx(target.keywords, language)} ${tx(documentationModuleLabels[target.module], language)}`.toLocaleLowerCase(language);
+      return profileMatch && (!normalized || haystack.includes(normalized));
+    });
+  }, [language, profile, query]);
+
+  const buildDocumentationUrl = (target: DocumentationTarget, section: DocumentationSection = target.section) => {
+    const params = new URLSearchParams({ lang: language, module: target.module, section });
+    if (target.anchor && section === target.section) params.set("anchor", target.anchor);
+    return `${asset("documentation/index.html")}?${params.toString()}`;
+  };
+
+  const documentationUrl = buildDocumentationUrl(activeTarget, activeSection);
+  const fullDocumentationUrl = `${asset("documentation/index.html")}?lang=${language}&module=${activeTarget.module}&section=${activeSection}`;
   const metrics = [
     [String(manifest?.modules.length ?? 9), c.modules],
     [String(manifest?.sections.length ?? 2), c.sections],
@@ -1585,32 +1782,384 @@ function DocumentationPage({ language }: { language: Language }) {
     [manifest?.documentation_version ? `v${manifest.documentation_version}` : "v1.8.0", c.version]
   ];
 
+  const selectTarget = (target: DocumentationTarget, section: DocumentationSection = target.section) => {
+    setActiveTarget(target);
+    setActiveSection(section);
+    window.setTimeout(() => document.getElementById("documentation-reader")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  };
+
+  const selectModule = (module: string, section: DocumentationSection) => {
+    const target = documentationTargets.find(item => item.module === module) ?? {
+      id: module,
+      module,
+      section,
+      title: documentationModuleLabels[module],
+      description: documentationModuleLabels[module],
+      profiles: ["all"],
+      keywords: documentationModuleLabels[module]
+    };
+    selectTarget({ ...target, section, anchor: undefined }, section);
+  };
+
   return <main className="documentation-page">
     <section className="documentation-hero page-width">
-      <div className="documentation-hero-copy">
-        <Eyebrow>{c.k}</Eyebrow>
-        <h1>{c.title}</h1>
-        <p className="lead">{c.p}</p>
-        <div className="documentation-actions">
-          <a className="button primary" href={documentationUrl} target="_blank" rel="noreferrer">{c.open}<span>↗</span></a>
-          <a className="button secondary" href="#/application/documentation">{c.appTab}<span>→</span></a>
+      <div className="documentation-hero-layout">
+        <div className="documentation-hero-copy">
+          <Eyebrow>{c.k}</Eyebrow>
+          <h1>{c.title}</h1>
+          <p className="lead">{c.p}</p>
+          <div className="documentation-actions">
+            <a className="button primary" href={fullDocumentationUrl} target="_blank" rel="noreferrer">{c.open}<span>↗</span></a>
+            <a className="button secondary" href="#/application/documentation">{c.appTab}<span>→</span></a>
+          </div>
+        </div>
+        <div className="documentation-level-preview">
+          <Eyebrow>{c.methodsK}</Eyebrow>
+          <h2>{c.methodsT}</h2>
+          {c.methods.map(([number, title, text]) => <article key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}
         </div>
       </div>
       <div className="documentation-metrics">{metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div>
       {manifest && <p className="documentation-version-line"><span>{c.source} <strong>{manifest.generated_for_app_version}</strong></span><span>{c.generated} <strong>{manifest.generated}</strong></span></p>}
     </section>
-    <section className="documentation-reader-section">
+
+    <section className="documentation-finder-section">
+      <div className="page-width">
+        <div className="documentation-finder-heading">
+          <div><Eyebrow>{c.finderK}</Eyebrow><h2>{c.finderT}</h2></div>
+          <p>{c.finderP}</p>
+        </div>
+        <div className="documentation-search-panel">
+          <label htmlFor="documentation-search"><span>{c.searchLabel}</span><input id="documentation-search" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={c.searchPlaceholder} /></label>
+          <div className="documentation-profile-filter" aria-label={c.profiles}>
+            <span>{c.profiles}</span>
+            <button className={profile === "all" ? "active" : ""} type="button" onClick={() => setProfile("all")}>{c.all}</button>
+            {(Object.keys(c.profileLabels) as Exclude<DocumentationProfile, "all">[]).map(key => <button className={profile === key ? "active" : ""} type="button" onClick={() => setProfile(key)} key={key}>{c.profileLabels[key]}</button>)}
+          </div>
+        </div>
+        <div className="documentation-target-grid">
+          {filteredTargets.map((target, index) => <article className={`documentation-target-card ${activeTarget.id === target.id ? "selected" : ""}`} key={target.id}>
+            <header><span>{String(index + 1).padStart(2, "0")}</span><small>{tx(documentationModuleLabels[target.module], language)}</small></header>
+            <h3>{tx(target.title, language)}</h3>
+            <p>{tx(target.description, language)}</p>
+            <footer><span>{target.section === "guide" ? c.guide : c.reference}</span><button type="button" onClick={() => selectTarget(target)}>{c.openTarget}<i>→</i></button></footer>
+          </article>)}
+        </div>
+        {filteredTargets.length === 0 && <p className="documentation-empty">{c.noResult}</p>}
+      </div>
+    </section>
+
+    <section className="documentation-modules-section">
+      <div className="page-width">
+        <div className="documentation-modules-heading"><div><Eyebrow>{c.quickK}</Eyebrow><h2>{c.quickT}</h2></div><p>{c.quickP}</p></div>
+        <div className="documentation-module-grid">
+          {(manifest?.modules ?? Object.keys(documentationModuleLabels)).map((module, index) => <article key={module}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <h3>{tx(documentationModuleLabels[module] ?? { fr: module, en: module }, language)}</h3>
+            <div><button type="button" onClick={() => selectModule(module, "guide")}>{c.guide}</button><button type="button" onClick={() => selectModule(module, "reference")}>{c.reference}</button></div>
+          </article>)}
+        </div>
+      </div>
+    </section>
+
+    <section className="documentation-reader-section" id="documentation-reader">
       <div className="page-width">
         <div className="documentation-reader-intro">
-          <div><Eyebrow>{c.embedded}</Eyebrow><h2>{c.embedded}</h2></div>
-          <p>{c.embeddedP}</p>
+          <div><Eyebrow>{c.readerK}</Eyebrow><h2>{c.readerT}</h2></div>
+          <p>{c.readerP}</p>
+        </div>
+        <div className="documentation-reader-toolbar">
+          <div><small>{c.current}</small><strong>{tx(documentationModuleLabels[activeTarget.module], language)} · {activeSection === "guide" ? c.guide : c.reference}</strong></div>
+          <div className="documentation-section-switch" role="group" aria-label={c.current}><button className={activeSection === "guide" ? "active" : ""} type="button" onClick={() => setActiveSection("guide")}>{c.guide}</button><button className={activeSection === "reference" ? "active" : ""} type="button" onClick={() => setActiveSection("reference")}>{c.reference}</button></div>
+          <a href={documentationUrl} target="_blank" rel="noreferrer">{c.open}<span>↗</span></a>
         </div>
         <div className="documentation-browser">
-          <div className="documentation-browser-bar"><span /><span /><span /><b>docs.barcoder.local</b><a href={documentationUrl} target="_blank" rel="noreferrer" aria-label={c.open}>↗</a></div>
+          <div className="documentation-browser-bar"><span /><span /><span /><b>docs.barcoder.local/{language}/{activeTarget.module}</b><a href={documentationUrl} target="_blank" rel="noreferrer" aria-label={c.open}>↗</a></div>
           <iframe key={`${language}-${documentationUrl}`} src={documentationUrl} title={c.loading} loading="lazy" />
         </div>
       </div>
     </section>
+  </main>;
+}
+
+
+type ShowcaseCategory = "all" | "quality" | "exploration" | "analysis" | "report";
+type ProvenanceKey = "composition" | "ordination" | "alpha";
+
+function ShowcasePage({ language }: { language: Language }) {
+  const [category, setCategory] = useState<ShowcaseCategory>("all");
+  const [selectedOutput, setSelectedOutput] = useState("composition");
+  const [provenanceKey, setProvenanceKey] = useState<ProvenanceKey>("composition");
+
+  const c = language === "fr" ? {
+    heroK: "Cas d’usage · résultats · provenance",
+    heroT: <>Des questions scientifiques<br /><em>aux résultats traçables.</em></>,
+    heroP: "BarCodeR ne se limite pas à exposer des méthodes. Le logiciel relie une question, un objet phyloseq, une préparation explicite, des diagnostics et des sorties réutilisables. Cette page montre quatre parcours réalistes et les résultats que l’écosystème peut produire.",
+    heroPrimary: "Explorer les cas d’usage",
+    heroSecondary: "Voir la galerie",
+    metrics: [["4", "cas d’usage scientifiques"], ["11", "familles de résultats illustrées"], ["3", "figures publiques reproductibles"], ["1", "provenance lisible par résultat"]],
+    casesK: "Parcours scientifiques",
+    casesT: "Commencer par la question, puis enchaîner les contrôles appropriés.",
+    casesP: "Chaque cas d’usage combine plusieurs modules. Les étapes proposées constituent un cadre de travail, pas une recette automatique : le plan expérimental et les hypothèses des méthodes restent déterminants.",
+    input: "Entrées",
+    outputs: "Sorties attendues",
+    caution: "Point de vigilance",
+    openAnalysis: "Ouvrir le parcours",
+    openTutorials: "Ouvrir les tutoriels",
+    cases: [
+      {
+        number: "01", title: "Suivi environnemental", question: "Les communautés diffèrent-elles entre sites, campagnes ou saisons ?",
+        audience: "Écologie · biodiversité · surveillance", input: "Un phyloseq avec abondances, taxonomie et métadonnées environnementales.",
+        steps: ["Diagnostic", "Filtration", "Composition", "Diversité alpha", "Ordination", "PERMANOVA + dispersion", "MultiView"],
+        outputs: ["profils taxonomiques", "indices de diversité", "ordination diagnostiquée", "test global", "planche de synthèse"],
+        caution: "Ne pas interpréter une PERMANOVA sans contrôler l’homogénéité des dispersions et la structure du plan d’échantillonnage.",
+        image: "app-previews/ordinations.png", href: "#/analyses"
+      },
+      {
+        number: "02", title: "Effet d’une condition", question: "Quels taxons sont associés à un traitement, un habitat ou une condition ?",
+        audience: "Expérimentation · biomonitoring · comparaison de groupes", input: "Comptes bruts, variable d’intérêt et covariables documentées.",
+        steps: ["Audit des comptes", "Filtration justifiée", "Modèle", "ANCOM-BC2", "ALDEx2", "LinDA / corncob / MaAsLin 3", "Concordance"],
+        outputs: ["tailles d’effet", "p-values ajustées", "taxons concordants", "résultats spécifiques aux moteurs", "tableaux exportables"],
+        caution: "La présence dans une seule méthode n’est pas une preuve de robustesse. Comparer les hypothèses, tailles d’effet et directions entre moteurs.",
+        image: "app-previews/analyses_differentielles.png", href: "#/analyses"
+      },
+      {
+        number: "03", title: "Comparaison de marqueurs", question: "Deux marqueurs ou domaines décrivent-ils une structure écologique cohérente ?",
+        audience: "Multi-marqueurs · multi-domaines · intercomparaison", input: "Plusieurs phyloseq avec des échantillons harmonisés et des métadonnées communes.",
+        steps: ["Harmonisation", "Distances compatibles", "Ordinations séparées", "Mantel", "Procrustes / PROTEST", "Co-inertie / MCOA", "Restitution"],
+        outputs: ["corrélations de matrices", "superposition d’ordinations", "compromis multi-tableaux", "échantillons divergents", "comparaison visuelle"],
+        caution: "Une corrélation entre matrices ne signifie pas que les deux marqueurs détectent les mêmes taxons ni qu’ils ont la même sensibilité.",
+        image: "app-previews/comparaison_matrices.png", href: "#/analyses"
+      },
+      {
+        number: "04", title: "Du séquençage à la restitution", question: "Comment transformer un run de séquençage en résultats inspectables ?",
+        audience: "Plateformes · projets complets · HPC", input: "FASTQ, design, amorces, références et accès à un cluster configuré.",
+        steps: ["OpenMetaBar", "Validation", "Slurm / Nextflow", "phyloseq", "Description", "Exploration / Analyse", "MultiView"],
+        outputs: ["logs du pipeline", "objet phyloseq", "diagnostics", "figures et tableaux", "scripts R", "composition finale"],
+        caution: "L’automatisation du pipeline ne corrige pas un design incomplet, une base inadaptée ou des paramètres biologiquement non justifiés.",
+        image: "app-previews/screen-openmetabar.png", href: "#/functioning"
+      }
+    ],
+    galleryK: "Galerie de résultats",
+    galleryT: "Voir ce que produit réellement l’application.",
+    galleryP: "Les trois premières figures sont générées de manière reproductible à partir du dataset public GlobalPatterns. Les autres visuels montrent les familles de sorties disponibles dans l’interface.",
+    filters: { all: "Tout", quality: "Contrôle qualité", exploration: "Exploration", analysis: "Analyse", report: "Restitution" },
+    inspect: "Inspecter",
+    selectedMethod: "Méthode ou sortie",
+    selectedUse: "Ce que cela permet de lire",
+    selectedNeeds: "Pré-requis",
+    selectedSource: "Origine du visuel",
+    openModule: "Ouvrir le module",
+    reproducible: "Figure publique reproductible",
+    interfacePreview: "Capture de l’application",
+    provenanceK: "Démonstration de provenance",
+    provenanceT: "Une figure doit pouvoir raconter comment elle a été produite.",
+    provenanceP: "Sélectionnez une sortie GlobalPatterns. La chaîne ci-dessous reprend les opérations réellement utilisées par le script public de génération des figures.",
+    chooseFigure: "Choisir une figure",
+    retained: "Informations conservées",
+    downloads: "Ressources vérifiables",
+    manifest: "Manifeste de provenance JSON",
+    script: "Script R de génération",
+    tsv: "Provenance générale TSV",
+    reproAction: "Comprendre toute la chaîne de traçabilité",
+    limitsK: "Interpréter sans sur-promettre",
+    limitsT: "Une belle figure n’est pas une conclusion scientifique.",
+    limits: [
+      ["Visualisation", "Une séparation graphique peut être descriptive sans être statistiquement étayée."],
+      ["Tests", "Une p-value ne remplace ni la taille d’effet, ni les diagnostics, ni le plan expérimental."],
+      ["Taxonomie", "La résolution dépend des séquences, du marqueur, de la base et de la stratégie d’assignation."],
+      ["Réseaux", "Une association statistique ne démontre pas une interaction biologique directe."],
+      ["Filtration", "Chaque seuil modifie l’objet analysé et doit rester justifié, documenté et comparé."],
+      ["Comparaison", "Deux méthodes peuvent diverger parce qu’elles ne modélisent pas le même signal ni les mêmes hypothèses."]
+    ],
+    finalK: "Reproduire le parcours",
+    finalT: "Passez de la vitrine à un exemple documenté.",
+    finalP: "Les tutoriels utilisent des objets et des sorties vérifiables. La documentation détaille ensuite les paramètres, diagnostics et limites propres à chaque module.",
+    finalTutorial: "Tester un tutoriel",
+    finalDocs: "Lire la documentation"
+  } : {
+    heroK: "Use cases · outputs · provenance",
+    heroT: <>From scientific questions<br /><em>to traceable results.</em></>,
+    heroP: "BarCodeR does more than expose methods. It connects a question, a phyloseq object, explicit preparation, diagnostics and reusable outputs. This page presents four realistic journeys and the results the ecosystem can produce.",
+    heroPrimary: "Explore use cases",
+    heroSecondary: "View the gallery",
+    metrics: [["4", "scientific use cases"], ["11", "illustrated output families"], ["3", "reproducible public figures"], ["1", "readable provenance per result"]],
+    casesK: "Scientific journeys",
+    casesT: "Start with the question, then connect the appropriate checks.",
+    casesP: "Each use case combines several modules. These steps provide a working framework, not an automatic recipe: experimental design and method assumptions remain decisive.",
+    input: "Inputs",
+    outputs: "Expected outputs",
+    caution: "Caution",
+    openAnalysis: "Open journey",
+    openTutorials: "Open tutorials",
+    cases: [
+      {
+        number: "01", title: "Environmental monitoring", question: "Do communities differ among sites, campaigns or seasons?",
+        audience: "Ecology · biodiversity · monitoring", input: "A phyloseq object with abundances, taxonomy and environmental metadata.",
+        steps: ["Diagnosis", "Filtering", "Composition", "Alpha diversity", "Ordination", "PERMANOVA + dispersion", "MultiView"],
+        outputs: ["taxonomic profiles", "diversity indices", "diagnosed ordination", "global test", "summary panel"],
+        caution: "Do not interpret PERMANOVA without checking dispersion homogeneity and the sampling design structure.",
+        image: "app-previews/ordinations.png", href: "#/analyses"
+      },
+      {
+        number: "02", title: "Condition effect", question: "Which taxa are associated with a treatment, habitat or condition?",
+        audience: "Experiments · biomonitoring · group comparison", input: "Raw counts, a variable of interest and documented covariates.",
+        steps: ["Count audit", "Justified filtering", "Model", "ANCOM-BC2", "ALDEx2", "LinDA / corncob / MaAsLin 3", "Concordance"],
+        outputs: ["effect sizes", "adjusted p-values", "concordant taxa", "engine-specific results", "exportable tables"],
+        caution: "Detection by one method alone is not evidence of robustness. Compare assumptions, effect sizes and directions across engines.",
+        image: "app-previews/analyses_differentielles.png", href: "#/analyses"
+      },
+      {
+        number: "03", title: "Marker comparison", question: "Do two markers or domains describe a coherent ecological structure?",
+        audience: "Multi-marker · multi-domain · intercomparison", input: "Several phyloseq objects with harmonised samples and shared metadata.",
+        steps: ["Harmonisation", "Compatible distances", "Separate ordinations", "Mantel", "Procrustes / PROTEST", "Co-inertia / MCOA", "Reporting"],
+        outputs: ["matrix correlations", "ordination overlays", "multi-table compromise", "divergent samples", "visual comparison"],
+        caution: "A matrix correlation does not mean both markers detect the same taxa or have the same sensitivity.",
+        image: "app-previews/comparaison_matrices.png", href: "#/analyses"
+      },
+      {
+        number: "04", title: "From sequencing to reporting", question: "How can a sequencing run become inspectable results?",
+        audience: "Core facilities · complete projects · HPC", input: "FASTQ, design, primers, references and access to a configured cluster.",
+        steps: ["OpenMetaBar", "Validation", "Slurm / Nextflow", "phyloseq", "Description", "Exploration / Analysis", "MultiView"],
+        outputs: ["pipeline logs", "phyloseq object", "diagnostics", "figures and tables", "R scripts", "final composition"],
+        caution: "Pipeline automation cannot correct an incomplete design, an unsuitable database or biologically unjustified parameters.",
+        image: "app-previews/screen-openmetabar.png", href: "#/functioning"
+      }
+    ],
+    galleryK: "Output gallery",
+    galleryT: "See what the application actually produces.",
+    galleryP: "The first three figures are reproducibly generated from the public GlobalPatterns dataset. The remaining visuals show output families available in the interface.",
+    filters: { all: "All", quality: "Quality control", exploration: "Exploration", analysis: "Analysis", report: "Reporting" },
+    inspect: "Inspect",
+    selectedMethod: "Method or output",
+    selectedUse: "What it helps read",
+    selectedNeeds: "Requirements",
+    selectedSource: "Visual source",
+    openModule: "Open module",
+    reproducible: "Reproducible public figure",
+    interfacePreview: "Application screenshot",
+    provenanceK: "Provenance demonstration",
+    provenanceT: "A figure should be able to explain how it was produced.",
+    provenanceP: "Select a GlobalPatterns output. The chain below reflects the operations actually used by the public figure-generation script.",
+    chooseFigure: "Choose a figure",
+    retained: "Retained information",
+    downloads: "Verifiable resources",
+    manifest: "JSON provenance manifest",
+    script: "R generation script",
+    tsv: "General provenance TSV",
+    reproAction: "Understand the full traceability chain",
+    limitsK: "Interpret without overclaiming",
+    limitsT: "A polished figure is not a scientific conclusion.",
+    limits: [
+      ["Visualisation", "A graphical separation can be descriptive without statistical support."],
+      ["Tests", "A p-value does not replace effect size, diagnostics or experimental design."],
+      ["Taxonomy", "Resolution depends on sequences, marker, database and assignment strategy."],
+      ["Networks", "A statistical association does not demonstrate a direct biological interaction."],
+      ["Filtering", "Every threshold changes the analysed object and must remain justified, documented and compared."],
+      ["Comparison", "Methods can diverge because they model different signals and assumptions."]
+    ],
+    finalK: "Reproduce the journey",
+    finalT: "Move from the showcase to a documented example.",
+    finalP: "Tutorials use verifiable objects and outputs. Documentation then details the parameters, diagnostics and limitations specific to each module.",
+    finalTutorial: "Try a tutorial",
+    finalDocs: "Read documentation"
+  };
+
+  const gallery = [
+    { id: "composition", category: "exploration" as ShowcaseCategory, image: "figures/globalpatterns-composition.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, method: { fr: "Abondance relative agrégée au phylum ; huit phyla dominants.", en: "Relative abundance aggregated at phylum level; eight dominant phyla." }, use: { fr: "Comparer les profils dominants entre types d’environnement.", en: "Compare dominant profiles across environment types." }, needs: { fr: "OTU, taxonomie et variable de groupe.", en: "OTU table, taxonomy and grouping variable." }, source: "reproducible", href: "#/application/exploration" },
+    { id: "ordination", category: "analysis" as ShowcaseCategory, image: "figures/globalpatterns-ordination.png", title: { fr: "PCoA Bray-Curtis", en: "Bray-Curtis PCoA" }, method: { fr: "PCoA calculée sur les abondances relatives et la dissimilarité de Bray-Curtis.", en: "PCoA computed from relative abundances and Bray-Curtis dissimilarity." }, use: { fr: "Visualiser la structure entre échantillons avant les tests multivariés.", en: "Visualise between-sample structure before multivariate testing." }, needs: { fr: "OTU et métadonnées ; transformation et distance explicites.", en: "OTU and metadata; explicit transformation and distance." }, source: "reproducible", href: "#/application/analyse" },
+    { id: "alpha", category: "analysis" as ShowcaseCategory, image: "figures/globalpatterns-alpha-diversity.png", title: { fr: "Diversité alpha", en: "Alpha diversity" }, method: { fr: "Richesse observée et indice de Shannon sur les comptes non nuls.", en: "Observed richness and Shannon index on non-zero counts." }, use: { fr: "Décrire la diversité au sein de chaque échantillon et comparer des groupes.", en: "Describe within-sample diversity and compare groups." }, needs: { fr: "OTU ; profondeur et effort d’échantillonnage à contrôler.", en: "OTU table; depth and sampling effort must be checked." }, source: "reproducible", href: "#/application/exploration" },
+    { id: "quality", category: "quality" as ShowcaseCategory, image: "app-previews/qualite_assignation_taxonomique.png", title: { fr: "Qualité des assignations", en: "Assignment quality" }, method: { fr: "Synthèse des rangs atteints et de la complétude taxonomique.", en: "Summary of reached ranks and taxonomic completeness." }, use: { fr: "Repérer les niveaux interprétables et les zones de taxonomie incomplète.", en: "Identify interpretable ranks and incomplete taxonomy." }, needs: { fr: "Table taxonomique structurée.", en: "Structured taxonomy table." }, source: "interface", href: "#/application/exploration" },
+    { id: "heat-tree", category: "exploration" as ShowcaseCategory, image: "app-previews/heat_tree.png", title: { fr: "Heat Tree", en: "Heat Tree" }, method: { fr: "Arbre taxonomique coloré et dimensionné par une métrique d’abondance ou de contraste.", en: "Taxonomic tree coloured and sized by an abundance or contrast metric." }, use: { fr: "Localiser visuellement les différences dans la hiérarchie taxonomique.", en: "Locate differences within the taxonomic hierarchy." }, needs: { fr: "Taxonomie multi-rangs et abondances.", en: "Multi-rank taxonomy and abundances." }, source: "interface", href: "#/application/exploration" },
+    { id: "venn", category: "exploration" as ShowcaseCategory, image: "app-previews/diagramme_venn.png", title: { fr: "Taxons partagés", en: "Shared taxa" }, method: { fr: "Diagramme de Venn ou UpSet selon le nombre de groupes.", en: "Venn or UpSet diagram depending on the number of groups." }, use: { fr: "Décrire les taxons communs et spécifiques aux groupes.", en: "Describe shared and group-specific taxa." }, needs: { fr: "OTU et variable de groupe ; seuil de présence explicite.", en: "OTU and grouping variable; explicit presence threshold." }, source: "interface", href: "#/application/exploration" },
+    { id: "differential", category: "analysis" as ShowcaseCategory, image: "app-previews/analyses_differentielles.png", title: { fr: "Analyse différentielle", en: "Differential analysis" }, method: { fr: "Effets, incertitudes et significativité issus de plusieurs moteurs compatibles avec les comptes.", en: "Effects, uncertainty and significance from several count-compatible engines." }, use: { fr: "Identifier les taxons associés à une condition et comparer la concordance.", en: "Identify taxa associated with a condition and compare concordance." }, needs: { fr: "Comptes bruts, modèle et contrastes documentés.", en: "Raw counts, documented model and contrasts." }, source: "interface", href: "#/application/analyse" },
+    { id: "permanova", category: "analysis" as ShowcaseCategory, image: "app-previews/permanova_dispersion.png", title: { fr: "PERMANOVA et dispersion", en: "PERMANOVA and dispersion" }, method: { fr: "Test de structure multivariée accompagné de PERMDISP.", en: "Multivariate structure test accompanied by PERMDISP." }, use: { fr: "Distinguer un effet de localisation d’une différence de dispersion.", en: "Distinguish a location effect from a dispersion difference." }, needs: { fr: "Matrice de distance, formule et permutations adaptées au design.", en: "Distance matrix, formula and permutations suited to the design." }, source: "interface", href: "#/application/analyse" },
+    { id: "matrices", category: "analysis" as ShowcaseCategory, image: "app-previews/comparaison_matrices.png", title: { fr: "Comparaison de matrices", en: "Matrix comparison" }, method: { fr: "Mantel, Procrustes, PROTEST, co-inertie et MCOA.", en: "Mantel, Procrustes, PROTEST, co-inertia and MCOA." }, use: { fr: "Évaluer la cohérence entre marqueurs, domaines ou représentations.", en: "Assess coherence across markers, domains or representations." }, needs: { fr: "Plusieurs matrices harmonisées sur les mêmes échantillons.", en: "Several matrices harmonised on the same samples." }, source: "interface", href: "#/application/analyse" },
+    { id: "clustering", category: "analysis" as ShowcaseCategory, image: "app-previews/clustering.png", title: { fr: "Clustering et stabilité", en: "Clustering and stability" }, method: { fr: "Dendrogrammes, silhouette, Dunn et diagnostics de stabilité.", en: "Dendrograms, silhouette, Dunn and stability diagnostics." }, use: { fr: "Explorer des regroupements naturels sans les confondre avec des groupes connus.", en: "Explore natural groupings without conflating them with known groups." }, needs: { fr: "Matrice transformée ou distance cohérente avec la question.", en: "Transformed matrix or distance consistent with the question." }, source: "interface", href: "#/application/analyse" },
+    { id: "multiview", category: "report" as ShowcaseCategory, image: "app-previews/screen-multiview.png", title: { fr: "Composition MultiView", en: "MultiView composition" }, method: { fr: "Bibliothèque, sélection, glisser-déposer et export de planches.", en: "Library, selection, drag-and-drop and panel export." }, use: { fr: "Assembler plusieurs résultats sans perdre leur dataset ni leurs paramètres.", en: "Assemble several results without losing their dataset or parameters." }, needs: { fr: "Figures préalablement sauvegardées dans le projet.", en: "Figures previously saved in the project." }, source: "interface", href: "#/application/multiview" }
+  ];
+
+  const provenance = {
+    composition: {
+      title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, image: "figures/globalpatterns-composition.png",
+      steps: language === "fr" ? [
+        ["01", "Dataset", "phyloseq::GlobalPatterns · 26 échantillons · 19 216 taxons source"],
+        ["02", "Contrôle", "Suppression des échantillons et taxons de somme nulle · 18 988 taxons analysés"],
+        ["03", "Transformation", "Abondance relative calculée indépendamment pour chaque échantillon"],
+        ["04", "Agrégation", "tax_glom au rang Phylum · valeurs inconnues conservées comme Unclassified"],
+        ["05", "Affichage", "Huit phyla les plus abondants ; les autres sont regroupés dans Other"],
+        ["06", "Sortie", "PNG 11 × 7 pouces · 180 dpi · script R public"]
+      ] : [
+        ["01", "Dataset", "phyloseq::GlobalPatterns · 26 samples · 19,216 source taxa"],
+        ["02", "Check", "Zero-sum samples and taxa removed · 18,988 taxa analysed"],
+        ["03", "Transformation", "Relative abundance computed independently within each sample"],
+        ["04", "Aggregation", "tax_glom at Phylum rank · unknown values retained as Unclassified"],
+        ["05", "Display", "Eight most abundant phyla; remaining taxa grouped as Other"],
+        ["06", "Output", "11 × 7 inch PNG · 180 dpi · public R script"]
+      ],
+      retained: language === "fr" ? ["objet source", "effectifs avant/après contrôle", "transformation", "rang taxonomique", "règle Top N", "dimensions et résolution"] : ["source object", "counts before/after checks", "transformation", "taxonomic rank", "Top N rule", "dimensions and resolution"]
+    },
+    ordination: {
+      title: { fr: "PCoA Bray-Curtis", en: "Bray-Curtis PCoA" }, image: "figures/globalpatterns-ordination.png",
+      steps: language === "fr" ? [
+        ["01", "Dataset", "phyloseq::GlobalPatterns après retrait des sommes nulles"],
+        ["02", "Transformation", "Abondance relative par échantillon"],
+        ["03", "Distance", "Dissimilarité de Bray-Curtis entre échantillons"],
+        ["04", "Ordination", "PCoA ; axes annotés avec la part d’inertie relative"],
+        ["05", "Métadonnée", "Coloration par SampleType avec neuf types d’environnement"],
+        ["06", "Sortie", "PNG 10 × 7 pouces · 180 dpi · coordonnées calculées par phyloseq"]
+      ] : [
+        ["01", "Dataset", "phyloseq::GlobalPatterns after removing zero sums"],
+        ["02", "Transformation", "Relative abundance within each sample"],
+        ["03", "Distance", "Bray-Curtis dissimilarity among samples"],
+        ["04", "Ordination", "PCoA; axes labelled with relative inertia"],
+        ["05", "Metadata", "Colour mapped to SampleType across nine environments"],
+        ["06", "Output", "10 × 7 inch PNG · 180 dpi · coordinates computed with phyloseq"]
+      ],
+      retained: language === "fr" ? ["dataset actif", "transformation", "distance", "méthode d’ordination", "variable esthétique", "valeurs propres"] : ["active dataset", "transformation", "distance", "ordination method", "aesthetic variable", "eigenvalues"]
+    },
+    alpha: {
+      title: { fr: "Diversité alpha", en: "Alpha diversity" }, image: "figures/globalpatterns-alpha-diversity.png",
+      steps: language === "fr" ? [
+        ["01", "Dataset", "Comptes GlobalPatterns après retrait des sommes nulles"],
+        ["02", "Mesures", "Observed et Shannon calculés avec estimate_richness"],
+        ["03", "Métadonnée", "Jointure avec SampleType pour les 26 échantillons"],
+        ["04", "Structure", "Deux facettes avec échelles verticales indépendantes"],
+        ["05", "Affichage", "Boxplots descriptifs et points individuels avec jitter reproductible"],
+        ["06", "Sortie", "PNG 12 × 6,8 pouces · 180 dpi · aucune p-value ajoutée"]
+      ] : [
+        ["01", "Dataset", "GlobalPatterns counts after removing zero sums"],
+        ["02", "Measures", "Observed and Shannon computed with estimate_richness"],
+        ["03", "Metadata", "Joined with SampleType for all 26 samples"],
+        ["04", "Structure", "Two facets with independent vertical scales"],
+        ["05", "Display", "Descriptive boxplots and individual points with reproducible jitter"],
+        ["06", "Output", "12 × 6.8 inch PNG · 180 dpi · no p-value added"]
+      ],
+      retained: language === "fr" ? ["comptes analysés", "indices", "variable de groupe", "graine graphique", "absence de test", "format d’export"] : ["analysed counts", "indices", "grouping variable", "graphical seed", "absence of testing", "export format"]
+    }
+  };
+
+  const filteredGallery = category === "all" ? gallery : gallery.filter(item => item.category === category);
+  const selectCategory = (nextCategory: ShowcaseCategory) => {
+    setCategory(nextCategory);
+    const nextOutputs = nextCategory === "all" ? gallery : gallery.filter(item => item.category === nextCategory);
+    if (!nextOutputs.some(item => item.id === selectedOutput) && nextOutputs[0]) setSelectedOutput(nextOutputs[0].id);
+  };
+  const currentOutput = gallery.find(item => item.id === selectedOutput) ?? gallery[0];
+  const currentProvenance = provenance[provenanceKey];
+
+  return <main>
+    <section className="showcase-hero"><div className="page-width showcase-hero-grid"><div className="reveal"><Eyebrow>{c.heroK}</Eyebrow><h1>{c.heroT}</h1><p className="lead">{c.heroP}</p><div className="showcase-hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("scientific-use-cases")?.scrollIntoView({ behavior: "smooth" })}>{c.heroPrimary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("output-gallery")?.scrollIntoView({ behavior: "smooth" })}>{c.heroSecondary}<span>↘</span></button></div></div><div className="showcase-hero-visual reveal"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Planche de résultats dans MultiView" : "Result panel in MultiView"} /><span className="showcase-float-card top">Dataset · GlobalPatterns</span><span className="showcase-float-card bottom">Parameters · Code R · Export</span></div></div><div className="page-width showcase-metrics">{c.metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
+
+    <section className="section page-width showcase-cases" id="scientific-use-cases"><div className="section-heading"><div><Eyebrow>{c.casesK}</Eyebrow><h2>{c.casesT}</h2></div><p>{c.casesP}</p></div><div className="showcase-case-list">{c.cases.map((item, index) => <article className="showcase-case reveal" style={{ "--delay": `${index * 50}ms` } as React.CSSProperties} key={item.number}><div className="showcase-case-image"><img src={asset(item.image)} alt="" /><span>{item.number}</span></div><div className="showcase-case-copy"><small>{item.audience}</small><h3>{item.title}</h3><blockquote>{item.question}</blockquote><div className="showcase-case-input"><b>{c.input}</b><p>{item.input}</p></div><ol>{item.steps.map((step, stepIndex) => <li key={step}><span>{String(stepIndex + 1).padStart(2, "0")}</span>{step}</li>)}</ol><div className="showcase-output-tags"><b>{c.outputs}</b><div>{item.outputs.map(output => <span key={output}>{output}</span>)}</div></div><div className="showcase-caution"><span>!</span><p><b>{c.caution}</b>{item.caution}</p></div><div className="showcase-case-actions"><a href={item.href}>{c.openAnalysis}<span>→</span></a><a href="#/tutorials">{c.openTutorials}<span>↗</span></a></div></div></article>)}</div></section>
+
+    <section className="showcase-gallery-section" id="output-gallery"><div className="page-width"><div className="section-heading light"><div><Eyebrow>{c.galleryK}</Eyebrow><h2>{c.galleryT}</h2></div><p>{c.galleryP}</p></div><div className="showcase-filter-bar" role="group" aria-label={c.galleryK}>{(Object.keys(c.filters) as ShowcaseCategory[]).map(key => <button type="button" className={category === key ? "active" : ""} onClick={() => selectCategory(key)} aria-pressed={category === key} key={key}>{c.filters[key]}</button>)}</div><div className="showcase-gallery-layout"><div className="showcase-gallery-grid">{filteredGallery.map((item, index) => <button type="button" className={`showcase-gallery-card ${selectedOutput === item.id ? "active" : ""}`} onClick={() => setSelectedOutput(item.id)} style={{ "--delay": `${(index % 3) * 45}ms` } as React.CSSProperties} key={item.id}><div><img src={asset(item.image)} alt={tx(item.title, language)} /><span>{item.source === "reproducible" ? c.reproducible : c.interfacePreview}</span></div><h3>{tx(item.title, language)}</h3><b>{c.inspect}<i>→</i></b></button>)}</div><aside className="showcase-output-detail" key={currentOutput.id}><div className="showcase-detail-image"><img src={asset(currentOutput.image)} alt={tx(currentOutput.title, language)} /></div><small>{currentOutput.source === "reproducible" ? c.reproducible : c.interfacePreview}</small><h3>{tx(currentOutput.title, language)}</h3><dl><div><dt>{c.selectedMethod}</dt><dd>{tx(currentOutput.method, language)}</dd></div><div><dt>{c.selectedUse}</dt><dd>{tx(currentOutput.use, language)}</dd></div><div><dt>{c.selectedNeeds}</dt><dd>{tx(currentOutput.needs, language)}</dd></div><div><dt>{c.selectedSource}</dt><dd>{currentOutput.source === "reproducible" ? "phyloseq::GlobalPatterns · public/figures" : "BarCodeR v2.12.8 · app-previews"}</dd></div></dl><a href={currentOutput.href}>{c.openModule}<span>→</span></a></aside></div></div></section>
+
+    <section className="section page-width showcase-provenance"><div className="section-heading"><div><Eyebrow>{c.provenanceK}</Eyebrow><h2>{c.provenanceT}</h2></div><p>{c.provenanceP}</p></div><div className="showcase-provenance-tabs" role="group" aria-label={c.chooseFigure}>{(Object.keys(provenance) as ProvenanceKey[]).map(key => <button type="button" className={provenanceKey === key ? "active" : ""} onClick={() => setProvenanceKey(key)} aria-pressed={provenanceKey === key} key={key}>{tx(provenance[key].title, language)}</button>)}</div><div className="showcase-provenance-grid"><div className="showcase-provenance-figure"><img src={asset(currentProvenance.image)} alt={tx(currentProvenance.title, language)} /><div><span>GlobalPatterns</span><b>{tx(currentProvenance.title, language)}</b></div></div><div className="showcase-provenance-chain">{currentProvenance.steps.map(([number, title, text], index) => <article key={number}><span>{number}</span><div><b>{title}</b><p>{text}</p></div>{index < currentProvenance.steps.length - 1 && <i>↓</i>}</article>)}</div></div><div className="showcase-provenance-footer"><div><small>{c.retained}</small><div>{currentProvenance.retained.map(item => <span key={item}>✓ {item}</span>)}</div></div><div><small>{c.downloads}</small><a href={asset("showcase/globalpatterns-provenance.json")} target="_blank" rel="noreferrer">{c.manifest}<span>↗</span></a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R" target="_blank" rel="noreferrer">{c.script}<span>↗</span></a><a href={asset("figures/data-provenance.tsv")} target="_blank" rel="noreferrer">{c.tsv}<span>↗</span></a><a href="#/reproducibility">{c.reproAction}<span>→</span></a></div></div></section>
+
+    <section className="showcase-limits-section"><div className="page-width"><div className="section-heading light"><div><Eyebrow>{c.limitsK}</Eyebrow><h2>{c.limitsT}</h2></div></div><div className="showcase-limits-grid">{c.limits.map(([title, text], index) => <article className="reveal" style={{ "--delay": `${(index % 3) * 45}ms` } as React.CSSProperties} key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+
+    <section className="section page-width showcase-final"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div><a className="button primary" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button secondary" href="#/documentation">{c.finalDocs}<span>↗</span></a></div></section>
   </main>;
 }
 
@@ -1639,13 +2188,242 @@ function ReproducibilityPage({ language }: { language: Language }) {
   return <main><section className="repro-hero"><div className="page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="repro-metrics">{c.metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></div></section><section className="section page-width"><div className="section-heading"><div><Eyebrow>{c.explore}</Eyebrow><h2>{c.explore}</h2></div><p>{c.exploreP}</p></div><div className="repro-explorer"><nav aria-label={c.explore}>{c.steps.map((item, index) => <button className={index === activeStep ? "active" : ""} onClick={() => setActiveStep(index)} aria-pressed={index === activeStep} key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><b>{item.title}</b><i>→</i></button>)}</nav><article className="repro-detail" key={step.title}><div className="repro-progress"><span style={{ width: `${((activeStep + 1) / c.steps.length) * 100}%` }} /></div><small>{step.kicker}</small><h3>{step.title}</h3><p>{step.description}</p><div className="repro-keeps">{step.keeps.map(item => <span key={item}>✓ {item}</span>)}</div><div className="repro-outcome"><small>{language === "fr" ? "Ce que cela permet" : "What this enables"}</small><b>{step.outcome}</b></div></article></div></section><section className="section section-tint"><div className="page-width"><div className="section-intro"><Eyebrow>{c.pillarsK}</Eyebrow><h2>{c.pillarsT}</h2></div><div className="repro-pillars">{c.pillars.map(([number, title, text]) => <article className="reveal" key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="limits-panel repro-limits page-width"><span>!</span><div><Eyebrow>{c.limits}</Eyebrow><h2>{c.limits}</h2><p>{c.limitP}</p></div></section></main>;
 }
 
-function AvailabilityPage({ language }: { language: Language }) {
-  const c = language === "fr" ? { k: "Code & disponibilité", title: "Un logiciel de recherche ouvert, documenté avec prudence.", p: "Le code source de BarCodeR et celui de ce site sont consultables sur GitHub. Le site décrit l’état observé dans la version v2.12.8 et signale les éléments éditoriaux encore à finaliser.", app: "Dépôt BarCodeR", appP: "Application R/Shiny, modules d’analyse, intégration OpenMetaBar et mécanismes de projet.", site: "Dépôt du site", siteP: "Code React/Vite, figures publiques, scripts de génération et déploiement GitHub Pages.", open: "Ouvrir sur GitHub", status: "État éditorial", items: [["Version examinée", "BarCodeR v2.12.8"], ["Hébergement du site", "GitHub Pages"], ["Licence définitive", "À confirmer dans la préparation de la publication"], ["Archive versionnée et DOI", "À produire pour la version citée dans le manuscrit"], ["Infrastructure OpenMetaBar", "Cluster SSH/Slurm requis ; non fourni par ce site"]], contact: "Correspondance scientifique", contactP: "Pour citer, tester ou discuter du logiciel, utiliser le dépôt GitHub et les coordonnées institutionnelles maintenues par le projet." } : { k: "Code & availability", title: "Open research software, documented with care.", p: "BarCodeR source code and this website are available on GitHub. The website describes the state observed in version v2.12.8 and identifies editorial elements that remain to be finalized.", app: "BarCodeR repository", appP: "R/Shiny application, analysis modules, OpenMetaBar integration and project mechanisms.", site: "Website repository", siteP: "React/Vite code, public figures, generation scripts and GitHub Pages deployment.", open: "Open on GitHub", status: "Editorial status", items: [["Version reviewed", "BarCodeR v2.12.8"], ["Website hosting", "GitHub Pages"], ["Final license", "To be confirmed during publication preparation"], ["Versioned archive and DOI", "To be produced for the version cited in the manuscript"], ["OpenMetaBar infrastructure", "SSH/Slurm cluster required; not provided by this website"]], contact: "Scientific correspondence", contactP: "To cite, test or discuss the software, use the GitHub repository and institutional contact details maintained by the project." };
-  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="repository-grid page-width"><a href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer"><span>R</span><small>github.com/MLPosuphy/BarCodeR</small><h2>{c.app}</h2><p>{c.appP}</p><b>{c.open} ↗</b></a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application" target="_blank" rel="noreferrer"><span>WEB</span><small>github.com/MLPosuphy/site-BarCodeR-R-shiny-application</small><h2>{c.site}</h2><p>{c.siteP}</p><b>{c.open} ↗</b></a></section><section className="section section-tint"><div className="page-width availability-status"><div><Eyebrow>{c.status}</Eyebrow><h2>{c.status}</h2></div><dl>{c.items.map(([term, description]) => <div key={term}><dt>{term}</dt><dd>{description}</dd></div>)}</dl></div></section><section className="contact-band page-width"><span>@</span><div><Eyebrow>{c.contact}</Eyebrow><h2>{c.contact}</h2><p>{c.contactP}</p></div></section></main>;
+function DownloadPage({ language }: { language: Language }) {
+  const [copied, setCopied] = useState<string | null>(null);
+  const appVersion = "2.12.8";
+  const documentationVersion = "1.8.0";
+  const sourceCommand = 'shiny::runApp("app.R")';
+  const cloneCommand = "git clone https://github.com/MLPosuphy/BarCodeR.git";
+  const temporaryCitation = language === "fr"
+    ? `Équipe BarCodeR (${new Date().getFullYear()}). BarCodeR v${appVersion} : application R/Shiny pour l’analyse reproductible des données de métabarcoding. Code source : https://github.com/MLPosuphy/BarCodeR.`
+    : `BarCodeR team (${new Date().getFullYear()}). BarCodeR v${appVersion}: an R/Shiny application for reproducible metabarcoding data analysis. Source code: https://github.com/MLPosuphy/BarCodeR.`;
+
+  const copyText = async (key: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(key);
+      window.setTimeout(() => setCopied((current) => current === key ? null : current), 1800);
+    } catch {
+      setCopied(null);
+    }
+  };
+
+  const c = language === "fr" ? {
+    k: "Télécharger, installer et citer",
+    title: "Choisissez un mode d’accès adapté à votre environnement.",
+    p: "BarCodeR peut être lancé depuis ses sources R. Une distribution Windows autonome est prévue pour simplifier l’usage sans installation manuelle, mais aucun binaire public n’est encore inclus dans cette version du site.",
+    version: "Version applicative",
+    docs: "Documentation",
+    languages: "Langues de l’interface",
+    sourceAvailable: "Disponible maintenant",
+    pending: "À finaliser",
+    repository: "Dépôt source",
+    sourceTitle: "Lancer depuis les sources R",
+    sourceP: "Solution actuelle de référence pour inspecter le code, développer des modules ou déployer l’application dans un environnement R maîtrisé.",
+    sourceNeeds: ["R et les dépendances de l’application", "Accès au dépôt GitHub", "Installation locale ou serveur Shiny"],
+    sourceAction: "Ouvrir le dépôt BarCodeR",
+    clone: "Cloner le dépôt",
+    launch: "Lancer l’application",
+    copy: "Copier",
+    copied: "Copié",
+    windowsTitle: "Distribution Windows autonome",
+    windowsP: "Format destiné aux utilisateurs qui ne souhaitent pas installer R et l’ensemble des dépendances manuellement.",
+    windowsNeeds: ["Archive versionnée", "Somme SHA-256", "Instructions de mise à jour", "Validation sur une installation Windows propre"],
+    windowsStatus: "Le paquet Windows n’est pas fourni par le site actuel.",
+    serverTitle: "Déploiement serveur",
+    serverP: "Installation destinée à une plateforme, une équipe ou un service mutualisé. Le stockage, les droits d’accès et les sauvegardes doivent être configurés par l’administrateur.",
+    serverNeeds: ["R et packages système", "Shiny Server ou infrastructure équivalente", "Stockage persistant des projets", "Politique d’accès et de sauvegarde"],
+    serverAction: "Consulter l’architecture",
+    hpcTitle: "OpenMetaBar sur cluster HPC",
+    hpcP: "OpenMetaBar complète BarCodeR lorsque le traitement part de FASTQ. Le cluster et les outils d’exécution ne sont pas fournis avec l’application.",
+    hpcNeeds: ["Connexion SSH", "Ordonnanceur Slurm", "Nextflow", "Singularity ou Apptainer", "Bases et ressources de calcul"],
+    hpcAction: "Voir le fonctionnement HPC",
+    modesK: "Modes d’accès",
+    modesT: "Un même logiciel, plusieurs contextes de déploiement.",
+    requirementsK: "Compatibilité et prérequis",
+    requirementsT: "Ce que chaque mode implique avant de commencer.",
+    mode: "Mode",
+    rRequired: "R local",
+    clusterRequired: "Cluster",
+    internet: "Internet",
+    suitable: "Contexte recommandé",
+    yes: "Oui",
+    no: "Non",
+    optional: "Optionnel",
+    planned: "Prévu",
+    rows: [
+      ["Sources R", "Oui", "Non", "Pour installation et mises à jour", "Développement, expertise, serveur"],
+      ["Windows autonome", "Non", "Non", "Pour téléchargement et mises à jour", "Utilisation locale guidée"],
+      ["Serveur mutualisé", "Sur le serveur", "Non", "Selon l’infrastructure", "Plateforme ou équipe"],
+      ["OpenMetaBar", "Selon l’installation", "Oui", "Selon le cluster", "Traitement des FASTQ sur HPC"]
+    ],
+    releasesK: "Versions et statut de publication",
+    releasesT: "Distinguer ce qui est exploitable de ce qui doit encore être publié.",
+    releaseRows: [
+      ["BarCodeR", `v${appVersion}`, "Version détectée dans app.R", "stable"],
+      ["Documentation", `v${documentationVersion}`, "90 pages, 9 modules, 5 langues", "stable"],
+      ["Site public", "Lot 7", "Refonte éditoriale en cours", "progress"],
+      ["Distribution Windows", "Non publiée", "Archive et validation à produire", "pending"],
+      ["Licence", "Non déclarée", "À définir avant redistribution externe", "pending"],
+      ["DOI / archive", "Non publié", "À produire pour une citation pérenne", "pending"]
+    ],
+    stable: "Disponible",
+    progress: "En cours",
+    openScienceK: "Code et science ouverte",
+    openScienceT: "Les sources sont consultables ; la licence et l’archive citable doivent encore être formalisées.",
+    appRepo: "Code de BarCodeR",
+    appRepoP: "Application R/Shiny, modules analytiques, gestion des projets et intégration OpenMetaBar.",
+    siteRepo: "Code du site",
+    siteRepoP: "Site React/Vite, contenus publics, documentation intégrée et scripts de génération.",
+    openGithub: "Ouvrir sur GitHub",
+    citationK: "Citation",
+    citationT: "Utiliser une citation temporaire tant qu’aucun DOI n’est publié.",
+    citationP: "Cette formulation identifie la version et le dépôt, mais elle devra être remplacée par la citation officielle lors de la publication de l’archive versionnée.",
+    copyCitation: "Copier la citation",
+    publicationWarning: "Avant une diffusion externe formelle",
+    publicationWarningP: "Déclarer une licence, synchroniser tous les identifiants de version, produire une archive immuable, publier son DOI et ajouter un fichier CITATION.cff.",
+    privacyK: "Confidentialité et télémétrie",
+    privacyT: "Les données scientifiques restent locales ; des événements d’usage peuvent être transmis.",
+    privacyP: "La télémétrie est configurable depuis Paramètres > Confidentialité. Elle est conçue pour mesurer l’usage et améliorer l’estimation des durées OpenMetaBar sans transmettre le contenu biologique des projets.",
+    collected: "Peut être enregistré",
+    collectedItems: ["Onglets ouverts", "Analyses lancées", "Durées des traitements OpenMetaBar", "Erreurs rencontrées", "Informations techniques d’exécution"],
+    never: "N’est pas transmis",
+    neverItems: ["Tables d’abondance", "Métadonnées scientifiques", "Noms d’échantillons", "Séquences", "Nom d’utilisateur de la machine"],
+    privacyNote: "Les événements sont placés dans une file locale et peuvent être envoyés ultérieurement lorsque le réseau est disponible. L’envoi peut être désactivé dans l’application et la file peut être vidée.",
+    helpK: "Avant de commencer",
+    helpT: "Trois ressources pour choisir le bon parcours.",
+    helpItems: [
+      ["Tutoriels", "Tester BarCodeR sur un jeu de données documenté.", "#/tutorials"],
+      ["Documentation", "Consulter les guides méthodologiques et techniques.", "#/documentation"],
+      ["Fonctionnement", "Comprendre le lien entre BarCodeR et OpenMetaBar.", "#/functioning"]
+    ]
+  } : {
+    k: "Download, install and cite",
+    title: "Choose an access mode suited to your environment.",
+    p: "BarCodeR can be launched from its R sources. A standalone Windows distribution is planned to simplify use without manual installation, but no public binary is included in this version of the website.",
+    version: "Application version",
+    docs: "Documentation",
+    languages: "Interface languages",
+    sourceAvailable: "Available now",
+    pending: "To finalise",
+    repository: "Source repository",
+    sourceTitle: "Run from the R sources",
+    sourceP: "The current reference option for inspecting the code, developing modules or deploying the application in a controlled R environment.",
+    sourceNeeds: ["R and the application dependencies", "Access to the GitHub repository", "Local installation or Shiny server"],
+    sourceAction: "Open the BarCodeR repository",
+    clone: "Clone the repository",
+    launch: "Launch the application",
+    copy: "Copy",
+    copied: "Copied",
+    windowsTitle: "Standalone Windows distribution",
+    windowsP: "Format intended for users who do not want to install R and all dependencies manually.",
+    windowsNeeds: ["Versioned archive", "SHA-256 checksum", "Update instructions", "Validation on a clean Windows installation"],
+    windowsStatus: "The Windows package is not provided by the current website.",
+    serverTitle: "Server deployment",
+    serverP: "Installation intended for a platform, team or shared service. Storage, access rights and backups must be configured by the administrator.",
+    serverNeeds: ["R and system packages", "Shiny Server or equivalent infrastructure", "Persistent project storage", "Access and backup policy"],
+    serverAction: "Read the architecture",
+    hpcTitle: "OpenMetaBar on an HPC cluster",
+    hpcP: "OpenMetaBar complements BarCodeR when processing starts from FASTQ. The cluster and execution tools are not provided with the application.",
+    hpcNeeds: ["SSH connection", "Slurm scheduler", "Nextflow", "Singularity or Apptainer", "Databases and compute resources"],
+    hpcAction: "View the HPC workflow",
+    modesK: "Access modes",
+    modesT: "One software package, several deployment contexts.",
+    requirementsK: "Compatibility and requirements",
+    requirementsT: "What each mode requires before getting started.",
+    mode: "Mode",
+    rRequired: "Local R",
+    clusterRequired: "Cluster",
+    internet: "Internet",
+    suitable: "Recommended context",
+    yes: "Yes",
+    no: "No",
+    optional: "Optional",
+    planned: "Planned",
+    rows: [
+      ["R sources", "Yes", "No", "For installation and updates", "Development, expertise, server"],
+      ["Standalone Windows", "No", "No", "For download and updates", "Guided local use"],
+      ["Shared server", "On the server", "No", "Depends on infrastructure", "Platform or team"],
+      ["OpenMetaBar", "Depends on installation", "Yes", "Depends on cluster", "FASTQ processing on HPC"]
+    ],
+    releasesK: "Versions and publication status",
+    releasesT: "Separate what is usable from what still needs to be published.",
+    releaseRows: [
+      ["BarCodeR", `v${appVersion}`, "Version detected in app.R", "stable"],
+      ["Documentation", `v${documentationVersion}`, "90 pages, 9 modules, 5 languages", "stable"],
+      ["Public website", "Lot 7", "Editorial redesign in progress", "progress"],
+      ["Windows distribution", "Not published", "Archive and validation to produce", "pending"],
+      ["License", "Not declared", "Must be defined before external redistribution", "pending"],
+      ["DOI / archive", "Not published", "Must be produced for a persistent citation", "pending"]
+    ],
+    stable: "Available",
+    progress: "In progress",
+    openScienceK: "Code and open science",
+    openScienceT: "Sources can be inspected; the license and citable archive still need formalisation.",
+    appRepo: "BarCodeR source code",
+    appRepoP: "R/Shiny application, analytical modules, project management and OpenMetaBar integration.",
+    siteRepo: "Website source code",
+    siteRepoP: "React/Vite website, public content, embedded documentation and generation scripts.",
+    openGithub: "Open on GitHub",
+    citationK: "Citation",
+    citationT: "Use a temporary citation until a DOI is published.",
+    citationP: "This wording identifies the version and repository, but it must be replaced by the official citation once the versioned archive is published.",
+    copyCitation: "Copy citation",
+    publicationWarning: "Before formal external distribution",
+    publicationWarningP: "Declare a license, synchronise all version identifiers, create an immutable archive, publish its DOI and add a CITATION.cff file.",
+    privacyK: "Privacy and telemetry",
+    privacyT: "Scientific data remain local; usage events may be transmitted.",
+    privacyP: "Telemetry is configurable from Settings > Privacy. It is designed to measure usage and improve OpenMetaBar runtime estimation without transmitting the biological content of projects.",
+    collected: "May be recorded",
+    collectedItems: ["Opened tabs", "Launched analyses", "OpenMetaBar processing durations", "Encountered errors", "Technical runtime information"],
+    never: "Is not transmitted",
+    neverItems: ["Abundance tables", "Scientific metadata", "Sample names", "Sequences", "Machine username"],
+    privacyNote: "Events are queued locally and may be sent later when a network is available. Sending can be disabled in the application and the queue can be cleared.",
+    helpK: "Before getting started",
+    helpT: "Three resources for selecting the right path.",
+    helpItems: [
+      ["Tutorials", "Test BarCodeR with a documented dataset.", "#/tutorials"],
+      ["Documentation", "Read methodological and technical guides.", "#/documentation"],
+      ["How it works", "Understand the relationship between BarCodeR and OpenMetaBar.", "#/functioning"]
+    ]
+  };
+
+  const statusLabel = (status: string) => status === "stable" ? c.stable : status === "progress" ? c.progress : c.pending;
+
+  return <main className="download-page">
+    <section className="download-hero">
+      <div className="page-width download-hero-grid">
+        <div><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="download-hero-actions"><a className="button primary" href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer">{c.sourceAction}<span>↗</span></a><button className="button secondary" type="button" onClick={() => document.getElementById("download-modes")?.scrollIntoView({ behavior: "smooth" })}>{c.modesK}<span>↓</span></button></div></div>
+        <div className="download-release-card" aria-label={c.version}><span>BarCodeR</span><strong>v{appVersion}</strong><dl><div><dt>{c.docs}</dt><dd>v{documentationVersion}</dd></div><div><dt>{c.languages}</dt><dd>5</dd></div><div><dt>{c.repository}</dt><dd>GitHub</dd></div></dl></div>
+      </div>
+    </section>
+
+    <section className="section page-width" id="download-modes">
+      <div className="section-heading"><div><Eyebrow>{c.modesK}</Eyebrow><h2>{c.modesT}</h2></div></div>
+      <div className="download-mode-grid">
+        <article className="download-mode-card featured"><header><span>R</span><b>{c.sourceAvailable}</b></header><h3>{c.sourceTitle}</h3><p>{c.sourceP}</p><ul>{c.sourceNeeds.map((item) => <li key={item}>{item}</li>)}</ul><div className="download-code-stack"><div><small>{c.clone}</small><code>{cloneCommand}</code><button type="button" onClick={() => copyText("clone", cloneCommand)}>{copied === "clone" ? c.copied : c.copy}</button></div><div><small>{c.launch}</small><code>{sourceCommand}</code><button type="button" onClick={() => copyText("launch", sourceCommand)}>{copied === "launch" ? c.copied : c.copy}</button></div></div><a href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer">{c.sourceAction}<span>↗</span></a></article>
+        <article className="download-mode-card pending"><header><span>WIN</span><b>{c.pending}</b></header><h3>{c.windowsTitle}</h3><p>{c.windowsP}</p><ul>{c.windowsNeeds.map((item) => <li key={item}>{item}</li>)}</ul><div className="download-unavailable"><span>!</span><p>{c.windowsStatus}</p></div></article>
+        <article className="download-mode-card"><header><span>SRV</span><b>{c.sourceAvailable}</b></header><h3>{c.serverTitle}</h3><p>{c.serverP}</p><ul>{c.serverNeeds.map((item) => <li key={item}>{item}</li>)}</ul><a href="#/functioning">{c.serverAction}<span>→</span></a></article>
+        <article className="download-mode-card openmetabar"><header><span>HPC</span><b>OpenMetaBar</b></header><h3>{c.hpcTitle}</h3><p>{c.hpcP}</p><ul>{c.hpcNeeds.map((item) => <li key={item}>{item}</li>)}</ul><a href="#/functioning">{c.hpcAction}<span>→</span></a></article>
+      </div>
+    </section>
+
+    <section className="section section-tint download-requirements-section"><div className="page-width"><div className="section-heading"><div><Eyebrow>{c.requirementsK}</Eyebrow><h2>{c.requirementsT}</h2></div></div><div className="download-table-wrap"><table><thead><tr><th>{c.mode}</th><th>{c.rRequired}</th><th>{c.clusterRequired}</th><th>{c.internet}</th><th>{c.suitable}</th></tr></thead><tbody>{c.rows.map((row) => <tr key={row[0]}>{row.map((cell, index) => <td key={`${row[0]}-${index}`}>{cell}</td>)}</tr>)}</tbody></table></div></div></section>
+
+    <section className="section page-width download-release-section"><div className="section-heading"><div><Eyebrow>{c.releasesK}</Eyebrow><h2>{c.releasesT}</h2></div></div><div className="download-release-list">{c.releaseRows.map(([name, value, note, status]) => <article key={name}><div><small>{name}</small><strong>{value}</strong></div><p>{note}</p><span className={`status-${status}`}>{statusLabel(status)}</span></article>)}</div></section>
+
+    <section className="download-open-science"><div className="page-width"><div className="download-open-heading"><div><Eyebrow>{c.openScienceK}</Eyebrow><h2>{c.openScienceT}</h2></div></div><div className="download-repository-grid"><a href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer"><span>R</span><small>github.com/MLPosuphy/BarCodeR</small><h3>{c.appRepo}</h3><p>{c.appRepoP}</p><b>{c.openGithub} ↗</b></a><a href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application" target="_blank" rel="noreferrer"><span>WEB</span><small>github.com/MLPosuphy/site-BarCodeR-R-shiny-application</small><h3>{c.siteRepo}</h3><p>{c.siteRepoP}</p><b>{c.openGithub} ↗</b></a></div></div></section>
+
+    <section className="section page-width download-citation-section"><div className="download-citation-grid"><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p></div><div className="download-citation-box"><blockquote>{temporaryCitation}</blockquote><button type="button" onClick={() => copyText("citation", temporaryCitation)}>{copied === "citation" ? c.copied : c.copyCitation}</button></div></div><div className="download-publication-warning"><span>!</span><div><strong>{c.publicationWarning}</strong><p>{c.publicationWarningP}</p></div></div></section>
+
+    <section className="download-privacy-section"><div className="page-width"><div className="download-privacy-heading"><Eyebrow>{c.privacyK}</Eyebrow><h2>{c.privacyT}</h2><p>{c.privacyP}</p></div><div className="download-privacy-grid"><article className="collected"><span>+</span><h3>{c.collected}</h3><ul>{c.collectedItems.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="never"><span>−</span><h3>{c.never}</h3><ul>{c.neverItems.map((item) => <li key={item}>{item}</li>)}</ul></article></div><p className="download-privacy-note">{c.privacyNote}</p></div></section>
+
+    <section className="section page-width download-help-section"><div className="section-heading"><div><Eyebrow>{c.helpK}</Eyebrow><h2>{c.helpT}</h2></div></div><div className="download-help-grid">{c.helpItems.map(([title, description, href], index) => <a href={href} key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{description}</p><b>→</b></a>)}</div></section>
+  </main>;
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Télécharger" : "Download"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Télécharger" : "Download"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -1668,6 +2446,7 @@ export default function App() {
       : route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
       : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation")
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
+      : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
       : route === "/functioning" || route === "/application" ? (language === "fr" ? "Fonctionnement de l’écosystème" : "How the ecosystem works")
       : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
       : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
@@ -1687,10 +2466,11 @@ export default function App() {
   if (activeModule) page = <ModulePage module={activeModule} language={language} />;
   else if (route === "/functioning" || route === "/application") page = <ApplicationIndex language={language} />;
   else if (route === "/analyses") page = <AnalysesPage language={language} />;
+  else if (route === "/showcase") page = <ShowcasePage language={language} />;
   else if (route === "/tutorials" || route === "/evidence") page = <EvidencePage language={language} />;
   else if (route === "/documentation") page = <DocumentationPage language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
-  else if (route === "/download" || route === "/availability") page = <AvailabilityPage language={language} />;
+  else if (route === "/download" || route === "/availability") page = <DownloadPage language={language} />;
   else page = <Landing language={language} />;
 
   return <div className={activeModule?.key === "openmetabar" ? "site-shell openmetabar-route" : "site-shell"}><Header language={language} setLanguage={setLanguage} route={route} />{page}<Footer language={language} /></div>;
