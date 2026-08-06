@@ -1082,13 +1082,443 @@ const publicFigures = [
   { file: "globalpatterns-alpha-diversity.png", title: { fr: "Diversité intra-échantillon", en: "Within-sample diversity" }, method: { fr: "Richesse observée et Shannon sur les comptes", en: "Observed richness and Shannon on counts" } }
 ];
 
+type TutorialCategory = "start" | "prepare" | "analyse" | "advanced";
+type TutorialLevel = "beginner" | "intermediate" | "advanced";
+type TutorialStatus = "published" | "planned";
+
+type TutorialJourney = {
+  id: string;
+  category: TutorialCategory;
+  level: TutorialLevel;
+  status: TutorialStatus;
+  duration: string;
+  title: Localized;
+  summary: Localized;
+  dataset: Localized;
+  goal: Localized;
+  outputs: Localized[];
+  steps: Localized[];
+  modules: string[];
+  caution: Localized;
+};
+
+type TestDataset = {
+  id: string;
+  status: "available" | "specified" | "planned";
+  title: Localized;
+  input: Localized;
+  purpose: Localized;
+  coverage: Localized[];
+  note: Localized;
+};
+
+const tutorialJourneys: TutorialJourney[] = [
+  {
+    id: "discover-globalpatterns", category: "start", level: "beginner", status: "published", duration: "15 min",
+    title: { fr: "Découvrir BarCodeR avec GlobalPatterns", en: "Discover BarCodeR with GlobalPatterns" },
+    summary: { fr: "Parcourir le cycle complet, de l’import d’un phyloseq public à une première planche de résultats.", en: "Walk through the complete cycle, from importing a public phyloseq object to a first results panel." },
+    dataset: { fr: "GlobalPatterns · phyloseq public", en: "GlobalPatterns · public phyloseq" },
+    goal: { fr: "Comprendre où charger, contrôler, explorer, analyser et sauvegarder un résultat.", en: "Understand where to load, check, explore, analyse and save a result." },
+    outputs: [
+      { fr: "un diagnostic rapide du dataset", en: "a rapid dataset diagnosis" },
+      { fr: "un barplot au niveau Phylum", en: "a phylum-level bar plot" },
+      { fr: "une PCoA Bray–Curtis", en: "a Bray–Curtis PCoA" },
+      { fr: "une composition MultiView", en: "a MultiView composition" }
+    ],
+    steps: [
+      { fr: "Créer un projet de démonstration puis importer l’objet GlobalPatterns.", en: "Create a demonstration project and import the GlobalPatterns object." },
+      { fr: "Ouvrir Description et vérifier dimensions, profondeur, taxonomie et métadonnées.", en: "Open Description and check dimensions, depth, taxonomy and metadata." },
+      { fr: "Produire une composition taxonomique en abondances relatives au niveau Phylum.", en: "Produce a relative-abundance taxonomic composition at phylum level." },
+      { fr: "Calculer Observed et Shannon puis comparer les environnements.", en: "Compute Observed and Shannon, then compare environments." },
+      { fr: "Construire une PCoA fondée sur Bray–Curtis et colorée par environnement.", en: "Build a Bray–Curtis PCoA coloured by environment." },
+      { fr: "Sauvegarder les figures et les réunir dans MultiView.", en: "Save the figures and combine them in MultiView." }
+    ],
+    modules: ["input-data", "description", "exploration", "analyse", "multiview"],
+    caution: { fr: "Ce parcours sert à comprendre l’interface ; il ne constitue pas une analyse écologique complète de GlobalPatterns.", en: "This journey explains the interface; it is not a complete ecological analysis of GlobalPatterns." }
+  },
+  {
+    id: "audit-phyloseq", category: "prepare", level: "beginner", status: "published", duration: "20 min",
+    title: { fr: "Auditer un phyloseq avant toute analyse", en: "Audit a phyloseq object before analysis" },
+    summary: { fr: "Vérifier la structure de l’objet, les profondeurs, la sparsité, la taxonomie et les métadonnées avant de choisir une méthode.", en: "Check object structure, depths, sparsity, taxonomy and metadata before choosing a method." },
+    dataset: { fr: "GlobalPatterns ou votre propre phyloseq", en: "GlobalPatterns or your own phyloseq" },
+    goal: { fr: "Décider si le dataset est analysable et identifier les points nécessitant une correction ou une justification.", en: "Decide whether the dataset is ready for analysis and identify issues requiring correction or justification." },
+    outputs: [
+      { fr: "une checklist de structure", en: "a structure checklist" },
+      { fr: "un bilan de profondeur et de sparsité", en: "a depth and sparsity assessment" },
+      { fr: "un bilan taxonomique", en: "a taxonomy assessment" },
+      { fr: "une liste d’échantillons à examiner", en: "a list of samples to inspect" }
+    ],
+    steps: [
+      { fr: "Contrôler la présence et l’orientation des tables OTU, taxonomie et métadonnées.", en: "Check the presence and orientation of OTU, taxonomy and metadata tables." },
+      { fr: "Vérifier la concordance des identifiants entre les composants.", en: "Check identifier consistency across components." },
+      { fr: "Examiner profondeur, richesse, dominance et sparsité par échantillon.", en: "Inspect depth, richness, dominance and sparsity by sample." },
+      { fr: "Mesurer la complétude taxonomique à chaque rang.", en: "Assess taxonomic completeness at each rank." },
+      { fr: "Repérer les valeurs manquantes et les variables de métadonnées non exploitables.", en: "Identify missing values and unusable metadata variables." },
+      { fr: "Examiner les courbes de raréfaction et les échantillons atypiques sans les exclure automatiquement.", en: "Inspect rarefaction curves and atypical samples without excluding them automatically." }
+    ],
+    modules: ["description", "data-edition"],
+    caution: { fr: "Un échantillon atypique n’est pas nécessairement erroné. Toute exclusion doit être documentée et biologiquement justifiée.", en: "An atypical sample is not necessarily erroneous. Any exclusion must be documented and biologically justified." }
+  },
+  {
+    id: "filter-provenance", category: "prepare", level: "intermediate", status: "published", duration: "25 min",
+    title: { fr: "Filtrer sans perdre la provenance", en: "Filter without losing provenance" },
+    summary: { fr: "Créer plusieurs branches analytiques à partir d’un même objet et comparer leur impact sans écraser l’original.", en: "Create several analytical branches from the same object and compare their impact without overwriting the original." },
+    dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
+    goal: { fr: "Comprendre la différence entre corriger un objet et produire un dataset filtré dérivé.", en: "Understand the difference between correcting an object and producing a derived filtered dataset." },
+    outputs: [
+      { fr: "trois datasets dérivés", en: "three derived datasets" },
+      { fr: "un bilan avant/après", en: "a before/after assessment" },
+      { fr: "un historique des filtres", en: "a filtering history" },
+      { fr: "une décision de seuil argumentée", en: "a justified threshold decision" }
+    ],
+    steps: [
+      { fr: "Dupliquer le dataset original et nommer clairement la branche de travail.", en: "Duplicate the original dataset and clearly name the working branch." },
+      { fr: "Créer une filtration faible fondée sur la prévalence.", en: "Create a light prevalence-based filtering branch." },
+      { fr: "Créer une filtration standard combinant prévalence et abondance minimale.", en: "Create a standard branch combining prevalence and minimum abundance." },
+      { fr: "Créer une filtration stricte uniquement pour tester la sensibilité des résultats.", en: "Create a strict branch solely to test result sensitivity." },
+      { fr: "Comparer le nombre de taxons, les reads conservés et la distribution des profondeurs.", en: "Compare retained taxa, reads and depth distributions." },
+      { fr: "Conserver la branche la plus défendable et documenter pourquoi les autres ne sont pas retenues.", en: "Keep the most defensible branch and document why the others are not retained." }
+    ],
+    modules: ["datasets", "filtration", "description"],
+    caution: { fr: "Un seuil plus strict n’est pas automatiquement meilleur. Il peut supprimer un signal rare mais biologiquement pertinent.", en: "A stricter threshold is not automatically better. It can remove a rare but biologically relevant signal." }
+  },
+  {
+    id: "composition-alpha", category: "analyse", level: "beginner", status: "published", duration: "25 min",
+    title: { fr: "Comparer composition et diversité alpha", en: "Compare composition and alpha diversity" },
+    summary: { fr: "Décrire les communautés, choisir un rang taxonomique et comparer plusieurs indices de diversité intra-échantillon.", en: "Describe communities, choose a taxonomic rank and compare several within-sample diversity indices." },
+    dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
+    goal: { fr: "Produire une description lisible des groupes sans confondre abondance relative, richesse et équitabilité.", en: "Produce a readable group description without confusing relative abundance, richness and evenness." },
+    outputs: [
+      { fr: "un barplot taxonomique", en: "a taxonomic bar plot" },
+      { fr: "un tableau de composition", en: "a composition table" },
+      { fr: "Observed, Shannon et Simpson", en: "Observed, Shannon and Simpson" },
+      { fr: "une comparaison statistique documentée", en: "a documented statistical comparison" }
+    ],
+    steps: [
+      { fr: "Choisir le rang Phylum et examiner la proportion de taxons non assignés.", en: "Choose phylum rank and inspect the proportion of unassigned taxa." },
+      { fr: "Définir un top N et regrouper explicitement les taxons restants.", en: "Define a top N and explicitly group remaining taxa." },
+      { fr: "Comparer profils par échantillon puis moyenne par environnement.", en: "Compare sample profiles, then means by environment." },
+      { fr: "Calculer plusieurs indices de diversité alpha sur les comptes adaptés.", en: "Compute several alpha-diversity indices on suitable counts." },
+      { fr: "Vérifier distributions et tailles de groupes avant de choisir le test.", en: "Check distributions and group sizes before choosing the test." },
+      { fr: "Interpréter séparément composition, richesse et équitabilité.", en: "Interpret composition, richness and evenness separately." }
+    ],
+    modules: ["exploration", "analyse"],
+    caution: { fr: "Une différence d’abondance relative ne signifie pas nécessairement une différence d’abondance absolue.", en: "A difference in relative abundance does not necessarily imply a difference in absolute abundance." }
+  },
+  {
+    id: "beta-permanova", category: "analyse", level: "intermediate", status: "published", duration: "35 min",
+    title: { fr: "Construire une bêta-diversité complète", en: "Build a complete beta-diversity analysis" },
+    summary: { fr: "Associer transformation, distance, ordination, PERMANOVA et contrôle de dispersion dans un même raisonnement.", en: "Combine transformation, distance, ordination, PERMANOVA and dispersion control in one reasoning workflow." },
+    dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
+    goal: { fr: "Tester une structuration entre groupes sans conclure à partir de la seule séparation visuelle des points.", en: "Test group structuring without drawing conclusions from visual point separation alone." },
+    outputs: [
+      { fr: "une PCoA Bray–Curtis", en: "a Bray–Curtis PCoA" },
+      { fr: "un diagnostic d’ordination", en: "an ordination diagnosis" },
+      { fr: "une PERMANOVA", en: "a PERMANOVA" },
+      { fr: "un test de dispersion multivariée", en: "a multivariate dispersion test" }
+    ],
+    steps: [
+      { fr: "Formuler la variable explicative et vérifier la taille des groupes.", en: "Define the explanatory variable and check group sizes." },
+      { fr: "Choisir une transformation cohérente avec la distance Bray–Curtis.", en: "Choose a transformation consistent with Bray–Curtis distance." },
+      { fr: "Construire la matrice de distance puis la PCoA.", en: "Build the distance matrix and then the PCoA." },
+      { fr: "Examiner variance expliquée, points atypiques et stabilité de la représentation.", en: "Inspect explained variance, atypical points and representation stability." },
+      { fr: "Lancer la PERMANOVA avec un nombre de permutations adapté.", en: "Run PERMANOVA with an appropriate number of permutations." },
+      { fr: "Contrôler PERMDISP avant d’attribuer la différence aux centroïdes des groupes.", en: "Check PERMDISP before attributing the difference to group centroids." },
+      { fr: "Présenter conjointement taille d’effet, p-value, dispersion et graphique.", en: "Report effect size, p-value, dispersion and plot together." }
+    ],
+    modules: ["analyse"],
+    caution: { fr: "Une PERMANOVA significative avec dispersion hétérogène demande une interprétation prudente.", en: "A significant PERMANOVA with heterogeneous dispersion requires cautious interpretation." }
+  },
+  {
+    id: "multiview-report", category: "start", level: "beginner", status: "published", duration: "20 min",
+    title: { fr: "Construire une planche de résultats avec MultiView", en: "Build a results panel with MultiView" },
+    summary: { fr: "Retrouver les figures sauvegardées, les organiser, les annoter et exporter une composition cohérente.", en: "Retrieve saved figures, arrange and annotate them, then export a coherent composition." },
+    dataset: { fr: "Tout projet contenant plusieurs figures", en: "Any project containing several figures" },
+    goal: { fr: "Passer d’une succession de graphiques isolés à une restitution structurée et traçable.", en: "Move from isolated plots to a structured and traceable report." },
+    outputs: [
+      { fr: "une bibliothèque filtrée", en: "a filtered library" },
+      { fr: "une sélection de figures", en: "a figure selection" },
+      { fr: "une grille MultiView", en: "a MultiView grid" },
+      { fr: "une image composite exportée", en: "an exported composite image" }
+    ],
+    steps: [
+      { fr: "Sauvegarder au moins trois figures issues de modules différents.", en: "Save at least three figures from different modules." },
+      { fr: "Filtrer la bibliothèque par dataset, module ou recherche textuelle.", en: "Filter the library by dataset, module or text search." },
+      { fr: "Ajouter favoris et tags pour distinguer les résultats retenus.", en: "Add favourites and tags to distinguish selected results." },
+      { fr: "Choisir une disposition puis glisser les figures dans les emplacements.", en: "Choose a layout and drag figures into the slots." },
+      { fr: "Vérifier lisibilité, ordre narratif et cohérence des légendes.", en: "Check readability, narrative order and legend consistency." },
+      { fr: "Exporter la composition et sauvegarder sa configuration.", en: "Export the composition and save its configuration." }
+    ],
+    modules: ["multiview"],
+    caution: { fr: "Une planche visuellement homogène ne corrige pas des méthodes ou des échelles incompatibles entre figures.", en: "A visually consistent panel does not correct incompatible methods or scales across figures." }
+  },
+  {
+    id: "differential-consensus", category: "advanced", level: "advanced", status: "planned", duration: "45–60 min",
+    title: { fr: "Comparer plusieurs moteurs différentiels", en: "Compare several differential-analysis engines" },
+    summary: { fr: "Mettre en parallèle ANCOM-BC2, LinDA, ALDEx2, corncob et MaAsLin 3 sur un signal contrôlé.", en: "Compare ANCOM-BC2, LinDA, ALDEx2, corncob and MaAsLin 3 on a controlled signal." },
+    dataset: { fr: "Benchmark différentiel simulé · à produire", en: "Simulated differential benchmark · to produce" },
+    goal: { fr: "Distinguer résultats spécifiques à une méthode et signaux concordants entre modèles.", en: "Distinguish method-specific findings from signals shared across models." },
+    outputs: [{ fr: "cinq résultats comparables", en: "five comparable results" }, { fr: "une matrice de concordance", en: "a concordance matrix" }, { fr: "une sélection robuste de taxons", en: "a robust taxon selection" }],
+    steps: [
+      { fr: "Construire un dataset simulé avec vrais positifs, absence d’effet et structure de groupes connue.", en: "Build a simulated dataset with known true positives, null effects and group structure." },
+      { fr: "Fixer la même population, le même contraste et les mêmes règles de correction multiple.", en: "Use the same population, contrast and multiple-testing rules." },
+      { fr: "Comparer signes, tailles d’effet, significativité et rangs taxonomiques.", en: "Compare signs, effect sizes, significance and taxonomic ranks." },
+      { fr: "Documenter les divergences plutôt que de sélectionner uniquement la méthode la plus favorable.", en: "Document disagreements rather than selecting only the most favourable method." }
+    ],
+    modules: ["analyse"],
+    caution: { fr: "Ce tutoriel sera publié avec un dataset dont le signal attendu est connu afin d’éviter une comparaison circulaire sur un cas réel.", en: "This tutorial will be published with a dataset whose expected signal is known, avoiding circular comparison on a real case." }
+  },
+  {
+    id: "compare-markers", category: "advanced", level: "advanced", status: "planned", duration: "45 min",
+    title: { fr: "Comparer plusieurs marqueurs ou matrices", en: "Compare several markers or matrices" },
+    summary: { fr: "Harmoniser les échantillons puis comparer plusieurs représentations avec Mantel, Procrustes, PROTEST, co-inertie et MCOA.", en: "Harmonise samples and compare representations using Mantel, Procrustes, PROTEST, co-inertia and MCOA." },
+    dataset: { fr: "Projet multi-marqueurs · à produire", en: "Multi-marker project · to produce" },
+    goal: { fr: "Évaluer si plusieurs marqueurs décrivent une organisation écologique cohérente.", en: "Assess whether several markers describe a coherent ecological organisation." },
+    outputs: [{ fr: "des matrices harmonisées", en: "harmonised matrices" }, { fr: "plusieurs tests de concordance", en: "several concordance tests" }, { fr: "une synthèse multi-tableaux", en: "a multi-table synthesis" }],
+    steps: [
+      { fr: "Identifier l’intersection exacte des échantillons et variables comparables.", en: "Identify the exact intersection of comparable samples and variables." },
+      { fr: "Appliquer des transformations et distances défendables dans chaque matrice.", en: "Apply defensible transformations and distances to each matrix." },
+      { fr: "Comparer les structures par plusieurs méthodes complémentaires.", en: "Compare structures using several complementary methods." },
+      { fr: "Séparer concordance globale, alignement des ordinations et contribution des tables.", en: "Separate global concordance, ordination alignment and table contribution." }
+    ],
+    modules: ["analyse"],
+    caution: { fr: "La concordance dépend fortement de l’intersection des échantillons et des choix de prétraitement.", en: "Concordance strongly depends on sample intersection and preprocessing choices." }
+  },
+  {
+    id: "openmetabar-run", category: "advanced", level: "advanced", status: "planned", duration: "60 min",
+    title: { fr: "Lancer un run OpenMetaBar minimal", en: "Launch a minimal OpenMetaBar run" },
+    summary: { fr: "Préparer FASTQ et design, configurer le pipeline, soumettre sur Slurm puis importer le phyloseq produit.", en: "Prepare FASTQ and design, configure the pipeline, submit through Slurm and import the resulting phyloseq object." },
+    dataset: { fr: "Mini-run FASTQ + référence · à produire", en: "FASTQ mini-run + reference · to produce" },
+    goal: { fr: "Démontrer le passage reproductible des reads bruts à un objet analysable dans BarCodeR.", en: "Demonstrate the reproducible transition from raw reads to an analysable BarCodeR object." },
+    outputs: [{ fr: "un design validé", en: "a validated design" }, { fr: "un job Slurm suivi", en: "a monitored Slurm job" }, { fr: "des logs interprétables", en: "interpretable logs" }, { fr: "un phyloseq importé", en: "an imported phyloseq" }],
+    steps: [
+      { fr: "Préparer un jeu réduit légalement redistribuable et une base de référence minimale.", en: "Prepare a small redistributable dataset and a minimal reference database." },
+      { fr: "Valider noms de fichiers, design et paramètres technologiques.", en: "Validate filenames, design and technology-specific parameters." },
+      { fr: "Prévisualiser la configuration puis soumettre le job.", en: "Preview the configuration and submit the job." },
+      { fr: "Lire états Slurm, logs Nextflow et sorties avant l’import final.", en: "Read Slurm states, Nextflow logs and outputs before final import." }
+    ],
+    modules: ["openmetabar", "input-data", "description"],
+    caution: { fr: "Ce parcours dépend d’un cluster Slurm configuré, de Nextflow et d’images de conteneurs accessibles.", en: "This journey requires a configured Slurm cluster, Nextflow and accessible container images." }
+  }
+];
+
+const testDatasets: TestDataset[] = [
+  {
+    id: "globalpatterns", status: "available", title: { fr: "GlobalPatterns", en: "GlobalPatterns" },
+    input: { fr: "Objet phyloseq public", en: "Public phyloseq object" },
+    purpose: { fr: "Découvrir l’application et reproduire composition, diversité alpha, ordination, PERMANOVA, filtration et MultiView.", en: "Discover the application and reproduce composition, alpha diversity, ordination, PERMANOVA, filtering and MultiView." },
+    coverage: [{ fr: "26 échantillons", en: "26 samples" }, { fr: "9 environnements", en: "9 environments" }, { fr: "figures de référence", en: "reference figures" }],
+    note: { fr: "Disponible dans le package phyloseq ; les figures publiques du site sont générées par le script versionné.", en: "Available in the phyloseq package; the public site figures are generated by the versioned script." }
+  },
+  {
+    id: "diagnostic-challenge", status: "specified", title: { fr: "Diagnostic Challenge", en: "Diagnostic Challenge" },
+    input: { fr: "Phyloseq volontairement problématique", en: "Deliberately problematic phyloseq" },
+    purpose: { fr: "S’entraîner à repérer identifiants incohérents, métadonnées manquantes, taxonomie partielle, profondeur variable et échantillons atypiques.", en: "Practise identifying inconsistent identifiers, missing metadata, partial taxonomy, variable depth and atypical samples." },
+    coverage: [{ fr: "structure", en: "structure" }, { fr: "qualité", en: "quality" }, { fr: "corrections", en: "corrections" }],
+    note: { fr: "Spécification pédagogique définie ; fichier redistribuable encore à générer et valider.", en: "Educational specification defined; redistributable file still needs to be generated and validated." }
+  },
+  {
+    id: "differential-benchmark", status: "planned", title: { fr: "Differential Benchmark", en: "Differential Benchmark" },
+    input: { fr: "Comptes simulés avec signal connu", en: "Simulated counts with known signal" },
+    purpose: { fr: "Comparer équitablement les cinq moteurs différentiels et mesurer concordance, vrais positifs et faux positifs.", en: "Fairly compare the five differential engines and assess concordance, true positives and false positives." },
+    coverage: [{ fr: "5 moteurs", en: "5 engines" }, { fr: "effets connus", en: "known effects" }, { fr: "benchmark", en: "benchmark" }],
+    note: { fr: "À produire avec une graine, un modèle de simulation et des réponses attendues versionnés.", en: "To be produced with a versioned seed, simulation model and expected answers." }
+  },
+  {
+    id: "multi-marker", status: "planned", title: { fr: "Multi-marker Project", en: "Multi-marker Project" },
+    input: { fr: "Plusieurs phyloseq partageant les mêmes échantillons", en: "Several phyloseq objects sharing the same samples" },
+    purpose: { fr: "Tester Mantel, Procrustes, PROTEST, co-inertie et MCOA dans un cas où l’intersection des échantillons est contrôlée.", en: "Test Mantel, Procrustes, PROTEST, co-inertia and MCOA with a controlled sample intersection." },
+    coverage: [{ fr: "multi-datasets", en: "multiple datasets" }, { fr: "concordance", en: "concordance" }, { fr: "MCOA", en: "MCOA" }],
+    note: { fr: "À construire à partir de matrices distribuables et d’une question écologique simple.", en: "To be built from redistributable matrices and a simple ecological question." }
+  },
+  {
+    id: "openmetabar-mini", status: "planned", title: { fr: "OpenMetaBar Mini-run", en: "OpenMetaBar Mini-run" },
+    input: { fr: "FASTQ, design et référence minimaux", en: "Minimal FASTQ, design and reference" },
+    purpose: { fr: "Rejouer l’ensemble du passage FASTQ → Slurm → Nextflow → phyloseq sur un calcul court.", en: "Replay the complete FASTQ → Slurm → Nextflow → phyloseq path in a short computation." },
+    coverage: [{ fr: "FASTQ", en: "FASTQ" }, { fr: "HPC", en: "HPC" }, { fr: "phyloseq final", en: "final phyloseq" }],
+    note: { fr: "À produire après validation des droits de redistribution et du profil d’exécution de démonstration.", en: "To be produced after validating redistribution rights and the demonstration execution profile." }
+  },
+  {
+    id: "complete-project", status: "planned", title: { fr: "Complete Analysis Project", en: "Complete Analysis Project" },
+    input: { fr: "Projet BarCodeR portable", en: "Portable BarCodeR project" },
+    purpose: { fr: "Fournir un projet déjà structuré avec datasets dérivés, historiques, figures et composition MultiView pour apprendre à reprendre un travail existant.", en: "Provide a structured project with derived datasets, histories, figures and a MultiView composition to learn how to resume existing work." },
+    coverage: [{ fr: "provenance", en: "provenance" }, { fr: "historiques", en: "histories" }, { fr: "reprise", en: "resumption" }],
+    note: { fr: "À générer lorsque le format de projet public et la politique de compatibilité de versions seront figés.", en: "To be generated once the public project format and version-compatibility policy are fixed." }
+  }
+];
+
 function EvidencePage({ language }: { language: Language }) {
+  const [filter, setFilter] = useState<"all" | TutorialLevel>("all");
+  const filteredTutorials = useMemo(() => tutorialJourneys.filter(tutorial => filter === "all" || tutorial.level === filter), [filter]);
+  const publishedCount = tutorialJourneys.filter(tutorial => tutorial.status === "published").length;
+  const plannedCount = tutorialJourneys.filter(tutorial => tutorial.status === "planned").length;
+
   const c = language === "fr" ? {
-    k: "Tutoriels & datasets tests", title: "Apprendre BarCodeR, onglet par onglet.", p: "Cette page est prête à accueillir un tutoriel guidé pour chacun des treize onglets. Chaque emplacement pourra réunir un objectif, un dataset test, les étapes à suivre et le résultat attendu.", tutorials: "Les tutoriels à construire", tutorialP: "Une trame cohérente est déjà prévue pour couvrir tout le processus analytique.", status: "Tutoriel à venir", format: "Parcours guidé · dataset test · résultat attendu", datasetsK: "Datasets tests", datasetsT: "Des jeux de données pour tester, comprendre et reproduire.", available: "Disponible", planned: "À préparer", datasets: [["GlobalPatterns", "Objet phyloseq public utilisé pour illustrer composition, ordination et diversité alpha.", "Disponible"], ["Sortie OpenMetaBar minimale", "Petit jeu de FASTQ et design associé pour rejouer le passage du pipeline vers BarCodeR.", "À préparer"], ["Projet d’analyse complet", "Objet phyloseq et métadonnées conçus pour parcourir filtration, exploration, analyses et restitution.", "À préparer"]], demo: "Aperçu du dataset GlobalPatterns", demoP: "Les trois sorties ci-dessous sont recalculables à partir du script R versionné dans le dépôt.", method: "Méthode", facts: [["26", "échantillons"], ["18 988", "taxons non nuls analysés"], ["9", "types d’environnements"]], trace: "Ressources du dataset", script: "Consulter le script R", data: "Lire la provenance"
+    k: "Tutoriels & datasets tests",
+    title: "Apprendre par objectif, pas onglet par onglet.",
+    p: "Chaque parcours part d’une question concrète, précise les prérequis, déroule les étapes dans BarCodeR et indique ce qui doit être obtenu, vérifié et interprété. Les ressources encore absentes sont identifiées sans les présenter comme disponibles.",
+    published: "parcours publiés",
+    planned: "parcours avancés planifiés",
+    publicDataset: "dataset public reproductible",
+    referenceOutputs: "sorties de référence",
+    startK: "Choisir son point de départ",
+    startT: "Trois portes d’entrée selon votre situation.",
+    startRoutes: [
+      ["Première visite", "Découvrir le cycle complet avec GlobalPatterns en quinze minutes.", "discover-globalpatterns", "Commencer"],
+      ["J’ai mon phyloseq", "Auditer sa structure et sa qualité avant de sélectionner une méthode.", "audit-phyloseq", "Contrôler"],
+      ["Je veux tester une hypothèse", "Associer ordination, PERMANOVA et dispersion dans un parcours cohérent.", "beta-permanova", "Analyser"]
+    ],
+    libraryK: "Bibliothèque de parcours",
+    libraryT: "Des procédures courtes, vérifiables et reliées aux modules réels.",
+    libraryP: "Les six parcours publiés sont directement consultables ci-dessous. Les trois parcours avancés documentent aussi les ressources nécessaires avant leur publication complète.",
+    filters: [["all", "Tous"], ["beginner", "Débutant"], ["intermediate", "Intermédiaire"], ["advanced", "Avancé"]],
+    statusPublished: "Parcours publié",
+    statusPlanned: "Ressource à préparer",
+    level: { beginner: "Débutant", intermediate: "Intermédiaire", advanced: "Avancé" },
+    category: { start: "Prise en main", prepare: "Préparation", analyse: "Analyse", advanced: "Avancé" },
+    dataset: "Dataset",
+    objective: "Objectif",
+    outputs: "Résultats attendus",
+    steps: "Voir les étapes",
+    modules: "Modules associés",
+    caution: "Point de vigilance",
+    documentation: "Documentation",
+    noResult: "Aucun parcours ne correspond à ce filtre.",
+    formatK: "Format pédagogique commun",
+    formatT: "Chaque tutoriel doit permettre de refaire, vérifier et expliquer.",
+    formatItems: [
+      ["01", "Objectif", "Une question précise et un résultat attendu avant de commencer."],
+      ["02", "Prérequis", "Les composants phyloseq, variables, packages ou accès HPC nécessaires."],
+      ["03", "Dataset", "Une ressource identifiable, versionnée et légalement redistribuable."],
+      ["04", "Procédure", "Des étapes ordonnées reliées aux modules réellement utilisés."],
+      ["05", "Contrôles", "Les diagnostics à examiner avant de conserver un résultat."],
+      ["06", "Interprétation", "Ce que la sortie permet de conclure et ce qu’elle ne démontre pas."],
+      ["07", "Ressources", "Figures, tableaux, code R, provenance et version de l’application."]
+    ],
+    datasetsK: "Bibliothèque de datasets tests",
+    datasetsT: "Une fonction pédagogique distincte pour chaque ressource.",
+    datasetsP: "Le statut distingue les fichiers réellement disponibles, les spécifications déjà définies et les jeux encore à construire.",
+    datasetStatus: { available: "Disponible", specified: "Spécification prête", planned: "À produire" },
+    datasetInput: "Entrée",
+    datasetCoverage: "Couvre",
+    demo: "Démonstration reproductible",
+    demoT: "GlobalPatterns fournit aujourd’hui la référence publique complète.",
+    demoP: "Les trois figures sont générées à partir du même objet et du script R versionné. Elles servent de résultats de contrôle pour vérifier la composition, l’ordination et la diversité alpha.",
+    method: "Méthode",
+    facts: [["26", "échantillons"], ["18 988", "taxons non nuls analysés"], ["9", "types d’environnements"]],
+    resourcesK: "Ressources pédagogiques",
+    resourcesT: "Reproduire le cas public et préparer les suivants.",
+    script: "Consulter le script R",
+    provenance: "Lire la provenance",
+    workbook: "Télécharger le carnet de parcours",
+    docs: "Ouvrir la documentation"
   } : {
-    k: "Tutorials & test datasets", title: "Learn BarCodeR, one tab at a time.", p: "This page is ready to host one guided tutorial for each of the thirteen tabs. Every slot can combine a goal, a test dataset, step-by-step instructions and an expected result.", tutorials: "Tutorials to build", tutorialP: "A consistent framework is already in place to cover the entire analytical process.", status: "Tutorial coming soon", format: "Guided workflow · test dataset · expected result", datasetsK: "Test datasets", datasetsT: "Datasets for testing, learning and reproducing.", available: "Available", planned: "To prepare", datasets: [["GlobalPatterns", "Public phyloseq object used to illustrate composition, ordination and alpha diversity.", "Available"], ["Minimal OpenMetaBar output", "Small FASTQ set and associated design to replay the handover from the pipeline to BarCodeR.", "To prepare"], ["Complete analysis project", "Phyloseq object and metadata designed to cover filtering, exploration, analysis and reporting.", "To prepare"]], demo: "GlobalPatterns dataset preview", demoP: "The three outputs below can be recomputed from the versioned R script in the repository.", method: "Method", facts: [["26", "samples"], ["18,988", "nonzero taxa analysed"], ["9", "environment types"]], trace: "Dataset resources", script: "View R script", data: "Read provenance"
+    k: "Tutorials & test datasets",
+    title: "Learn by objective, not tab by tab.",
+    p: "Each journey starts from a concrete question, states its requirements, walks through the BarCodeR steps and explains what must be obtained, checked and interpreted. Missing resources are explicitly identified rather than presented as available.",
+    published: "published journeys",
+    planned: "planned advanced journeys",
+    publicDataset: "reproducible public dataset",
+    referenceOutputs: "reference outputs",
+    startK: "Choose a starting point",
+    startT: "Three entry points depending on your situation.",
+    startRoutes: [
+      ["First visit", "Discover the full cycle with GlobalPatterns in fifteen minutes.", "discover-globalpatterns", "Start"],
+      ["I have a phyloseq", "Audit its structure and quality before selecting a method.", "audit-phyloseq", "Check"],
+      ["I want to test a hypothesis", "Combine ordination, PERMANOVA and dispersion in a coherent journey.", "beta-permanova", "Analyse"]
+    ],
+    libraryK: "Journey library",
+    libraryT: "Short, verifiable procedures linked to the real modules.",
+    libraryP: "The six published journeys can be read directly below. The three advanced journeys also document the resources required before full publication.",
+    filters: [["all", "All"], ["beginner", "Beginner"], ["intermediate", "Intermediate"], ["advanced", "Advanced"]],
+    statusPublished: "Published journey",
+    statusPlanned: "Resource to prepare",
+    level: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
+    category: { start: "Getting started", prepare: "Preparation", analyse: "Analysis", advanced: "Advanced" },
+    dataset: "Dataset",
+    objective: "Objective",
+    outputs: "Expected outputs",
+    steps: "View steps",
+    modules: "Related modules",
+    caution: "Caution",
+    documentation: "Documentation",
+    noResult: "No journey matches this filter.",
+    formatK: "Shared learning format",
+    formatT: "Every tutorial must make it possible to repeat, check and explain.",
+    formatItems: [
+      ["01", "Objective", "A precise question and expected result before starting."],
+      ["02", "Requirements", "Required phyloseq components, variables, packages or HPC access."],
+      ["03", "Dataset", "An identifiable, versioned and legally redistributable resource."],
+      ["04", "Procedure", "Ordered steps linked to the modules actually used."],
+      ["05", "Checks", "Diagnostics to inspect before retaining a result."],
+      ["06", "Interpretation", "What the output supports and what it does not demonstrate."],
+      ["07", "Resources", "Figures, tables, R code, provenance and application version."]
+    ],
+    datasetsK: "Test dataset library",
+    datasetsT: "A distinct educational role for each resource.",
+    datasetsP: "Status labels distinguish files that are actually available, specifications already defined and datasets still to be built.",
+    datasetStatus: { available: "Available", specified: "Specification ready", planned: "To produce" },
+    datasetInput: "Input",
+    datasetCoverage: "Covers",
+    demo: "Reproducible demonstration",
+    demoT: "GlobalPatterns currently provides the complete public reference.",
+    demoP: "The three figures are generated from the same object and the versioned R script. They act as control outputs for composition, ordination and alpha diversity.",
+    method: "Method",
+    facts: [["26", "samples"], ["18,988", "nonzero taxa analysed"], ["9", "environment types"]],
+    resourcesK: "Learning resources",
+    resourcesT: "Reproduce the public case and prepare the next ones.",
+    script: "View R script",
+    provenance: "Read provenance",
+    workbook: "Download journey workbook",
+    docs: "Open documentation"
   };
-  return <main><section className="page-hero page-width tutorial-hero"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="tutorial-summary"><div><b>{modules.length}</b><span>{language === "fr" ? "tutoriels prévus" : "planned tutorials"}</span></div><div><b>1</b><span>{language === "fr" ? "trame commune" : "shared framework"}</span></div><div><b>3</b><span>{language === "fr" ? "datasets tests planifiés" : "planned test datasets"}</span></div></div></section><section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{c.tutorials}</Eyebrow><h2>{c.tutorials}</h2></div><p>{c.tutorialP}</p></div><div className="tutorial-grid">{modules.map((module, index) => <article className="tutorial-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="tutorial-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><div className="tutorial-status"><span />{c.status}</div><b>{c.format}</b></article>)}</div></div></section><section className="section page-width"><div className="section-intro"><Eyebrow>{c.datasetsK}</Eyebrow><h2>{c.datasetsT}</h2></div><div className="test-dataset-grid">{c.datasets.map(([title, text, status], index) => <article className={index === 0 ? "available" : ""} key={title}><span>{status}</span><h3>{title}</h3><p>{text}</p></article>)}</div><div className="dataset-demo"><div><Eyebrow>{c.demo}</Eyebrow><h2>{c.demo}</h2><p>{c.demoP}</p></div><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></div></section><section className="figure-gallery page-width">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section><section className="section section-tint"><div className="page-width tutorial-resources"><div><Eyebrow>{c.trace}</Eyebrow><h2>{c.trace}</h2></div><div className="evidence-links"><a className="button primary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script}<span>↗</span></a><a className="button secondary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/public/figures/data-provenance.tsv">{c.data}<span>↗</span></a></div></div></section></main>;
+
+  const scrollToTutorial = (id: string) => document.getElementById(`tutorial-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  return <main className="tutorial-page">
+    <section className="page-hero page-width tutorial-hero tutorial-hero-v2">
+      <Eyebrow>{c.k}</Eyebrow>
+      <h1>{c.title}</h1>
+      <p className="lead">{c.p}</p>
+      <div className="tutorial-summary tutorial-summary-v2">
+        <div><b>{publishedCount}</b><span>{c.published}</span></div>
+        <div><b>{plannedCount}</b><span>{c.planned}</span></div>
+        <div><b>1</b><span>{c.publicDataset}</span></div>
+        <div><b>{publicFigures.length}</b><span>{c.referenceOutputs}</span></div>
+      </div>
+    </section>
+
+    <section className="section tutorial-start-section"><div className="page-width">
+      <div className="section-heading reveal"><div><Eyebrow>{c.startK}</Eyebrow><h2>{c.startT}</h2></div></div>
+      <div className="tutorial-start-grid">{c.startRoutes.map(([title, text, id, action], index) => <article className="tutorial-start-card reveal" style={{ "--delay": `${index * 65}ms` } as React.CSSProperties} key={id}>
+        <span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><button type="button" onClick={() => scrollToTutorial(id)}>{action}<i>↓</i></button>
+      </article>)}</div>
+    </div></section>
+
+    <section className="section section-tint tutorial-library-section"><div className="page-width">
+      <div className="tutorial-library-header"><div><Eyebrow>{c.libraryK}</Eyebrow><h2>{c.libraryT}</h2><p>{c.libraryP}</p></div><div className="tutorial-filters" role="group" aria-label={language === "fr" ? "Filtrer les tutoriels par niveau" : "Filter tutorials by level"}>{c.filters.map(([value, label]) => <button type="button" className={filter === value ? "active" : ""} aria-pressed={filter === value} onClick={() => setFilter(value as "all" | TutorialLevel)} key={value}>{label}</button>)}</div></div>
+      <div className="journey-grid">{filteredTutorials.map((tutorial, index) => <article id={`tutorial-${tutorial.id}`} className={`journey-card ${tutorial.status}`} style={{ "--delay": `${(index % 3) * 55}ms` } as React.CSSProperties} key={tutorial.id}>
+        <div className="journey-card-head"><span className={`journey-status ${tutorial.status}`}>{tutorial.status === "published" ? c.statusPublished : c.statusPlanned}</span><span className="journey-duration">{tutorial.duration}</span></div>
+        <div className="journey-tags"><span>{c.category[tutorial.category]}</span><span>{c.level[tutorial.level]}</span></div>
+        <h3>{tx(tutorial.title, language)}</h3>
+        <p className="journey-summary">{tx(tutorial.summary, language)}</p>
+        <dl className="journey-meta"><div><dt>{c.dataset}</dt><dd>{tx(tutorial.dataset, language)}</dd></div><div><dt>{c.objective}</dt><dd>{tx(tutorial.goal, language)}</dd></div></dl>
+        <div className="journey-outputs"><b>{c.outputs}</b><ul>{tutorial.outputs.map(output => <li key={output.fr}>{tx(output, language)}</li>)}</ul></div>
+        <details className="journey-details"><summary>{c.steps}<span>+</span></summary><ol>{tutorial.steps.map(step => <li key={step.fr}>{tx(step, language)}</li>)}</ol><div className="journey-caution"><span>!</span><div><b>{c.caution}</b><p>{tx(tutorial.caution, language)}</p></div></div></details>
+        <div className="journey-links"><div><small>{c.modules}</small>{tutorial.modules.map(key => { const module = modules.find(item => item.key === key); return module ? <a href={moduleHref(key)} key={key}>{tx(module.title, language)}</a> : null; })}</div><a className="journey-doc-link" href="#/documentation">{c.documentation}<span>→</span></a></div>
+      </article>)}</div>
+      {filteredTutorials.length === 0 && <p className="tutorial-empty">{c.noResult}</p>}
+    </div></section>
+
+    <section className="section tutorial-format-section"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.formatK}</Eyebrow><h2>{c.formatT}</h2></div></div><div className="tutorial-format-grid">{c.formatItems.map(([number, title, text]) => <article className="reveal" key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+
+    <section className="section section-dark dataset-library-section"><div className="page-width"><div className="section-heading light reveal"><div><Eyebrow>{c.datasetsK}</Eyebrow><h2>{c.datasetsT}</h2></div><p>{c.datasetsP}</p></div><div className="dataset-library-grid">{testDatasets.map((dataset, index) => <article className={`dataset-library-card ${dataset.status} reveal`} style={{ "--delay": `${(index % 3) * 55}ms` } as React.CSSProperties} key={dataset.id}><div className="dataset-library-head"><span>{c.datasetStatus[dataset.status]}</span><i>{String(index + 1).padStart(2, "0")}</i></div><h3>{tx(dataset.title, language)}</h3><small>{c.datasetInput}</small><b>{tx(dataset.input, language)}</b><p>{tx(dataset.purpose, language)}</p><div><small>{c.datasetCoverage}</small><ul>{dataset.coverage.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div><footer>{tx(dataset.note, language)}</footer></article>)}</div></div></section>
+
+    <section className="section page-width tutorial-demo-section"><div className="dataset-demo dataset-demo-v2"><div><Eyebrow>{c.demo}</Eyebrow><h2>{c.demoT}</h2><p>{c.demoP}</p></div><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></div></section>
+    <section className="figure-gallery page-width tutorial-figure-gallery">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section>
+
+    <section className="section section-tint tutorial-resources-section"><div className="page-width tutorial-resources tutorial-resources-v2"><div><Eyebrow>{c.resourcesK}</Eyebrow><h2>{c.resourcesT}</h2></div><div className="evidence-links"><a className="button primary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script}<span>↗</span></a><a className="button secondary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/public/figures/data-provenance.tsv">{c.provenance}<span>↗</span></a><a className="button secondary" href={asset(`tutorials/barcoder-tutorial-workbook-${language}.md`)} download>{c.workbook}<span>↓</span></a><a className="button secondary" href="#/documentation">{c.docs}<span>→</span></a></div></div></section>
+  </main>;
 }
 
 type DocumentationManifest = {

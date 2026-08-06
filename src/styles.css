@@ -1051,3 +1051,131 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .analysis-limit-grid { grid-template-columns: 1fr; }
   .analysis-final-band { padding-block: 58px; }
 }
+
+/* Lot 5 — tutorials and test datasets */
+.tutorial-hero-v2 { padding-bottom: 72px; }
+.tutorial-summary-v2 { grid-template-columns: repeat(4, 1fr); max-width: 1080px; }
+.tutorial-start-section { background: var(--surface); padding-top: 52px; }
+.tutorial-start-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+.tutorial-start-card { background: linear-gradient(145deg, #f8f7ff 0%, #fff 68%); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; min-height: 290px; padding: 28px; position: relative; }
+.tutorial-start-card > span { color: var(--violet); font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.tutorial-start-card h3 { font-size: 25px; margin-top: 42px; }
+.tutorial-start-card p { color: var(--muted); line-height: 1.62; margin-top: 13px; }
+.tutorial-start-card button { align-items: center; align-self: flex-start; background: none; border: 0; color: var(--violet-dark); cursor: pointer; display: flex; font-family: var(--font-display); font-size: 14px; font-weight: 700; gap: 11px; margin-top: auto; padding: 24px 0 0; }
+.tutorial-start-card button i { font-style: normal; transition: transform .2s ease; }
+.tutorial-start-card button:hover i { transform: translateY(4px); }
+.tutorial-library-section { padding-top: 92px; }
+.tutorial-library-header { align-items: end; display: grid; gap: 38px; grid-template-columns: minmax(0, 1fr) auto; margin-bottom: 44px; }
+.tutorial-library-header h2 { font-size: clamp(38px, 4vw, 58px); max-width: 850px; }
+.tutorial-library-header > div:first-child > p { color: var(--muted); line-height: 1.65; margin-top: 18px; max-width: 760px; }
+.tutorial-filters { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; display: flex; gap: 5px; padding: 5px; }
+.tutorial-filters button { background: transparent; border: 0; border-radius: 999px; color: var(--muted); cursor: pointer; font-family: var(--font-display); font-size: 12px; font-weight: 700; padding: 11px 15px; white-space: nowrap; }
+.tutorial-filters button.active { background: var(--ink); color: #fff; }
+.journey-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.journey-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; display: flex; flex-direction: column; min-width: 0; padding: 28px; scroll-margin-top: 105px; }
+.journey-card.planned { background: linear-gradient(150deg, #fff 0%, #faf9ff 100%); border-style: dashed; }
+.journey-card-head { align-items: center; display: flex; justify-content: space-between; }
+.journey-status { border-radius: 999px; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 7px 10px; text-transform: uppercase; }
+.journey-status.published { background: #e8f7ef; color: #176b43; }
+.journey-status.planned { background: #f1eefc; color: var(--violet-dark); }
+.journey-duration { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+.journey-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 25px; }
+.journey-tags span { border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-family: var(--font-mono); font-size: 10px; padding: 6px 9px; text-transform: uppercase; }
+.journey-card h3 { font-size: 29px; line-height: 1.12; margin-top: 19px; }
+.journey-summary { color: var(--muted); line-height: 1.62; margin-top: 14px; }
+.journey-meta { border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; gap: 0; grid-template-columns: .8fr 1.2fr; margin-top: 24px; }
+.journey-meta > div { padding: 17px 14px 17px 0; }
+.journey-meta > div + div { border-left: 1px solid var(--line); padding-left: 18px; }
+.journey-meta dt, .journey-outputs > b, .journey-links small { color: var(--muted-light); font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.journey-meta dd { font-size: 13px; line-height: 1.45; margin-top: 7px; }
+.journey-outputs { margin-top: 23px; }
+.journey-outputs ul { display: grid; gap: 8px 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 13px; }
+.journey-outputs li { color: var(--muted); font-size: 13px; line-height: 1.4; padding-left: 16px; position: relative; }
+.journey-outputs li::before { background: var(--violet); border-radius: 50%; content: ""; height: 5px; left: 0; position: absolute; top: .55em; width: 5px; }
+.journey-details { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 6px; }
+.journey-details summary { align-items: center; cursor: pointer; display: flex; font-family: var(--font-display); font-size: 14px; font-weight: 700; justify-content: space-between; list-style: none; padding: 14px 0 8px; }
+.journey-details summary::-webkit-details-marker { display: none; }
+.journey-details summary span { font-size: 21px; font-weight: 400; transition: transform .2s ease; }
+.journey-details[open] summary span { transform: rotate(45deg); }
+.journey-details ol { counter-reset: journey-step; display: grid; gap: 12px; margin-top: 13px; }
+.journey-details ol li { color: var(--muted); counter-increment: journey-step; font-size: 14px; line-height: 1.55; padding-left: 38px; position: relative; }
+.journey-details ol li::before { align-items: center; background: var(--violet-pale); border-radius: 50%; color: var(--violet-dark); content: counter(journey-step); display: flex; font-family: var(--font-mono); font-size: 10px; font-weight: 700; height: 25px; justify-content: center; left: 0; position: absolute; top: -2px; width: 25px; }
+.journey-caution { align-items: flex-start; background: #fff8ec; border: 1px solid #f0dfbe; border-radius: 10px; display: flex; gap: 13px; margin-top: 22px; padding: 15px; }
+.journey-caution > span { align-items: center; background: #f2c970; border-radius: 50%; display: flex; flex: 0 0 auto; font-family: var(--font-display); font-size: 12px; font-weight: 800; height: 23px; justify-content: center; width: 23px; }
+.journey-caution b { font-size: 12px; }
+.journey-caution p { color: #6f5c38; font-size: 12px; line-height: 1.5; margin-top: 4px; }
+.journey-links { align-items: end; border-top: 1px solid var(--line); display: flex; gap: 20px; justify-content: space-between; margin-top: auto; padding-top: 22px; }
+.journey-links > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.journey-links small { flex-basis: 100%; }
+.journey-links > div a { background: var(--violet-pale); border-radius: 999px; color: var(--violet-dark); font-size: 11px; padding: 6px 9px; }
+.journey-doc-link { align-items: center; color: var(--ink); display: flex; flex: 0 0 auto; font-family: var(--font-display); font-size: 12px; font-weight: 700; gap: 7px; }
+.tutorial-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); padding: 30px; text-align: center; }
+.tutorial-format-section { overflow: hidden; }
+.tutorial-format-grid { border-bottom: 1px solid var(--line-dark); border-left: 1px solid var(--line-dark); display: grid; grid-template-columns: repeat(4, 1fr); }
+.tutorial-format-grid article { border-right: 1px solid var(--line-dark); border-top: 1px solid var(--line-dark); min-height: 235px; padding: 25px; }
+.tutorial-format-grid article > span { color: var(--violet); font-family: var(--font-mono); font-size: 11px; }
+.tutorial-format-grid h3 { font-size: 21px; margin-top: 36px; }
+.tutorial-format-grid p { color: var(--muted); font-size: 13px; line-height: 1.55; margin-top: 11px; }
+.tutorial-format-grid article:last-child { background: var(--violet-pale); grid-column: span 2; }
+.dataset-library-section { padding-block: 100px; }
+.dataset-library-grid { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dataset-library-card { background: #171a2c; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; display: flex; flex-direction: column; min-height: 430px; padding: 25px; }
+.dataset-library-card.available { background: linear-gradient(150deg, #241d50 0%, #171a2c 70%); border-color: rgba(176,158,255,.6); }
+.dataset-library-card.specified { border-style: dashed; }
+.dataset-library-head { align-items: center; display: flex; justify-content: space-between; }
+.dataset-library-head span { background: rgba(255,255,255,.09); border-radius: 999px; color: #e6e4f2; font-family: var(--font-mono); font-size: 9px; letter-spacing: .04em; padding: 7px 9px; text-transform: uppercase; }
+.dataset-library-card.available .dataset-library-head span { background: #dff7e9; color: #176b43; }
+.dataset-library-card.specified .dataset-library-head span { background: #eee9ff; color: #4b378c; }
+.dataset-library-head i { color: rgba(255,255,255,.38); font-family: var(--font-mono); font-size: 11px; font-style: normal; }
+.dataset-library-card h3 { color: #fff; font-size: 25px; margin-top: 35px; }
+.dataset-library-card > small, .dataset-library-card > div > small { color: rgba(255,255,255,.45); font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; margin-top: 19px; text-transform: uppercase; }
+.dataset-library-card > b { color: #fff; font-size: 13px; margin-top: 7px; }
+.dataset-library-card > p { color: rgba(255,255,255,.66); font-size: 13px; line-height: 1.55; margin-top: 17px; }
+.dataset-library-card > div:nth-of-type(2) { margin-top: 21px; }
+.dataset-library-card ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.dataset-library-card li { border: 1px solid rgba(255,255,255,.13); border-radius: 999px; color: rgba(255,255,255,.72); font-size: 10px; padding: 5px 8px; }
+.dataset-library-card footer { border-top: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.48); font-size: 11px; line-height: 1.5; margin-top: auto; padding-top: 17px; }
+.tutorial-demo-section { padding-bottom: 20px; }
+.dataset-demo-v2 { margin-top: 0; }
+.tutorial-figure-gallery { margin-bottom: 70px; }
+.tutorial-resources-v2 { gap: 35px; }
+.tutorial-resources-v2 .evidence-links { flex-wrap: wrap; justify-content: flex-end; }
+.tutorial-resources-v2 .button { min-width: 220px; }
+
+@media (max-width: 1180px) {
+  .tutorial-library-header { align-items: start; grid-template-columns: 1fr; }
+  .tutorial-filters { justify-self: start; }
+  .dataset-library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 920px) {
+  .tutorial-summary-v2 { grid-template-columns: repeat(2, 1fr); }
+  .tutorial-summary-v2 > div:nth-child(3) { border-left: 0; border-top: 1px solid var(--line-dark); }
+  .tutorial-summary-v2 > div:nth-child(4) { border-top: 1px solid var(--line-dark); }
+  .tutorial-start-grid { grid-template-columns: 1fr; }
+  .tutorial-start-card { min-height: 230px; }
+  .journey-grid { grid-template-columns: 1fr; }
+  .tutorial-format-grid { grid-template-columns: repeat(2, 1fr); }
+  .tutorial-format-grid article:last-child { grid-column: span 2; }
+  .tutorial-resources-v2 .evidence-links { justify-content: flex-start; }
+}
+
+@media (max-width: 620px) {
+  .tutorial-summary-v2 { grid-template-columns: 1fr; }
+  .tutorial-summary-v2 > div:nth-child(3), .tutorial-summary-v2 > div:nth-child(4) { border-left: 0; }
+  .tutorial-start-card { min-height: 250px; padding: 23px; }
+  .tutorial-library-section { padding-top: 72px; }
+  .tutorial-filters { border-radius: 12px; display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
+  .tutorial-filters button { border-radius: 8px; }
+  .journey-card { padding: 22px 18px; }
+  .journey-card h3 { font-size: 25px; }
+  .journey-meta { grid-template-columns: 1fr; }
+  .journey-meta > div + div { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+  .journey-outputs ul { grid-template-columns: 1fr; }
+  .journey-links { align-items: flex-start; flex-direction: column; }
+  .tutorial-format-grid { grid-template-columns: 1fr; }
+  .tutorial-format-grid article, .tutorial-format-grid article:last-child { grid-column: span 1; min-height: 190px; }
+  .dataset-library-grid { grid-template-columns: 1fr; }
+  .dataset-library-card { min-height: 390px; }
+  .tutorial-resources-v2 .button { min-width: 0; }
+}
