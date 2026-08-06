@@ -141,8 +141,8 @@ function Landing({ language }: { language: Language }) {
     version: "Versions présentées : BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
     metrics: [
       ["3", "technologies de séquençage", "Illumina · PacBio · Oxford Nanopore"],
-      ["5", "moteurs différentiels", "ANCOM-BC · ANCOM-BC2 · ALDEx2 · LinDA · corncob"],
-      ["6", "familles d’ordination", "PCA · PCoA · NMDS · RDA · CCA · CAP"],
+      ["5", "moteurs différentiels", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"],
+      ["6", "familles d’ordination", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
       ["R", "code exportable", "Commencer dans l’interface, poursuivre dans R"]
     ],
     journeysK: "Deux points d’entrée",
@@ -210,8 +210,8 @@ function Landing({ language }: { language: Language }) {
     version: "Versions presented: BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
     metrics: [
       ["3", "sequencing technologies", "Illumina · PacBio · Oxford Nanopore"],
-      ["5", "differential engines", "ANCOM-BC · ANCOM-BC2 · ALDEx2 · LinDA · corncob"],
-      ["6", "ordination families", "PCA · PCoA · NMDS · RDA · CCA · CAP"],
+      ["5", "differential engines", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"],
+      ["6", "ordination families", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
       ["R", "exportable code", "Start in the interface, continue in R"]
     ],
     journeysK: "Two entry points",
@@ -599,32 +599,448 @@ function ApplicationIndex({ language }: { language: Language }) {
     <section className="section section-tint process-section" id="function-modules"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2></div><p>{c.modulesP}</p></div>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{c.discover}<span>→</span></b></a>)}</div></div>)}</div></section>
   </main>;
 }
+type AnalysisFamily = "describe" | "test" | "compare" | "hypothesis";
+type AnalysisRequirement = "metadata" | "tree" | "multiple" | "counts";
+
+type AnalysisMethodSpec = {
+  id: string;
+  family: AnalysisFamily;
+  number: string;
+  icon: string;
+  title: Localized;
+  question: Localized;
+  summary: Localized;
+  methods: string[];
+  requirements: AnalysisRequirement[];
+  inputs: Localized[];
+  preparation: Localized[];
+  diagnostics: Localized[];
+  outputs: Localized[];
+  cautions: Localized[];
+  image?: string;
+  moduleKey: "exploration" | "analyse";
+};
+
+const analysisText = (fr: string, en: string): Localized => ({ fr, en });
+
+const analysisMethodCatalog: AnalysisMethodSpec[] = [
+  {
+    id: "composition",
+    family: "describe",
+    number: "01",
+    icon: "▥",
+    title: analysisText("Composition et taxons partagés", "Composition and shared taxa"),
+    question: analysisText("Quels taxons structurent mes communautés et lesquels sont partagés entre groupes ?", "Which taxa structure my communities and which are shared among groups?"),
+    summary: analysisText("Décrire la composition à différents rangs taxonomiques, cibler une lignée et comparer les taxons communs ou spécifiques.", "Describe composition at different taxonomic ranks, target a lineage and compare shared or specific taxa."),
+    methods: ["Barplot", "Venn", "UpSet", "Heat Tree", "Phylogeny", "Taxonomy quality"],
+    requirements: ["metadata"],
+    inputs: [analysisText("Table OTU/ASV", "OTU/ASV table"), analysisText("Taxonomie", "Taxonomy"), analysisText("Variable de groupe facultative", "Optional grouping variable")],
+    preparation: [analysisText("Choisir le rang taxonomique", "Choose the taxonomic rank"), analysisText("Définir le traitement des non-assignés", "Define how unassigned taxa are handled"), analysisText("Choisir comptes, proportions ou agrégation", "Choose counts, proportions or aggregation")],
+    diagnostics: [analysisText("Part des taxons non assignés", "Share of unassigned taxa"), analysisText("Effet du top N et du regroupement « Autres »", "Effect of top N and the 'Other' group"), analysisText("Couverture des groupes et des échantillons", "Coverage of groups and samples")],
+    outputs: [analysisText("Barplots interactifs", "Interactive bar plots"), analysisText("Diagrammes Venn/UpSet", "Venn/UpSet diagrams"), analysisText("Arbres et Heat Trees", "Trees and Heat Trees")],
+    cautions: [analysisText("Une proportion élevée ne prouve pas une différence statistique.", "A high proportion does not demonstrate a statistical difference."), analysisText("L’agrégation peut masquer une hétérogénéité au niveau ASV.", "Aggregation can hide ASV-level heterogeneity.")],
+    image: "barplot.png",
+    moduleKey: "exploration"
+  },
+  {
+    id: "alpha",
+    family: "describe",
+    number: "02",
+    icon: "α",
+    title: analysisText("Diversité alpha", "Alpha diversity"),
+    question: analysisText("La richesse ou la diversité intra-échantillon diffère-t-elle entre mes groupes ?", "Does within-sample richness or diversity differ among groups?"),
+    summary: analysisText("Calculer plusieurs indices, visualiser leur distribution et appliquer des tests adaptés au nombre de groupes et au plan d’étude.", "Compute several indices, visualise their distribution and apply tests suited to the number of groups and study design."),
+    methods: ["Observed", "Chao1", "ACE", "Shannon", "Simpson", "Inverse Simpson", "Fisher", "Faith PD"],
+    requirements: ["metadata", "tree", "counts"],
+    inputs: [analysisText("Table de comptes", "Count table"), analysisText("Variable de groupe", "Grouping variable"), analysisText("Arbre pour Faith PD", "Tree for Faith PD")],
+    preparation: [analysisText("Contrôler la profondeur de séquençage", "Check sequencing depth"), analysisText("Choisir les indices avant de tester", "Choose indices before testing"), analysisText("Définir les comparaisons prévues", "Define planned comparisons")],
+    diagnostics: [analysisText("Courbes de raréfaction", "Rarefaction curves"), analysisText("Distribution et valeurs atypiques", "Distribution and atypical values"), analysisText("Taille des groupes et comparaisons multiples", "Group size and multiple comparisons")],
+    outputs: [analysisText("Boxplots et points interactifs", "Interactive box plots and points"), analysisText("Tables d’indices", "Index tables"), analysisText("Tests globaux et post-hoc", "Global and post-hoc tests")],
+    cautions: [analysisText("La richesse observée dépend fortement de la profondeur.", "Observed richness strongly depends on depth."), analysisText("Un indice unique ne résume pas toutes les dimensions de la diversité.", "A single index does not summarise every dimension of diversity.")],
+    image: "alpha_diversite.png",
+    moduleKey: "exploration"
+  },
+  {
+    id: "ordination",
+    family: "describe",
+    number: "03",
+    icon: "◎",
+    title: analysisText("Ordinations", "Ordinations"),
+    question: analysisText("Comment les échantillons s’organisent-ils dans un espace multivarié ?", "How are samples organised in multivariate space?"),
+    summary: analysisText("Résumer la structure globale avec des méthodes non contraintes ou contraintes, tout en contrôlant la qualité de la représentation.", "Summarise overall structure with unconstrained or constrained methods while checking representation quality."),
+    methods: ["PCA", "PCoA", "NMDS", "CCA", "RDA", "dbRDA"],
+    requirements: ["metadata", "tree"],
+    inputs: [analysisText("Table OTU/ASV", "OTU/ASV table"), analysisText("Métadonnées facultatives ou explicatives", "Optional or explanatory metadata"), analysisText("Arbre pour UniFrac", "Tree for UniFrac")],
+    preparation: [analysisText("Choisir transformation et distance ensemble", "Choose transformation and distance together"), analysisText("Retirer les taxons à variance nulle", "Remove zero-variance taxa"), analysisText("Définir contraintes, covariables et blocs si nécessaire", "Define constraints, covariates and blocks when needed")],
+    diagnostics: [analysisText("Stress, convergence et Shepard pour NMDS", "Stress, convergence and Shepard for NMDS"), analysisText("Valeurs propres et inertie", "Eigenvalues and inertia"), analysisText("Stabilité des échantillons et robustesse", "Sample stability and robustness")],
+    outputs: [analysisText("Ordinations 2D/3D interactives", "Interactive 2D/3D ordinations"), analysisText("Biplots, centroides et envfit", "Biplots, centroids and envfit"), analysisText("Diagnostics et tables d’axes", "Diagnostics and axis tables")],
+    cautions: [analysisText("Une séparation visuelle n’est pas un test.", "Visual separation is not a test."), analysisText("Une NMDS non convergée ou à stress élevé ne doit pas être surinterprétée.", "A non-converged or high-stress NMDS should not be overinterpreted.")],
+    image: "ordinations.png",
+    moduleKey: "analyse"
+  },
+  {
+    id: "permanova",
+    family: "test",
+    number: "04",
+    icon: "P",
+    title: analysisText("PERMANOVA et dispersion", "PERMANOVA and dispersion"),
+    question: analysisText("Une variable explique-t-elle une part de la structure multivariée ?", "Does a variable explain part of multivariate structure?"),
+    summary: analysisText("Tester les différences de centroïdes avec des permutations et vérifier séparément que les dispersions ne conduisent pas à une conclusion trompeuse.", "Test centroid differences with permutations and separately check that dispersion does not lead to a misleading conclusion."),
+    methods: ["adonis2", "PERMDISP", "Pairwise", "Sequential tests", "Marginal tests"],
+    requirements: ["metadata", "tree"],
+    inputs: [analysisText("Matrice de distance", "Distance matrix"), analysisText("Facteur principal et covariables", "Main factor and covariates"), analysisText("Variable de bloc pour plans appariés", "Blocking variable for paired designs")],
+    preparation: [analysisText("Définir une formule conforme au plan", "Define a formula matching the design"), analysisText("Choisir le schéma de permutations", "Choose the permutation scheme"), analysisText("Corriger les comparaisons pairwise", "Correct pairwise comparisons")],
+    diagnostics: [analysisText("PERMDISP et distances aux centroïdes", "PERMDISP and distances to centroids"), analysisText("R², pseudo-F et p-value", "R², pseudo-F and p-value"), analysisText("Taille des groupes et structure des blocs", "Group size and block structure")],
+    outputs: [analysisText("Table PERMANOVA", "PERMANOVA table"), analysisText("Tests pairwise", "Pairwise tests"), analysisText("Graphiques de dispersion", "Dispersion plots")],
+    cautions: [analysisText("Une PERMANOVA significative peut refléter une dispersion différente.", "A significant PERMANOVA can reflect different dispersion."), analysisText("Les permutations doivent respecter les répétitions et les blocs.", "Permutations must respect repeated measures and blocks.")],
+    image: "permanova_dispersion.png",
+    moduleKey: "analyse"
+  },
+  {
+    id: "differential",
+    family: "test",
+    number: "05",
+    icon: "Δ",
+    title: analysisText("Analyses différentielles", "Differential analyses"),
+    question: analysisText("Quels taxons sont associés à une condition après ajustement du modèle ?", "Which taxa are associated with a condition after model adjustment?"),
+    summary: analysisText("Appliquer jusqu’à cinq moteurs sur un même jeu de taxons et comparer la significativité corrigée ainsi que la direction des effets.", "Run up to five engines on the same taxon set and compare adjusted significance and effect direction."),
+    methods: ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"],
+    requirements: ["metadata", "counts"],
+    inputs: [analysisText("Comptes bruts", "Raw counts"), analysisText("Variable principale et référence", "Main variable and reference"), analysisText("Covariables et effets aléatoires compatibles", "Compatible covariates and random effects")],
+    preparation: [analysisText("Appliquer un filtre de prévalence partagé", "Apply a shared prevalence filter"), analysisText("Choisir un rang taxonomique", "Choose a taxonomic rank"), analysisText("Vérifier réplicats, NA et confusion entre facteurs", "Check replicates, missing values and factor confounding")],
+    diagnostics: [analysisText("Prévalence, abondance et nombre d’échantillons", "Prevalence, abundance and sample count"), analysisText("Effet, q-value et direction", "Effect, q-value and direction"), analysisText("Concordance et discordance entre moteurs", "Concordance and disagreement among engines")],
+    outputs: [analysisText("Volcano plots et tableaux complets", "Volcano plots and complete tables"), analysisText("Consensus multi-méthodes", "Multi-method consensus"), analysisText("Dispersion corncob et prévalence MaAsLin 3 séparées", "Separate corncob dispersion and MaAsLin 3 prevalence")],
+    cautions: [analysisText("Les amplitudes d’effet des moteurs ne sont pas directement comparables.", "Effect magnitudes from different engines are not directly comparable."), analysisText("ALDEx2 et corncob ne gèrent pas les effets aléatoires.", "ALDEx2 and corncob do not support random effects.")],
+    image: "analyses_differentielles.png",
+    moduleKey: "analyse"
+  },
+  {
+    id: "matrices",
+    family: "compare",
+    number: "06",
+    icon: "⇄",
+    title: analysisText("Comparaison de matrices", "Matrix comparison"),
+    question: analysisText("Plusieurs marqueurs ou représentations racontent-ils une structure cohérente ?", "Do multiple markers or representations reveal a coherent structure?"),
+    summary: analysisText("Apparier rigoureusement les mêmes unités biologiques puis comparer distances, ordinations et configurations communes.", "Rigorously match the same biological units, then compare distances, ordinations and shared configurations."),
+    methods: ["Mantel", "Procrustes", "PROTEST", "Co-inertia", "MCOA"],
+    requirements: ["multiple", "tree"],
+    inputs: [analysisText("Au moins deux datasets", "At least two datasets"), analysisText("Clé d’appariement non ambiguë", "Unambiguous matching key"), analysisText("Intersection d’échantillons suffisante", "Sufficient sample intersection")],
+    preparation: [analysisText("Harmoniser les identifiants", "Harmonise identifiers"), analysisText("Choisir une préparation cohérente pour chaque matrice", "Choose coherent preparation for each matrix"), analysisText("Contrôler doublons et clés ambiguës", "Check duplicates and ambiguous keys")],
+    diagnostics: [analysisText("Recouvrement des échantillons et taxons", "Sample and taxon overlap"), analysisText("Résidus et flèches Procrustes", "Procrustes residuals and arrows"), analysisText("Distance au consensus MCOA", "Distance to the MCOA consensus")],
+    outputs: [analysisText("Corrélations Mantel", "Mantel correlations"), analysisText("Superpositions Procrustes", "Procrustes superimpositions"), analysisText("Consensus et projections partielles MCOA", "MCOA consensus and partial projections")],
+    cautions: [analysisText("La validité dépend entièrement de l’appariement.", "Validity depends entirely on matching."), analysisText("Une faible intersection peut ne plus représenter les datasets initiaux.", "A small intersection may no longer represent the original datasets.")],
+    image: "comparaison_matrices.png",
+    moduleKey: "analyse"
+  },
+  {
+    id: "networks",
+    family: "hypothesis",
+    number: "07",
+    icon: "⌘",
+    title: analysisText("Réseaux d’associations", "Association networks"),
+    question: analysisText("Quelles associations statistiques émergent entre taxons ou domaines ?", "Which statistical associations emerge among taxa or domains?"),
+    summary: analysisText("Construire, filtrer et comparer des réseaux simples ou multi-domaines avec des diagnostics de stabilité et de structure.", "Build, filter and compare single- or multi-domain networks with stability and structural diagnostics."),
+    methods: ["SPIEC-EASI", "SparCC", "Proportionality", "Correlations", "Bootstrap"],
+    requirements: ["counts", "multiple"],
+    inputs: [analysisText("Au moins quatre échantillons et trois taxons après préparation", "At least four samples and three taxa after preparation"), analysisText("Comptes et taxonomie", "Counts and taxonomy"), analysisText("Plusieurs datasets pour le multi-domaine", "Multiple datasets for multi-domain analysis")],
+    preparation: [analysisText("Filtrer prévalence et abondance", "Filter prevalence and abundance"), analysisText("Choisir une méthode compositionnelle adaptée", "Choose an appropriate compositional method"), analysisText("Éviter une double transformation", "Avoid double transformation")],
+    diagnostics: [analysisText("Stabilité bootstrap des arêtes", "Bootstrap edge stability"), analysisText("Densité, modularité et composantes", "Density, modularity and components"), analysisText("Sensibilité aux filtres et seuils", "Sensitivity to filters and thresholds")],
+    outputs: [analysisText("Réseaux interactifs", "Interactive networks"), analysisText("Tables des arêtes et nœuds", "Edge and node tables"), analysisText("Hubs, modules et comparaisons", "Hubs, modules and comparisons")],
+    cautions: [analysisText("Une arête est une association, pas une interaction démontrée.", "An edge is an association, not a demonstrated interaction."), analysisText("Un hub statistique n’est pas automatiquement une espèce clé.", "A statistical hub is not automatically a keystone species.")],
+    moduleKey: "analyse"
+  },
+  {
+    id: "clustering",
+    family: "hypothesis",
+    number: "08",
+    icon: "⋈",
+    title: analysisText("Clustering", "Clustering"),
+    question: analysisText("Des regroupements non supervisés sont-ils compatibles avec les données ?", "Are unsupervised groupings compatible with the data?"),
+    summary: analysisText("Regrouper échantillons ou taxons, comparer les algorithmes et évaluer la qualité des partitions avant toute interprétation biologique.", "Group samples or taxa, compare algorithms and assess partition quality before biological interpretation."),
+    methods: ["Hierarchical", "Ward", "Silhouette", "Dunn", "Heatmap", "Bootstrap"],
+    requirements: [],
+    inputs: [analysisText("Table OTU/ASV", "OTU/ASV table"), analysisText("Métadonnées ou taxonomie facultatives", "Optional metadata or taxonomy"), analysisText("Choix de l’unité à regrouper", "Choice of unit to cluster")],
+    preparation: [analysisText("Sélectionner transformation et distance compatibles", "Select compatible transformation and distance"), analysisText("Limiter les taxons rares ou peu variables", "Limit rare or low-variance taxa"), analysisText("Définir la plage de k", "Define the k range")],
+    diagnostics: [analysisText("Silhouette et indice de Dunn", "Silhouette and Dunn index"), analysisText("Corrélation cophénétique", "Cophenetic correlation"), analysisText("Taille et stabilité des groupes", "Group size and stability")],
+    outputs: [analysisText("Dendrogrammes", "Dendrograms"), analysisText("Heatmaps ordonnées", "Ordered heatmaps"), analysisText("Profils descriptifs des clusters", "Descriptive cluster profiles")],
+    cautions: [analysisText("Le meilleur k statistique n’est pas automatiquement biologiquement pertinent.", "The statistically best k is not automatically biologically meaningful."), analysisText("La mise à l’échelle peut masquer les différences absolues.", "Scaling can hide absolute differences.")],
+    image: "clustering.png",
+    moduleKey: "analyse"
+  }
+];
+
 function AnalysesPage({ language }: { language: Language }) {
+  const [activeFamily, setActiveFamily] = useState<"all" | AnalysisFamily>("all");
+  const [activeRequirement, setActiveRequirement] = useState<"all" | AnalysisRequirement>("all");
+
   const c = language === "fr" ? {
     k: "Capacités scientifiques",
-    title: "Choisir une analyse à partir de la question biologique.",
-    p: "Cette première vue regroupe les capacités réelles de BarCodeR par objectif scientifique. Les fiches détaillées des modules restent accessibles pour consulter les entrées, les paramètres, les diagnostics et les sorties.",
-    groups: [
-      ["Explorer les communautés", "Composition taxonomique, diversité alpha, taxons partagés, Heat Tree, phylogénie et qualité des assignations."],
-      ["Tester des hypothèses", "Ordinations, PERMANOVA, dispersion multivariée, analyses différentielles et clustering."],
-      ["Comparer plusieurs matrices", "Mantel, Procrustes, PROTEST, coefficient RV, co-inertie et STATIS."],
-      ["Explorer les associations", "Réseaux taxons-taxons, diagnostics de robustesse et comparaisons de réseaux."]
+    title: <>Choisir une méthode à partir de la <em>question biologique.</em></>,
+    p: "BarCodeR distingue la description, le test d’hypothèse, la comparaison de matrices et la génération d’hypothèses. Chaque famille ci-dessous précise les données requises, la préparation, les diagnostics et les limites à examiner avant d’interpréter un résultat.",
+    heroPrimary: "Trouver une méthode",
+    heroSecondary: "Lire le guide méthodologique",
+    metrics: [["8", "familles d’analyses"], ["5", "moteurs différentiels"], ["6", "méthodes d’ordination"], ["5", "cadres multi-matrices"]],
+    orientK: "Orientation rapide",
+    orientT: "Commencez par ce que vous cherchez à démontrer — ou à décrire.",
+    orientP: "Cliquer sur une question filtre immédiatement le catalogue. Le filtre ne remplace pas le choix scientifique : il réduit seulement les méthodes à examiner.",
+    families: [
+      ["all", "Tout afficher", "Voir les huit familles disponibles."],
+      ["describe", "Décrire mes données", "Composition, diversité et structure globale."],
+      ["test", "Tester une hypothèse", "Effet d’une variable ou taxons associés."],
+      ["compare", "Comparer plusieurs datasets", "Marqueurs, domaines ou représentations."],
+      ["hypothesis", "Générer des hypothèses", "Réseaux et regroupements non supervisés."]
+    ] as ["all" | AnalysisFamily, string, string][],
+    catalogK: "Catalogue des méthodes",
+    catalogT: "Des fiches conçues pour vérifier la compatibilité avant de calculer.",
+    catalogP: "Filtrez par objectif et par composant disponible. Ouvrez ensuite chaque fiche pour consulter les entrées, la préparation, les diagnostics, les sorties et les limites.",
+    objective: "Objectif",
+    dataAvailable: "Composant ou contrainte",
+    requirements: [
+      ["all", "Toutes les méthodes"],
+      ["metadata", "Métadonnées requises"],
+      ["tree", "Arbre utilisable"],
+      ["multiple", "Plusieurs datasets"],
+      ["counts", "Comptes bruts"]
+    ] as ["all" | AnalysisRequirement, string][],
+    requirementLabels: { metadata: "Métadonnées", tree: "Arbre facultatif/requis", multiple: "Multi-datasets", counts: "Comptes" } as Record<AnalysisRequirement, string>,
+    results: "méthodes affichées",
+    reset: "Réinitialiser",
+    methodsLabel: "Méthodes disponibles",
+    detailsOne: "Entrées, préparation et diagnostics",
+    detailsTwo: "Sorties et points de vigilance",
+    inputs: "Entrées",
+    preparation: "Préparation",
+    diagnostics: "Diagnostics à vérifier",
+    outputs: "Sorties",
+    cautions: "Points de vigilance",
+    openModule: "Ouvrir le module",
+    readGuide: "Guide méthodologique",
+    empty: "Aucune famille ne correspond à cette combinaison. Réinitialisez les filtres ou examinez les exigences de vos données.",
+    compatibilityK: "Transformation × distance",
+    compatibilityT: "La méthode commence avant le bouton Calculer.",
+    compatibilityP: "La transformation définit la représentation des données ; la distance définit ce que signifie être similaire. Certaines associations sont cohérentes, d’autres sont redondantes ou invalides.",
+    tableHeaders: ["Question", "Données", "Préparation", "Distance / modèle", "Analyses compatibles"],
+    compatibilityRows: [
+      ["Composition taxonomique", "Comptes", "Agrégation + abondance relative", "Aucune distance", "Barplot · Heat Tree"],
+      ["Structure d’abondance", "Comptes ou proportions", "Relatif ou Hellinger", "Bray-Curtis", "PCoA · NMDS · PERMANOVA"],
+      ["Structure compositionnelle", "Comptes avec zéros traités", "CLR", "Aitchison", "PCA · PCoA · clustering"],
+      ["Présence-absence", "Comptes binarisés", "Présence-absence", "Jaccard", "PCoA · NMDS · PERMANOVA"],
+      ["Structure phylogénétique", "OTU + arbre", "Selon pondération choisie", "UniFrac", "PCoA · PERMANOVA"],
+      ["Taxons associés", "Comptes entiers", "Filtre partagé, sans CLR", "Modèle par taxon", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"]
     ],
-    modules: "Accéder aux modules d’analyse"
+    warningTitle: "Combinaisons à éviter",
+    warningItems: ["CLR suivi de Bray-Curtis : la géométrie log-ratio n’est plus respectée.", "Aitchison après une transformation CLR déjà appliquée : risque de double transformation.", "ALDEx2, ANCOM-BC2 ou rarefaction sur des proportions : ces méthodes attendent des comptes.", "UniFrac sans arbre correctement apparié aux taxons : résultat impossible ou invalide."],
+    workflowK: "Parcours recommandé",
+    workflowT: "Une séquence courte pour éviter de tester trop tôt.",
+    workflowSteps: [
+      ["01", "Contrôler l’objet", "Structure, profondeur, taxonomie, métadonnées, arbre et valeurs manquantes dans Description."],
+      ["02", "Conserver une référence", "Garder le dataset brut et créer une version filtrée documentée plutôt que l’écraser."],
+      ["03", "Décrire avant de tester", "Examiner composition, diversité et ordination pour comprendre les principales structures."],
+      ["04", "Vérifier les hypothèses", "Contrôler stress, dispersion, blocs, réplicats et compatibilité transformation-distance."],
+      ["05", "Tester avec un modèle explicite", "Définir facteur principal, référence, covariables, effets aléatoires et permutations."],
+      ["06", "Lire au-delà de la p-value", "Examiner taille d’effet, R², q-value, prévalence, stabilité et cohérence entre méthodes."],
+      ["07", "Sauvegarder le contexte", "Conserver tables, figures, paramètres, code R et dataset source dans le projet."]
+    ],
+    limitsK: "Interprétation",
+    limitsT: "Ce que les résultats ne démontrent pas à eux seuls.",
+    limits: [
+      ["Ordination", "Une distance visuelle ou un chevauchement d’ellipses ne constitue pas un test statistique."],
+      ["PERMANOVA", "Une significativité peut être liée aux centroïdes, aux dispersions ou aux deux."],
+      ["Différentiel", "Un consensus entre moteurs renforce la robustesse, mais les amplitudes restent sur des échelles différentes."],
+      ["Mantel", "Une corrélation globale élevée n’identifie pas les échantillons responsables de l’accord ou du désaccord."],
+      ["Réseaux", "Une association n’établit ni causalité, ni interaction directe, ni statut d’espèce clé."],
+      ["Clustering", "Une partition stable peut être statistiquement nette sans correspondre à une entité biologique pertinente."]
+    ],
+    finalTitle: "La méthode retenue doit rester explicable.",
+    finalP: "Les fiches du site orientent le choix. Le guide méthodologique détaille les hypothèses et la documentation technique décrit les paramètres effectivement utilisés par l’application.",
+    finalModule: "Inspecter le module Analyse",
+    finalDocs: "Ouvrir la documentation"
   } : {
     k: "Scientific capabilities",
-    title: "Choose an analysis from the biological question.",
-    p: "This first view groups BarCodeR capabilities by scientific objective. Detailed module pages remain available for inputs, parameters, diagnostics and outputs.",
-    groups: [
-      ["Explore communities", "Taxonomic composition, alpha diversity, shared taxa, Heat Tree, phylogeny and assignment quality."],
-      ["Test hypotheses", "Ordinations, PERMANOVA, multivariate dispersion, differential analyses and clustering."],
-      ["Compare multiple matrices", "Mantel, Procrustes, PROTEST, RV coefficient, co-inertia and STATIS."],
-      ["Explore associations", "Taxon networks, robustness diagnostics and network comparisons."]
+    title: <>Choose a method from the <em>biological question.</em></>,
+    p: "BarCodeR separates description, hypothesis testing, matrix comparison and hypothesis generation. Each family below specifies required data, preparation, diagnostics and limitations to examine before interpreting a result.",
+    heroPrimary: "Find a method",
+    heroSecondary: "Read the methodological guide",
+    metrics: [["8", "analysis families"], ["5", "differential engines"], ["6", "ordination methods"], ["5", "multi-matrix frameworks"]],
+    orientK: "Quick orientation",
+    orientT: "Start with what you need to demonstrate — or describe.",
+    orientP: "Selecting a question immediately filters the catalogue. The filter does not replace scientific choice; it only narrows the methods to examine.",
+    families: [
+      ["all", "Show everything", "View all eight available families."],
+      ["describe", "Describe my data", "Composition, diversity and overall structure."],
+      ["test", "Test a hypothesis", "Effect of a variable or associated taxa."],
+      ["compare", "Compare several datasets", "Markers, domains or representations."],
+      ["hypothesis", "Generate hypotheses", "Networks and unsupervised groupings."]
+    ] as ["all" | AnalysisFamily, string, string][],
+    catalogK: "Method catalogue",
+    catalogT: "Cards designed to check compatibility before computing.",
+    catalogP: "Filter by objective and available component. Then open each card to review inputs, preparation, diagnostics, outputs and limitations.",
+    objective: "Objective",
+    dataAvailable: "Component or constraint",
+    requirements: [
+      ["all", "All methods"],
+      ["metadata", "Metadata required"],
+      ["tree", "Usable tree"],
+      ["multiple", "Several datasets"],
+      ["counts", "Raw counts"]
+    ] as ["all" | AnalysisRequirement, string][],
+    requirementLabels: { metadata: "Metadata", tree: "Optional/required tree", multiple: "Multiple datasets", counts: "Counts" } as Record<AnalysisRequirement, string>,
+    results: "methods displayed",
+    reset: "Reset",
+    methodsLabel: "Available methods",
+    detailsOne: "Inputs, preparation and diagnostics",
+    detailsTwo: "Outputs and cautions",
+    inputs: "Inputs",
+    preparation: "Preparation",
+    diagnostics: "Diagnostics to check",
+    outputs: "Outputs",
+    cautions: "Cautions",
+    openModule: "Open module",
+    readGuide: "Methodological guide",
+    empty: "No family matches this combination. Reset the filters or review your data requirements.",
+    compatibilityK: "Transformation × distance",
+    compatibilityT: "The method starts before the Compute button.",
+    compatibilityP: "Transformation defines the data representation; distance defines what similarity means. Some combinations are coherent, while others are redundant or invalid.",
+    tableHeaders: ["Question", "Data", "Preparation", "Distance / model", "Compatible analyses"],
+    compatibilityRows: [
+      ["Taxonomic composition", "Counts", "Aggregation + relative abundance", "No distance", "Barplot · Heat Tree"],
+      ["Abundance structure", "Counts or proportions", "Relative or Hellinger", "Bray-Curtis", "PCoA · NMDS · PERMANOVA"],
+      ["Compositional structure", "Counts with handled zeros", "CLR", "Aitchison", "PCA · PCoA · clustering"],
+      ["Presence-absence", "Binarised counts", "Presence-absence", "Jaccard", "PCoA · NMDS · PERMANOVA"],
+      ["Phylogenetic structure", "OTU + tree", "According to weighting", "UniFrac", "PCoA · PERMANOVA"],
+      ["Associated taxa", "Integer counts", "Shared filter, no CLR", "Taxon-level model", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"]
     ],
-    modules: "Open analysis modules"
+    warningTitle: "Combinations to avoid",
+    warningItems: ["CLR followed by Bray-Curtis: the log-ratio geometry is no longer respected.", "Aitchison after an already applied CLR transformation: risk of double transformation.", "ALDEx2, ANCOM-BC2 or rarefaction on proportions: these methods expect counts.", "UniFrac without a tree correctly matched to taxa: the result is impossible or invalid."],
+    workflowK: "Recommended journey",
+    workflowT: "A short sequence to avoid testing too early.",
+    workflowSteps: [
+      ["01", "Check the object", "Structure, depth, taxonomy, metadata, tree and missing values in Description."],
+      ["02", "Retain a reference", "Keep the raw dataset and create a documented filtered version rather than overwriting it."],
+      ["03", "Describe before testing", "Review composition, diversity and ordination to understand the main structures."],
+      ["04", "Check assumptions", "Check stress, dispersion, blocks, replicates and transformation-distance compatibility."],
+      ["05", "Test with an explicit model", "Define the main factor, reference, covariates, random effects and permutations."],
+      ["06", "Read beyond the p-value", "Review effect size, R², q-value, prevalence, stability and agreement among methods."],
+      ["07", "Save the context", "Retain tables, figures, parameters, R code and source dataset in the project."]
+    ],
+    limitsK: "Interpretation",
+    limitsT: "What the results do not demonstrate on their own.",
+    limits: [
+      ["Ordination", "Visual distance or ellipse overlap is not a statistical test."],
+      ["PERMANOVA", "Significance may relate to centroids, dispersions or both."],
+      ["Differential", "Agreement among engines strengthens robustness, but magnitudes remain on different scales."],
+      ["Mantel", "A high global correlation does not identify the samples responsible for agreement or disagreement."],
+      ["Networks", "An association establishes neither causality, direct interaction nor keystone status."],
+      ["Clustering", "A stable partition can be statistically clear without corresponding to a relevant biological entity."]
+    ],
+    finalTitle: "The selected method must remain explainable.",
+    finalP: "Website cards guide the choice. The methodological guide details assumptions and the technical documentation describes the parameters actually used by the application.",
+    finalModule: "Inspect the Analysis module",
+    finalDocs: "Open documentation"
   };
-  const analysisModules = modules.filter(module => module.group === "analyse");
-  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="section section-tint"><div className="page-width"><div className="action-grid analysis-purpose-grid">{c.groups.map(([title, text], index) => <article className="action-card reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="section page-width"><div className="section-intro"><Eyebrow>{c.modules}</Eyebrow><h2>{c.modules}</h2></div><div className="module-grid">{analysisModules.map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></section></main>;
+
+  const visibleMethods = analysisMethodCatalog.filter(method => {
+    const familyMatch = activeFamily === "all" || method.family === activeFamily;
+    const requirementMatch = activeRequirement === "all" || method.requirements.includes(activeRequirement);
+    return familyMatch && requirementMatch;
+  });
+
+  const selectFamily = (family: "all" | AnalysisFamily) => {
+    setActiveFamily(family);
+    window.setTimeout(() => document.getElementById("analysis-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  };
+
+  const resetFilters = () => {
+    setActiveFamily("all");
+    setActiveRequirement("all");
+  };
+
+  const guidePath = asset(`documentation/${language}/analyse/guides-methodologiques.html`);
+
+  return <main className="analyses-page">
+    <section className="analyses-hero page-width">
+      <div className="analyses-hero-copy reveal">
+        <Eyebrow>{c.k}</Eyebrow>
+        <h1>{c.title}</h1>
+        <p className="lead">{c.p}</p>
+        <div className="hero-actions">
+          <button className="button primary" type="button" onClick={() => document.getElementById("analysis-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" })}>{c.heroPrimary}<span>↓</span></button>
+          <a className="button secondary" href={guidePath} target="_blank" rel="noreferrer">{c.heroSecondary}<span>↗</span></a>
+        </div>
+      </div>
+      <div className="analysis-hero-metrics reveal delay-1">
+        {c.metrics.map(([number, label]) => <article key={label}><b>{number}</b><span>{label}</span></article>)}
+      </div>
+    </section>
+
+    <section className="section section-tint analysis-orientation">
+      <div className="page-width">
+        <div className="section-heading analysis-orientation-heading reveal"><div><Eyebrow>{c.orientK}</Eyebrow><h2>{c.orientT}</h2></div><p>{c.orientP}</p></div>
+        <div className="analysis-question-selector">
+          {c.families.slice(1).map(([id, title, text], index) => <button type="button" className={activeFamily === id ? "active" : ""} onClick={() => selectFamily(id as AnalysisFamily)} aria-pressed={activeFamily === id} key={id}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p><i>→</i></button>)}
+        </div>
+      </div>
+    </section>
+
+    <section className="section page-width analysis-catalog-section" id="analysis-catalog">
+      <div className="section-heading analysis-catalog-heading reveal"><div><Eyebrow>{c.catalogK}</Eyebrow><h2>{c.catalogT}</h2></div><p>{c.catalogP}</p></div>
+      <div className="analysis-filter-panel reveal">
+        <div className="analysis-filter-group"><b>{c.objective}</b><div>{c.families.map(([id, title]) => <button type="button" className={activeFamily === id ? "active" : ""} onClick={() => setActiveFamily(id)} aria-pressed={activeFamily === id} key={id}>{title}</button>)}</div></div>
+        <div className="analysis-filter-group"><b>{c.dataAvailable}</b><div>{c.requirements.map(([id, title]) => <button type="button" className={activeRequirement === id ? "active" : ""} onClick={() => setActiveRequirement(id)} aria-pressed={activeRequirement === id} key={id}>{title}</button>)}</div></div>
+        <div className="analysis-filter-status"><span><b>{visibleMethods.length}</b> {c.results}</span><button type="button" onClick={resetFilters}>{c.reset} ↺</button></div>
+      </div>
+
+      {visibleMethods.length > 0 ? <div className="analysis-method-grid">
+        {visibleMethods.map((method, index) => <article className="analysis-method-card reveal" style={{ "--delay": `${(index % 2) * 55}ms` } as React.CSSProperties} key={method.id}>
+          <div className="analysis-method-media">
+            {method.image ? <img src={asset(`app-previews/${method.image}`)} alt="" loading="lazy" /> : <div className="analysis-network-visual" aria-hidden="true"><span /><span /><span /><span /><i /><i /><i /></div>}
+            <span className="analysis-method-number">{method.number}</span><i className="analysis-method-icon">{method.icon}</i>
+          </div>
+          <div className="analysis-method-body">
+            <div className="analysis-requirement-row">{method.requirements.length > 0 ? method.requirements.map(item => <span key={item}>{c.requirementLabels[item]}</span>) : <span>{language === "fr" ? "OTU/ASV" : "OTU/ASV"}</span>}</div>
+            <h3>{tx(method.title, language)}</h3>
+            <p className="analysis-method-question">{tx(method.question, language)}</p>
+            <p className="analysis-method-summary">{tx(method.summary, language)}</p>
+            <small>{c.methodsLabel}</small>
+            <div className="analysis-method-pills">{method.methods.map(item => <span key={item}>{item}</span>)}</div>
+            <details>
+              <summary>{c.detailsOne}<span>+</span></summary>
+              <div className="analysis-detail-grid">
+                <div><b>{c.inputs}</b><ul>{method.inputs.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>
+                <div><b>{c.preparation}</b><ul>{method.preparation.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>
+                <div><b>{c.diagnostics}</b><ul>{method.diagnostics.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>
+              </div>
+            </details>
+            <details>
+              <summary>{c.detailsTwo}<span>+</span></summary>
+              <div className="analysis-detail-grid two-cols">
+                <div><b>{c.outputs}</b><ul>{method.outputs.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>
+                <div className="analysis-caution-list"><b>{c.cautions}</b><ul>{method.cautions.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>
+              </div>
+            </details>
+            <div className="analysis-method-actions"><a href={moduleHref(method.moduleKey)}>{c.openModule}<span>→</span></a><a href={guidePath} target="_blank" rel="noreferrer">{c.readGuide}<span>↗</span></a></div>
+          </div>
+        </article>)}
+      </div> : <div className="analysis-empty"><span>∅</span><p>{c.empty}</p><button type="button" onClick={resetFilters}>{c.reset}</button></div>}
+    </section>
+
+    <section className="analysis-compatibility-section">
+      <div className="page-width">
+        <div className="section-heading reveal"><div><Eyebrow>{c.compatibilityK}</Eyebrow><h2>{c.compatibilityT}</h2></div><p>{c.compatibilityP}</p></div>
+        <div className="analysis-table-wrap reveal"><table><thead><tr>{c.tableHeaders.map(header => <th key={header}>{header}</th>)}</tr></thead><tbody>{c.compatibilityRows.map(row => <tr key={row[0]}>{row.map((cell, index) => <td key={cell}>{index === 0 ? <b>{cell}</b> : cell}</td>)}</tr>)}</tbody></table></div>
+        <aside className="analysis-warning reveal"><div><span>!</span><h3>{c.warningTitle}</h3></div><ul>{c.warningItems.map(item => <li key={item}>{item}</li>)}</ul></aside>
+      </div>
+    </section>
+
+    <section className="section page-width analysis-workflow-section">
+      <div className="section-intro reveal"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2></div>
+      <div className="analysis-workflow-list">{c.workflowSteps.map(([number, title, text]) => <article className="reveal" key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
+    </section>
+
+    <section className="section section-tint analysis-limits-section"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.limitsK}</Eyebrow><h2>{c.limitsT}</h2></div></div><div className="analysis-limit-grid">{c.limits.map(([title, text]) => <article className="reveal" key={title}><span>!</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+
+    <section className="analysis-final-band"><div className="page-width"><div><Eyebrow>{c.k}</Eyebrow><h2>{c.finalTitle}</h2><p>{c.finalP}</p></div><div><a className="button primary" href="#/application/analyse">{c.finalModule}<span>→</span></a><a className="button secondary" href="#/documentation">{c.finalDocs}<span>→</span></a></div></div></section>
+  </main>;
 }
 
 function ModuleVisual({ module, language }: { module: AppModule; language: Language }) {
