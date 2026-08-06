@@ -362,10 +362,243 @@ function ModuleGrid({ language, limit }: { language: Language; limit?: number })
 }
 
 function ApplicationIndex({ language }: { language: Language }) {
-  const c = language === "fr" ? { k: "Processus analytique au sein de l’application", title: "Tous les onglets, organisés selon le cheminement de vos données.", p: "Cette vue montre comment les treize onglets se complètent pour prendre en main l’outil, importer et préparer les données, explorer les résultats, conduire les analyses puis les restituer.", guide: "Sélectionnez un onglet pour voir ses entrées, ses opérations, ses résultats et ses points de vigilance." } : { k: "Analytical process within the application", title: "Every tab, organised around the journey of your data.", p: "This view shows how the thirteen tabs work together to get started, import and prepare data, explore results, perform analyses and report findings.", guide: "Select a tab to review its inputs, operations, results and cautions." };
-  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="section section-tint process-section"><div className="page-width"><p className="guide-note">{c.guide}</p>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></div>)}</div></section></main>;
-}
+  const c = language === "fr" ? {
+    k: "Fonctionnement de l’écosystème",
+    title: <>Deux outils complémentaires,<br /><em>un même fil scientifique.</em></>,
+    p: "OpenMetaBar orchestre le traitement distant des séquences. BarCodeR prend ensuite en charge les objets phyloseq, leur contrôle, leur transformation, les analyses statistiques et la restitution. Les deux outils peuvent être utilisés ensemble ou séparément.",
+    primary: "Voir le parcours complet",
+    secondary: "Explorer les modules",
+    bridge: "Le point de jonction",
+    bridgeTitle: "L’objet phyloseq relie le traitement bioinformatique à l’analyse.",
+    bridgeP: "OpenMetaBar peut produire un objet directement importable dans BarCodeR. BarCodeR accepte également des objets phyloseq déjà construits ou leurs composants fournis séparément.",
+    productsK: "Rôles respectifs",
+    productsT: "Une séparation claire entre traitement des reads et analyse scientifique.",
+    openmetaRole: "Traitement bioinformatique distant",
+    openmetaText: "Préparer un design, configurer un pipeline, transférer les entrées, soumettre sur Slurm, suivre Nextflow et récupérer les sorties.",
+    openmetaTags: ["FASTQ", "SSH", "Slurm", "Nextflow", "Monitoring"],
+    barcoderRole: "Contrôle, exploration et analyse",
+    barcoderText: "Vérifier la structure des données, gérer plusieurs versions, filtrer, explorer, tester des hypothèses et composer les résultats.",
+    barcoderTags: ["phyloseq", "Diagnostics", "Statistiques", "Code R", "MultiView"],
+    independent: "Indépendants par conception",
+    independentP: "OpenMetaBar n’est pas requis pour analyser un phyloseq dans BarCodeR. Inversement, les sorties d’OpenMetaBar restent exploitables en dehors de BarCodeR.",
+    pathsK: "Deux points d’entrée",
+    pathsT: "Le parcours s’adapte au niveau auquel commencent vos données.",
+    pathsP: "Les étapes affichées décrivent la logique de travail, pas une obligation de passer par tous les modules.",
+    fastqLabel: "Parcours A",
+    fastqTitle: "Je pars de fichiers FASTQ",
+    fastqIntro: "OpenMetaBar structure le passage des séquences brutes vers un objet scientifique contrôlable.",
+    fastqSteps: [
+      ["01", "Préparer les entrées", "FASTQ, design expérimental et base de référence."],
+      ["02", "Configurer le traitement", "Technologie, moteur, amorces, filtres et ressources HPC."],
+      ["03", "Valider avant lancement", "Cohérence des chemins, paramètres et fichiers attendus."],
+      ["04", "Soumettre et suivre", "SSH, Slurm, Nextflow, états des jobs et journaux d’exécution."],
+      ["05", "Récupérer les résultats", "Tables, rapports, séquences et objet phyloseq."],
+      ["06", "Poursuivre dans BarCodeR", "Description, filtration, analyses et restitution."],
+    ],
+    phyloseqLabel: "Parcours B",
+    phyloseqTitle: "J’ai déjà un objet phyloseq",
+    phyloseqIntro: "BarCodeR commence directement par la validation de l’objet et la préparation de versions analytiques traçables.",
+    phyloseqSteps: [
+      ["01", "Importer", "Objet phyloseq ou composants fournis séparément."],
+      ["02", "Diagnostiquer", "Dimensions, profondeur, sparsité, taxonomie et métadonnées."],
+      ["03", "Corriger si nécessaire", "Identifiants, tables, taxonomie, séquences ou arbre."],
+      ["04", "Créer une version analytique", "Filtres d’abondance, prévalence, taxonomie ou échantillons."],
+      ["05", "Explorer et tester", "Figures descriptives, ordinations, modèles et diagnostics."],
+      ["06", "Restituer", "Historique, tableaux, scripts R, bibliothèque et MultiView."],
+    ],
+    hpcK: "Cycle de vie d’un run OpenMetaBar",
+    hpcT: "Le calcul distant reste visible de la configuration jusqu’à la récupération.",
+    hpcP: "L’interface ne remplace pas Slurm ou Nextflow : elle rend leurs états, leurs paramètres et leurs journaux accessibles dans un parcours unique.",
+    hpcSteps: [
+      ["Configuration", "Choix des entrées, de la technologie et des paramètres."],
+      ["Validation", "Contrôles avant transfert et génération de la commande."],
+      ["Soumission", "Création du job sur l’infrastructure distante."],
+      ["Exécution", "Traitement par Nextflow et les outils du pipeline."],
+      ["Monitoring", "Lecture des états Slurm, progression et logs."],
+      ["Intégration", "Récupération des sorties et import du phyloseq."],
+    ],
+    lineageK: "Projets et lignée des datasets",
+    lineageT: "Conserver l’original tout en construisant plusieurs versions analytiques.",
+    lineageP: "BarCodeR distingue la correction structurelle d’un objet et la création d’un sous-dataset filtré. Chaque branche peut répondre à une hypothèse différente sans écraser la version précédente.",
+    lineageNodes: [
+      ["Objet original", "Import conservé comme référence"],
+      ["Dataset corrigé", "Structure et métadonnées harmonisées"],
+      ["Filtration faible", "Exploration et contrôle de sensibilité"],
+      ["Filtration standard", "Analyse principale"],
+      ["Filtration stricte", "Analyse de robustesse"],
+    ],
+    editTitle: "Éditer corrige l’objet",
+    editP: "L’édition agit sur la structure, les identifiants ou les composants du phyloseq.",
+    filterTitle: "Filtrer crée une version dérivée",
+    filterP: "La filtration sélectionne des taxons ou échantillons selon des règles analytiques explicites.",
+    responsibilityK: "Ce que l’écosystème garantit — et ce qu’il ne remplace pas",
+    responsibilityT: "La traçabilité encadre les choix ; elle ne décide pas à la place du scientifique.",
+    guarantees: [
+      "Paramètres et étapes visibles dans l’interface.",
+      "Conservation de plusieurs datasets et de leur filiation.",
+      "Diagnostics associés aux méthodes lorsqu’ils sont disponibles.",
+      "Sorties exportables et analyses prolongeables avec R.",
+    ],
+    responsibilities: [
+      "Qualité du plan expérimental et de l’échantillonnage.",
+      "Pertinence des amorces et de la base de référence.",
+      "Choix des seuils, transformations, distances et modèles.",
+      "Interprétation biologique et portée des conclusions.",
+    ],
+    guaranteeTitle: "Fourni par l’outil",
+    responsibilityTitle: "Reste sous responsabilité scientifique",
+    modulesK: "Architecture détaillée",
+    modulesT: "Retrouver les modules de l’application par étape du parcours.",
+    modulesP: "Cette vue secondaire permet d’ouvrir chaque fiche fonctionnelle, avec ses entrées, opérations, sorties et points de vigilance.",
+    discover: "Découvrir",
+  } : {
+    k: "How the ecosystem works",
+    title: <>Two complementary tools,<br /><em>one scientific thread.</em></>,
+    p: "OpenMetaBar orchestrates remote sequence processing. BarCodeR then handles phyloseq objects, quality checks, transformations, statistical analyses and reporting. Both tools can be used together or independently.",
+    primary: "View the complete journey",
+    secondary: "Explore the modules",
+    bridge: "The connection point",
+    bridgeTitle: "The phyloseq object connects bioinformatics processing to analysis.",
+    bridgeP: "OpenMetaBar can produce an object that is directly importable into BarCodeR. BarCodeR also accepts existing phyloseq objects or their components supplied separately.",
+    productsK: "Respective roles",
+    productsT: "A clear separation between read processing and scientific analysis.",
+    openmetaRole: "Remote bioinformatics processing",
+    openmetaText: "Prepare a design, configure a pipeline, transfer inputs, submit through Slurm, monitor Nextflow and retrieve outputs.",
+    openmetaTags: ["FASTQ", "SSH", "Slurm", "Nextflow", "Monitoring"],
+    barcoderRole: "Quality control, exploration and analysis",
+    barcoderText: "Check data structure, manage multiple versions, filter, explore, test hypotheses and assemble results.",
+    barcoderTags: ["phyloseq", "Diagnostics", "Statistics", "R code", "MultiView"],
+    independent: "Independent by design",
+    independentP: "OpenMetaBar is not required to analyse a phyloseq object in BarCodeR. Conversely, OpenMetaBar outputs remain usable outside BarCodeR.",
+    pathsK: "Two entry points",
+    pathsT: "The journey adapts to the stage at which your data begin.",
+    pathsP: "The displayed steps describe the working logic; users do not have to visit every module.",
+    fastqLabel: "Journey A",
+    fastqTitle: "I start with FASTQ files",
+    fastqIntro: "OpenMetaBar structures the transition from raw sequences to a scientific object that can be inspected.",
+    fastqSteps: [
+      ["01", "Prepare inputs", "FASTQ files, experimental design and reference database."],
+      ["02", "Configure processing", "Technology, engine, primers, filters and HPC resources."],
+      ["03", "Validate before launch", "Consistency of paths, parameters and expected files."],
+      ["04", "Submit and monitor", "SSH, Slurm, Nextflow, job states and execution logs."],
+      ["05", "Retrieve results", "Tables, reports, sequences and phyloseq object."],
+      ["06", "Continue in BarCodeR", "Description, filtering, analyses and reporting."],
+    ],
+    phyloseqLabel: "Journey B",
+    phyloseqTitle: "I already have a phyloseq object",
+    phyloseqIntro: "BarCodeR starts directly with object validation and preparation of traceable analytical versions.",
+    phyloseqSteps: [
+      ["01", "Import", "Phyloseq object or components supplied separately."],
+      ["02", "Diagnose", "Dimensions, depth, sparsity, taxonomy and metadata."],
+      ["03", "Correct when necessary", "Identifiers, tables, taxonomy, sequences or tree."],
+      ["04", "Create an analytical version", "Abundance, prevalence, taxonomy or sample filters."],
+      ["05", "Explore and test", "Descriptive figures, ordinations, models and diagnostics."],
+      ["06", "Report", "History, tables, R scripts, library and MultiView."],
+    ],
+    hpcK: "OpenMetaBar run lifecycle",
+    hpcT: "Remote computing remains visible from configuration to retrieval.",
+    hpcP: "The interface does not replace Slurm or Nextflow: it presents their states, parameters and logs in one continuous journey.",
+    hpcSteps: [
+      ["Configuration", "Select inputs, technology and parameters."],
+      ["Validation", "Checks before transfer and command generation."],
+      ["Submission", "Create the job on the remote infrastructure."],
+      ["Execution", "Processing through Nextflow and pipeline tools."],
+      ["Monitoring", "Read Slurm states, progress and logs."],
+      ["Integration", "Retrieve outputs and import the phyloseq object."],
+    ],
+    lineageK: "Projects and dataset lineage",
+    lineageT: "Keep the original while building several analytical versions.",
+    lineageP: "BarCodeR distinguishes structural correction of an object from creation of a filtered sub-dataset. Each branch can address a different hypothesis without overwriting the previous version.",
+    lineageNodes: [
+      ["Original object", "Import preserved as reference"],
+      ["Corrected dataset", "Structure and metadata harmonised"],
+      ["Light filtering", "Exploration and sensitivity control"],
+      ["Standard filtering", "Primary analysis"],
+      ["Strict filtering", "Robustness analysis"],
+    ],
+    editTitle: "Editing corrects the object",
+    editP: "Editing acts on the structure, identifiers or components of the phyloseq object.",
+    filterTitle: "Filtering creates a derived version",
+    filterP: "Filtering selects taxa or samples through explicit analytical rules.",
+    responsibilityK: "What the ecosystem guarantees — and what it does not replace",
+    responsibilityT: "Traceability frames decisions; it does not make them for the scientist.",
+    guarantees: [
+      "Parameters and steps remain visible in the interface.",
+      "Multiple datasets and their lineage are preserved.",
+      "Diagnostics accompany methods when available.",
+      "Outputs are exportable and analyses can continue in R.",
+    ],
+    responsibilities: [
+      "Quality of the experimental design and sampling.",
+      "Relevance of primers and reference database.",
+      "Choice of thresholds, transformations, distances and models.",
+      "Biological interpretation and scope of conclusions.",
+    ],
+    guaranteeTitle: "Provided by the tool",
+    responsibilityTitle: "Remains a scientific responsibility",
+    modulesK: "Detailed architecture",
+    modulesT: "Find the application modules by stage of the journey.",
+    modulesP: "This secondary view opens each functional page with its inputs, operations, outputs and cautions.",
+    discover: "Discover",
+  };
 
+  const renderPath = (label: string, title: string, intro: string, steps: string[][], variant: "openmeta" | "barcoder") => (
+    <article className={`function-path function-path-${variant} reveal`}>
+      <div className="function-path-heading"><span>{label}</span><h3>{title}</h3><p>{intro}</p></div>
+      <ol>{steps.map(([number, stepTitle, detail]) => <li key={number}><span>{number}</span><div><b>{stepTitle}</b><p>{detail}</p></div></li>)}</ol>
+    </article>
+  );
+
+  return <main className="functioning-page">
+    <section className="functioning-hero">
+      <div className="page-width functioning-hero-grid">
+        <div className="functioning-hero-copy reveal"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("function-paths")?.scrollIntoView({ behavior: "smooth" })}>{c.primary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("function-modules")?.scrollIntoView({ behavior: "smooth" })}>{c.secondary}<span>→</span></button></div></div>
+        <div className="ecosystem-diagram reveal" aria-label={c.bridgeTitle}>
+          <div className="ecosystem-tool ecosystem-openmeta"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><small>OpenMetaBar</small><b>FASTQ → pipeline</b></div>
+          <div className="ecosystem-bridge"><span>phyloseq</span><i>→</i></div>
+          <div className="ecosystem-tool ecosystem-barcoder"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><small>BarCodeR</small><b>diagnostics → figures</b></div>
+          <div className="ecosystem-note"><small>{c.bridge}</small><strong>{c.bridgeTitle}</strong><p>{c.bridgeP}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section className="section page-width function-products">
+      <div className="section-heading reveal"><div><Eyebrow>{c.productsK}</Eyebrow><h2>{c.productsT}</h2></div></div>
+      <div className="product-role-grid">
+        <article className="product-role openmeta-role reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>OpenMetaBar</small><h3>{c.openmetaRole}</h3></div></div><p>{c.openmetaText}</p><div className="role-tags">{c.openmetaTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-openmetabar.png")} alt={c.openmetaRole} /></figure></article>
+        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>BarCodeR</small><h3>{c.barcoderRole}</h3></div></div><p>{c.barcoderText}</p><div className="role-tags">{c.barcoderTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/barcoder-home-real.png")} alt={c.barcoderRole} /></figure></article>
+      </div>
+      <aside className="independence-note reveal"><span>↔</span><div><b>{c.independent}</b><p>{c.independentP}</p></div></aside>
+    </section>
+
+    <section className="section section-tint function-paths-section" id="function-paths">
+      <div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.pathsK}</Eyebrow><h2>{c.pathsT}</h2></div><p>{c.pathsP}</p></div><div className="function-path-grid">{renderPath(c.fastqLabel, c.fastqTitle, c.fastqIntro, c.fastqSteps, "openmeta")}{renderPath(c.phyloseqLabel, c.phyloseqTitle, c.phyloseqIntro, c.phyloseqSteps, "barcoder")}</div></div>
+    </section>
+
+    <section className="section page-width hpc-lifecycle">
+      <div className="section-heading reveal"><div><Eyebrow>{c.hpcK}</Eyebrow><h2>{c.hpcT}</h2></div><p>{c.hpcP}</p></div>
+      <div className="hpc-track reveal">{c.hpcSteps.map(([title, detail], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><i /><h3>{title}</h3><p>{detail}</p></article>)}</div>
+      <div className="hpc-technology-row reveal"><span>SSH</span><i>→</i><span>Slurm</span><i>→</i><span>Nextflow</span><i>→</i><span>Logs</span><i>→</i><span>phyloseq</span></div>
+    </section>
+
+    <section className="dataset-lineage-section">
+      <div className="page-width dataset-lineage-grid">
+        <div className="dataset-lineage-copy reveal"><Eyebrow>{c.lineageK}</Eyebrow><h2>{c.lineageT}</h2><p>{c.lineageP}</p><div className="edition-filtering"><article><span>✎</span><div><b>{c.editTitle}</b><p>{c.editP}</p></div></article><article><span>⌁</span><div><b>{c.filterTitle}</b><p>{c.filterP}</p></div></article></div></div>
+        <div className="lineage-tree reveal">{c.lineageNodes.map(([title, text], index) => <article className={`lineage-node lineage-node-${index}`} key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><b>{title}</b><small>{text}</small></div></article>)}</div>
+      </div>
+    </section>
+
+    <section className="section page-width responsibility-section">
+      <div className="section-intro reveal"><Eyebrow>{c.responsibilityK}</Eyebrow><h2>{c.responsibilityT}</h2></div>
+      <div className="responsibility-grid">
+        <article className="responsibility-provided reveal"><span>✓</span><h3>{c.guaranteeTitle}</h3><ul>{c.guarantees.map(item => <li key={item}>{item}</li>)}</ul></article>
+        <article className="responsibility-science reveal"><span>!</span><h3>{c.responsibilityTitle}</h3><ul>{c.responsibilities.map(item => <li key={item}>{item}</li>)}</ul></article>
+      </div>
+    </section>
+
+    <section className="section section-tint process-section" id="function-modules"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2></div><p>{c.modulesP}</p></div>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{c.discover}<span>→</span></b></a>)}</div></div>)}</div></section>
+  </main>;
+}
 function AnalysesPage({ language }: { language: Language }) {
   const c = language === "fr" ? {
     k: "Capacités scientifiques",
