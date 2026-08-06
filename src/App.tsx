@@ -42,9 +42,9 @@ function Brand({ language }: { language: Language }) {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    overview: "Vue d’ensemble", application: "Processus analytique", evidence: "Tutoriels & datasets tests", documentation: "Documentation", reproducibility: "Reproductibilité", code: "Code & disponibilité"
+    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", documentation: "Documentation", download: "Télécharger"
   } : {
-    overview: "Overview", application: "Analytical process", evidence: "Tutorials & test datasets", documentation: "Documentation", reproducibility: "Reproducibility", code: "Code & availability"
+    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", documentation: "Documentation", download: "Download"
   };
 
   useEffect(() => setOpen(false), [route]);
@@ -56,12 +56,12 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <span /><span />
       </button>
       <nav className={open ? "primary-nav open" : "primary-nav"} aria-label={language === "fr" ? "Navigation principale" : "Main navigation"}>
-        <a className={route === "/" ? "active" : ""} href="#/">{c.overview}</a>
-        <a className={route.startsWith("/application") ? "active" : ""} href="#/application">{c.application}</a>
-        <a className={route === "/reproducibility" ? "active" : ""} href="#/reproducibility">{c.reproducibility}</a>
-        <a className={route === "/evidence" ? "active" : ""} href="#/evidence">{c.evidence}</a>
+        <a className={route === "/" ? "active" : ""} href="#/">{c.home}</a>
+        <a className={route === "/functioning" || route.startsWith("/application") ? "active" : ""} href="#/functioning">{c.functioning}</a>
+        <a className={route === "/analyses" ? "active" : ""} href="#/analyses">{c.analyses}</a>
+        <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
         <a className={route === "/documentation" ? "active" : ""} href="#/documentation">{c.documentation}</a>
-        <a className={route === "/availability" ? "active" : ""} href="#/availability">{c.code}</a>
+        <a className={route === "/download" || route === "/availability" ? "active" : ""} href="#/download">{c.download}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
           <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
           <button className={language === "en" ? "active" : ""} onClick={() => { setLanguage("en"); setOpen(false); }}>EN</button>
@@ -183,6 +183,34 @@ function ApplicationIndex({ language }: { language: Language }) {
   return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="section section-tint process-section"><div className="page-width"><p className="guide-note">{c.guide}</p>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></div>)}</div></section></main>;
 }
 
+function AnalysesPage({ language }: { language: Language }) {
+  const c = language === "fr" ? {
+    k: "Capacités scientifiques",
+    title: "Choisir une analyse à partir de la question biologique.",
+    p: "Cette première vue regroupe les capacités réelles de BarCodeR par objectif scientifique. Les fiches détaillées des modules restent accessibles pour consulter les entrées, les paramètres, les diagnostics et les sorties.",
+    groups: [
+      ["Explorer les communautés", "Composition taxonomique, diversité alpha, taxons partagés, Heat Tree, phylogénie et qualité des assignations."],
+      ["Tester des hypothèses", "Ordinations, PERMANOVA, dispersion multivariée, analyses différentielles et clustering."],
+      ["Comparer plusieurs matrices", "Mantel, Procrustes, PROTEST, coefficient RV, co-inertie et STATIS."],
+      ["Explorer les associations", "Réseaux taxons-taxons, diagnostics de robustesse et comparaisons de réseaux."]
+    ],
+    modules: "Accéder aux modules d’analyse"
+  } : {
+    k: "Scientific capabilities",
+    title: "Choose an analysis from the biological question.",
+    p: "This first view groups BarCodeR capabilities by scientific objective. Detailed module pages remain available for inputs, parameters, diagnostics and outputs.",
+    groups: [
+      ["Explore communities", "Taxonomic composition, alpha diversity, shared taxa, Heat Tree, phylogeny and assignment quality."],
+      ["Test hypotheses", "Ordinations, PERMANOVA, multivariate dispersion, differential analyses and clustering."],
+      ["Compare multiple matrices", "Mantel, Procrustes, PROTEST, RV coefficient, co-inertia and STATIS."],
+      ["Explore associations", "Taxon networks, robustness diagnostics and network comparisons."]
+    ],
+    modules: "Open analysis modules"
+  };
+  const analysisModules = modules.filter(module => module.group === "analyse");
+  return <main><section className="page-hero page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p></section><section className="section section-tint"><div className="page-width"><div className="action-grid analysis-purpose-grid">{c.groups.map(([title, text], index) => <article className="action-card reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="section page-width"><div className="section-intro"><Eyebrow>{c.modules}</Eyebrow><h2>{c.modules}</h2></div><div className="module-grid">{analysisModules.map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Découvrir" : "Discover"}<span>→</span></b></a>)}</div></section></main>;
+}
+
 function ModuleVisual({ module, language }: { module: AppModule; language: Language }) {
   const screen = moduleScreens[module.key];
   if (screen) {
@@ -200,7 +228,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   const c = language === "fr" ? { app: "Processus analytique", what: "Ce que l’utilisateur peut faire", io: "De l’entrée à la sortie", inputs: "Entrées", operations: "Opérations", outputs: "Sorties", question: "Question directrice", modules: "Sous-modules et questions", vigilance: "Rigueur et points d’attention", source: "Confronté au code source", sourceText: "Le contenu de cette page est dérivé du module ci-dessous, et non d’une description générique du logiciel.", previous: "Onglet précédent", next: "Onglet suivant", reproduce: "Ce qui est conservé", reproText: "Le dataset et les paramètres restent rattachés à la session ou au projet. Lorsqu’un historique est proposé, il sert à relire le contexte de production de la figure ou du résultat." } : { app: "Analytical process", what: "What users can do", io: "From input to output", inputs: "Inputs", operations: "Operations", outputs: "Outputs", question: "Guiding question", modules: "Submodules and questions", vigilance: "Rigour and cautions", source: "Checked against source code", sourceText: "This page content is derived from the module below, not from a generic software description.", previous: "Previous tab", next: "Next tab", reproduce: "What is retained", reproText: "The dataset and parameters remain attached to the session or project. Where histories are available, they support review of the context used to produce a figure or result." };
   return <main className={module.key === "openmetabar" ? "module-page openmetabar-page" : "module-page"}>
     <section className="module-hero page-width">
-      <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/application">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div>{module.key === "openmetabar" && <img className="openmetabar-page-logo" src={asset("app-previews/openmetabar-logo.png")} alt="" />}<Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p><div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
+      <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/functioning">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div>{module.key === "openmetabar" && <img className="openmetabar-page-logo" src={asset("app-previews/openmetabar-logo.png")} alt="" />}<Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p><div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
       <div className="reveal delay-1"><ModuleVisual module={module} language={language} /></div>
     </section>
     <section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{module.order}</Eyebrow><h2>{c.what}</h2></div><p>{tx(module.question, language)}</p></div><div className="action-grid">{module.actions.map((action, i) => <article className="action-card reveal" style={{ "--delay": `${(i % 3) * 60}ms` } as React.CSSProperties} key={action.fr}><span>{String(i + 1).padStart(2, "0")}</span><p>{tx(action, language)}</p></article>)}</div></div></section>
@@ -355,7 +383,7 @@ function AvailabilityPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/application">{language === "fr" ? "Processus analytique" : "Analytical process"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/evidence">{language === "fr" ? "Tutoriels & datasets tests" : "Tutorials & test datasets"}</a><a href="#/documentation">Documentation</a><a href="#/availability">GitHub</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Télécharger" : "Download"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -374,7 +402,14 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets") : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Processus analytique au sein de l’application" : "Analytical process within the application") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
+    const label = activeModule ? tx(activeModule.title, language)
+      : route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
+      : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation")
+      : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
+      : route === "/functioning" || route === "/application" ? (language === "fr" ? "Fonctionnement de l’écosystème" : "How the ecosystem works")
+      : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
+      : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
+      : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR × OpenMetaBar`;
   }, [language, route, activeModule]);
 
@@ -388,11 +423,12 @@ export default function App() {
 
   let page: React.ReactNode;
   if (activeModule) page = <ModulePage module={activeModule} language={language} />;
-  else if (route === "/application") page = <ApplicationIndex language={language} />;
-  else if (route === "/evidence") page = <EvidencePage language={language} />;
+  else if (route === "/functioning" || route === "/application") page = <ApplicationIndex language={language} />;
+  else if (route === "/analyses") page = <AnalysesPage language={language} />;
+  else if (route === "/tutorials" || route === "/evidence") page = <EvidencePage language={language} />;
   else if (route === "/documentation") page = <DocumentationPage language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
-  else if (route === "/availability") page = <AvailabilityPage language={language} />;
+  else if (route === "/download" || route === "/availability") page = <AvailabilityPage language={language} />;
   else page = <Landing language={language} />;
 
   return <div className={activeModule?.key === "openmetabar" ? "site-shell openmetabar-route" : "site-shell"}><Header language={language} setLanguage={setLanguage} route={route} />{page}<Footer language={language} /></div>;

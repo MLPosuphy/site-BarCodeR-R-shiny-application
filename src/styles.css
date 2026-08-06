@@ -580,3 +580,13 @@ footer { background: #101426; color: white; padding-top: 58px; }
   *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Lot 1: scientific-question overview */
+.analysis-purpose-grid .action-card h3 {
+  margin: 0.6rem 0 0.55rem;
+  font-size: clamp(1.08rem, 1.5vw, 1.35rem);
+}
+
+.analysis-purpose-grid .action-card p {
+  margin: 0;
+}
