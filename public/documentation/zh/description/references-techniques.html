@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>描述 — 技术参考 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="reference" data-module="description" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">技术参考</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">描述</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">方法指南</a>
+        <a class="active" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">描述</a><span>›</span><span>技术参考</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">描述 — 技术参考</h1>
+<p>根据当前 BarCodeR 版本中实际代码自动生成的技术清单。</p>
+<blockquote>
+<p><strong>本页由 documentation-src/build_docs.py 重新生成。函数名、标识符和行号来自当前源代码。</strong></p>
+</blockquote>
+<h2 id="section-1">1. 源文件<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>作用</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface Shiny</td>
+<td><code>modules/description/mod_description_ui.R</code></td>
+</tr>
+<tr>
+<td>Metrics, plots, tables and comparison logic</td>
+<td><code>modules/description/mod_description_server.R</code></td>
+</tr>
+<tr>
+<td>Global active-dataset synchronization</td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+</tr>
+<tr>
+<td>Persistent UI state</td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/zh/description/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/zh/description/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. 架构与主要数据流<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">datasets() + active_ds()
+  → selected_dataset_single
+  → phyloseq extraction and temporary OTU orientation
+  → sample / ASV / sequence / completeness metrics
+  → Plotly and DT outputs
+  → optional vegan::rarefy() computation
+</code></pre>
+<pre tabindex="0"><code class="language-text">all in-memory datasets
+  → compute_dataset_stats()
+  → selected comparison subset
+  → normalized heatmap / dotplot / baseline delta
+  → filtration-log comparison
+</code></pre>
+<h3 id="section-2-1">2.1. 反应式状态与内存<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selected_dataset_single</code></td>
+<td>当前检查的数据集，并与 active_ds() 同步。</td>
+</tr>
+<tr>
+<td><code>sample_group_var</code></td>
+<td>用作描述性分组的 sample_data 列。</td>
+</tr>
+<tr>
+<td><code>rarefaction_result</code></td>
+<td>最近一次 vegan::rarefy() 计算的缓存结果。</td>
+</tr>
+<tr>
+<td><code>selected_sample_id</code></td>
+<td>详细样本卡中显示的样本。</td>
+</tr>
+<tr>
+<td><code>selected_datasets_compare</code></td>
+<td>纳入项目比较图的数据集。</td>
+</tr>
+<tr>
+<td><code>project_baseline_dataset</code></td>
+<td>计算相对差异时使用的参考数据集。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. 可追溯链<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">selected dataset
+  → active_ds() synchronization
+  → compute_dataset_stats() + sample/asv metrics
+  → diagnostic cards and interactive plots
+  → tables / CSV exports
+</code></pre>
+<pre tabindex="0"><code class="language-text">Calculate curves
+  → positive-count and ≥50-read checks
+  → vegan::rarefy() on up to ~80 depths
+  → cached rarefaction_result
+  → individual or pooled-group rendering
+</code></pre>
+<h2 id="section-3">3. Shiny 输入<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>控件</th>
+<th>UI 来源</th>
+<th>服务器引用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>download_logs_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:932</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_meta_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:917</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_otu_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:899</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_tax_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:908</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>jump_to_logs</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_description_ui.R:692</code></td>
+<td><code>mod_description_server.R:1084</code></td>
+</tr>
+<tr>
+<td><code>project_baseline_dataset</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:983</code></td>
+<td><code>mod_description_server.R:1016</code>, <code>mod_description_server.R:1020</code>, <code>mod_description_server.R:2597</code></td>
+</tr>
+<tr>
+<td><code>project_focus_metric</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:987</code></td>
+<td><code>mod_description_server.R:1079</code>, <code>mod_description_server.R:2522</code>, <code>mod_description_server.R:2599</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_curve_mode</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:817</code></td>
+<td><code>mod_description_server.R:1063</code>, <code>mod_description_server.R:1820</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_display_mode</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:824</code></td>
+<td><code>mod_description_server.R:1071</code>, <code>mod_description_server.R:1757</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_max_samples</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_description_ui.R:825</code></td>
+<td><code>mod_description_server.R:1758</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_show_legend</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_description_ui.R:818</code></td>
+<td><code>mod_description_server.R:1821</code></td>
+</tr>
+<tr>
+<td><code>run_rarefaction</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_description_ui.R:816</code></td>
+<td><code>mod_description_server.R:1683</code></td>
+</tr>
+<tr>
+<td><code>sample_group_var</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:922</code>, <code>mod_description_server.R:1039</code>, <code>mod_description_server.R:1734</code>, <code>mod_description_server.R:1932</code>, <code>mod_description_server.R:2130</code></td>
+</tr>
+<tr>
+<td><code>selected_dataset_single</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:796</code></td>
+</tr>
+<tr>
+<td><code>selected_datasets_compare</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:807</code>, <code>mod_description_server.R:1009</code>, <code>mod_description_server.R:1013</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Shiny 输出<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>控件</th>
+<th>UI 来源</th>
+<th>服务器引用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clicked_sample_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:756</code></td>
+<td><code>mod_description_server.R:1324</code></td>
+</tr>
+<tr>
+<td><code>dataset_diagnostic_grid</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:733</code></td>
+<td><code>mod_description_server.R:1222</code></td>
+</tr>
+<tr>
+<td><code>dataset_header</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:697</code></td>
+<td><code>mod_description_server.R:1104</code></td>
+</tr>
+<tr>
+<td><code>dataset_hero_metrics</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:698</code></td>
+<td><code>mod_description_server.R:1138</code></td>
+</tr>
+<tr>
+<td><code>dataset_key_message</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:699</code></td>
+<td><code>mod_description_server.R:1151</code></td>
+</tr>
+<tr>
+<td><code>dataset_quick_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:731</code></td>
+<td><code>mod_description_server.R:1161</code></td>
+</tr>
+<tr>
+<td><code>download_logs_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:932</code></td>
+<td><code>mod_description_server.R:2441</code></td>
+</tr>
+<tr>
+<td><code>download_meta_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:917</code></td>
+<td><code>mod_description_server.R:2433</code></td>
+</tr>
+<tr>
+<td><code>download_otu_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:899</code></td>
+<td><code>mod_description_server.R:2417</code></td>
+</tr>
+<tr>
+<td><code>download_tax_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:908</code></td>
+<td><code>mod_description_server.R:2425</code></td>
+</tr>
+<tr>
+<td><code>log_removed_samples</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_server.R:2382</code></td>
+<td><code>mod_description_server.R:2401</code></td>
+</tr>
+<tr>
+<td><code>log_removed_taxa</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_server.R:2376</code></td>
+<td><code>mod_description_server.R:2389</code></td>
+</tr>
+<tr>
+<td><code>log_table</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:934</code></td>
+<td><code>mod_description_server.R:2354</code></td>
+</tr>
+<tr>
+<td><code>meta_missingness_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:926</code></td>
+<td><code>mod_description_server.R:2345</code></td>
+</tr>
+<tr>
+<td><code>meta_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:919</code></td>
+<td><code>mod_description_server.R:2328</code></td>
+</tr>
+<tr>
+<td><code>meta_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:915</code></td>
+<td><code>mod_description_server.R:2299</code></td>
+</tr>
+<tr>
+<td><code>openmetabar_provenance</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:715</code></td>
+<td><code>mod_description_server.R:823</code></td>
+</tr>
+<tr>
+<td><code>otu_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:901</code></td>
+<td><code>mod_description_server.R:2312</code></td>
+</tr>
+<tr>
+<td><code>otu_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:897</code></td>
+<td><code>mod_description_server.R:2272</code></td>
+</tr>
+<tr>
+<td><code>outlier_group_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:854</code></td>
+<td><code>mod_description_server.R:2125</code></td>
+</tr>
+<tr>
+<td><code>outlier_signal_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:849</code></td>
+<td><code>mod_description_server.R:2038</code></td>
+</tr>
+<tr>
+<td><code>outlier_spotlight_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:850</code></td>
+<td><code>mod_description_server.R:2078</code></td>
+</tr>
+<tr>
+<td><code>outlier_story_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:844</code></td>
+<td><code>mod_description_server.R:1924</code></td>
+</tr>
+<tr>
+<td><code>outlier_summary_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:846</code></td>
+<td><code>mod_description_server.R:2019</code></td>
+</tr>
+<tr>
+<td><code>project_baseline_delta</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2594</code></td>
+</tr>
+<tr>
+<td><code>project_filtration_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2626</code></td>
+</tr>
+<tr>
+<td><code>project_metric_dotplot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2573</code></td>
+</tr>
+<tr>
+<td><code>project_metric_heatmap</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2546</code></td>
+</tr>
+<tr>
+<td><code>project_overview_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:954</code></td>
+<td><code>mod_description_server.R:2507</code></td>
+</tr>
+<tr>
+<td><code>project_plot_memory</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2666</code></td>
+</tr>
+<tr>
+<td><code>project_plot_reads</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2658</code></td>
+</tr>
+<tr>
+<td><code>project_plot_richness</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2662</code></td>
+</tr>
+<tr>
+<td><code>project_plot_samples</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2650</code></td>
+</tr>
+<tr>
+<td><code>project_plot_taxa</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2654</code></td>
+</tr>
+<tr>
+<td><code>project_story_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:956</code></td>
+<td><code>mod_description_server.R:2519</code></td>
+</tr>
+<tr>
+<td><code>project_summary_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:958</code></td>
+<td><code>mod_description_server.R:2538</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1816</code></td>
+</tr>
+<tr>
+<td><code>sample_metric_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:870</code></td>
+<td><code>mod_description_server.R:2216</code></td>
+</tr>
+<tr>
+<td><code>sample_outlier_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:861</code></td>
+<td><code>mod_description_server.R:2185</code></td>
+</tr>
+<tr>
+<td><code>selected_cum_asvs_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1496</code></td>
+</tr>
+<tr>
+<td><code>selected_cum_reads_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1469</code></td>
+</tr>
+<tr>
+<td><code>selected_evenness_proxy_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1605</code></td>
+</tr>
+<tr>
+<td><code>selected_gc_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1644</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_cumulative_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1553</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1549</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1523</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_richness_scatter</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1372</code></td>
+</tr>
+<tr>
+<td><code>selected_richness_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1601</code></td>
+</tr>
+<tr>
+<td><code>selected_richness_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1586</code></td>
+</tr>
+<tr>
+<td><code>selected_seq_len_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1629</code></td>
+</tr>
+<tr>
+<td><code>selected_seq_scatter</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1659</code></td>
+</tr>
+<tr>
+<td><code>selected_top_asvs_bar</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1443</code></td>
+</tr>
+<tr>
+<td><code>selected_top_samples_bar</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1411</code></td>
+</tr>
+<tr>
+<td><code>tables_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:886</code></td>
+<td><code>mod_description_server.R:2255</code></td>
+</tr>
+<tr>
+<td><code>tax_missingness_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:925</code></td>
+<td><code>mod_description_server.R:2336</code></td>
+</tr>
+<tr>
+<td><code>tax_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:910</code></td>
+<td><code>mod_description_server.R:2320</code></td>
+</tr>
+<tr>
+<td><code>tax_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:906</code></td>
+<td><code>mod_description_server.R:2286</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. 验证与完整性保护<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>控制</th>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OTU 方向</td>
+<td><code>get_otu_taxa_rows()</code></td>
+<td>仅转置计算矩阵，不修改 phyloseq 对象。</td>
+</tr>
+<tr>
+<td>分组</td>
+<td><code>get_group_var_choices()</code></td>
+<td>仅保留具有 2–15 个非缺失水平的非时间变量。</td>
+</tr>
+<tr>
+<td>异常值</td>
+<td><code>iqr_outlier_flag()</code> / <code>iqr_distance_score()</code></td>
+<td>对 reads、丰富度和优势度执行全局 1.5 IQR 检测。</td>
+</tr>
+<tr>
+<td>稀释曲线</td>
+<td><code>vegan::rarefy()</code></td>
+<td>要求兼容的计数，并排除少于 50 reads 的样本。</td>
+</tr>
+<tr>
+<td>表格</td>
+<td><code>get_table_*_df()</code></td>
+<td>仅为显示和导出添加 ASV/SampleID 并安全化名称。</td>
+</tr>
+<tr>
+<td>项目视图</td>
+<td><code>compute_dataset_stats()</code></td>
+<td>跨数据集求和，不对样本或分类单元去重。</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. 内部函数<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. 配置<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_read_ui_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>60</td>
+<td>配置 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_capture_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>96</td>
+<td>配置 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. 文件与序列化<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_ui_state_path()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>26</td>
+<td>文件与序列化 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. 通用<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_description_server()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>3</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>24</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>tr_tokens()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>34</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>tr_signal()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>36</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>first_non_na()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>65</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>stat_or_na()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>72</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>iqr_outlier_flag()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>86</td>
+<td>使用 Tukey 的 1.5 IQR 规则标记异常值。</td>
+</tr>
+<tr>
+<td><code>iqr_distance_score()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>98</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>scale_01()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>125</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>alert_item()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>205</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>desc_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>300</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>empty_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>359</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>dt_opts()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>388</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>datatable_modern()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>401</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_otu_taxa_rows()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>413</td>
+<td>提取 OTU table，并临时调整为分类单元在行。</td>
+</tr>
+<tr>
+<td><code>get_sample_metadata()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>423</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_seq_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>449</td>
+<td>提取参考序列长度和 GC 组成。</td>
+</tr>
+<tr>
+<td><code>get_asv_metrics()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>471</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_sample_metrics()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>494</td>
+<td>计算每个样本的 reads、观测丰富度、优势度和零值比例。</td>
+</tr>
+<tr>
+<td><code>get_group_var_choices()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>530</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_grouped_sample_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>542</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_table_otu_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>555</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_table_tax_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>561</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_table_meta_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>569</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_log_export_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>573</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_tax_missingness_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>607</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>get_meta_missingness_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>633</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>kv_block()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>835</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>refresh_group_var_picker()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>1036</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>group_violin_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>1538</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bar_compare_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>2641</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_bind_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>30</td>
+<td>将 Description 选择器与全局活动数据集同步。</td>
+</tr>
+<tr>
+<td><code>bcr_follow_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>51</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_is_nav_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>34</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_capture_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>40</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_is_param_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>89</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>.bcr_session_token()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>132</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_restore_param()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>165</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_restore_module_inputs()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>233</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_apply_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>310</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-4">6.4. 界面 / 渲染<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_outlier_reason()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>113</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>build_group_palette()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>141</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>status_pill()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>149</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>metric_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>155</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>mini_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>164</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>outlier_stat_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>173</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>quick_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>189</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>panel_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>197</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_read_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>51</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_ui_state_prime()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>140</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_write_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>286</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-5">6.5. 验证 / 格式化<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fmt_number()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>50</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>fmt_pct()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>60</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sanitize_display_names()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>132</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>normalize_plot_title()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>219</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>normalize_plot_axis()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>254</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>normalize_plot_legend()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>283</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>fmt_val()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>830</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-6">6.6. Phyloseq / 数据集<a aria-label="Permalink" class="heading-anchor" href="#section-6-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compute_dataset_stats()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>657</td>
+<td>汇总数据集维度、稀疏度、完整性和全局指标。</td>
+</tr>
+<tr>
+<td><code>build_dataset_story()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>744</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 源文件</a><a class="toc-l2" href="#section-2">2. 架构与主要数据流</a><a class="toc-l3" href="#section-2-1">2.1. 反应式状态与内存</a><a class="toc-l3" href="#section-2-2">2.2. 可追溯链</a><a class="toc-l2" href="#section-3">3. Shiny 输入</a><a class="toc-l2" href="#section-4">4. Shiny 输出</a><a class="toc-l2" href="#section-5">5. 验证与完整性保护</a><a class="toc-l2" href="#section-6">6. 内部函数</a><a class="toc-l3" href="#section-6-1">6.1. 配置</a><a class="toc-l3" href="#section-6-2">6.2. 文件与序列化</a><a class="toc-l3" href="#section-6-3">6.3. 通用</a><a class="toc-l3" href="#section-6-4">6.4. 界面 / 渲染</a><a class="toc-l3" href="#section-6-5">6.5. 验证 / 格式化</a><a class="toc-l3" href="#section-6-6">6.6. Phyloseq / 数据集</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 描述</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

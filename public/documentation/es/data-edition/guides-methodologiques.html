@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Edición de datos — Guías metodológicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="guide" data-module="data-edition" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Guías metodológicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link active" href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Edición de datos</a><span>›</span><span>Guías metodológicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">Edición de datos — Guías metodológicas</h1>
+<h2 id="section-1">1. Presentación general<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Data Edition</strong> modifica directamente los componentes internos de un dataset <code>phyloseq</code>: metadata, abundancias OTU, taxonomía, secuencias de referencia y árbol filogenético. También permite importar, exportar o eliminar componentes, renombrar ASV y conservar un historial descriptivo.</p>
+<h2 id="section-2">2. Principio fundamental: los cambios son inmediatos<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>No existe un borrador independiente. La mayoría de las acciones sustituyen inmediatamente el objeto seleccionado en <code>datasets()</code>: edición de celdas, operaciones de columnas, fusiones, renombrado, reemplazos taxonómicos, importaciones completas y eliminación de componentes.</p>
+<h2 id="section-3">3. El botón Guardar no aplica cambios pendientes<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Los cambios ya se han aplicado. <strong>Guardar</strong> solo vuelve a registrar el estado editado con el mismo nombre, uno nuevo o sobre otra entrada. No guarda el proyecto en disco.</p>
+<h2 id="section-4">4. Consecuencia importante para la versión original<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Editar <code>COI_raw</code> y después guardar como <code>COI_edited</code> no conserva un <code>COI_raw</code> intacto: la entrada de origen ya fue modificada. Duplique el dataset bruto en <strong>Datasets</strong> antes de editar.</p>
+<h2 id="section-5">5. Efecto sobre los archivos fuente<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>No se reescriben los archivos RDS, RData, CSV, FASTA, Newick ni los resultados remotos. Se modifica el objeto en memoria. Para conservarlo, guarde el proyecto o exporte el dataset.</p>
+<h2 id="section-6">6. Organización del módulo<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Incluye selección del dataset, edición de metadata, edición OTU, edición taxonómica, importación/exportación/eliminación de componentes, logs y registro del dataset.</p>
+<h2 id="section-7">7. Dataset que se va a editar<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>El selector muestra los datasets del registro y está sincronizado con <code>active_ds()</code>. Cambiarlo modifica el dataset activo global.</p>
+<h2 id="section-8">8. Cambio de dataset durante la edición<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Al cambiar de dataset se recargan los estados locales de los tres editores y se reinician los estados inicial/anterior y las previsualizaciones. El estado inicial local no siempre es el archivo original.</p>
+<h2 id="section-9">9. Restablecer después de cambiar de dataset y volver<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Si se modifica <code>COI</code>, se abre otro dataset y se vuelve a <code>COI</code>, Restablecer apunta al estado ya modificado que se cargó al volver.</p>
+<h2 id="section-10">10. Edición y persistencia del proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Cada acción actualiza <code>datasets()</code> y puede marcar el proyecto como no guardado. Use <strong>Datasets → Guardar proyecto</strong> para conservar los cambios tras cerrar la aplicación.</p>
+<h2 id="section-11">11. Diferencia entre los dos mecanismos de importación<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p><strong>Fusionar</strong> añade únicamente columnas ausentes usando identificadores comunes. La importación completa reemplaza todo el componente seleccionado al elegir el archivo.</p>
+<h2 id="section-12">12. Operaciones para las que no está diseñado Data Edition<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>No es el método preferido para filtración biológica, normalización, transformación de abundancias o eliminación por umbrales. Use Filtration o un flujo externo controlado.</p>
+<h2 id="section-13">13. Historial de modificaciones<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Las acciones pueden añadir una entrada a <code>attr(ps, "edit_log")</code> con fecha, dataset, tabla, acción, descripción, dimensiones antes/después y advertencias.</p>
+<h2 id="section-14">14. El historial no es una copia de seguridad<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>No almacena las tablas antiguas completas. Es una traza de auditoría, no un sistema de versionado o restauración integral.</p>
+<h2 id="section-15">15. Idioma del historial<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Las acciones y advertencias internas de <code>edit_log</code> permanecen en francés aunque la interfaz use otro idioma.</p>
+<h2 id="section-16">16. Las tres vistas de logs<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><strong>Última acción global</strong> cubre la sesión actual del módulo, <strong>Historial completo</strong> muestra el log almacenado y <strong>Resumen</strong> agrega acciones, tablas, advertencias y fechas.</p>
+<h2 id="section-17">17. Acciones contabilizadas<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>El total puede incluir ediciones, cambios estructurales, importaciones, exportaciones, deshacer, restablecer, guardados en el registro, renombrados y sincronizaciones automáticas.</p>
+<h2 id="section-18">18. Deshacer: un solo paso<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Cada editor conserva un único estado anterior. Deshacer no recorre todo el historial y varios clics pueden alternar entre dos estados recientes.</p>
+<h2 id="section-19">19. Restablecer<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>Restaura el estado local capturado cuando el submódulo cargó el dataset. Es inmediato, se registra y puede deshacerse, pero no garantiza volver al archivo original.</p>
+<h2 id="section-20">20. Edición de metadata — presentación<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Actúa sobre <code>sample_data(ps)</code> y permite editar valores, añadir, eliminar o renombrar variables, fusionar un archivo, deshacer y restablecer.</p>
+<h2 id="section-21">21. Creación automática de metadata ausente<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Si no existe metadata utilizable, el editor crea una <code>sample_data</code> mínima con una columna <code>SampleID</code> y una fila por muestra. Puede modificar el dataset sin una entrada de log específica.</p>
+<h2 id="section-22">22. Identificadores de muestras<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Los identificadores reales son los rownames alineados con <code>sample_names(ps)</code>. Una columna <code>SampleID</code> es una variable ordinaria; editarla no renombra las muestras OTU.</p>
+<h2 id="section-23">23. Tabla de metadata editable<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Las celdas se modifican directamente y se aplican al validar la edición. No existe un botón Aplicar global.</p>
+<h2 id="section-24">24. Tratamiento de factores<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Los factores se convierten localmente en texto. Sus niveles y orden pueden perderse tras la primera reescritura.</p>
+<h2 id="section-25">25. Tratamiento de columnas de listas<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Las listas se convierten en texto separado por comas, lo que puede ser irreversible.</p>
+<h2 id="section-26">26. Edición de una columna numérica<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Un número válido sigue siendo numérico, una celda vacía pasa a <code>NA_real_</code> y un texto no numérico puede convertir toda la columna en carácter con advertencia.</p>
+<h2 id="section-27">27. Consecuencia de convertir numérico a texto<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Una covariable continua convertida a <code>character</code> puede dejar de funcionar como variable cuantitativa. Revise los tipos después de editar.</p>
+<h2 id="section-28">28. Columnas lógicas, fechas y clases especiales<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>La conservación explícita se centra en columnas numéricas. <code>logical</code>, <code>Date</code>, <code>POSIXct</code>, factores ordenados y clases personalizadas pueden perderse.</p>
+<h2 id="section-29">29. Añadir una columna de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>La nueva columna se rellena con <code>NA</code>. El nombre debe empezar por una letra ASCII, contener solo letras, números o <code>_</code>, no incluir punto y ser único.</p>
+<h2 id="section-30">30. Sugerencias de nombres compatibles<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Puede mostrarse una sugerencia normalizada, pero no se aplica automáticamente.</p>
+<h2 id="section-31">31. Renombrar una columna de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Conserva los valores y exige un nombre válido y único. No renombra rownames ni identificadores de muestras.</p>
+<h2 id="section-32">32. Consecuencia del renombrado para los análisis<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>Las fórmulas y parámetros guardados con el nombre anterior no se actualizan y deben configurarse de nuevo.</p>
+<h2 id="section-33">33. Eliminar una columna de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>Requiere el nombre exacto y distingue mayúsculas y minúsculas. Pueden mostrarse sugerencias aproximadas.</p>
+<h2 id="section-34">34. Eliminar la última columna<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>No existe una protección general que garantice una columna restante. Para retirar toda la metadata, use la eliminación completa del componente.</p>
+<h2 id="section-35">35. Coherencia de las filas de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Las muestras ausentes se añaden con <code>NA</code>, las filas se ordenan según <code>sample_names(ps)</code> y las filas adicionales se descartan.</p>
+<h2 id="section-36">36. Fusionar un archivo en la metadata<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>Se aceptan CSV, TSV y TXT con separador coma, punto y coma o tabulación.</p>
+<h2 id="section-37">37. Detección automática del separador de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Se inspeccionan hasta treinta líneas no vacías para comparar número de campos y regularidad. Un resultado incierto puede corregirse manualmente.</p>
+<h2 id="section-38">38. Primera columna como identificadores<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Al activarlo, la primera columna se usa como rownames. Sin esta opción, los rownames numéricos suelen impedir la correspondencia.</p>
+<h2 id="section-39">39. Fusión de metadata: comportamiento real<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Solo se añaden columnas nuevas para rownames comunes. Las muestras coincidentes reciben valores y las demás reciben <code>NA</code>.</p>
+<h2 id="section-40">40. Columnas ya existentes<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Fusionar no actualiza columnas existentes. Si no hay columnas nuevas, no se modifica nada.</p>
+<h2 id="section-41">41. Muestras adicionales en el archivo de fusión<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Los identificadores ausentes del phyloseq se ignoran y no crean nuevas muestras.</p>
+<h2 id="section-42">42. Muestras actuales ausentes del archivo<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>Permanecen en el dataset y reciben <code>NA</code> en las columnas nuevas.</p>
+<h2 id="section-43">43. Edición de la tabla OTU — presentación<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Permite editar celdas, añadir o eliminar columnas, fusionar, ordenar la visualización, renombrar ASV, declarar orientación, deshacer y restablecer.</p>
+<h2 id="section-44">44. Orientación de la tabla OTU<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Se conserva <code>taxa_are_rows()</code>. Con taxones en filas, las columnas son muestras; en el caso contrario, las columnas son taxones.</p>
+<h2 id="section-45">45. «ASV en columnas» no transpone la tabla<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>El selector informa principalmente al renombrado automático. Cambiarlo solo no transpone ni modifica inmediatamente <code>taxa_are_rows</code>.</p>
+<h2 id="section-46">46. Riesgo de elegir el eje incorrecto<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<p>Puede renombrar muestras como ASV, alterar la orientación declarada y desincronizar taxonomía, secuencias y árbol.</p>
+<h2 id="section-47">47. Tabla OTU editable<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Cada celda puede modificarse y el módulo reconstruye después una matriz numérica.</p>
+<h2 id="section-48">48. Conversión numérica de la tabla OTU<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>Toda la tabla se convierte a numérico después de una acción. Los valores no convertibles pasan a <code>NA</code> con advertencia.</p>
+<h2 id="section-49">49. Valores vacíos en OTU<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>Las celdas vacías, espacios y <code>NA</code> se señalan, pero no se sustituyen automáticamente por cero.</p>
+<h2 id="section-50">50. Valores no numéricos<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>Textos como <code>absent</code>, <code>low</code> o <code>?</code> suelen convertirse en <code>NA</code>.</p>
+<h2 id="section-51">51. Valores negativos y decimales<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>No se bloquean. La tabla puede contener cuentas, proporciones, transformaciones o CLR, aunque algunos análisis las rechacen.</p>
+<h2 id="section-52">52. Añadir una columna a OTU<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p>Con taxones en filas añade una muestra; con taxones en columnas añade un taxón. La columna se inicializa con <code>NA</code>.</p>
+<h2 id="section-53">53. Riesgos al añadir una muestra<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>No se crea automáticamente la fila correspondiente en <code>sample_data</code>, por lo que el objeto puede quedar incoherente.</p>
+<h2 id="section-54">54. Riesgos al añadir un taxón<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>No se crean taxonomía, secuencia ni hoja del árbol. RefSeq o el árbol pueden eliminarse si quedan incompletos.</p>
+<h2 id="section-55">55. Recomendación para adiciones estructurales<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>Para nuevos taxones o muestras, reconstruya y valide un phyloseq completo en R.</p>
+<h2 id="section-56">56. Eliminar una columna de OTU<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>Según la orientación, elimina una muestra o un taxón. La metadata o taxonomía no se sincronizan siempre.</p>
+<h2 id="section-57">57. Usar Filtration para eliminaciones biológicas<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>Filtration está diseñado para retirar taxones o muestras con criterios documentados y producir un dataset hijo coherente.</p>
+<h2 id="section-58">58. Orden natural de ASV<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>Muestra <code>ASV1</code>, <code>ASV2</code>, <code>ASV10</code> en orden numérico sin modificar el orden interno.</p>
+<h2 id="section-59">59. Edición con el orden activado<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>La fila visible se asocia de nuevo con su identificador original para modificar el elemento correcto.</p>
+<h2 id="section-60">60. Fusionar un archivo en OTU<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>Detecta el separador, usa rownames, encuentra filas comunes y añade solo columnas nuevas.</p>
+<h2 id="section-61">61. Significado de las columnas importadas<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>Depende de la orientación actual; el módulo no deduce si son muestras o taxones.</p>
+<h2 id="section-62">62. Filas adicionales en el archivo OTU<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>Se ignoran y no crean nuevos identificadores.</p>
+<h2 id="section-63">63. Filas actuales ausentes del archivo<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<p>Las nuevas columnas permanecen <code>NA</code> para esas filas.</p>
+<h2 id="section-64">64. Renombrado automático de ASV<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>Combina un prefijo, el eje declarado y los identificadores actuales.</p>
+<h2 id="section-65">65. Conservación de números finales<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>Si todos los identificadores terminan en números únicos, se conservan: <code>ASV128</code> puede convertirse en <code>Feature128</code>.</p>
+<h2 id="section-66">66. Renombrado secuencial<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>Si algún identificador no posee un número final utilizable, todos se renombran secuencialmente según el orden interno.</p>
+<h2 id="section-67">67. Colisiones de nombres nuevos<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>Si los nombres generados no son únicos, se utiliza un renombrado secuencial de respaldo.</p>
+<h2 id="section-68">68. Validación del prefijo<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>Solo se eliminan espacios externos. Use prefijos simples como <code>ASV</code>, <code>OTU</code>, <code>ZOTU</code> o <code>Feature</code>.</p>
+<h2 id="section-69">69. Propagación del renombrado de ASV<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>Con identificadores antiguos únicos, los nombres se propagan a <code>tax_table</code>, <code>refseq</code> y hojas del árbol.</p>
+<h2 id="section-70">70. Identificadores duplicados antes del renombrado<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>La propagación se desactiva y el objeto puede seguir incoherente. Corrija duplicados antes.</p>
+<h2 id="section-71">71. Realineación de secuencias tras modificar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<p>Las secuencias sin nombre se nombran por orden si el número coincide; las completas se reordenan. Si falta una secuencia para algún taxón, se elimina toda <code>refseq</code>.</p>
+<h2 id="section-72">72. Realineación del árbol tras modificar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>Se podan hojas adicionales. Si falta un taxón OTU, se elimina todo el árbol.</p>
+<h2 id="section-73">73. Paquete <code>ape</code> ausente<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>Si <code>ape</code> no está disponible durante una modificación OTU, el árbol se elimina con advertencia.</p>
+<h2 id="section-74">74. Taxonomía tras cambios estructurales OTU<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>La propagación es explícita al renombrar ASV, pero no está garantizada para todos los cambios. Verifique los identificadores.</p>
+<h2 id="section-75">75. Edición de taxonomía — presentación<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>Actúa sobre <code>tax_table(ps)</code>: celdas, rangos, fusión, reemplazo automático, deshacer y restablecer.</p>
+<h2 id="section-76">76. Taxonomía ausente<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>Use la importación completa para añadir una tabla taxonómica.</p>
+<h2 id="section-77">77. Confirmación antes de la primera edición taxonómica<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>El primer intento solo abre una ventana informativa y no ejecuta la acción. Ciérrela y repita la acción.</p>
+<h2 id="section-78">78. Nueva confirmación tras cambiar de dataset<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>El estado se reinicia al cambiar el dataset seleccionado.</p>
+<h2 id="section-79">79. Edición de una celda taxonómica<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>El valor se guarda como texto. No se valida nomenclatura ni coherencia taxonómica.</p>
+<h2 id="section-80">80. Sin verificación de jerarquía<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p>No se comprueba la coherencia especie–género–familia ni la validez de los nombres.</p>
+<h2 id="section-81">81. Añadir un rango taxonómico<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>Se añade al final una columna de <code>NA</code> con un nombre estricto, válido y único.</p>
+<h2 id="section-82">82. Orden de los rangos<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>No se impone orden. Mantenga manualmente una secuencia coherente.</p>
+<h2 id="section-83">83. Renombrar un rango taxonómico<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>No hay botón directo. Cree un rango nuevo, transfiera valores y elimine el antiguo, o realice la operación en R.</p>
+<h2 id="section-84">84. Eliminar un rango<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>La eliminación es inmediata con el nombre exacto; pueden aparecer sugerencias.</p>
+<h2 id="section-85">85. Eliminar todos los rangos<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>No existe una protección general. Para eliminar toda la taxonomía, use la eliminación completa del componente.</p>
+<h2 id="section-86">86. Orden taxonómico por ASV<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>El orden natural solo afecta la visualización y usa la primera secuencia numérica del identificador.</p>
+<h2 id="section-87">87. Sincronización tras renombrar ASV<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>Si cambian los rownames manteniendo el mismo número de filas, se actualizan los estados locales y se añade una entrada de sincronización.</p>
+<h2 id="section-88">88. Límite de la sincronización taxonómica<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>Una sustitución completa con los mismos identificadores puede no actualizar los valores locales. Cambie de dataset y vuelva.</p>
+<h2 id="section-89">89. Fusionar un archivo en taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>Añade únicamente rangos ausentes para taxones comunes; los demás reciben <code>NA</code>.</p>
+<h2 id="section-90">90. Sin detección automática del separador taxonómico<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>Debe seleccionarse manualmente.</p>
+<h2 id="section-91">91. Columnas taxonómicas existentes<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>Fusionar no sustituye rangos existentes como <code>Genus</code>. Use importación completa.</p>
+<h2 id="section-92">92. Reemplazo automático de valores<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>Patrones como <code>NA</code>, <code>unidentified</code>, <code>unclassified</code>, <code>unknown</code> o <code>missing</code> pueden sustituirse por un texto común.</p>
+<h2 id="section-93">93. Coincidencia exacta sin distinguir mayúsculas<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>Los patrones se recortan, se convierten a minúsculas y se comparan exactamente.</p>
+<h2 id="section-94">94. Patrón <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>Coincide con valores realmente ausentes y con variantes textuales de <code>NA</code>.</p>
+<h2 id="section-95">95. Patrón vacío<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>Apunta a cadenas vacías o compuestas solo por espacios.</p>
+<h2 id="section-96">96. Alcance del reemplazo<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>Se aplica a todos los rangos; no existe selección de una sola columna.</p>
+<h2 id="section-97">97. Previsualización obligatoria<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>Se muestran totales por patrón y columna antes de confirmar.</p>
+<h2 id="section-98">98. Patrones solapados<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>Una celda puede coincidir con varios patrones; los recuentos por patrón pueden solaparse.</p>
+<h2 id="section-99">99. Valor de reemplazo no vacío<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>No se permite una cadena de reemplazo vacía.</p>
+<h2 id="section-100">100. Consecuencias científicas del reemplazo<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>Convertir <code>NA</code> en <code>Unassigned</code> crea una categoría real y modifica completitud, aglomeración y gráficos.</p>
+<h2 id="section-101">101. Agrupación de taxones no asignados<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<p>Los taxones con el mismo texto pueden agruparse mediante <code>tax_glom()</code>, a diferencia de los valores ausentes reales.</p>
+<h2 id="section-102">102. Estado taxonómico inicial y restablecimiento<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>El estado inicial se vuelve a capturar al cargar localmente el dataset; cambiar de dataset puede alterar la referencia de Restablecer.</p>
+<h2 id="section-103">103. Importación, exportación y eliminación — presentación<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>Gestiona componentes completos: metadata, OTU, taxonomía, RefSeq y árbol.</p>
+<h2 id="section-104">104. Importación automática<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>Comienza al seleccionar el archivo, sin confirmación adicional ni previsualización general.</p>
+<h2 id="section-105">105. Límite de tamaño<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>Se aplica el límite global de carga de BarCodeR, aproximadamente 500 MB.</p>
+<h2 id="section-106">106. Detección de separador en importaciones completas<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>Se inspecciona principalmente la primera línea: punto y coma, después tabulación, y si no, coma. Es menos robusto que Fusionar.</p>
+<h2 id="section-107">107. Importación completa de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>La primera columna contiene identificadores. Las muestras desconocidas provocan rechazo; las ausentes se añaden con <code>NA</code>. La metadata anterior se reemplaza por completo.</p>
+<h2 id="section-108">108. Importación completa de OTU<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<p>Se interpreta como taxones en filas y muestras en columnas, imponiendo <code>taxa_are_rows = TRUE</code>.</p>
+<h2 id="section-109">109. Identificadores aceptados para OTU<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<p>Taxones y muestras deben ser subconjuntos de los identificadores existentes. No se añaden nuevos elementos.</p>
+<h2 id="section-110">110. Identificadores ausentes en OTU<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<p>Los taxones o muestras actuales ausentes se rellenan con cero y se reordenan según el objeto.</p>
+<h2 id="section-111">111. Conversión numérica en OTU<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<p>Toda la tabla se convierte a numérico; los valores inválidos pasan a <code>NA</code> y la importación puede continuar con advertencia.</p>
+<h2 id="section-112">112. Importación completa de taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<p>La primera columna contiene taxones. Los desconocidos se rechazan; los ausentes se añaden con <code>NA</code>. Se sustituye la tabla anterior.</p>
+<h2 id="section-113">113. Importación de RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<p>Los identificadores FASTA deben corresponder y cubrir todos los taxones. Se rechazan archivos parciales o identificadores desconocidos.</p>
+<h2 id="section-114">114. Importación del árbol<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<p>Las hojas Newick deben corresponder y cubrir todos los taxones. Las hojas desconocidas o taxones ausentes provocan rechazo.</p>
+<h2 id="section-115">115. Sustitución completa de componentes<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<p>El componente antiguo no se conserva como snapshot. Solo se registran dimensiones, archivo y advertencias.</p>
+<h2 id="section-116">116. Actualización de editores tras importación completa<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>Los editores locales pueden conservar una copia antigua si no cambia el nombre del dataset. Cambie de dataset y vuelva antes de editar.</p>
+<h2 id="section-117">117. Exportación de componentes<a aria-label="Permalink" class="heading-anchor" href="#section-117">#</a></h2>
+<p>Metadata, OTU y taxonomía se exportan como CSV; RefSeq como FASTA; el árbol como Newick.</p>
+<h2 id="section-118">118. Separador de exportaciones CSV<a aria-label="Permalink" class="heading-anchor" href="#section-118">#</a></h2>
+<p>Se utiliza punto y coma <code>;</code> aunque la extensión sea <code>.csv</code>.</p>
+<h2 id="section-119">119. Exportación de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-119">#</a></h2>
+<p>Se crea una columna <code>SampleID</code> desde los rownames y los valores ausentes se exportan como celdas vacías.</p>
+<h2 id="section-120">120. Exportación de OTU<a aria-label="Permalink" class="heading-anchor" href="#section-120">#</a></h2>
+<p>Se conserva la orientación almacenada y el archivo no registra explícitamente <code>taxa_are_rows</code>.</p>
+<h2 id="section-121">121. Exportación de taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-121">#</a></h2>
+<p>Los identificadores aparecen en la primera columna y las anotaciones ausentes como celdas vacías.</p>
+<h2 id="section-122">122. Exportación de RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-122">#</a></h2>
+<p>Se escribe FASTA con los nombres actuales; requiere <code>Biostrings</code>.</p>
+<h2 id="section-123">123. Exportación del árbol<a aria-label="Permalink" class="heading-anchor" href="#section-123">#</a></h2>
+<p>Se escribe Newick; requiere <code>ape</code>.</p>
+<h2 id="section-124">124. Exportación e historial<a aria-label="Permalink" class="heading-anchor" href="#section-124">#</a></h2>
+<p>Cada exportación añade una entrada a <code>edit_log</code> y puede marcar el proyecto como no guardado.</p>
+<h2 id="section-125">125. Eliminación de componentes<a aria-label="Permalink" class="heading-anchor" href="#section-125">#</a></h2>
+<p>La ventana muestra los componentes presentes y permite seleccionar varios antes de confirmar.</p>
+<h2 id="section-126">126. Eliminar metadata<a aria-label="Permalink" class="heading-anchor" href="#section-126">#</a></h2>
+<p>Se retira <code>sam_data</code>; los análisis con grupos o covariables dejan de estar disponibles.</p>
+<h2 id="section-127">127. Eliminar taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-127">#</a></h2>
+<p>Se retira <code>tax_table</code>; los análisis taxonómicos dejan de estar disponibles.</p>
+<h2 id="section-128">128. Eliminar RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-128">#</a></h2>
+<p>Se pierden las secuencias para análisis de longitud, GC o secuencia.</p>
+<h2 id="section-129">129. Eliminar el árbol<a aria-label="Permalink" class="heading-anchor" href="#section-129">#</a></h2>
+<p>UniFrac, Faith PD y visualizaciones filogenéticas dejan de estar disponibles.</p>
+<h2 id="section-130">130. Eliminar la tabla OTU<a aria-label="Permalink" class="heading-anchor" href="#section-130">#</a></h2>
+<p>La interfaz lo permite, pero elimina el componente central y hace inutilizable el dataset en la mayoría de módulos.</p>
+<h2 id="section-131">131. Eliminar varios componentes<a aria-label="Permalink" class="heading-anchor" href="#section-131">#</a></h2>
+<p>Pueden retirarse varios slots aunque el objeto restante quede incoherente.</p>
+<h2 id="section-132">132. Deshacer la eliminación de un componente<a aria-label="Permalink" class="heading-anchor" href="#section-132">#</a></h2>
+<p>No hay Undo. Reimporte, restaure el proyecto o cargue una exportación anterior.</p>
+<h2 id="section-133">133. Eliminación y archivos en disco<a aria-label="Permalink" class="heading-anchor" href="#section-133">#</a></h2>
+<p>La eliminación afecta a la memoria hasta guardar el proyecto. Los archivos fuente y copias anteriores no se eliminan.</p>
+<h2 id="section-134">134. Guardar el dataset en el registro<a aria-label="Permalink" class="heading-anchor" href="#section-134">#</a></h2>
+<p>El campo de nombre permite registrar con el mismo nombre, crear una entrada nueva o sustituir una existente.</p>
+<h2 id="section-135">135. Nombre vacío<a aria-label="Permalink" class="heading-anchor" href="#section-135">#</a></h2>
+<p>Se vuelve a registrar con el nombre actual, permanece activo y se añade una entrada al log. El proyecto no se guarda en disco.</p>
+<h2 id="section-136">136. Nuevo nombre disponible<a aria-label="Permalink" class="heading-anchor" href="#section-136">#</a></h2>
+<p>Se crea una entrada con el estado editado y pasa a ser activa. La fuente permanece, pero ya estaba editada.</p>
+<h2 id="section-137">137. Nombre usado por otro dataset<a aria-label="Permalink" class="heading-anchor" href="#section-137">#</a></h2>
+<p>Tras confirmar, el objetivo se sobrescribe por completo con el estado editado; la fuente también permanece.</p>
+<h2 id="section-138">138. Limpieza del nombre<a aria-label="Permalink" class="heading-anchor" href="#section-138">#</a></h2>
+<p>El helper común limpia el nombre antes de comprobar colisiones.</p>
+<h2 id="section-139">139. Sobrescribir otro dataset<a aria-label="Permalink" class="heading-anchor" href="#section-139">#</a></h2>
+<p>Se sustituyen tablas, secuencias, árbol, atributos, logs y procedencia. No es una fusión.</p>
+<h2 id="section-140">140. Guardar el proyecto completo<a aria-label="Permalink" class="heading-anchor" href="#section-140">#</a></h2>
+<p>Use <strong>Datasets → Guardar proyecto</strong> para persistir el registro en disco.</p>
+<h2 id="section-141">141. Resolución de problemas<a aria-label="Permalink" class="heading-anchor" href="#section-141">#</a></h2>
+<p>Las subsecciones siguientes describen errores frecuentes y sus causas reales.</p>
+<h2 id="section-141-1">141.1. Se modificó el dataset equivocado<a aria-label="Permalink" class="heading-anchor" href="#section-141-1">#</a></h2>
+<p>El selector sigue el dataset activo global. Compruebe el nombre antes de cada acción.</p>
+<h2 id="section-141-2">141.2. El original cambió aunque se quería un nombre nuevo<a aria-label="Permalink" class="heading-anchor" href="#section-141-2">#</a></h2>
+<p>La edición ocurre antes de copiar. Restaure una copia, exportación o archivo original.</p>
+<h2 id="section-141-3">141.3. Guardar no guardó el proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-141-3">#</a></h2>
+<p>Solo modifica el registro en memoria. Guarde desde Datasets.</p>
+<h2 id="section-141-4">141.4. La metadata apareció automáticamente<a aria-label="Permalink" class="heading-anchor" href="#section-141-4">#</a></h2>
+<p>El dataset no contenía <code>sample_data</code>; se creó una tabla mínima.</p>
+<h2 id="section-141-5">141.5. Editar <code>SampleID</code> no renombró muestras<a aria-label="Permalink" class="heading-anchor" href="#section-141-5">#</a></h2>
+<p>Los identificadores reales son los rownames.</p>
+<h2 id="section-141-6">141.6. Una variable numérica se convirtió en texto<a aria-label="Permalink" class="heading-anchor" href="#section-141-6">#</a></h2>
+<p>Se introdujo un valor no numérico. Repare toda la columna o reimporte metadata tipada.</p>
+<h2 id="section-141-7">141.7. Un factor se convirtió en character<a aria-label="Permalink" class="heading-anchor" href="#section-141-7">#</a></h2>
+<p>El editor aplana los factores. Restaure niveles en R si es necesario.</p>
+<h2 id="section-141-8">141.8. Una columna nueva tiene el tipo incorrecto<a aria-label="Permalink" class="heading-anchor" href="#section-141-8">#</a></h2>
+<p>Comienza con <code>NA</code> y se infiere a partir de los valores. Revísela y conviértala.</p>
+<h2 id="section-141-9">141.9. Fusionar metadata no actualizó una columna<a aria-label="Permalink" class="heading-anchor" href="#section-141-9">#</a></h2>
+<p>Solo añade columnas ausentes. Use importación completa o edite celdas.</p>
+<h2 id="section-141-10">141.10. No se encontró un identificador común<a aria-label="Permalink" class="heading-anchor" href="#section-141-10">#</a></h2>
+<p>Revise primera columna, opción rownames, mayúsculas, espacios y ortografía.</p>
+<h2 id="section-141-11">141.11. El separador detectado es incorrecto<a aria-label="Permalink" class="heading-anchor" href="#section-141-11">#</a></h2>
+<p>Selecciónelo manualmente en archivos irregulares.</p>
+<h2 id="section-141-12">141.12. Valores OTU se convirtieron en <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-12">#</a></h2>
+<p>Falló la conversión por texto, símbolos, espacios o coma decimal.</p>
+<h2 id="section-141-13">141.13. Los decimales con coma se vuelven <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-13">#</a></h2>
+<p>El separador decimal esperado es el punto.</p>
+<h2 id="section-141-14">141.14. Una columna OTU nueva desincronizó metadata<a aria-label="Permalink" class="heading-anchor" href="#section-141-14">#</a></h2>
+<p>La muestra se añadió solo a OTU. Añada metadata o reconstruya el objeto.</p>
+<h2 id="section-141-15">141.15. RefSeq desapareció tras modificar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-141-15">#</a></h2>
+<p>Ya no cubría todos los taxones.</p>
+<h2 id="section-141-16">141.16. El árbol desapareció tras modificar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-141-16">#</a></h2>
+<p>Faltaba un taxón, el renombrado no se propagó o <code>ape</code> no estaba disponible.</p>
+<h2 id="section-141-17">141.17. Desaparecieron hojas del árbol<a aria-label="Permalink" class="heading-anchor" href="#section-141-17">#</a></h2>
+<p>Las hojas adicionales se podan automáticamente.</p>
+<h2 id="section-141-18">141.18. Las muestras se renombraron como ASV<a aria-label="Permalink" class="heading-anchor" href="#section-141-18">#</a></h2>
+<p>Se declaró el eje incorrecto. Restaure una copia.</p>
+<h2 id="section-141-19">141.19. El prefijo ASV produjo nombres extraños<a aria-label="Permalink" class="heading-anchor" href="#section-141-19">#</a></h2>
+<p>No se valida estrictamente. Use un prefijo simple.</p>
+<h2 id="section-141-20">141.20. La taxonomía ya no coincide con OTU<a aria-label="Permalink" class="heading-anchor" href="#section-141-20">#</a></h2>
+<p>Revise rownames, duplicados y recargue los editores; compare conjuntos de identificadores en R.</p>
+<h2 id="section-141-21">141.21. La primera modificación taxonómica no se ejecutó<a aria-label="Permalink" class="heading-anchor" href="#section-141-21">#</a></h2>
+<p>El primer intento solo abre la advertencia. Repita la acción.</p>
+<h2 id="section-141-22">141.22. Un reemplazo taxonómico cambió varios rangos<a aria-label="Permalink" class="heading-anchor" href="#section-141-22">#</a></h2>
+<p>Se aplica a todas las columnas. Revise la previsualización por rango.</p>
+<h2 id="section-141-23">141.23. <code>NA</code> ahora se considera una categoría real<a aria-label="Permalink" class="heading-anchor" href="#section-141-23">#</a></h2>
+<p>Se sustituyó por texto y puede agregarse como taxonomía asignada.</p>
+<h2 id="section-141-24">141.24. La fusión taxonómica no sustituyó <code>Genus</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-24">#</a></h2>
+<p>El rango ya existe; Fusionar solo añade rangos ausentes.</p>
+<h2 id="section-141-25">141.25. No se detectó el separador taxonómico<a aria-label="Permalink" class="heading-anchor" href="#section-141-25">#</a></h2>
+<p>Debe seleccionarse manualmente.</p>
+<h2 id="section-141-26">141.26. La importación completa borró columnas<a aria-label="Permalink" class="heading-anchor" href="#section-141-26">#</a></h2>
+<p>Sustituye todo el componente. Restaure una copia o use Fusionar.</p>
+<h2 id="section-141-27">141.27. La importación OTU cambió la orientación<a aria-label="Permalink" class="heading-anchor" href="#section-141-27">#</a></h2>
+<p>Siempre impone taxones en filas.</p>
+<h2 id="section-141-28">141.28. La importación rechaza nuevas muestras<a aria-label="Permalink" class="heading-anchor" href="#section-141-28">#</a></h2>
+<p>Los identificadores deben existir. Construya un phyloseq completo nuevo.</p>
+<h2 id="section-141-29">141.29. La importación rechaza nuevos taxones<a aria-label="Permalink" class="heading-anchor" href="#section-141-29">#</a></h2>
+<p>Los rownames deben pertenecer a <code>taxa_names(ps)</code>.</p>
+<h2 id="section-141-30">141.30. Se rechaza el FASTA<a aria-label="Permalink" class="heading-anchor" href="#section-141-30">#</a></h2>
+<p>Revise formato, identificadores, cobertura completa y disponibilidad de <code>Biostrings</code>.</p>
+<h2 id="section-141-31">141.31. Se rechaza el árbol<a aria-label="Permalink" class="heading-anchor" href="#section-141-31">#</a></h2>
+<p>Revise Newick, hojas desconocidas, taxones ausentes y disponibilidad de <code>ape</code>.</p>
+<h2 id="section-141-32">141.32. El editor sigue mostrando la tabla antigua<a aria-label="Permalink" class="heading-anchor" href="#section-141-32">#</a></h2>
+<p>Cambie de dataset y vuelva para actualizar el estado local.</p>
+<h2 id="section-141-33">141.33. Una tabla eliminada reaparece tras editar<a aria-label="Permalink" class="heading-anchor" href="#section-141-33">#</a></h2>
+<p>Un estado local obsoleto pudo reescribir su copia anterior. Recargue tras eliminar o importar.</p>
+<h2 id="section-141-34">141.34. Descargar creó una modificación no guardada<a aria-label="Permalink" class="heading-anchor" href="#section-141-34">#</a></h2>
+<p>Las exportaciones se registran en <code>edit_log</code>.</p>
+<h2 id="section-141-35">141.35. No se puede deshacer la eliminación de una tabla<a aria-label="Permalink" class="heading-anchor" href="#section-141-35">#</a></h2>
+<p>No hay Undo en esta sección. Reimporte o restaure.</p>
+<h2 id="section-141-36">141.36. El dataset dejó de funcionar tras eliminar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-141-36">#</a></h2>
+<p>Restaure una versión completa.</p>
+<h2 id="section-141-37">141.37. Deshacer no retrocede varias acciones<a aria-label="Permalink" class="heading-anchor" href="#section-141-37">#</a></h2>
+<p>Solo se almacena un estado anterior.</p>
+<h2 id="section-141-38">141.38. Restablecer no vuelve al archivo original<a aria-label="Permalink" class="heading-anchor" href="#section-141-38">#</a></h2>
+<p>Vuelve al estado capturado al cargar el editor local.</p>
+<h2 id="section-141-39">141.39. El log permanece en francés<a aria-label="Permalink" class="heading-anchor" href="#section-141-39">#</a></h2>
+<p>La auditoría interna se almacena en francés.</p>
+<h2 id="section-141-40">141.40. El total de acciones aumenta tras exportar<a aria-label="Permalink" class="heading-anchor" href="#section-141-40">#</a></h2>
+<p>Las exportaciones se contabilizan como acciones.</p>
+<h2 id="section-142">142. Checklist antes de editar<a aria-label="Permalink" class="heading-anchor" href="#section-142">#</a></h2>
+<ul>
+<li>Confirme proyecto y dataset.</li>
+<li>Duplique el dataset bruto.</li>
+<li>Guarde el proyecto y exporte datos importantes.</li>
+<li>Revise componentes y orientación OTU.</li>
+<li>Cierre otras sesiones que puedan escribir en el mismo proyecto.</li>
+</ul>
+<h2 id="section-143">143. Checklist antes de editar metadata<a aria-label="Permalink" class="heading-anchor" href="#section-143">#</a></h2>
+<ul>
+<li>Revise rownames y no los confunda con <code>SampleID</code>.</li>
+<li>Documente tipos, factores, fechas y valores ausentes.</li>
+<li>Use nombres válidos.</li>
+<li>Verifique los tipos después.</li>
+</ul>
+<h2 id="section-144">144. Checklist antes de editar OTU<a aria-label="Permalink" class="heading-anchor" href="#section-144">#</a></h2>
+<ul>
+<li>Revise <code>taxa_are_rows</code> y el eje ASV.</li>
+<li>Confirme la naturaleza de las abundancias y ausencia de texto.</li>
+<li>Revise metadata, taxonomía, RefSeq y árbol antes de cambios estructurales.</li>
+<li>Exporte antes de renombrar masivamente.</li>
+</ul>
+<h2 id="section-145">145. Checklist antes de reemplazar taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-145">#</a></h2>
+<ul>
+<li>Revise patrones, mayúsculas y espacios.</li>
+<li>Examine recuentos por rango.</li>
+<li>Comprenda <code>NA</code> frente a categorías textuales.</li>
+<li>Anticipe efectos de aglomeración.</li>
+<li>Conserve la taxonomía original.</li>
+</ul>
+<h2 id="section-146">146. Checklist antes de una importación completa<a aria-label="Permalink" class="heading-anchor" href="#section-146">#</a></h2>
+<ul>
+<li>Verifique dataset, separador, primera columna, identificadores y cobertura.</li>
+<li>Guarde el componente anterior.</li>
+<li>Comprenda que será reemplazado.</li>
+<li>Recargue editores y valide en Description.</li>
+</ul>
+<h2 id="section-147">147. Checklist antes de eliminar un componente<a aria-label="Permalink" class="heading-anchor" href="#section-147">#</a></h2>
+<ul>
+<li>Exporte el componente y guarde el proyecto.</li>
+<li>Revise módulos dependientes.</li>
+<li>Evite eliminar OTU salvo casos excepcionales.</li>
+<li>Recuerde que no existe Undo.</li>
+</ul>
+<h2 id="section-148">148. Checklist después de Data Edition<a aria-label="Permalink" class="heading-anchor" href="#section-148">#</a></h2>
+<ul>
+<li>Abra Description y revise dimensiones, sumas, tipos, ausencias, taxonomía, RefSeq y árbol.</li>
+<li>Verifique identificadores y lea el historial.</li>
+<li>Guarde el proyecto en Datasets.</li>
+</ul>
+<h2 id="section-149">149. Controles R recomendados<a aria-label="Permalink" class="heading-anchor" href="#section-149">#</a></h2>
+<pre tabindex="0"><code class="language-r">setequal(sample_names(ps), rownames(as.data.frame(sample_data(ps))))
+setequal(taxa_names(ps), rownames(as(tax_table(ps), "matrix")))
+setequal(taxa_names(ps), names(refseq(ps)))
+setequal(taxa_names(ps), phy_tree(ps)$tip.label)
+
+otu &lt;- as(otu_table(ps), "matrix")
+anyNA(otu)
+any(otu &lt; 0, na.rm = TRUE)
+all(otu == round(otu), na.rm = TRUE)
+</code></pre>
+<h2 id="section-150">150. Limitaciones actuales<a aria-label="Permalink" class="heading-anchor" href="#section-150">#</a></h2>
+<ul>
+<li>Los cambios son inmediatos y el original no se preserva automáticamente.</li>
+<li>Guardar no persiste el proyecto.</li>
+<li>Undo conserva un estado y Reset depende de la carga local.</li>
+<li>Puede crearse metadata automáticamente.</li>
+<li>Factores y clases especiales pueden perderse.</li>
+<li>El switch ASV no transpone.</li>
+<li>Las ediciones OTU pueden desincronizar componentes.</li>
+<li>Los reemplazos taxonómicos afectan todos los rangos.</li>
+<li>Las importaciones completas empiezan sin previsualización y no extienden identificadores.</li>
+<li>Los editores locales pueden mostrar copias obsoletas.</li>
+<li>Exportar modifica el log.</li>
+<li>Se permite eliminar OTU.</li>
+<li>No se ejecuta un guard completo tras cada acción.</li>
+</ul>
+<h2 id="section-151">151. Flujo recomendado<a aria-label="Permalink" class="heading-anchor" href="#section-151">#</a></h2>
+<ol>
+<li>Guarde el proyecto y duplique el dataset bruto.</li>
+<li>Edite la copia.</li>
+<li>Verifique orientación OTU.</li>
+<li>Edite metadata y controle los tipos.</li>
+<li>Edite OTU solo cuando sea necesario.</li>
+<li>Revise taxonomía, RefSeq y árbol tras cambios estructurales.</li>
+<li>Use las previsualizaciones taxonómicas.</li>
+<li>Recargue tras importar o eliminar componentes.</li>
+<li>Valide en Description.</li>
+<li>Guarde el proyecto y exporte el dataset final.</li>
+</ol>
+<h2 id="section-152">152. Fuentes internas verificadas<a aria-label="Permalink" class="heading-anchor" href="#section-152">#</a></h2>
+<p>Esta guía se reconstruyó a partir del módulo principal Data Edition, los editores de metadata, OTU y taxonomía, el submódulo de importación/exportación/eliminación, la sincronización del dataset activo, el helper de nombres, <code>app.R</code> y las notas de arquitectura contrastadas con el código efectivo.</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Presentación general</a><a class="toc-l2" href="#section-2">2. Principio fundamental: los cambios son inmediatos</a><a class="toc-l2" href="#section-3">3. El botón Guardar no aplica cambios pendientes</a><a class="toc-l2" href="#section-4">4. Consecuencia importante para la versión original</a><a class="toc-l2" href="#section-5">5. Efecto sobre los archivos fuente</a><a class="toc-l2" href="#section-6">6. Organización del módulo</a><a class="toc-l2" href="#section-7">7. Dataset que se va a editar</a><a class="toc-l2" href="#section-8">8. Cambio de dataset durante la edición</a><a class="toc-l2" href="#section-9">9. Restablecer después de cambiar de dataset y volver</a><a class="toc-l2" href="#section-10">10. Edición y persistencia del proyecto</a><a class="toc-l2" href="#section-11">11. Diferencia entre los dos mecanismos de importación</a><a class="toc-l2" href="#section-12">12. Operaciones para las que no está diseñado Data Edition</a><a class="toc-l2" href="#section-13">13. Historial de modificaciones</a><a class="toc-l2" href="#section-14">14. El historial no es una copia de seguridad</a><a class="toc-l2" href="#section-15">15. Idioma del historial</a><a class="toc-l2" href="#section-16">16. Las tres vistas de logs</a><a class="toc-l2" href="#section-17">17. Acciones contabilizadas</a><a class="toc-l2" href="#section-18">18. Deshacer: un solo paso</a><a class="toc-l2" href="#section-19">19. Restablecer</a><a class="toc-l2" href="#section-20">20. Edición de metadata — presentación</a><a class="toc-l2" href="#section-21">21. Creación automática de metadata ausente</a><a class="toc-l2" href="#section-22">22. Identificadores de muestras</a><a class="toc-l2" href="#section-23">23. Tabla de metadata editable</a><a class="toc-l2" href="#section-24">24. Tratamiento de factores</a><a class="toc-l2" href="#section-25">25. Tratamiento de columnas de listas</a><a class="toc-l2" href="#section-26">26. Edición de una columna numérica</a><a class="toc-l2" href="#section-27">27. Consecuencia de convertir numérico a texto</a><a class="toc-l2" href="#section-28">28. Columnas lógicas, fechas y clases especiales</a><a class="toc-l2" href="#section-29">29. Añadir una columna de metadata</a><a class="toc-l2" href="#section-30">30. Sugerencias de nombres compatibles</a><a class="toc-l2" href="#section-31">31. Renombrar una columna de metadata</a><a class="toc-l2" href="#section-32">32. Consecuencia del renombrado para los análisis</a><a class="toc-l2" href="#section-33">33. Eliminar una columna de metadata</a><a class="toc-l2" href="#section-34">34. Eliminar la última columna</a><a class="toc-l2" href="#section-35">35. Coherencia de las filas de metadata</a><a class="toc-l2" href="#section-36">36. Fusionar un archivo en la metadata</a><a class="toc-l2" href="#section-37">37. Detección automática del separador de metadata</a><a class="toc-l2" href="#section-38">38. Primera columna como identificadores</a><a class="toc-l2" href="#section-39">39. Fusión de metadata: comportamiento real</a><a class="toc-l2" href="#section-40">40. Columnas ya existentes</a><a class="toc-l2" href="#section-41">41. Muestras adicionales en el archivo de fusión</a><a class="toc-l2" href="#section-42">42. Muestras actuales ausentes del archivo</a><a class="toc-l2" href="#section-43">43. Edición de la tabla OTU — presentación</a><a class="toc-l2" href="#section-44">44. Orientación de la tabla OTU</a><a class="toc-l2" href="#section-45">45. «ASV en columnas» no transpone la tabla</a><a class="toc-l2" href="#section-46">46. Riesgo de elegir el eje incorrecto</a><a class="toc-l2" href="#section-47">47. Tabla OTU editable</a><a class="toc-l2" href="#section-48">48. Conversión numérica de la tabla OTU</a><a class="toc-l2" href="#section-49">49. Valores vacíos en OTU</a><a class="toc-l2" href="#section-50">50. Valores no numéricos</a><a class="toc-l2" href="#section-51">51. Valores negativos y decimales</a><a class="toc-l2" href="#section-52">52. Añadir una columna a OTU</a><a class="toc-l2" href="#section-53">53. Riesgos al añadir una muestra</a><a class="toc-l2" href="#section-54">54. Riesgos al añadir un taxón</a><a class="toc-l2" href="#section-55">55. Recomendación para adiciones estructurales</a><a class="toc-l2" href="#section-56">56. Eliminar una columna de OTU</a><a class="toc-l2" href="#section-57">57. Usar Filtration para eliminaciones biológicas</a><a class="toc-l2" href="#section-58">58. Orden natural de ASV</a><a class="toc-l2" href="#section-59">59. Edición con el orden activado</a><a class="toc-l2" href="#section-60">60. Fusionar un archivo en OTU</a><a class="toc-l2" href="#section-61">61. Significado de las columnas importadas</a><a class="toc-l2" href="#section-62">62. Filas adicionales en el archivo OTU</a><a class="toc-l2" href="#section-63">63. Filas actuales ausentes del archivo</a><a class="toc-l2" href="#section-64">64. Renombrado automático de ASV</a><a class="toc-l2" href="#section-65">65. Conservación de números finales</a><a class="toc-l2" href="#section-66">66. Renombrado secuencial</a><a class="toc-l2" href="#section-67">67. Colisiones de nombres nuevos</a><a class="toc-l2" href="#section-68">68. Validación del prefijo</a><a class="toc-l2" href="#section-69">69. Propagación del renombrado de ASV</a><a class="toc-l2" href="#section-70">70. Identificadores duplicados antes del renombrado</a><a class="toc-l2" href="#section-71">71. Realineación de secuencias tras modificar OTU</a><a class="toc-l2" href="#section-72">72. Realineación del árbol tras modificar OTU</a><a class="toc-l2" href="#section-73">73. Paquete ape ausente</a><a class="toc-l2" href="#section-74">74. Taxonomía tras cambios estructurales OTU</a><a class="toc-l2" href="#section-75">75. Edición de taxonomía — presentación</a><a class="toc-l2" href="#section-76">76. Taxonomía ausente</a><a class="toc-l2" href="#section-77">77. Confirmación antes de la primera edición taxonómica</a><a class="toc-l2" href="#section-78">78. Nueva confirmación tras cambiar de dataset</a><a class="toc-l2" href="#section-79">79. Edición de una celda taxonómica</a><a class="toc-l2" href="#section-80">80. Sin verificación de jerarquía</a><a class="toc-l2" href="#section-81">81. Añadir un rango taxonómico</a><a class="toc-l2" href="#section-82">82. Orden de los rangos</a><a class="toc-l2" href="#section-83">83. Renombrar un rango taxonómico</a><a class="toc-l2" href="#section-84">84. Eliminar un rango</a><a class="toc-l2" href="#section-85">85. Eliminar todos los rangos</a><a class="toc-l2" href="#section-86">86. Orden taxonómico por ASV</a><a class="toc-l2" href="#section-87">87. Sincronización tras renombrar ASV</a><a class="toc-l2" href="#section-88">88. Límite de la sincronización taxonómica</a><a class="toc-l2" href="#section-89">89. Fusionar un archivo en taxonomía</a><a class="toc-l2" href="#section-90">90. Sin detección automática del separador taxonómico</a><a class="toc-l2" href="#section-91">91. Columnas taxonómicas existentes</a><a class="toc-l2" href="#section-92">92. Reemplazo automático de valores</a><a class="toc-l2" href="#section-93">93. Coincidencia exacta sin distinguir mayúsculas</a><a class="toc-l2" href="#section-94">94. Patrón NA</a><a class="toc-l2" href="#section-95">95. Patrón vacío</a><a class="toc-l2" href="#section-96">96. Alcance del reemplazo</a><a class="toc-l2" href="#section-97">97. Previsualización obligatoria</a><a class="toc-l2" href="#section-98">98. Patrones solapados</a><a class="toc-l2" href="#section-99">99. Valor de reemplazo no vacío</a><a class="toc-l2" href="#section-100">100. Consecuencias científicas del reemplazo</a><a class="toc-l2" href="#section-101">101. Agrupación de taxones no asignados</a><a class="toc-l2" href="#section-102">102. Estado taxonómico inicial y restablecimiento</a><a class="toc-l2" href="#section-103">103. Importación, exportación y eliminación — presentación</a><a class="toc-l2" href="#section-104">104. Importación automática</a><a class="toc-l2" href="#section-105">105. Límite de tamaño</a><a class="toc-l2" href="#section-106">106. Detección de separador en importaciones completas</a><a class="toc-l2" href="#section-107">107. Importación completa de metadata</a><a class="toc-l2" href="#section-108">108. Importación completa de OTU</a><a class="toc-l2" href="#section-109">109. Identificadores aceptados para OTU</a><a class="toc-l2" href="#section-110">110. Identificadores ausentes en OTU</a><a class="toc-l2" href="#section-111">111. Conversión numérica en OTU</a><a class="toc-l2" href="#section-112">112. Importación completa de taxonomía</a><a class="toc-l2" href="#section-113">113. Importación de RefSeq</a><a class="toc-l2" href="#section-114">114. Importación del árbol</a><a class="toc-l2" href="#section-115">115. Sustitución completa de componentes</a><a class="toc-l2" href="#section-116">116. Actualización de editores tras importación completa</a><a class="toc-l2" href="#section-117">117. Exportación de componentes</a><a class="toc-l2" href="#section-118">118. Separador de exportaciones CSV</a><a class="toc-l2" href="#section-119">119. Exportación de metadata</a><a class="toc-l2" href="#section-120">120. Exportación de OTU</a><a class="toc-l2" href="#section-121">121. Exportación de taxonomía</a><a class="toc-l2" href="#section-122">122. Exportación de RefSeq</a><a class="toc-l2" href="#section-123">123. Exportación del árbol</a><a class="toc-l2" href="#section-124">124. Exportación e historial</a><a class="toc-l2" href="#section-125">125. Eliminación de componentes</a><a class="toc-l2" href="#section-126">126. Eliminar metadata</a><a class="toc-l2" href="#section-127">127. Eliminar taxonomía</a><a class="toc-l2" href="#section-128">128. Eliminar RefSeq</a><a class="toc-l2" href="#section-129">129. Eliminar el árbol</a><a class="toc-l2" href="#section-130">130. Eliminar la tabla OTU</a><a class="toc-l2" href="#section-131">131. Eliminar varios componentes</a><a class="toc-l2" href="#section-132">132. Deshacer la eliminación de un componente</a><a class="toc-l2" href="#section-133">133. Eliminación y archivos en disco</a><a class="toc-l2" href="#section-134">134. Guardar el dataset en el registro</a><a class="toc-l2" href="#section-135">135. Nombre vacío</a><a class="toc-l2" href="#section-136">136. Nuevo nombre disponible</a><a class="toc-l2" href="#section-137">137. Nombre usado por otro dataset</a><a class="toc-l2" href="#section-138">138. Limpieza del nombre</a><a class="toc-l2" href="#section-139">139. Sobrescribir otro dataset</a><a class="toc-l2" href="#section-140">140. Guardar el proyecto completo</a><a class="toc-l2" href="#section-141">141. Resolución de problemas</a><a class="toc-l2" href="#section-141-1">141.1. Se modificó el dataset equivocado</a><a class="toc-l2" href="#section-141-2">141.2. El original cambió aunque se quería un nombre nuevo</a><a class="toc-l2" href="#section-141-3">141.3. Guardar no guardó el proyecto</a><a class="toc-l2" href="#section-141-4">141.4. La metadata apareció automáticamente</a><a class="toc-l2" href="#section-141-5">141.5. Editar SampleID no renombró muestras</a><a class="toc-l2" href="#section-141-6">141.6. Una variable numérica se convirtió en texto</a><a class="toc-l2" href="#section-141-7">141.7. Un factor se convirtió en character</a><a class="toc-l2" href="#section-141-8">141.8. Una columna nueva tiene el tipo incorrecto</a><a class="toc-l2" href="#section-141-9">141.9. Fusionar metadata no actualizó una columna</a><a class="toc-l2" href="#section-141-10">141.10. No se encontró un identificador común</a><a class="toc-l2" href="#section-141-11">141.11. El separador detectado es incorrecto</a><a class="toc-l2" href="#section-141-12">141.12. Valores OTU se convirtieron en NA</a><a class="toc-l2" href="#section-141-13">141.13. Los decimales con coma se vuelven NA</a><a class="toc-l2" href="#section-141-14">141.14. Una columna OTU nueva desincronizó metadata</a><a class="toc-l2" href="#section-141-15">141.15. RefSeq desapareció tras modificar OTU</a><a class="toc-l2" href="#section-141-16">141.16. El árbol desapareció tras modificar OTU</a><a class="toc-l2" href="#section-141-17">141.17. Desaparecieron hojas del árbol</a><a class="toc-l2" href="#section-141-18">141.18. Las muestras se renombraron como ASV</a><a class="toc-l2" href="#section-141-19">141.19. El prefijo ASV produjo nombres extraños</a><a class="toc-l2" href="#section-141-20">141.20. La taxonomía ya no coincide con OTU</a><a class="toc-l2" href="#section-141-21">141.21. La primera modificación taxonómica no se ejecutó</a><a class="toc-l2" href="#section-141-22">141.22. Un reemplazo taxonómico cambió varios rangos</a><a class="toc-l2" href="#section-141-23">141.23. NA ahora se considera una categoría real</a><a class="toc-l2" href="#section-141-24">141.24. La fusión taxonómica no sustituyó Genus</a><a class="toc-l2" href="#section-141-25">141.25. No se detectó el separador taxonómico</a><a class="toc-l2" href="#section-141-26">141.26. La importación completa borró columnas</a><a class="toc-l2" href="#section-141-27">141.27. La importación OTU cambió la orientación</a><a class="toc-l2" href="#section-141-28">141.28. La importación rechaza nuevas muestras</a><a class="toc-l2" href="#section-141-29">141.29. La importación rechaza nuevos taxones</a><a class="toc-l2" href="#section-141-30">141.30. Se rechaza el FASTA</a><a class="toc-l2" href="#section-141-31">141.31. Se rechaza el árbol</a><a class="toc-l2" href="#section-141-32">141.32. El editor sigue mostrando la tabla antigua</a><a class="toc-l2" href="#section-141-33">141.33. Una tabla eliminada reaparece tras editar</a><a class="toc-l2" href="#section-141-34">141.34. Descargar creó una modificación no guardada</a><a class="toc-l2" href="#section-141-35">141.35. No se puede deshacer la eliminación de una tabla</a><a class="toc-l2" href="#section-141-36">141.36. El dataset dejó de funcionar tras eliminar OTU</a><a class="toc-l2" href="#section-141-37">141.37. Deshacer no retrocede varias acciones</a><a class="toc-l2" href="#section-141-38">141.38. Restablecer no vuelve al archivo original</a><a class="toc-l2" href="#section-141-39">141.39. El log permanece en francés</a><a class="toc-l2" href="#section-141-40">141.40. El total de acciones aumenta tras exportar</a><a class="toc-l2" href="#section-142">142. Checklist antes de editar</a><a class="toc-l2" href="#section-143">143. Checklist antes de editar metadata</a><a class="toc-l2" href="#section-144">144. Checklist antes de editar OTU</a><a class="toc-l2" href="#section-145">145. Checklist antes de reemplazar taxonomía</a><a class="toc-l2" href="#section-146">146. Checklist antes de una importación completa</a><a class="toc-l2" href="#section-147">147. Checklist antes de eliminar un componente</a><a class="toc-l2" href="#section-148">148. Checklist después de Data Edition</a><a class="toc-l2" href="#section-149">149. Controles R recomendados</a><a class="toc-l2" href="#section-150">150. Limitaciones actuales</a><a class="toc-l2" href="#section-151">151. Flujo recomendado</a><a class="toc-l2" href="#section-152">152. Fuentes internas verificadas</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Edición de datos</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>MultiView — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="multiview" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link active" href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">MultiView</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">MultiView — 方法指南</h1>
+<h2 id="section-1">1. 总体作用<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>MultiView 汇集 BarCodeR 科学模块已经保存的图，可搜索、筛选、收藏、加标签，并在 GridStack 网格中移动、缩放和组合，最后导出复合 PNG 或保存布局。它<strong>不会重新计算科学分析</strong>，不会修改模型参数、同步坐标轴、编辑颜色或恢复 Plotly 交互；需要修改分析时必须返回来源模块。</p>
+<h2 id="section-2">2. 图的来源<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>系统递归扫描当前项目 <code>save/projects/&lt;项目&gt;/</code> 下含 PNG 的文件夹，并排除 MultiView 自身文件夹。类型由路径推断，手动放入的 PNG 也可能出现。每个文件夹只载入最近修改的 <strong>100 个 PNG</strong>，没有分页；日期筛选不能找回已被上限排除的旧图。</p>
+<h2 id="section-3">3. PNG 与 RDS 配对<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>只有基础文件名完全相同的 PNG/RDS 才会配对。两者齐全时可显示数据集、描述、参数和徽章；只有 PNG 时仍可见但元数据有限；只有 RDS 时不可见。读取器会寻找数据集、转换、距离、分类层级、分组、置换数和随机种子，非标准快照可能信息不完整。</p>
+<h2 id="section-4">4. 加载与刷新<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>仅在打开 MultiView 时扫描。<strong>刷新</strong>手动重扫；自动刷新在选项卡活动时每 10 秒执行一次，大型 RDS、网络磁盘或大量文件会增加开销。显示日期来自 PNG 的修改时间，而不一定是分析时间。</p>
+<h2 id="section-5">5. 搜索、筛选与排序<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>可按类型、精确数据集标签、日期、收藏和标签筛选；多个标签使用“或”。文本搜索不区分大小写，覆盖键、数据集、描述和参数。多数据集分析可能作为一个组合标签出现。KPI 可能包含已失效的收藏引用。</p>
+<h2 id="section-6">6. 图库与表格<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>图库卡片显示缩略图、类型、文件名、日期、数据集、徽章、标签和收藏。“可比较”只表示类型和数据集标签相同，并不验证转换、距离、过滤、层级、分组、坐标轴或方法。当前表格选择没有连接到打开/替换操作，多选应在图库中完成。</p>
+<h2 id="section-7">7. 选择图<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>复选框/空格用于选择，单击/回车打开详情，双击或拖放加入网格，星标管理收藏，Esc 关闭详情。全选只选当前可见卡片，但筛选后隐藏卡片仍可能保持选中；开始新比较前应清除选择。一次打开过多 PNG 会拖慢浏览器和导出。</p>
+<h2 id="section-8">8. 详情面板<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>显示大图、类型、日期、数据集、键、主要与技术参数、标签、收藏、PNG 下载和加入网格。不能下载科学 RDS、重新运行分析、生成 R 代码、直接返回来源模块或自动比较两组参数。</p>
+<h2 id="section-9">9. 收藏与标签<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>保存在 <code>save/projects/&lt;项目&gt;/multiview/tags.rds</code>，立即写盘，不依赖 Datasets 保存。旧提示 <code>save/multiview/tags.rds</code> 已过时。标签可用逗号或分号分隔。删除 PNG 不会清理引用；同一项目所有会话共享状态，非用户隔离，并发写入可能互相覆盖。</p>
+<h2 id="section-10">10. 打开的分析网格<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>可通过选择、双击、拖放或详情加入；同一图只打开一次。网格 12 列，默认每行两张（宽 6、高 6）。<code>object-fit: contain</code> 保留整图但可能留白；放大不会提升原始 PNG 分辨率。编辑模式控制移动/缩放，关闭卡片不会删除文件。</p>
+<h2 id="section-11">11. 固定、替换与关闭<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>固定卡片不会被“替换网格”或“全部关闭”删除，但仍可移动、缩放或单独关闭。替换会保留固定卡片、移除其他卡片并加入当前选择。</p>
+<h2 id="section-12">12. 布局预设<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>包括 1×2、2×2、1×3、3×1 和 Hero+2。图数超过预设位置时，多余图会复用最后位置并重叠；需手动移动、换预设或减少图数。重置恢复默认布局但不关闭卡片。</p>
+<h2 id="section-13">13. 复合 PNG 导出<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p><code>html-to-image</code> 捕获整个网格 DOM，白色背景、像素比 2，因此标题、元数据和按钮也可能进入图中；它不是只合并科学 PNG 的干净导出。结果是浏览器端栅格 PNG，不进入历史、无结构化数据，也没有 PDF/SVG/TIFF/PowerPoint/交互 HTML。大网格、大图片、CDN 缺失或空网格可能失败。</p>
+<h2 id="section-14">14. 保存组合<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>组合 RDS 位于 <code>multiview/compositions/</code>，保存名称、描述、日期、图键、位置尺寸、固定状态和筛选值。它<strong>不会复制</strong> PNG、科学 RDS、phyloseq、表格、标签或收藏，只是布局配方。加载时仅恢复仍存在的图、布局和固定状态；保存的筛选不会重新应用。缺失或改名的图会被省略。</p>
+<h2 id="section-15">15. 组合的导入与导出<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>导出下载配方 RDS。导入主要验证其为含 <code>tabs</code> 的列表，复制到当前项目但不自动载入。配方本身不可移植，目标项目必须具有相同的内部“类型+文件名”键。分享时应同时提供复合 PNG 或原始 PNG/RDS。界面没有直接导入外部 PNG 的功能。</p>
+<h2 id="section-16">16. 正确比较图<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>检查数据集、样本、过滤、转换、标准化、分类层级、方法、距离、分组、坐标轴、范围、单位、颜色、类别、显示阈值和数据版本。Top N/Other 会改变 barplot；独立排序图可旋转或翻转，应使用 Procrustes 定量比较；volcano 图可能参考组和效应单位不同。MultiView 用于组织和展示，不进行统计比较。</p>
+<h2 id="section-17">17. 项目、会话与多用户<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>图库、标签、收藏和组合随当前项目变化。实时网格仅存在于会话，未保存组合则重启后丢失。部分界面设置可恢复，但数据集/标签/日期筛选、选择和未保存布局不会。Shiny 静态资源前缀是进程级的，多项目并发可能短暂指向错误资源；状态也非用户隔离，因此尚不完全适合并发多用户部署。</p>
+<h2 id="section-18">18. 外部依赖与离线使用<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>GridStack、SortableJS 和 html-to-image 从 jsDelivr 加载。离线时浏览可能部分可用，但移动、缩放、拖放、预设或复合导出可能失效。GridStack 约等待 6 秒后放弃。完全离线需要把库打包到 <code>www/</code>。</p>
+<h2 id="section-19">19. 常见问题<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>没有图</td>
+<td>项目中没有已保存 PNG</td>
+<td>在科学模块保存</td>
+</tr>
+<tr>
+<td>新图不出现</td>
+<td>未重扫</td>
+<td>刷新</td>
+</tr>
+<tr>
+<td>旧图找不到</td>
+<td>每文件夹 100 上限</td>
+<td>查看/归档文件夹</td>
+</tr>
+<tr>
+<td>参数缺失</td>
+<td>RDS 缺失或名称不一致</td>
+<td>修复 PNG/RDS 配对</td>
+</tr>
+<tr>
+<td>表格选择无效</td>
+<td>未连接选择状态</td>
+<td>使用图库</td>
+</tr>
+<tr>
+<td>卡片重叠</td>
+<td>图数超过预设</td>
+<td>手动重排</td>
+</tr>
+<tr>
+<td>组合不完整</td>
+<td>来源文件缺失</td>
+<td>恢复历史文件</td>
+</tr>
+<tr>
+<td>筛选未恢复</td>
+<td>当前加载逻辑</td>
+<td>手动重设</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-20">20. 使用检查表<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>组合前确认项目、刷新、PNG/RDS 配对、参数并清除旧选择；比较前统一数据、过滤、方法、层级、坐标轴、单位、颜色和阈值；导出前检查重叠、尺寸和分辨率；保存前命名说明、理解图不会被复制，并测试重新加载与导出便携 PNG。</p>
+<h2 id="section-21">21. 主要限制<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>仅 PNG、交互丢失、无重新计算/坐标统一、100 文件上限、日期基于 mtime、元数据依赖 RDS、表格选择缺陷、弱“可比较”标记、共享/孤立标签、预设重叠、带控件的栅格导出、非自包含组合、筛选不恢复、CDN 依赖、多用户脆弱、未保存网格丢失。</p>
+<h2 id="section-22">22. 推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>先保存来源图；打开并刷新；筛选并检查参数；标签/收藏；在图库选择；加入网格；核对可比性；使用预设并手动调整；固定关键图；导出并检查 PNG；保存并测试组合；保留原始历史并以统计表作为结论依据。</p>
+<h2 id="section-23">23. 已验证内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p><code>app.R</code>、<code>modules/multiview/mod_multiview_ui.R</code>、<code>modules/multiview/mod_multiview_server.R</code>、<code>modules/multiview/_shared/mod_multiview_helpers.R</code>、<code>modules/_shared/_project_store.R</code>、<code>.claude/architecture/16-multiview.md</code>。</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 总体作用</a><a class="toc-l2" href="#section-2">2. 图的来源</a><a class="toc-l2" href="#section-3">3. PNG 与 RDS 配对</a><a class="toc-l2" href="#section-4">4. 加载与刷新</a><a class="toc-l2" href="#section-5">5. 搜索、筛选与排序</a><a class="toc-l2" href="#section-6">6. 图库与表格</a><a class="toc-l2" href="#section-7">7. 选择图</a><a class="toc-l2" href="#section-8">8. 详情面板</a><a class="toc-l2" href="#section-9">9. 收藏与标签</a><a class="toc-l2" href="#section-10">10. 打开的分析网格</a><a class="toc-l2" href="#section-11">11. 固定、替换与关闭</a><a class="toc-l2" href="#section-12">12. 布局预设</a><a class="toc-l2" href="#section-13">13. 复合 PNG 导出</a><a class="toc-l2" href="#section-14">14. 保存组合</a><a class="toc-l2" href="#section-15">15. 组合的导入与导出</a><a class="toc-l2" href="#section-16">16. 正确比较图</a><a class="toc-l2" href="#section-17">17. 项目、会话与多用户</a><a class="toc-l2" href="#section-18">18. 外部依赖与离线使用</a><a class="toc-l2" href="#section-19">19. 常见问题</a><a class="toc-l2" href="#section-20">20. 使用检查表</a><a class="toc-l2" href="#section-21">21. 主要限制</a><a class="toc-l2" href="#section-22">22. 推荐流程</a><a class="toc-l2" href="#section-23">23. 已验证内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · MultiView</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

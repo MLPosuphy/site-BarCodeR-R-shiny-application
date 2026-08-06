@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Exploración — Guías metodológicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="guide" data-module="exploration" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Guías metodológicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+    
+      <a class="module-link active" href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Exploración</a><span>›</span><span>Guías metodológicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">Exploración — Guía metodológica</h1>
+<h2 id="section-1">1. Objetivo y organización<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Exploración</strong> visualiza, resume y compara objetos <code>phyloseq</code>. Incluye Barplot, diversidad alfa, Venn/UpSet, Heat Tree, árbol filogenético y calidad de asignación taxonómica. Algunos resultados son descriptivos; las pruebas dirigidas, los modelos alfa, ANCOM-BC y las comparaciones de Faith son inferenciales.</p>
+<h2 id="section-2">2. Funcionamiento común<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Los parámetros científicos requieren volver a calcular; los ajustes visuales reutilizan normalmente el último cálculo. Una figura antigua puede seguir visible después de cambiar datasets, rangos, grupos, índices o métodos. Revisar los indicadores de recálculo, regeneración y guardado.</p>
+<p>Varios selectores siguen el dataset activo, pero una selección local no cambia necesariamente <code>active_ds()</code>. Alpha y Venn pueden utilizar varios datasets.</p>
+<h2 id="section-3">3. Filtración local<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Barplot, Alpha, Venn, Heat Tree y Calidad taxonómica pueden aplicar una filtración temporal propia del submódulo. No modifica el registro, no se comparte con otras herramientas y no crea un phyloseq persistente. Para conservarla, reproducirla en Filtración, guardar el dataset y guardar el proyecto.</p>
+<h2 id="section-4">4. Barplot<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Representa composiciones taxonómicas por muestra o grupo. La agregación usa <code>tax_glom(..., NArm = FALSE)</code> para conservar no asignados. El usuario define las etiquetas consideradas desconocidas.</p>
+<p>Por grupo, los reads se suman antes de calcular proporciones: es un pool ponderado por profundidad, no una media de proporciones individuales. Top N depende de los datos mostrados; el resto se agrupa como <strong>Otros</strong>. El umbral se aplica después de Top N y las filas retiradas no se añaden automáticamente a Otros. El modo 100 % renormaliza visualmente los segmentos restantes.</p>
+<p>La comparación dirigida de un taxón selecciona Student, Welch, Wilcoxon, ANOVA/Tukey, Welch ANOVA o Kruskal-Wallis según grupos, tamaños, normalidad y varianzas. Puede incluir covariables, pero no sustituye un análisis diferencial global composicional.</p>
+<h2 id="section-5">5. Diversidad alfa<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Incluye Observed, Shannon, Simpson, InvSimpson, Chao1, ACE, Fisher y Pielou. Chao1, ACE y Fisher se devuelven como ausentes con datos no enteros.</p>
+<p>La rarefacción opcional usa <code>rarefy_even_depth()</code> con semilla 2026. Una profundidad cero usa el mínimo positivo de cada dataset por separado. Puede perder reads y muestras. Los diagnósticos de profundidad y cobertura de Good necesitan conteos enteros.</p>
+<p>El subpanel Estadísticas ejecuta pruebas automáticas para una variable o modelos ajustados <code>Y ~ V1 + V2</code> / <code>Y ~ V1 * V2</code> para varias variables, con diagnósticos y comparaciones <code>emmeans</code> cuando están disponibles.</p>
+<h2 id="section-6">6. Venn y UpSet<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Compara presencia/ausencia entre datasets o modalidades de metadata. Los elementos pueden ser etiquetas taxonómicas o secuencias RefSeq exactas; no hay alineamiento ni similitud de secuencias.</p>
+<p>Las regex eliminan anotaciones ambiguas y la normalización armoniza prefijos, espacios, guiones bajos y mayúsculas, pudiendo fusionar etiquetas distintas. Venn admite hasta siete conjuntos; después se usa UpSet. Una intersección indica presencia compartida, no abundancia comparable.</p>
+<h2 id="section-7">7. Heat Tree<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>El modo simple muestra suma, media, ocurrencia, ASV contribuyentes, mediana, varianza, abundancia relativa, log-abundancia, dominancia o frecuencia.</p>
+<p>El diferencial rápido usa un log2 del cociente de medianas y es solamente descriptivo. ANCOM-BC realiza análisis inferencial composicional con covariables, filtros, corrección múltiple, alpha, ceros estructurales y parámetros de convergencia.</p>
+<p>ANCOM-BC se ejecuta por rango y contraste. Con <code>k</code> grupos hay <code>k(k-1)/2</code> contrastes; rango × contraste puede ser muy costoso. Los umbrales q y logFC posteriores son visuales y no recalculan el modelo.</p>
+<h2 id="section-8">8. Árbol filogenético<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Requiere un <code>phy_tree</code> existente. Usa agregación, prevalencia, abundancia, Top N y limpieza de etiquetas. Deben quedar al menos tres taxones.</p>
+<p>Muestra diagnósticos del árbol y puede calcular Faith PD con <code>picante</code>. Faith se calcula antes de los filtros visuales de prevalencia, abundancia y Top N, por lo que estos no cambian su tabla. Un árbol parcial puede ignorar taxones y sesgar comparaciones; se informa la cobertura.</p>
+<p>Wilcoxon compara dos grupos y Kruskal-Wallis tres o más. Los motores son <code>ggtree</code>, <code>phyloseq</code> y <code>ape</code>.</p>
+<h2 id="section-9">9. Calidad de asignación taxonómica<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Calcula porcentaje de taxones asignados, porcentaje de reads asignados y profundidad continua estricta. Muchos ASV desconocidos pueden representar pocos reads.</p>
+<p>Los patrones no asignados incluyen NA, vacío, unknown/unclassified/uncultured, environmental, metagenome, prefijos vacíos y <code>sp.</code>. La profundidad se detiene en la primera ruptura jerárquica.</p>
+<p>Los contaminantes pueden excluirse solo del cálculo, cambiando el denominador sin modificar el dataset. Deben adaptarse al marcador.</p>
+<h2 id="section-10">10. Descriptivo e inferencial<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Barplot principal, Venn, Heat Tree simple, árbol y calidad son sobre todo descriptivos. Las pruebas dirigidas, estadísticas alfa, ANCOM-BC y comparaciones de Faith son inferenciales. Diferencia visual no significa significación; significación no significa causalidad.</p>
+<h2 id="section-11">11. Historiales y reproducibilidad<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Cada herramienta guarda su historial en una carpeta propia del proyecto. Una figura visible no se guarda automáticamente. Un snapshot puede incluir PNG, RDS, parámetros, datos, logs y tablas.</p>
+<p>El código R reproducible puede depender del RDS, versiones y paquetes especializados. Revisarlo antes de publicación. Los historiales dependen del proyecto actual y no tienen papelera interna.</p>
+<h2 id="section-12">12. Comparabilidad científica<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Verificar marcador, región, tecnología, pipeline, definición ASV/OTU, taxonomía, muestras, tipo de abundancia, filtración, normalización y profundidad. Rarefacción, estimadores de riqueza, Good y ANCOM-BC presuponen conteos. La agregación cambia la unidad analizada y el tamaño de grupo afecta pools e intersecciones.</p>
+<h2 id="section-13">13. Rendimiento y dependencias<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>El coste aumenta con muestras, taxones, datasets, índices, conjuntos, rangos, contrastes y hojas del árbol. Paquetes posibles: <code>phyloseq</code>, <code>vegan</code>, <code>metacoder</code>, <code>ANCOMBC</code>, <code>ComplexUpset</code>, <code>ggtree</code>, <code>picante</code>, <code>plotly</code>, <code>emmeans</code>, <code>lmtest</code> y <code>openxlsx</code>.</p>
+<p>Reducir el coste filtrando, agregando, limitando grupos/rangos/contrastes y evitando interactividad excesiva.</p>
+<h2 id="section-14">14. Solución de problemas<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Explicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Figura no coincide con parámetros</td>
+<td>Recalcular</td>
+</tr>
+<tr>
+<td>Filtro local ausente en otro módulo</td>
+<td>Estados independientes</td>
+</tr>
+<tr>
+<td>Barplot agrupado no es una media</td>
+<td>Pool de reads</td>
+</tr>
+<tr>
+<td>Chao1/ACE/Fisher ausentes</td>
+<td>Datos no enteros</td>
+</tr>
+<tr>
+<td>Venn cambia a UpSet</td>
+<td>Más de siete conjuntos</td>
+</tr>
+<tr>
+<td>ANCOM-BC muy lento</td>
+<td>Demasiados rangos/contrastes/ASV</td>
+</tr>
+<tr>
+<td>Faith no cambia con Top N</td>
+<td>Cálculo anterior a filtros visuales</td>
+</tr>
+<tr>
+<td>Tasa aumenta al excluir contaminantes</td>
+<td>Cambio de denominador</td>
+</tr>
+<tr>
+<td>Historial vacío</td>
+<td>Proyecto incorrecto o resultado no guardado</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-15">15. Listas de control<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Antes de explorar, verificar proyecto, datasets, naturaleza de abundancias, tablas, rangos, metadata, grupos y filtros locales. Antes de estadísticas, comprobar réplicas, valores ausentes, profundidad, supuestos, covariables y corrección múltiple. Antes de guardar, confirmar cálculo y renderizado actuales, título, colores, dimensiones, logs y tablas.</p>
+<h2 id="section-16">16. Limitaciones principales<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Estados locales independientes, figuras potencialmente antiguas, grupos poolados, limitaciones con datos no enteros, rarefacción cero por dataset, Venn por primera presencia, normalización que puede fusionar etiquetas, diferencial mediano no inferencial, ANCOM-BC costoso, Faith sobre árbol parcial y calidad dependiente de regex.</p>
+<h2 id="section-17">17. Flujo recomendado<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<ol>
+<li>Revisar datasets en Description.</li>
+<li>Identificar conteos o transformaciones.</li>
+<li>Comprobar grupos y réplicas.</li>
+<li>Probar filtración local.</li>
+<li>Empezar con visualización descriptiva.</li>
+<li>Elegir rango y limitar elementos.</li>
+<li>Recalcular tras cambios científicos.</li>
+<li>Ejecutar estadísticas con diseño válido.</li>
+<li>Leer logs y diagnósticos.</li>
+<li>Guardar figuras, parámetros y tablas.</li>
+<li>Revisar código R.</li>
+<li>Hacer persistentes los filtros en Filtración y guardar el proyecto.</li>
+</ol>
+<h2 id="section-18">18. Fuentes internas verificadas<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Basado en los módulos principales de <code>modules/exploration/</code>, <code>_dirty_tracking.R</code>, <code>_active_dataset_sync.R</code> y las carpetas <code>barplot</code>, <code>alpha</code>, <code>venn</code>, <code>heattree</code>, <code>phylotree</code> y <code>tax_quality</code>, contrastadas con las notas de arquitectura 30–35.</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Objetivo y organización</a><a class="toc-l2" href="#section-2">2. Funcionamiento común</a><a class="toc-l2" href="#section-3">3. Filtración local</a><a class="toc-l2" href="#section-4">4. Barplot</a><a class="toc-l2" href="#section-5">5. Diversidad alfa</a><a class="toc-l2" href="#section-6">6. Venn y UpSet</a><a class="toc-l2" href="#section-7">7. Heat Tree</a><a class="toc-l2" href="#section-8">8. Árbol filogenético</a><a class="toc-l2" href="#section-9">9. Calidad de asignación taxonómica</a><a class="toc-l2" href="#section-10">10. Descriptivo e inferencial</a><a class="toc-l2" href="#section-11">11. Historiales y reproducibilidad</a><a class="toc-l2" href="#section-12">12. Comparabilidad científica</a><a class="toc-l2" href="#section-13">13. Rendimiento y dependencias</a><a class="toc-l2" href="#section-14">14. Solución de problemas</a><a class="toc-l2" href="#section-15">15. Listas de control</a><a class="toc-l2" href="#section-16">16. Limitaciones principales</a><a class="toc-l2" href="#section-17">17. Flujo recomendado</a><a class="toc-l2" href="#section-18">18. Fuentes internas verificadas</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Exploración</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>探索 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="exploration" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link active" href="../exploration/guides-methodologiques.html">探索</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">探索</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">探索 — 方法指南</h1>
+<h2 id="section-1">1. 作用与结构<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>探索</strong>用于可视化、汇总和比较项目中的 <code>phyloseq</code> 对象。它包含六个工具：Barplot、Alpha 多样性、Venn/UpSet、Heat Tree、系统发育树和分类赋值质量。</p>
+<p>这些工具并非全部只是描述性图表。单个分类单元比较、Alpha 统计、ANCOM-BC 和 Faith PD 组间比较属于推断分析。明显的图形差异并不自动等于统计显著。</p>
+<h2 id="section-2">2. 通用工作方式<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>大多数子模块把<strong>科学计算</strong>和<strong>视觉渲染</strong>分开。数据集、分组、层级、指数、本地过滤和统计方法改变后，需要重新计算；颜色、尺寸、标签、方向和布局通常只重用上一次计算。</p>
+<p>修改科学参数后，旧图可能继续显示。应检查“需要重新计算”“分析已更新”“需要重新生成图形”和“需要保存”等状态。</p>
+<p>多个本地选择器会跟随全局活动数据集，但本地选择通常不会重设 <code>active_ds()</code>。Alpha 和 Venn 可以独立使用多个数据集。</p>
+<h2 id="section-3">3. 本地过滤<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Barplot、Alpha、Venn、Heat Tree 和分类质量可以使用子模块自己的临时过滤：</p>
+<pre tabindex="0"><code class="language-text">注册表数据集 → 本地临时过滤 → 探索结果
+</code></pre>
+<p>它不会覆盖全局数据集，不会在其他探索工具中自动生效，也不会创建持久化 phyloseq。需要保留时，应在“过滤”模块中重建条件、另存数据集并保存项目。</p>
+<h2 id="section-4">4. Barplot<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Barplot 按样本或元数据组显示分类组成，可使用原始或相对丰度。</p>
+<p>OTU 表是必需的；分类层级需要 taxonomy，分组需要 metadata。聚合使用 <code>tax_glom(..., NArm = FALSE)</code>，从而保留未赋值分类单元。用户可定义哪些标签归为“未知”。</p>
+<p>无分组时，一根柱代表一个样本。按组时，先汇总组内 reads，再计算组成，因此是按测序深度加权的 pooled composition，不是各样本比例的平均。</p>
+<p>Top N 基于当前显示的数据计算，其余分类单元归为“其他”。丰度阈值在 Top N 之后应用，被删除的行不会自动归入“其他”。100% 堆叠图会把剩余部分视觉归一化为 100%。</p>
+<p>可使用堆叠、分组、dodged、水平、总分类单元柱图和 lollipop 等形式，并可排序和自定义颜色。</p>
+<p>选择一个分类单元后，可按组比较其相对丰度。模块根据组数、样本量、正态性和方差自动选择 Student、Welch、Wilcoxon、ANOVA/Tukey、Welch ANOVA 或 Kruskal-Wallis，并可加入协变量。这是定向检验，不等同于全局组成差异分析。</p>
+<h2 id="section-5">5. Alpha 多样性<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>可计算 Observed、Shannon、Simpson、InvSimpson、Chao1、ACE、Fisher 和 Pielou。<code>Observed ≤ 1</code> 时 Pielou 缺失。</p>
+<p>系统不会强制把非整数数据四舍五入。Observed、Shannon、Simpson、InvSimpson 和 Pielou 仍可计算，但 Chao1、ACE 和 Fisher 在非计数数据上返回缺失。</p>
+<p>分组变量只有在所有分析数据集中都存在时才会提供。跨数据集比较前，应确认标记、流程、分类单元定义、丰度类型和过滤一致。</p>
+<p>可选稀释使用 <code>rarefy_even_depth()</code> 和固定种子 <code>2026</code>。目标深度为零时，每个数据集分别使用自己的正最小值，而不是共同深度。稀释会丢失 reads，也可能丢失样本。</p>
+<p>深度诊断包括稀释曲线和 Good 覆盖度：</p>
+<pre tabindex="0"><code class="language-text">1 - singleton 数 / 总 reads
+</code></pre>
+<p>这些诊断要求整数计数。</p>
+<p>统计子页独立运行。一个解释变量时自动选择参数或非参数检验；多个变量时构建 <code>Y ~ V1 + V2</code> 或 <code>Y ~ V1 * V2</code> 模型，并可提供残差、方差、R²、Breusch-Pagan 和 <code>emmeans</code> 诊断。稀疏交互单元可能不稳定。</p>
+<h2 id="section-6">6. Venn 与 UpSet<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>该工具比较存在/不存在。元素在本地过滤后只要出现一次就视为存在。</p>
+<p>跨数据集模式把数据集作为集合；数据集内模式把 metadata 水平作为集合。元素可以是分类标签或完全相同的 RefSeq 字符串。序列模式不进行比对或相似性聚类。</p>
+<p>正则表达式可删除模糊标签；标准化可统一层级前缀、空格、下划线和大小写，但也可能合并原本不同的标签。具有同一标签的 ASV 会聚合，出现率按样本重新计算。</p>
+<p>Venn 最多支持七个集合，更多集合会自动切换到 UpSet。UpSet 可排序、筛选交集，并显示 reads 或出现率注释。</p>
+<p>交集表示共享存在，不表示丰度相同。核心或唯一分类单元受过滤、深度、组大小、分类层级和标签标准化影响。</p>
+<h2 id="section-7">7. Heat Tree<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Heat Tree 把值映射到分类层级。模式包括简单树、两组描述性差异和多比较矩阵。</p>
+<p>简单指标包括总和、均值、出现次数、贡献 ASV 数、中位数、方差、平均相对丰度、对数丰度、优势度和相对频率。部分指标可仅使用出现样本，也可包含所有样本的零值。</p>
+<p>快速差异模式计算两组中位数的 log2 比值。它是描述性的，没有 p 值、多重校正或组成偏差修正。</p>
+<p>ANCOM-BC 提供组成差异推断，可配置协变量、出现率、最小库大小、p 值校正、alpha、结构零、收敛、伪计数、敏感性和随机效应。检验 alpha 改变时需要重新计算；计算后的 q 和 logFC 阈值只是显示过滤。</p>
+<p>ANCOM-BC 对每个层级和对比单独运行。<code>k</code> 组产生 <code>k(k-1)/2</code> 个两两对比，层级 × 对比数量可能非常大，尤其是 ASV 层级。取消可能只能在两个任务之间生效。</p>
+<h2 id="section-8">8. 系统发育树<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>必须已有 <code>phy_tree</code>；模块不会从序列重建树。它使用分类聚合、出现率、总丰度、Top N 和标签清理，而不是完整本地过滤。</p>
+<p>模糊标签可改写为 <code>unclassified &lt;最后已知祖先&gt;</code>。过滤后至少保留三个分类单元。</p>
+<p>叶节点可显示总和、均值、相对丰度、中位数、方差、出现率、对数丰度或优势度。诊断包括叶数、内部节点、枝长、根、超度量、二叉性、总长度和高度。</p>
+<p>Faith PD 在 <code>picante</code> 可用时计算。它在显示用的出现率、丰度和 Top N 过滤之前计算，因此这些视觉参数不会改变 Faith 表。根树与无根树的值不能直接等同。</p>
+<p>树不完整时，缺失分类单元可能被忽略。BarCodeR 报告缺失数和 reads 覆盖率。两组比较使用 Wilcoxon，三组以上使用 Kruskal-Wallis。Faith PD 对丰富度和测序深度敏感。</p>
+<p>渲染引擎包括 <code>ggtree</code>、<code>phyloseq</code> 和 <code>ape</code>，完整交互主要依赖 <code>ggtree</code>。</p>
+<h2 id="section-9">9. 分类赋值质量<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>该工具按层级计算已赋值分类单元比例、已赋值 reads 比例，以及连续的严格赋值深度。</p>
+<p>分类单元比例和 reads 加权比例可能差异很大：大量未知 ASV 可能只占很少 reads。</p>
+<p>未赋值模式包括 NA、空值、unknown、unclassified、uncultured、environmental、metagenome、空层级前缀和 <code>sp.</code>。无效 regex 会按字面处理。</p>
+<p>严格深度在第一次层级中断处停止；较低层级有值也不能修复较高层级缺失。</p>
+<p>污染物模式可在所有层级搜索。排除只影响质量计算，不修改数据集，但会改变分母并可能提高赋值率。默认污染物必须按标记调整。</p>
+<p>结果可按层级、累计深度或两者显示，并可使用百分比或绝对数量。</p>
+<h2 id="section-10">10. 描述性与推断性分析<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Barplot 主图、Venn、简单 Heat Tree、系统发育图和分类质量主要是描述性的。定向 Barplot 检验、Alpha 统计、ANCOM-BC 和 Faith 比较属于推断分析。视觉差异不等于显著性，显著性也不等于因果关系。</p>
+<h2 id="section-11">11. 历史记录与可重复性<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>每个工具在项目中拥有独立历史目录：<code>barplot/</code>、<code>alpha_div/</code>、<code>venn_diag/</code>、<code>heat_tree/</code>、<code>phylo_tree/figures/</code> 和 <code>tax_quality/</code>。</p>
+<p>显示结果不会自动保存。快照可包含 PNG、RDS、元数据、参数、计算数据、日志和 XLSX。删除历史条目会直接删除文件，没有内部回收站。</p>
+<p>较新的快照可以生成 R 代码。代码可能依赖快照 RDS、包版本和专用依赖，发布前应审查。旧快照可能没有代码。日志记录数据、过滤、参数、检验、警告和错误，其中部分文本仍为法语。</p>
+<h2 id="section-12">12. 科学可比性<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>比较前应确认标记、区域、技术、去噪/聚类、ASV/OTU 定义、分类数据库、层级、样本、丰度类型、过滤、归一化和深度。</p>
+<p>稀释、Chao1、ACE、Fisher、Good 覆盖度、ANCOM-BC 以及 reads/出现率汇总假设计数型数据。CLR 或对数数据会改变“存在”和“总量”的含义。</p>
+<p>分类聚合会改变分析单位。组大小会影响 pooled composition 和检测稀有分类单元的概率。全局分析需要合适的多重检验和组成方法。</p>
+<h2 id="section-13">13. 性能与依赖<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>成本随样本、分类单元、数据集、指数、集合、层级、对比和树叶数量增加。多层级 ANCOM-BC 和大型交互树尤其昂贵。</p>
+<p>可能需要 <code>phyloseq</code>、<code>vegan</code>、<code>metacoder</code>、<code>ANCOMBC</code>、<code>ComplexUpset</code>、<code>ape</code>、<code>ggtree</code>、<code>picante</code>、<code>plotly</code>、<code>emmeans</code>、<code>lmtest</code> 和 <code>openxlsx</code>。包缺失时，输出可能被禁用或回退；应查看日志。</p>
+<p>通过过滤、按层级聚合、限制组/层级/对比和减少交互性来降低成本。</p>
+<h2 id="section-14">14. 常见问题<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>主要原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图形与参数不一致</td>
+<td>需要重新计算</td>
+</tr>
+<tr>
+<td>本地过滤未出现在另一工具</td>
+<td>状态相互独立</td>
+</tr>
+<tr>
+<td>组 Barplot 不是平均值</td>
+<td>reads 被 pooled</td>
+</tr>
+<tr>
+<td>Chao1/ACE/Fisher 缺失</td>
+<td>非整数数据</td>
+</tr>
+<tr>
+<td>Venn 自动变 UpSet</td>
+<td>超过七个集合</td>
+</tr>
+<tr>
+<td>ANCOM-BC 很慢</td>
+<td>层级、对比或 ASV 过多</td>
+</tr>
+<tr>
+<td>q 阈值改变节点但未重算</td>
+<td>只是视觉过滤</td>
+</tr>
+<tr>
+<td>Top N 改变但 Faith 不变</td>
+<td>Faith 在显示过滤前计算</td>
+</tr>
+<tr>
+<td>排除污染物后赋值率上升</td>
+<td>分母改变</td>
+</tr>
+<tr>
+<td>历史为空</td>
+<td>项目错误或未保存结果</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-15">15. 使用检查表<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>探索前：确认项目、数据集、计数/转换状态、表、层级、metadata 类型、组和本地过滤。</p>
+<p>统计前：确认重复、缺失值、深度、检验假设、协变量、交互、多重校正和效应大小。</p>
+<p>ANCOM-BC 前：使用合适计数，定义组和参考，从高层级开始，限制层级与对比，并区分计算 alpha 和显示 q。</p>
+<p>保存前：确保计算和渲染均为最新，检查标题、颜色、尺寸和日志，并保存历史与所需表格。</p>
+<h2 id="section-16">16. 主要限制<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>子模块本地状态独立、图形可能过期、组组成采用 pooled 计算、非整数数据限制丰富度估计、零目标稀释按数据集分别计算、Venn 使用首次出现、标签标准化可能合并类别、中位数 Heat Tree 非推断、ANCOM-BC 扫描昂贵、Faith 可能基于部分树、分类质量依赖 regex、历史依赖当前项目。</p>
+<h2 id="section-17">17. 推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<ol>
+<li>在 Description 检查数据集。</li>
+<li>确认是原始计数还是转换值。</li>
+<li>检查组和重复。</li>
+<li>仅把本地过滤用于探索试验。</li>
+<li>从简单描述图开始。</li>
+<li>选择合适层级并限制显示元素。</li>
+<li>科学参数改变后重新计算。</li>
+<li>设计有效后再运行统计。</li>
+<li>阅读日志和诊断。</li>
+<li>保存图、参数和表。</li>
+<li>审查可重复 R 代码。</li>
+<li>在 Filtration 中持久化必要过滤并保存项目。</li>
+</ol>
+<h2 id="section-18">18. 已核对的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>依据 <code>modules/exploration/</code> 主模块、<code>_dirty_tracking.R</code>、<code>_active_dataset_sync.R</code> 以及 <code>barplot</code>、<code>alpha</code>、<code>venn</code>、<code>heattree</code>、<code>phylotree</code> 和 <code>tax_quality</code> 目录中的代码，并与架构说明 30–35 交叉核对。</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 作用与结构</a><a class="toc-l2" href="#section-2">2. 通用工作方式</a><a class="toc-l2" href="#section-3">3. 本地过滤</a><a class="toc-l2" href="#section-4">4. Barplot</a><a class="toc-l2" href="#section-5">5. Alpha 多样性</a><a class="toc-l2" href="#section-6">6. Venn 与 UpSet</a><a class="toc-l2" href="#section-7">7. Heat Tree</a><a class="toc-l2" href="#section-8">8. 系统发育树</a><a class="toc-l2" href="#section-9">9. 分类赋值质量</a><a class="toc-l2" href="#section-10">10. 描述性与推断性分析</a><a class="toc-l2" href="#section-11">11. 历史记录与可重复性</a><a class="toc-l2" href="#section-12">12. 科学可比性</a><a class="toc-l2" href="#section-13">13. 性能与依赖</a><a class="toc-l2" href="#section-14">14. 常见问题</a><a class="toc-l2" href="#section-15">15. 使用检查表</a><a class="toc-l2" href="#section-16">16. 主要限制</a><a class="toc-l2" href="#section-17">17. 推荐流程</a><a class="toc-l2" href="#section-18">18. 已核对的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 探索</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

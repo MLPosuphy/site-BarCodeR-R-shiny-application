@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>फ़िल्ट्रेशन — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="filtration" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link active" href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">फ़िल्ट्रेशन</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">Filtration — कार्यप्रणाली मार्गदर्शिका</h1>
+<h2 id="section-1">1. टैब का सामान्य उद्देश्य<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Filtration</strong> टैब BarCodeR में पहले से लोड किए गए <code>phyloseq</code> ऑब्जेक्ट से एक उप-डेटासेट बनाता है। यह टैक्सोनॉमिक annotation के आधार पर taxa, कम abundance या कम prevalence वाले ASV, depth, richness, नाम या metadata के आधार पर samples, तथा technical criteria पूरा न करने वाली sequences को हटा सकता है।</p>
+<p>परिणाम पहले एक अस्थायी reactive object के रूप में बनता है:</p>
+<pre tabindex="0"><code class="language-r">ps_filtered
+</code></pre>
+<p>इसके बाद इसे summary में देखा जा सकता है, नए नाम से save किया जा सकता है, parent dataset को replace किया जा सकता है, Description में inspect किया जा सकता है, अन्य datasets से compare किया जा सकता है और export किया जा सकता है।</p>
+<h3 id="data-edition">Data Edition से अंतर<a aria-label="Permalink" class="heading-anchor" href="#data-edition">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Data Edition</th>
+<th>Filtration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>चुने गए dataset की tables सीधे बदलता है</td>
+<td>पहले एक अस्थायी derived object बनाता है</td>
+</tr>
+<tr>
+<td>बदलाव तुरंत <code>datasets()</code> में लागू होते हैं</td>
+<td>parameter सेट करते समय parent अपरिवर्तित रहता है</td>
+</tr>
+<tr>
+<td>cell और structure corrections के लिए</td>
+<td>criteria के आधार पर samples या taxa हटाने के लिए</td>
+</tr>
+<tr>
+<td>edits को <code>edit_log</code> में रखता है</td>
+<td>filtering को <code>filtration_log</code> में रखता है</td>
+</tr>
+</tbody>
+</table></div>
+<p>जब तक result save नहीं होता, वह Datasets में नहीं दिखता, अन्य modules में उपलब्ध नहीं होता, disk पर नहीं लिखा जाता और session reload होने पर खो सकता है।</p>
+<h2 id="section-2">2. स्वचालित कार्यप्रणाली और result life cycle<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>कोई <strong>Apply filters</strong> button नहीं है। किसी active parameter के बदलते ही filtration स्वतः recalculated होती है, जैसे block enable करना, threshold बदलना, taxonomic value चुनना, metadata condition जोड़ना या dataset बदलना।</p>
+<p>बड़े dataset पर हर बदलाव OTU table पढ़ सकता है, abundance और prevalence recalculated कर सकता है, कई <code>prune_taxa()</code> या <code>prune_samples()</code> चला सकता है, sequences analyse कर सकता है और log तथा summary दोबारा बना सकता है। Parameters धीरे-धीरे बदलें और calculation समाप्त होने दें।</p>
+<h3 id="parent">सेटिंग के दौरान parent सुरक्षित रहता है<a aria-label="Permalink" class="heading-anchor" href="#parent">#</a></h3>
+<pre tabindex="0"><code class="language-text">parent dataset
+      ↓
+reactive calculation
+      ↓
+temporary filtered dataset
+</code></pre>
+<p>Parent तभी replace होता है जब result उसी नाम से save किया जाए।</p>
+<h3 id="save-name">खाली save name का जोखिम<a aria-label="Permalink" class="heading-anchor" href="#save-name">#</a></h3>
+<p>Save field default रूप से खाली है। खाली value का अर्थ है:</p>
+<blockquote>
+<p>Result को parent के नाम से save करें और parent को replace करें।</p>
+</blockquote>
+<p>कोई अतिरिक्त confirmation नहीं आता। Raw dataset बचाने के लिए अलग नाम दें, जैसे <code>COI_raw</code> और <code>COI_filtered</code>।</p>
+<p>Save केवल BarCodeR memory बदलता है। Result को स्थायी रखने के लिए बाद में <strong>Datasets → Save project</strong> करना आवश्यक है।</p>
+<h2 id="section-3">3. Filters का निश्चित क्रम<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Filters हमेशा इस क्रम में लागू होते हैं:</p>
+<pre tabindex="0"><code class="language-text">1. Taxonomy
+2. ASV abundance
+3. Samples
+4. Sequences
+</code></pre>
+<p>यह क्रम fixed है और boxes खोलने या parameters भरने के क्रम पर निर्भर नहीं करता।</p>
+<h3 id="section">परिणाम<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h3>
+<p>हर block पिछले block के result पर काम करता है। उदाहरण:</p>
+<ol>
+<li>chloroplast हटाए जाते हैं;</li>
+<li>बचे ASV का total और prevalence recalculated होता है;</li>
+<li>sample reads और richness recalculated होते हैं;</li>
+<li>अपर्याप्त samples हटते हैं;</li>
+<li>technical criteria पूरा न करने वाली sequences हटती हैं।</li>
+</ol>
+<p>इसलिए sample thresholds जरूरी नहीं कि Description में दिखाए गए raw values पर लागू हों।</p>
+<h3 id="pass-convergence">केवल एक pass, convergence नहीं<a aria-label="Permalink" class="heading-anchor" href="#pass-convergence">#</a></h3>
+<p>अंतिम step के बाद pipeline फिर से शुरुआत पर नहीं जाता। इसलिए:</p>
+<ul>
+<li>samples हटने के बाद कुछ ASV prevalence threshold से नीचे जा सकते हैं, पर ASV filter फिर से नहीं चलेगा;</li>
+<li>sequence filtering के बाद sample reads या richness threshold से नीचे जा सकते हैं, पर sample filter फिर नहीं चलेगा;</li>
+<li>final result में zero-read samples या zero-abundance taxa रह सकते हैं।</li>
+</ul>
+<p>दूसरा filtering pass पहले से अधिक elements हटा सकता है।</p>
+<h2 id="section-4">4. Dataset selection और parameters का बने रहना<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>मुख्य selector global active dataset से synchronized है। Filtration में dataset बदलने से <code>active_ds()</code> बदलता है, अन्य tabs का default dataset बदलता है और project unsaved माना जा सकता है।</p>
+<h3 id="parameters-reset">सभी parameters reset नहीं होते<a aria-label="Permalink" class="heading-anchor" href="#parameters-reset">#</a></h3>
+<p>Dataset बदलने पर ये settings बनी रह सकती हैं:</p>
+<ul>
+<li>abundance thresholds;</li>
+<li>sample thresholds;</li>
+<li>sequence criteria;</li>
+<li>taxonomy keywords;</li>
+<li>advanced conditions;</li>
+<li>save name।</li>
+</ul>
+<p>Dataset-dependent lists update होती हैं: taxonomic ranks और values, sample names और metadata variables।</p>
+<p>Advanced condition नए dataset में मौजूद न रहने वाली variable को refer कर सकती है। तब result बनना रुक सकता है, जब तक condition corrected या deleted न हो।</p>
+<p>हर dataset change के बाद save करने से पहले सभी blocks जाँचें।</p>
+<h2 id="section-5">5. Interface states को समझना<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>हर block की visual state होती है।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>रंग</th>
+<th>अर्थ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grey</td>
+<td>कोई active या modified parameter नहीं</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td>parameters बदले गए हैं, पर block disabled है</td>
+</tr>
+<tr>
+<td>Green</td>
+<td>block activation checkbox selected है</td>
+</tr>
+</tbody>
+</table></div>
+<p>Green border यह सुनिश्चित नहीं करता कि कोई element हटेगा। उदाहरण के लिए ASV block enabled हो सकता है और सभी thresholds zero हों; block green होगा, लेकिन criteria neutral होंगे।</p>
+<p>Global banner configured blocks पहचानने की कोशिश करता है, पर बिना किसी removal के भी dataset को <code>filtration_log</code> मिल सकता है।</p>
+<h3 id="graphical-previews">Graphical previews<a aria-label="Permalink" class="heading-anchor" href="#graphical-previews">#</a></h3>
+<p>Threshold histograms selected parent dataset पर बनते हैं, progressively filtered object पर नहीं। इनमें total reads per ASV, prevalence, maximum relative abundance, reads per sample, richness per sample, length और GC शामिल हैं।</p>
+<p>Threshold line initial distribution दिखाती है, पर previous blocks के बाद वास्तव में उपयोग हुए values हमेशा नहीं। <strong>Before/after summary</strong> final result का मुख्य preview है।</p>
+<h2 id="section-6">6. Taxonomic filtering<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Taxonomic filtering के लिए <code>tax_table</code> आवश्यक है। यह selected rank के values exclude कर सकता है, केवल selected values रख सकता है और keywords वाली annotations हटा सकता है।</p>
+<h3 id="keywords">पहले से चुने गए keywords<a aria-label="Permalink" class="heading-anchor" href="#keywords">#</a></h3>
+<p>Default selected keywords हैं:</p>
+<pre tabindex="0"><code class="language-text">chloroplast
+mitochondria
+</code></pre>
+<p>Block enable होने तक ये लागू नहीं होते। लेकिन केवल <strong>Enable filtering</strong> चुनना भी इन terms वाले taxa को तुरंत हटा सकता है।</p>
+<p>ये universal contaminants नहीं हैं। Marker और study objective के अनुसार ये target biological signal भी हो सकते हैं।</p>
+<h3 id="rank-exclude-keep">Rank के अनुसार exclude या keep<a aria-label="Permalink" class="heading-anchor" href="#rank-exclude-keep">#</a></h3>
+<p>Selected rank के लिए:</p>
+<ul>
+<li><strong>Exclude</strong> exact selected value वाले ASV हटाता है;</li>
+<li><strong>Keep only</strong> selected values से मेल खाने वाले ASV रखता है।</li>
+</ul>
+<p>Internal order है:</p>
+<pre tabindex="0"><code class="language-text">1. Exclusion
+2. Retention
+3. Keyword search
+</code></pre>
+<p>विरोधी rules सभी taxa हटा सकते हैं।</p>
+<h3 id="keyword-search">Keyword search<a aria-label="Permalink" class="heading-anchor" href="#keyword-search">#</a></h3>
+<p>Keywords सभी taxonomy columns में, case-insensitive, substring के रूप में और combined <code>|</code> pattern से खोजे जाते हैं।</p>
+<p>इसलिए <code>chloroplast</code>, <code>Chloroplast</code>, <code>chloroplastidae</code> या <code>Unclassified chloroplast sequence</code> से match कर सकता है। Search selected rank तक सीमित नहीं है।</p>
+<h3 id="taxonomy-absent">Taxonomy absent<a aria-label="Permalink" class="heading-anchor" href="#taxonomy-absent">#</a></h3>
+<p>Taxonomy table न होने पर enabled block skip हो जाता है। अन्य blocks result बना सकते हैं। केवल green state पर भरोसा न करें; actual summary देखें।</p>
+<h2 id="section-7">7. Abundance के आधार पर ASV filtering<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>तीन criteria क्रम से लागू होते हैं:</p>
+<pre tabindex="0"><code class="language-text">1. Total reads
+2. Prevalence
+3. Maximum relative abundance
+</code></pre>
+<p>ये मानते हैं कि OTU table values meaningful abundances हैं। CLR, relative abundances, logarithmic data, negative values या normalized matrices पर interpretation गलत हो सकती है।</p>
+<h3 id="total-reads-per-asv">Total reads per ASV<a aria-label="Permalink" class="heading-anchor" href="#total-reads-per-asv">#</a></h3>
+<pre tabindex="0"><code class="language-text">Total = इस stage पर मौजूद samples में abundance का sum
+</code></pre>
+<p>Rule strict है:</p>
+<pre tabindex="0"><code class="language-text">Total &gt; threshold
+</code></pre>
+<p>Threshold 10 होने पर total 10 हटेगा और total 11 रहेगा।</p>
+<h3 id="prevalence">Prevalence<a aria-label="Permalink" class="heading-anchor" href="#prevalence">#</a></h3>
+<p>Prevalence उन samples की संख्या है जहाँ abundance strictly greater than zero है। Rule है:</p>
+<pre tabindex="0"><code class="language-text">Prevalence ≥ threshold
+</code></pre>
+<p>Threshold 3 पर exactly 3 samples में मौजूद ASV रखा जाता है।</p>
+<p>Absolute threshold को sample count के संदर्भ में समझें। 3 samples, 10-sample project में 30% हैं, जबकि 100-sample project में 3%।</p>
+<h3 id="maximum-relative-abundance">Maximum relative abundance<a aria-label="Permalink" class="heading-anchor" href="#maximum-relative-abundance">#</a></h3>
+<p>हर ASV के लिए BarCodeR प्रत्येक sample में relative abundance calculate करता है और maximum value रखता है:</p>
+<pre tabindex="0"><code class="language-text">Maximum of: ASV abundance / total sample abundance × 100
+</code></pre>
+<p>Rule है:</p>
+<pre tabindex="0"><code class="language-text">Maximum relative abundance ≥ threshold
+</code></pre>
+<p>यह globally rare लेकिन किसी एक sample में important ASV को बचा सकता है।</p>
+<p>यह calculation total और prevalence filters के बाद होती है। Taxa हटने से denominator बदलता है और remaining taxa की relative proportion स्वतः बढ़ती है।</p>
+<h2 id="section-8">8. Sample filtering<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Criteria इस क्रम में लागू होते हैं:</p>
+<pre tabindex="0"><code class="language-text">1. Minimum reads
+2. Minimum richness
+3. Sample names
+4. Simple metadata condition
+5. Advanced conditions
+</code></pre>
+<h3 id="minimum-reads">Minimum reads<a aria-label="Permalink" class="heading-anchor" href="#minimum-reads">#</a></h3>
+<p>Taxonomic और abundance filtering के बाद reads recalculated होते हैं:</p>
+<pre tabindex="0"><code class="language-text">Reads = remaining taxa abundances का sum
+</code></pre>
+<p>Rule inclusive है:</p>
+<pre tabindex="0"><code class="language-text">Reads ≥ threshold
+</code></pre>
+<h3 id="minimum-richness">Minimum richness<a aria-label="Permalink" class="heading-anchor" href="#minimum-richness">#</a></h3>
+<p>Richness उन taxa की संख्या है जिनकी abundance strictly greater than zero है। Rule है:</p>
+<pre tabindex="0"><code class="language-text">Richness ≥ threshold
+</code></pre>
+<p>यह parent dataset के Description value से अलग हो सकती है।</p>
+<h3 id="name-filtering">Name के अनुसार filtering<a aria-label="Permalink" class="heading-anchor" href="#name-filtering">#</a></h3>
+<p>Names exactly <code>sample_names(ps)</code> से match करते हैं। Partial या case-insensitive search नहीं है।</p>
+<ul>
+<li><strong>Keep</strong> केवल selected names रखता है;</li>
+<li><strong>Exclude</strong> selected names हटाता है।</li>
+</ul>
+<p>यह step reads और richness thresholds के बाद आता है। Keep में चुना sample पहले ही हट चुका हो सकता है।</p>
+<h3 id="simple-metadata-condition">Simple metadata condition<a aria-label="Permalink" class="heading-anchor" href="#simple-metadata-condition">#</a></h3>
+<p>Module मुख्य रूप से numeric columns और factor/character columns में अंतर करता है। Dates, logical columns और special classes simple filter में सही तरह handle न हों।</p>
+<h4>Numeric variables</h4>
+<p>Operators हैं <code>≥</code>, <code>&gt;</code>, <code>≤</code>, <code>&lt;</code> और <code>between</code>। Between दोनों limits को include करता है। उल्टे limits दिए जाने पर BarCodeR lower और upper values स्वतः चुनता है।</p>
+<p>Median या quartiles जैसी initial values केवल convenience हैं, scientific recommendations नहीं।</p>
+<p><strong>Keep</strong> के साथ missing values सामान्यतः हटते हैं। <strong>Exclude</strong> के साथ वे सामान्यतः रहते हैं, क्योंकि inversion से पहले condition satisfy नहीं करते।</p>
+<h4>Categorical variables</h4>
+<p>Text conversion के बाद exact comparison होती है और case, spaces तथा spelling sensitive है।</p>
+<p>एक condition में कई values OR से जुड़ती हैं।</p>
+<p>Missing values आम तौर पर Keep में हटते और Exclude में रहते हैं।</p>
+<h2 id="section-9">9. Advanced metadata conditions<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>हर advanced condition में variable, Keep/Exclude action, comparison या values और delete button होता है।</p>
+<p>सभी conditions आपस में <strong>AND</strong> से जुड़ते हैं।</p>
+<p>उदाहरण:</p>
+<pre tabindex="0"><code class="language-text">Keep Campaign = 2026
+AND
+Exclude Site = control
+AND
+Keep Depth ≥ 50
+</code></pre>
+<p>अलग variables के बीच OR उपलब्ध नहीं है।</p>
+<p>Categorical variable की एक ही row में कई values चुनना internal OR देता है, जैसे <code>Site = A or B</code>।</p>
+<p>Non-numeric variables text के रूप में handle होते हैं। Date category के रूप में चुनी जा सकती है, पर वास्तविक time interval की तरह filter नहीं होती।</p>
+<h3 id="incomplete-condition">Incomplete condition<a aria-label="Permalink" class="heading-anchor" href="#incomplete-condition">#</a></h3>
+<p>एक अधूरी advanced condition temporary result बनना पूरी तरह रोक सकती है, भले अन्य filters valid हों। Condition complete या delete करें।</p>
+<h2 id="section-10">10. Technical sequence filtering<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Technical filtering <code>refseq(ps)</code> का उपयोग करता है और length, GC, ambiguous bases तथा homopolymers पर criteria लागू कर सकता है। यह सबसे अंत में चलता है।</p>
+<h3 id="missing-misaligned-sequences">Missing या misaligned sequences<a aria-label="Permalink" class="heading-anchor" href="#missing-misaligned-sequences">#</a></h3>
+<p><code>refseq</code> absent होने पर block skip होता है और log में line जुड़ती है।</p>
+<p>BarCodeR sequences को <code>taxa_names(ps)</code> से align करने की कोशिश करता है:</p>
+<ul>
+<li>names absent हों और count exactly match करे तो order same माना जाता है;</li>
+<li>names हों तो identifiers से match किया जाता है।</li>
+</ul>
+<p>कोई sequence align न हो तो block skip होता है।</p>
+<p>Coverage partial हो तो sequence वाले ASV evaluate होते हैं और sequence बिना ASV बिना test के retained रहते हैं।</p>
+<p>Length और GC plots stricter alignment उपयोग करते हैं, इसलिए filter partially apply होने पर भी plots absent हो सकते हैं।</p>
+<h3 id="length">Length<a aria-label="Permalink" class="heading-anchor" href="#length">#</a></h3>
+<p>Limits inclusive हैं:</p>
+<pre tabindex="0"><code class="language-text">Minimum length ≤ length ≤ maximum length
+</code></pre>
+<p>Maximum zero होने पर upper limit disabled है। Minimum maximum से बड़ा हो तो सभी sequences reject हो सकती हैं।</p>
+<h3 id="gc">GC<a aria-label="Permalink" class="heading-anchor" href="#gc">#</a></h3>
+<p>Filter A, C, G और T पर GC calculate करता है:</p>
+<pre tabindex="0"><code class="language-text">G + C
+────────────── × 100
+A + C + G + T
+</code></pre>
+<p>Ambiguous bases denominator में नहीं हैं। Limits inclusive हैं; neutral range 0% से 100% है।</p>
+<h3 id="ambiguous-bases">Ambiguous bases<a aria-label="Permalink" class="heading-anchor" href="#ambiguous-bases">#</a></h3>
+<p>Count किए जाने वाले characters हैं:</p>
+<pre tabindex="0"><code class="language-text">N R Y S W K M B D H V
+</code></pre>
+<p>Gaps, dots और अन्य symbols explicitly count नहीं होते।</p>
+<p>Current implementation में <strong>Maximum ambiguities = 0</strong> filter disable करता है। इससे strictly zero ambiguous bases enforce नहीं किए जा सकते।</p>
+<h3 id="homopolymers">Homopolymers<a aria-label="Permalink" class="heading-anchor" href="#homopolymers">#</a></h3>
+<p>BarCodeR consecutive identical characters की longest run खोजता है। <code>AAAATCG</code> की maximum homopolymer length 4 है।</p>
+<p>Ambiguous bases और repeated symbols सहित सभी characters count हो सकते हैं। Longest run threshold से कम या बराबर होने पर sequence रहती है। Zero इस criterion को भी disable करता है।</p>
+<h3 id="section-11">क्रम का परिणाम<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h3>
+<p>Technical filtering के बाद sample thresholds दोबारा नहीं चलते। Samples reads या richness threshold से नीचे, या zero reads पर रह सकते हैं।</p>
+<h2 id="section-11-2">11. Empty result protection और validation सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-11-2">#</a></h2>
+<p>यदि कोई operation सभी taxa या सभी samples हटा दे, BarCodeR calculation रोककर error दिखाता है।</p>
+<p>यह केवल इतना सुनिश्चित करता है कि कम से कम एक taxon और एक sample रहे। यह पर्याप्त replicates, final minimum depth/richness, zero values की अनुपस्थिति या statistical suitability की guarantee नहीं देता।</p>
+<p>Final result Description में जाँचें।</p>
+<h2 id="section-12">12. Filtration log और provenance<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Result को attribute मिलता है:</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>इसमें parent name, date, before/after dimensions, descriptive lines, structured parameters, removed taxa और removed samples हो सकते हैं।</p>
+<h3 id="structured-parameters">Structured parameters<a aria-label="Permalink" class="heading-anchor" href="#structured-parameters">#</a></h3>
+<p>Parameters यहाँ save होते हैं:</p>
+<pre tabindex="0"><code class="language-r">filtration_log$params
+</code></pre>
+<p>इनमें enabled blocks, taxonomic rank, excluded/retained values, keywords, abundance thresholds, name filters, metadata conditions और sequence parameters शामिल हैं।</p>
+<p>Filtering reproduce या audit करने के लिए यह सबसे reliable source है।</p>
+<h3 id="log-language">Log language<a aria-label="Permalink" class="heading-anchor" href="#log-language">#</a></h3>
+<p>Text calculation के समय active language में save होता है और बाद में translate नहीं होता।</p>
+<p><strong>Active blocks</strong> column फिलहाल text log में कुछ French expressions खोजता है। अन्य भाषा में filtered dataset के लिए यह <code>—</code> दिखा सकता है। Structured parameters अधिक reliable हैं।</p>
+<h3 id="removed-item-tables">Removed-item tables<a aria-label="Permalink" class="heading-anchor" href="#removed-item-tables">#</a></h3>
+<p><code>removed_taxa</code> और <code>removed_samples</code> सभी filters से पहले raw parent की metrics उपयोग करते हैं।</p>
+<p>Taxonomic filtering के बाद 800 reads बचने के कारण हटाया sample table में original 5,000 reads के साथ दिख सकता है।</p>
+<p>Tables हर item के लिए exact cause हमेशा नहीं देतीं। Log steps मुख्यतः global effects बताते हैं।</p>
+<h3 id="successive-filtering">Successive filtering<a aria-label="Permalink" class="heading-anchor" href="#successive-filtering">#</a></h3>
+<p>नई pass पिछले <code>filtration_log</code> को replace करती है; logs stack नहीं होते।</p>
+<p>Stages अलग names में रखें:</p>
+<pre tabindex="0"><code class="language-text">COI_raw
+COI_tax
+COI_abundance
+COI_final
+</code></pre>
+<h3 id="preserved-potentially-lost-attributes">Preserved और potentially lost attributes<a aria-label="Permalink" class="heading-anchor" href="#preserved-potentially-lost-attributes">#</a></h3>
+<p>BarCodeR explicitly <code>openmetabar_run</code> और <code>edit_log</code> copy करता है।</p>
+<p>Pruning अन्य non-standard attributes जैसे <code>dataset_meta</code>, notes, tags या custom attributes हटा सकता है। Filtering के बाद उन्हें जाँचें।</p>
+<h2 id="section-13">13. Result saving और overwrite risk<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>तीन cases हैं।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Entered name</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empty field या parent name</td>
+<td>Parent तुरंत replace होता है</td>
+</tr>
+<tr>
+<td>New name</td>
+<td>नया dataset बनता है</td>
+</tr>
+<tr>
+<td>किसी अन्य dataset का name</td>
+<td>Replacement से पहले confirmation</td>
+</tr>
+</tbody>
+</table></div>
+<p>Name common BarCodeR helper से normalized होता है। Input data के विपरीत collision पर <code>_2</code> स्वतः नहीं जुड़ता।</p>
+<h3 id="memory-save">केवल memory में save<a aria-label="Permalink" class="heading-anchor" href="#memory-save">#</a></h3>
+<p>Save button <code>datasets()</code> बदलता है। Project disk पर persist नहीं होता।</p>
+<p>Saved result active dataset बन जाता है।</p>
+<h3 id="filters-automatic-reapplication">Filters का automatic reapplication<a aria-label="Permalink" class="heading-anchor" href="#filters-automatic-reapplication">#</a></h3>
+<p>Filtration selector active dataset को follow करता है, इसलिए saved result तुरंत नया parent बन जाता है और active filters फिर लागू होते हैं:</p>
+<pre tabindex="0"><code class="language-text">raw parent
+    ↓
+first saved result
+    ↓
+same active filters
+    ↓
+new temporary result
+</code></pre>
+<p>दूसरा Save click अधिक elements हटा सकता है।</p>
+<p>Save के बाद:</p>
+<ol>
+<li>तुरंत दोबारा Save न करें;</li>
+<li>filters disable करें या tab छोड़ें;</li>
+<li>Description में result inspect करें;</li>
+<li>Datasets में project save करें।</li>
+</ol>
+<h2 id="section-14">14. Dataset inspection और exports<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>नीचे का section registry के datasets दिखाता है, unsaved temporary result नहीं।</p>
+<p>Table name, filtered status, parent, date, before/after dimensions, removed counts और active blocks दिखा सकती है।</p>
+<p><code>filtration_log</code> मौजूद होते ही dataset filtered माना जाता है, भले कुछ हटाया न गया हो।</p>
+<p>Same name से parent overwrite होने पर dataset अपना ही parent दिख सकता है।</p>
+<p>बाद में Data Edition में बदलाव होने पर current dimensions केवल filtration का प्रभाव नहीं रहेंगी।</p>
+<h3 id="detail-panel">Detail panel<a aria-label="Permalink" class="heading-anchor" href="#detail-panel">#</a></h3>
+<p>Panel log, parameters, removed taxa/samples, OTU table, taxonomy, metadata, sequences और histograms दिखाता है।</p>
+<p>महत्वपूर्ण बातें:</p>
+<ul>
+<li>Reads नाम वाला plot वास्तव में total per taxon दिखाता है;</li>
+<li>log histogram <code>log10(total + 1)</code> उपयोग करता है;</li>
+<li>detail GC total string length से divide करता है और filter GC से अलग हो सकता है;</li>
+<li>OTU table हमेशा transpose होती है, orientation reliably standardized नहीं है;</li>
+<li>component absent होने पर panel empty या error हो सकता है।</li>
+</ul>
+<h3 id="tsv-exports">TSV exports<a aria-label="Permalink" class="heading-anchor" href="#tsv-exports">#</a></h3>
+<p>File names generic हैं:</p>
+<pre tabindex="0"><code class="language-text">otu_table.tsv
+taxonomy.tsv
+metadata.tsv
+</code></pre>
+<p>इनमें dataset name या date नहीं होता। Rownames पहली column में export होते हैं, कभी-कभी explicit header के बिना।</p>
+<p>OTU table export में भी हमेशा transpose होती है, इसलिए orientation original phyloseq पर निर्भर है।</p>
+<h3 id="biom-export">BIOM export<a aria-label="Permalink" class="heading-anchor" href="#biom-export">#</a></h3>
+<p>BIOM में केवल abundance matrix होती है। Taxonomy, metadata, sequences, tree और log स्वतः शामिल नहीं होते।</p>
+<p>Stored orientation सीधे उपयोग होती है। Taxa columns में हों तो file reversed हो सकती है।</p>
+<p><code>biomformat</code> unavailable होने पर BarCodeR <code>.biom</code> extension वाला text-message file बनाता है। वह valid BIOM नहीं है।</p>
+<h2 id="section-15">15. Scientific interpretation और recommended strategy<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>BarCodeR सही thresholds स्वतः निर्धारित नहीं कर सकता। वे marker, technology, protocol, sample count, depth, controls, expected diversity, pipeline और scientific objective पर निर्भर हैं।</p>
+<h3 id="rare-taxa">Rare taxa<a aria-label="Permalink" class="heading-anchor" href="#rare-taxa">#</a></h3>
+<p>Rare ASV error, contamination, artefact, वास्तविक rare taxon या महत्वपूर्ण biological event हो सकता है। केवल rarity removal justify नहीं करती।</p>
+<h3 id="experimental-groups">Experimental groups<a aria-label="Permalink" class="heading-anchor" href="#experimental-groups">#</a></h3>
+<p>Global threshold groups को असंतुलित कर सकता है। Filtering के बाद samples per group, retained controls, replicate count और group depth जाँचें।</p>
+<h3 id="strategies">Strategies की तुलना<a aria-label="Permalink" class="heading-anchor" href="#strategies">#</a></h3>
+<p>एक ही parent से methods compare करें:</p>
+<pre tabindex="0"><code class="language-text">COI_raw → method A
+COI_raw → method B
+</code></pre>
+<p><code>COI_raw → method A → method B</code> से बचें, जब तक progressive filtering स्पष्ट उद्देश्य न हो।</p>
+<h3 id="recommended-workflow">Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#recommended-workflow">#</a></h3>
+<ol>
+<li>Project save करें।</li>
+<li>Raw dataset रखें।</li>
+<li>Parent select करें।</li>
+<li>Inherited settings जाँचें।</li>
+<li>एक समय में एक block enable करें।</li>
+<li>हर block के बाद dimensions देखें।</li>
+<li>अन्य criteria धीरे-धीरे जोड़ें।</li>
+<li>Groups और controls जाँचें।</li>
+<li>नया name दें।</li>
+<li>केवल एक बार save करें।</li>
+<li>Tab छोड़ें या filters disable करें।</li>
+<li>Description में result देखें।</li>
+<li>Zeros, notes, tags और provenance जाँचें।</li>
+<li>Project save करें।</li>
+<li>Final dataset export करें।</li>
+</ol>
+<h2 id="section-16">16. Troubleshooting और checks<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="parameter-problems">Parameter problems<a aria-label="Permalink" class="heading-anchor" href="#parameter-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>पुराने filters नए dataset पर लागू</td>
+<td>Parameters persist</td>
+<td>Dataset change के बाद सभी blocks जाँचें</td>
+</tr>
+<tr>
+<td>Green box लेकिन removal नहीं</td>
+<td>Neutral criteria</td>
+<td>Thresholds और summary जाँचें</td>
+</tr>
+<tr>
+<td>Orange box</td>
+<td>Parameters modified, block disabled</td>
+<td>Enable करें या neutral values करें</td>
+</tr>
+<tr>
+<td>Taxonomy enable करते ही ASV हटे</td>
+<td>Preselected keywords</td>
+<td><code>chloroplast</code> और <code>mitochondria</code> जाँचें</td>
+</tr>
+<tr>
+<td>Result नहीं</td>
+<td>Incomplete condition या बहुत strict filter</td>
+<td>Complete, delete या relax करें</td>
+</tr>
+<tr>
+<td>सभी taxa/samples हटेंगे</td>
+<td>Contradictory या excessive criteria</td>
+<td>Thresholds कम करें</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="threshold-problems">Threshold problems<a aria-label="Permalink" class="heading-anchor" href="#threshold-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact total threshold वाला ASV हटता है</td>
+<td>Total <code>&gt;</code> उपयोग करता है</td>
+</tr>
+<tr>
+<td>Low-total ASV relative threshold pass करता है</td>
+<td>किसी sample में important है</td>
+</tr>
+<tr>
+<td>Plot threshold से ऊपर sample हटता है</td>
+<td>Actual threshold taxon removal के बाद लागू है</td>
+</tr>
+<tr>
+<td>Missing value Keep में हटता है</td>
+<td>Condition satisfy नहीं करता</td>
+</tr>
+<tr>
+<td>Missing value Exclude में रहता है</td>
+<td>Inversion से पहले match नहीं करता</td>
+</tr>
+<tr>
+<td>Advanced conditions बहुत restrictive</td>
+<td>AND से जुड़ते हैं</td>
+</tr>
+<tr>
+<td>Variables के बीच OR नहीं बनता</td>
+<td>Direct support नहीं है</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sequence-problems">Sequence problems<a aria-label="Permalink" class="heading-anchor" href="#sequence-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause/behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Length या GC plot नहीं</td>
+<td>RefSeq absent या incomplete alignment</td>
+</tr>
+<tr>
+<td>Active block skipped</td>
+<td>कोई alignable sequence नहीं</td>
+</tr>
+<tr>
+<td>बिना sequence ASV रहते हैं</td>
+<td>Coverage partial है</td>
+</tr>
+<tr>
+<td>Ambiguities maximum zero filter नहीं करता</td>
+<td>Zero disables criterion</td>
+</tr>
+<tr>
+<td>Homopolymer maximum zero filter नहीं करता</td>
+<td>Zero disables criterion</td>
+</tr>
+<tr>
+<td>Zero-read samples रहते हैं</td>
+<td>Sample thresholds reapply नहीं होते</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="log-provenance-problems">Log और provenance problems<a aria-label="Permalink" class="heading-anchor" href="#log-provenance-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Removed table में threshold से बड़ी metrics</td>
+<td>Raw parent metrics उपयोग हुईं</td>
+</tr>
+<tr>
+<td>Exact reason per item नहीं</td>
+<td>Log मुख्यतः global effects रखता है</td>
+</tr>
+<tr>
+<td>Old log गायब</td>
+<td>New pass ने <code>filtration_log</code> replace किया</td>
+</tr>
+<tr>
+<td>Notes/tags गायब</td>
+<td>Pruning में custom attribute खोया</td>
+</tr>
+<tr>
+<td>Removal बिना filtered status</td>
+<td>Log presence पर्याप्त है</td>
+</tr>
+<tr>
+<td>Active blocks <code>—</code></td>
+<td>Text log अन्य भाषा में है</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="save-problems">Save problems<a aria-label="Permalink" class="heading-anchor" href="#save-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause/action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parent overwrite हुआ</td>
+<td>Name empty या same था</td>
+</tr>
+<tr>
+<td><code>_2</code> नहीं जुड़ा</td>
+<td>Filtration replaces, auto-renames नहीं</td>
+</tr>
+<tr>
+<td>Close करने पर result खोया</td>
+<td>Datasets में project save नहीं किया</td>
+</tr>
+<tr>
+<td>Save के बाद result बदलता है</td>
+<td>Filters नए active dataset पर reapply हुए</td>
+</tr>
+<tr>
+<td>Second click अधिक हटाता है</td>
+<td>First result पर second pass चला</td>
+</tr>
+<tr>
+<td>Save rejected</td>
+<td>OTU, metadata या taxonomy IDs inconsistent</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="inspection-export-problems">Inspection/export problems<a aria-label="Permalink" class="heading-anchor" href="#inspection-export-problems">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Temporary result table में नहीं</td>
+<td>अभी save नहीं हुआ</td>
+</tr>
+<tr>
+<td>Reads histogram ASV आधारित</td>
+<td>Total per taxon calculate करता है</td>
+</tr>
+<tr>
+<td>GC plots में अलग</td>
+<td>Denominator formulas अलग हैं</td>
+</tr>
+<tr>
+<td>OTU table transposed</td>
+<td>Panel हमेशा <code>t()</code> चलाता है</td>
+</tr>
+<tr>
+<td>BIOM reversed</td>
+<td>OTU orientation correct नहीं हुई</td>
+</tr>
+<tr>
+<td><code>.biom</code> में text</td>
+<td><code>biomformat</code> unavailable है</td>
+</tr>
+<tr>
+<td>Detail tab error</td>
+<td>Required phyloseq component absent</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="filtering-checklist">Filtering से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#filtering-checklist">#</a></h3>
+<ul>
+<li>Active dataset और project confirm करें।</li>
+<li>Project save करें।</li>
+<li>Raw version रखें।</li>
+<li>Abundance values thresholds के लिए suitable हों।</li>
+<li>OTU orientation जाँचें।</li>
+<li>Taxonomy, metadata और RefSeq जाँचें।</li>
+<li>हर filter का scientific purpose तय करें।</li>
+<li>अन्य dataset से inherited settings जाँचें।</li>
+</ul>
+<h3 id="save-checklist">Save से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#save-checklist">#</a></h3>
+<ul>
+<li>Full summary पढ़ें।</li>
+<li>Before/after ASV और samples जाँचें।</li>
+<li>Skipped steps जाँचें।</li>
+<li>Advanced conditions जाँचें।</li>
+<li>Parent बचाने के लिए नया name दें।</li>
+<li>Save केवल एक बार click करें।</li>
+<li>Registry save और project persistence में अंतर समझें।</li>
+</ul>
+<h3 id="save-checklist-2">Save के बाद checklist<a aria-label="Permalink" class="heading-anchor" href="#save-checklist-2">#</a></h3>
+<ul>
+<li>Description खोलें।</li>
+<li>Dimensions जाँचें।</li>
+<li>Reads और richness जाँचें।</li>
+<li>Zero-abundance taxa और zero-read samples जाँचें।</li>
+<li>Group sizes जाँचें।</li>
+<li>Taxonomy, RefSeq और tree जाँचें।</li>
+<li>Notes, tags और log जाँचें।</li>
+<li>Datasets में save करें।</li>
+<li>Final dataset export करें।</li>
+</ul>
+<h2 id="section-17">17. Module की मुख्य सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>इन सीमाओं को ध्यान में रखें:</p>
+<ul>
+<li>automatic recalculation महँगा हो सकता है;</li>
+<li>histograms raw parent पर आधारित हैं;</li>
+<li>filter order fixed है;</li>
+<li>thresholds iterative रूप से reevaluate नहीं होते;</li>
+<li>final zero cleanup नहीं होता;</li>
+<li>dataset change पर settings persist करती हैं;</li>
+<li>taxonomy keywords preselected हैं;</li>
+<li>dates और special classes का support सीमित है;</li>
+<li>advanced condition rows के बीच केवल AND है;</li>
+<li>current control zero ambiguities enforce नहीं कर सकता;</li>
+<li>बिना sequence ASV retain हो सकते हैं;</li>
+<li>नया log पुराने log को replace करता है;</li>
+<li>exact per-item cause हमेशा नहीं रखा जाता;</li>
+<li>removed-item metrics raw parent से आते हैं;</li>
+<li>custom attributes खो सकते हैं;</li>
+<li>empty name बिना confirmation parent overwrite करता है;</li>
+<li>save के बाद filters reapply होते हैं;</li>
+<li>Save project को disk पर नहीं लिखता;</li>
+<li>active-block detection multilingual logs पर imperfect है;</li>
+<li>export orientations ambiguous हो सकती हैं;</li>
+<li>BIOM export minimal है और <code>biomformat</code> पर निर्भर है।</li>
+</ul>
+<h2 id="internal-sources">सत्यापित internal sources<a aria-label="Permalink" class="heading-anchor" href="#internal-sources">#</a></h2>
+<p>यह documentation वर्तमान व्यवहार पर आधारित है:</p>
+<ol>
+<li><code>modules/filtration/mod_filtration_ui.R</code>: मुख्य interface और चार filtering blocks।</li>
+<li><code>modules/filtration/mod_filtration_server.R</code>: numeric parsing, order, calculations, safeguards, log और temporary result।</li>
+<li><code>modules/filtration/io/mod_filtration_io_ui.R</code>: saving, inspection और exports।</li>
+<li><code>modules/filtration/io/mod_filtration_io_server.R</code>: overwrite, registry insertion, tables, details और BIOM export।</li>
+<li><code>modules/_shared/_provenance.R</code>: pruning के दौरान attributes preservation।</li>
+<li><code>modules/_shared/_dataset_naming.R</code>: name normalization।</li>
+<li><code>modules/_shared/_ps_guard.R</code>: registry insertion से पहले integrity check।</li>
+<li><code>app.R</code>: submodule assembly, global registry और active dataset।</li>
+<li><code>.claude/architecture/23-filtration.md</code>: intended architecture को actual behaviour से verify किया गया।</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. टैब का सामान्य उद्देश्य</a><a class="toc-l3" href="#data-edition">Data Edition से अंतर</a><a class="toc-l2" href="#section-2">2. स्वचालित कार्यप्रणाली और result life cycle</a><a class="toc-l3" href="#parent">सेटिंग के दौरान parent सुरक्षित रहता है</a><a class="toc-l3" href="#save-name">खाली save name का जोखिम</a><a class="toc-l2" href="#section-3">3. Filters का निश्चित क्रम</a><a class="toc-l3" href="#section">परिणाम</a><a class="toc-l3" href="#pass-convergence">केवल एक pass, convergence नहीं</a><a class="toc-l2" href="#section-4">4. Dataset selection और parameters का बने रहना</a><a class="toc-l3" href="#parameters-reset">सभी parameters reset नहीं होते</a><a class="toc-l2" href="#section-5">5. Interface states को समझना</a><a class="toc-l3" href="#graphical-previews">Graphical previews</a><a class="toc-l2" href="#section-6">6. Taxonomic filtering</a><a class="toc-l3" href="#keywords">पहले से चुने गए keywords</a><a class="toc-l3" href="#rank-exclude-keep">Rank के अनुसार exclude या keep</a><a class="toc-l3" href="#keyword-search">Keyword search</a><a class="toc-l3" href="#taxonomy-absent">Taxonomy absent</a><a class="toc-l2" href="#section-7">7. Abundance के आधार पर ASV filtering</a><a class="toc-l3" href="#total-reads-per-asv">Total reads per ASV</a><a class="toc-l3" href="#prevalence">Prevalence</a><a class="toc-l3" href="#maximum-relative-abundance">Maximum relative abundance</a><a class="toc-l2" href="#section-8">8. Sample filtering</a><a class="toc-l3" href="#minimum-reads">Minimum reads</a><a class="toc-l3" href="#minimum-richness">Minimum richness</a><a class="toc-l3" href="#name-filtering">Name के अनुसार filtering</a><a class="toc-l3" href="#simple-metadata-condition">Simple metadata condition</a><a class="toc-l2" href="#section-9">9. Advanced metadata conditions</a><a class="toc-l3" href="#incomplete-condition">Incomplete condition</a><a class="toc-l2" href="#section-10">10. Technical sequence filtering</a><a class="toc-l3" href="#missing-misaligned-sequences">Missing या misaligned sequences</a><a class="toc-l3" href="#length">Length</a><a class="toc-l3" href="#gc">GC</a><a class="toc-l3" href="#ambiguous-bases">Ambiguous bases</a><a class="toc-l3" href="#homopolymers">Homopolymers</a><a class="toc-l3" href="#section-11">क्रम का परिणाम</a><a class="toc-l2" href="#section-11-2">11. Empty result protection और validation सीमाएँ</a><a class="toc-l2" href="#section-12">12. Filtration log और provenance</a><a class="toc-l3" href="#structured-parameters">Structured parameters</a><a class="toc-l3" href="#log-language">Log language</a><a class="toc-l3" href="#removed-item-tables">Removed-item tables</a><a class="toc-l3" href="#successive-filtering">Successive filtering</a><a class="toc-l3" href="#preserved-potentially-lost-attributes">Preserved और potentially lost attributes</a><a class="toc-l2" href="#section-13">13. Result saving और overwrite risk</a><a class="toc-l3" href="#memory-save">केवल memory में save</a><a class="toc-l3" href="#filters-automatic-reapplication">Filters का automatic reapplication</a><a class="toc-l2" href="#section-14">14. Dataset inspection और exports</a><a class="toc-l3" href="#detail-panel">Detail panel</a><a class="toc-l3" href="#tsv-exports">TSV exports</a><a class="toc-l3" href="#biom-export">BIOM export</a><a class="toc-l2" href="#section-15">15. Scientific interpretation और recommended strategy</a><a class="toc-l3" href="#rare-taxa">Rare taxa</a><a class="toc-l3" href="#experimental-groups">Experimental groups</a><a class="toc-l3" href="#strategies">Strategies की तुलना</a><a class="toc-l3" href="#recommended-workflow">Recommended workflow</a><a class="toc-l2" href="#section-16">16. Troubleshooting और checks</a><a class="toc-l3" href="#parameter-problems">Parameter problems</a><a class="toc-l3" href="#threshold-problems">Threshold problems</a><a class="toc-l3" href="#sequence-problems">Sequence problems</a><a class="toc-l3" href="#log-provenance-problems">Log और provenance problems</a><a class="toc-l3" href="#save-problems">Save problems</a><a class="toc-l3" href="#inspection-export-problems">Inspection/export problems</a><a class="toc-l3" href="#filtering-checklist">Filtering से पहले checklist</a><a class="toc-l3" href="#save-checklist">Save से पहले checklist</a><a class="toc-l3" href="#save-checklist-2">Save के बाद checklist</a><a class="toc-l2" href="#section-17">17. Module की मुख्य सीमाएँ</a><a class="toc-l2" href="#internal-sources">सत्यापित internal sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · फ़िल्ट्रेशन</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

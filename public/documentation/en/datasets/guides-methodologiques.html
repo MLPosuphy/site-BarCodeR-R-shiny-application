@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Datasets — Methodological guides — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="en" data-kind="guide" data-module="datasets" data-no-result="No result found on this page.">
+<a class="skip-link" href="#doc-content">Methodological guides</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR documentation</strong><small>Embedded documentation — works offline</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Back to BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="en" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" selected>English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link active" href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Methodological guides</a>
+        <a class="" href="references-techniques.html">Technical reference</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analysis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Documentation version</span><strong>1.8.0</strong><span>Generated on 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Datasets</a><span>›</span><span>Methodological guides</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Search this page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No result found on this page.</div>
+    <article class="doc-article"><h1 id="top">Datasets — Methodological guides</h1>
+<h2 id="section-1">1. Overview<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>The <strong>Datasets</strong> tab manages two different levels of BarCodeR work:</p>
+<ol>
+<li><strong>Datasets in memory</strong>: named <code>phyloseq</code> objects available in the current session.</li>
+<li><strong>Persistent projects</strong>: folders stored on disk that may contain datasets, the active dataset, interface state, figure histories and module files.</li>
+</ol>
+<p>Dataset actions include selecting the active object, renaming, annotating, tagging, duplicating, reordering, exporting and removing an object from memory. Project actions include saving, restoring, creating, opening, renaming, duplicating, exporting, importing and deleting workspaces.</p>
+<h2 id="section-2">2. Essential definitions<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. Dataset<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>A dataset is a named entry in the reactive list:</p>
+<pre tabindex="0"><code class="language-r">datasets()
+</code></pre>
+<p>Each entry is normally a <code>phyloseq</code> object. Its list name is used throughout the application.</p>
+<h3 id="section-2-2">2.2. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>The active dataset is stored separately in:</p>
+<pre tabindex="0"><code class="language-r">active_ds()
+</code></pre>
+<p>It is only the name of the object selected as the global default; it is not another copy of the object.</p>
+<h3 id="section-2-3">2.3. Dataset registry<a aria-label="Permalink" class="heading-anchor" href="#section-2-3">#</a></h3>
+<p>The registry is the current in-memory list, including names, order, attributes and the active name. It does not automatically match the last version saved on disk.</p>
+<h3 id="section-2-4">2.4. Session<a aria-label="Permalink" class="heading-anchor" href="#section-2-4">#</a></h3>
+<p>The session is the current browser/application state. Registry changes are first applied in memory. Unsaved changes can be lost when the application is closed or an older save is restored.</p>
+<h3 id="section-2-5">2.5. Project<a aria-label="Permalink" class="heading-anchor" href="#section-2-5">#</a></h3>
+<p>A project is stored under:</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;internal-project-id&gt;/
+</code></pre>
+<p>It may contain <code>registry.rds</code>, <code>manifest.rds</code>, <code>ui_state.rds</code> and module folders such as <code>barplot/</code>, <code>alpha_div/</code>, <code>Ordination/</code>, <code>DAA/</code>, <code>Analyse/</code> and <code>multiview/</code>.</p>
+<h2 id="section-3">3. Dataset versus project<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Property</th>
+<th style="text-align:right">Dataset</th>
+<th style="text-align:right">Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contains a phyloseq object</td>
+<td style="text-align:right">Yes</td>
+<td style="text-align:right">One or several</td>
+</tr>
+<tr>
+<td>Can be active</td>
+<td style="text-align:right">Yes</td>
+<td style="text-align:right">Yes, as current project</td>
+</tr>
+<tr>
+<td>Contains figure histories</td>
+<td style="text-align:right">No</td>
+<td style="text-align:right">Yes</td>
+</tr>
+<tr>
+<td>Can be removed only from memory</td>
+<td style="text-align:right">Yes</td>
+<td style="text-align:right">No</td>
+</tr>
+<tr>
+<td>Can be physically deleted from disk</td>
+<td style="text-align:right">Not through dataset deletion</td>
+<td style="text-align:right">Yes</td>
+</tr>
+</tbody>
+</table></div>
+<p>Deleting a dataset and deleting a project are therefore completely different operations.</p>
+<h2 id="section-4">4. Tab layout<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>The tab contains three main areas:</p>
+<ol>
+<li>global active dataset;</li>
+<li>dataset registry;</li>
+<li>projects.</li>
+</ol>
+<h2 id="section-5">5. Global active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Selector role<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>The selected dataset becomes the default working object for Description, Data Edition, Filtration, Exploration and Analysis.</p>
+<h3 id="section-5-2">5.2. Synchronization<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>The selector is synchronized with <code>active_ds()</code> and other global dataset selectors.</p>
+<h3 id="section-5-3">5.3. Local module selections<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Some modules can locally use another dataset. Always check both the global selector and the module-specific selector before running an operation.</p>
+<h3 id="section-5-4">5.4. Effect of changing the active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>The change does not edit, filter, copy or delete data. It only changes the global reference, but it still marks the project as having unsaved changes because the active name is persisted.</p>
+<h2 id="section-6">6. No dataset in memory<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>When the registry is empty, load data through Input data, import a phyloseq from OpenMetaBar, open a saved project, import a project archive or restore a previous registry.</p>
+<h2 id="section-7">7. Dataset registry<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>The table displays one row per entry currently held in <code>datasets()</code>. It does not scan disk files.</p>
+<h2 id="section-8">8. Registry columns<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. Active state<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>A star marks the active dataset; a circle marks an inactive dataset. This icon says nothing about quality, filtering or save status.</p>
+<h3 id="section-8-2">8.2. Name<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>The name is the key used in selectors, reports, exports, histories, lineage attributes, legends and some filenames.</p>
+<h3 id="section-8-3">8.3. ASV<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>The displayed value comes from:</p>
+<pre tabindex="0"><code class="language-r">phyloseq::ntaxa()
+</code></pre>
+<p>It is the number of taxa, which may represent ASVs, OTUs, ZOTUs or another unit depending on the source workflow.</p>
+<h3 id="section-8-4">8.4. Samples<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>The displayed value comes from:</p>
+<pre tabindex="0"><code class="language-r">phyloseq::nsamples()
+</code></pre>
+<h3 id="section-8-5">8.5. Provenance<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<ul>
+<li><strong>Loaded</strong>: no recognized filtration or OpenMetaBar provenance attribute.</li>
+<li><strong>OpenMetaBar</strong>: the object has <code>openmetabar_run</code>.</li>
+<li><strong>Filtered</strong>: <code>filtration_log</code> contains a named parent.</li>
+</ul>
+<p>Filtered takes priority over OpenMetaBar.</p>
+<h3 id="section-8-6">8.6. Parent<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>The parent name comes from:</p>
+<pre tabindex="0"><code class="language-r">filtration_log$parent_dataset
+</code></pre>
+<p>This is a stored string, not a live object link. BarCodeR updates recognized descendants when a parent is renamed or deleted.</p>
+<h3 id="section-8-7">8.7. Note and tags<a aria-label="Permalink" class="heading-anchor" href="#section-8-7">#</a></h3>
+<p>They are stored in the object attribute:</p>
+<pre tabindex="0"><code class="language-r">list(note = "...", tags = c("tag1", "tag2"))
+</code></pre>
+<p>They travel with individual exports, project saves and duplicates.</p>
+<h3 id="section-8-8">8.8. Modified<a aria-label="Permalink" class="heading-anchor" href="#section-8-8">#</a></h3>
+<p>The displayed date is taken first from the latest <code>edit_log</code> entry, then from <code>filtration_log</code>. Renaming, tags, notes, order and active selection do not necessarily update this date.</p>
+<h3 id="section-8-9">8.9. Actions<a aria-label="Permalink" class="heading-anchor" href="#section-8-9">#</a></h3>
+<p>Each row can be activated, edited, duplicated, exported, moved up, moved down or deleted from memory.</p>
+<h2 id="section-9">9. Refresh registry<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><strong>Refresh</strong> rebuilds the visible table from the current reactive objects. It does not read <code>registry.rds</code>, scan projects or restore data.</p>
+<h2 id="section-10">10. Set a dataset active<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Activating a row updates <code>active_ds()</code>, synchronizes global selectors and marks the project as modified. Save the project to preserve this selection across restarts.</p>
+<h2 id="section-11">11. Edit a dataset<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>The edit dialog contains the dataset name, a free-text note and comma-separated tags.</p>
+<h2 id="section-12">12. Rename a dataset<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Name cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p><code>bcr_clean_label()</code> trims whitespace, replaces unsafe characters with <code>_</code>, removes edge underscores and falls back to <code>dataset</code> when empty.</p>
+<h3 id="section-12-2">12.2. Non-ASCII characters<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Cleaning depends partly on the R locale. For maximum portability, prefer ASCII letters, digits, <code>_</code> and <code>-</code>.</p>
+<h3 id="section-12-3">12.3. Name collision<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>If the name already exists, a suffix such as <code>_2</code> or <code>_3</code> is added. Existing objects are not silently overwritten.</p>
+<h3 id="section-12-4">12.4. Active dataset update<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>If the renamed dataset was active, <code>active_ds()</code> is updated to its final name.</p>
+<h3 id="section-12-5">12.5. Filtered descendants<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Recognized descendants have their <code>parent_dataset</code> value changed to the new parent name.</p>
+<h3 id="section-12-6">12.6. Items not renamed<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>Previously exported files, source RDS files, old figures, old reports, the project name and the project slug are not renamed.</p>
+<h2 id="section-13">13. Add a note<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>A note can document processing, caveats, database versions, validation state or intended use. It is stored inside the phyloseq object. Editing a note does not necessarily change the registry’s Modified date.</p>
+<h2 id="section-14">14. Add tags<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Tags are split on commas and trimmed. Empty tags are removed, but duplicates and capitalization differences are kept. Use a consistent convention.</p>
+<h2 id="section-15">15. <code>dataset_meta</code> attribute<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Saving the edit replaces <code>dataset_meta</code> with a list containing only <code>note</code> and <code>tags</code>. Other custom fields previously stored under that attribute may be lost.</p>
+<h2 id="section-16">16. Duplicate a dataset<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="section-16-1">16.1. Proposed name<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>The default name is <code>&lt;name&gt;_copy</code>, with a numeric suffix if needed.</p>
+<h3 id="section-16-2">16.2. Copied content<a aria-label="Permalink" class="heading-anchor" href="#section-16-2">#</a></h3>
+<p>The whole object is copied: count table, metadata, taxonomy, sequences, tree, logs, provenance, note, tags and other attributes.</p>
+<h3 id="section-16-3">16.3. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-16-3">#</a></h3>
+<p>The new copy becomes active.</p>
+<h3 id="section-16-4">16.4. Later independence<a aria-label="Permalink" class="heading-anchor" href="#section-16-4">#</a></h3>
+<p>The registry entries are subsequently edited independently.</p>
+<h3 id="section-16-5">16.5. Provenance<a aria-label="Permalink" class="heading-anchor" href="#section-16-5">#</a></h3>
+<p>Duplication does not create a special “copy” provenance. The copied object keeps the source provenance attributes and parent value.</p>
+<h2 id="section-17">17. Reorder datasets<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Up and down arrows change the list order. This can affect selectors, multi-dataset operations and fallback selection. The order is persistent only after saving the project.</p>
+<h2 id="section-18">18. Export an individual dataset<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>The row export writes the current phyloseq object to a file similar to:</p>
+<pre tabindex="0"><code class="language-text">dataset_&lt;name&gt;_&lt;timestamp&gt;.rds
+</code></pre>
+<p>It includes object components and attributes but not other datasets, project figures, module histories, raw FASTQ files, cluster run folders or the original taxonomic database. Reimport it through Input data.</p>
+<h2 id="section-19">19. Remove a dataset from the session<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. Immediate effects<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>The object is removed from <code>datasets()</code>, disappears from selectors and can no longer be used in the current session. The project is marked unsaved.</p>
+<h3 id="section-19-2">19.2. Removing the active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>The first remaining dataset becomes active; if none remains, <code>active_ds()</code> becomes empty.</p>
+<h3 id="section-19-3">19.3. Filtered descendants<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>If the deleted dataset was recorded as a parent, descendants have <code>parent_dataset</code> cleared. Because the Filtered badge currently depends on a non-empty parent, their displayed provenance may change.</p>
+<h3 id="section-19-4">19.4. Memory only<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>The last saved registry is not changed immediately. Restoring from disk can bring the dataset back.</p>
+<h3 id="section-19-5">19.5. Make deletion persistent<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>Delete the row, verify the registry, then click <strong>Save project</strong>.</p>
+<h3 id="section-19-6">19.6. Deleting the last dataset<a aria-label="Permalink" class="heading-anchor" href="#section-19-6">#</a></h3>
+<p>The quick-save function refuses to save an empty registry. An older non-empty <code>registry.rds</code> may therefore remain. Create a new project when a truly empty persistent workspace is needed.</p>
+<h2 id="section-20">20. Unsaved changes state<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>The project is marked modified when <code>datasets()</code> or <code>active_ds()</code> changes. This mainly tracks the registry and active name; it is not a complete audit of every file created by every module.</p>
+<h2 id="section-21">21. Projects section<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>The project manager controls the current persistent workspace, saving, restoring, creation, exports, imports and the list of available projects.</p>
+<h2 id="section-22">22. Current project<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>The current slug is stored in:</p>
+<pre tabindex="0"><code class="language-text">save/projects/.current
+</code></pre>
+<p>BarCodeR attempts to reopen it at startup. If unavailable, it falls back to <code>sans-titre</code>.</p>
+<h2 id="section-23">23. Display name and internal slug<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>A project has a display name, an internal ASCII-safe slug and a disk folder. Renaming changes only the display name; the slug and paths remain stable.</p>
+<h2 id="section-24">24. Project disk structure<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<h3 id="section-24-1">24.1. <code>registry.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Stores the saved datasets, their order, the active dataset and format metadata.</p>
+<h3 id="section-24-2">24.2. <code>manifest.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Stores display name, creation/modification times and saved dataset count.</p>
+<h3 id="section-24-3">24.3. <code>ui_state.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>May store the main tab, sub-tabs and restorable interface parameters.</p>
+<h3 id="section-24-4">24.4. Module folders<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>Modules can persist figures, R objects, parameter files and history metadata in their own subdirectories.</p>
+<h2 id="section-25">25. What a project does not automatically contain<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>A project is not a complete copy of all scientific inputs. Raw FASTQ/BAM files, reference FASTA files, taxonomic databases, OpenMetaBar design files, remote cluster results, external scripts and tool databases must be archived separately.</p>
+<h2 id="section-26">26. Save project<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<h3 id="section-26-1">26.1. Saved content<a aria-label="Permalink" class="heading-anchor" href="#section-26-1">#</a></h3>
+<p>The operation stores the dataset list, order, complete objects and attributes, active dataset, manifest count and available UI state.</p>
+<h3 id="section-26-2">26.2. Figure histories<a aria-label="Permalink" class="heading-anchor" href="#section-26-2">#</a></h3>
+<p>Histories are usually written by their modules directly. Saving mainly synchronizes the dataset registry.</p>
+<h3 id="section-26-3">26.3. Empty project<a aria-label="Permalink" class="heading-anchor" href="#section-26-3">#</a></h3>
+<p>Saving is refused when no dataset is present.</p>
+<h3 id="section-26-4">26.4. Protection from empty overwrite<a aria-label="Permalink" class="heading-anchor" href="#section-26-4">#</a></h3>
+<p>A non-empty saved registry is protected from being replaced by an empty in-memory registry, for example after a failed load.</p>
+<h3 id="section-26-5">26.5. Success<a aria-label="Permalink" class="heading-anchor" href="#section-26-5">#</a></h3>
+<p>A successful save clears the unsaved flag and updates project metadata.</p>
+<h2 id="section-27">27. Available save status<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>The displayed timestamp is the modification time of <code>registry.rds</code>; it is not necessarily the time of the last figure, analysis or history file.</p>
+<h2 id="section-28">28. Reload from disk<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Reloading replaces all current in-memory datasets with the contents of <code>registry.rds</code>; it does not merge them. Unsaved imports, edits, deletions, filters, notes, tags, order and active selection may be lost.</p>
+<h2 id="section-29">29. Save not found<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>No <code>registry.rds</code> may mean a new project, a figure-only project, a project never saved, a manually deleted file or a partial import.</p>
+<h2 id="section-30">30. Unreadable save<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>If <code>registry.rds</code> cannot be read, the project may open empty with a warning. BarCodeR protects the unreadable file from being silently overwritten by an empty registry. Copy the project directory before attempting recovery.</p>
+<h2 id="section-31">31. Export data only as <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>This export downloads a versioned list containing <code>datasets()</code> and <code>active_ds()</code>. It excludes figures, histories, manifest, project display name, UI state and external files. Reimport it through Input data.</p>
+<h2 id="section-32">32. Export complete project as <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>The ZIP contains the current project directory. BarCodeR first attempts to save the in-memory registry. If that save fails, the export may still contain the last valid disk registry rather than current memory. Always read notifications.</p>
+<h2 id="section-33">33. Size warning<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>A warning is displayed above 200 MB. The size includes all project files and may be briefly cached. The application upload limit is 500 MB, so a ZIP larger than that may be exportable but not reimportable through the interface.</p>
+<h2 id="section-34">34. Import a project <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>The archive is extracted as a <strong>new project</strong> and is never merged into the current project. Open it from the project list after import. BarCodeR recognizes <code>registry.rds</code>, <code>manifest.rds</code> or known history folders; figure-only projects may therefore import with zero datasets.</p>
+<h2 id="section-35">35. Create a new project<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>A new folder and manifest are created, the current project is submitted to the normal save/switch workflow, the new project becomes current and the application reloads. Empty or duplicate display names are refused.</p>
+<h2 id="section-36">36. Open another project<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>BarCodeR attempts to save the current project, writes the new slug to <code>.current</code>, reloads the full session and initializes modules against the new project paths. A save error does not always prevent the switch, so red notifications must not be ignored.</p>
+<h2 id="section-37">37. Multiple BarCodeR browser tabs<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>The current project is shared at the R-process level. Other tabs may retain paths from the previous project and write files to unexpected locations. Save and close other BarCodeR tabs before switching projects.</p>
+<h2 id="section-38">38. Rename the current project<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Only the display name changes. The slug, directory, histories, datasets and active dataset do not move. A name already used by another project is refused.</p>
+<h2 id="section-39">39. Project list<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Projects are sorted by most recent manifest modification time. The dataset count represents the saved registry, not necessarily unsaved in-memory state.</p>
+<h2 id="section-40">40. Duplicate a project<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>The whole project folder is copied, including registry, manifest, UI state, datasets, figures and histories. When duplicating the current project, save manually first because the internal pre-save result is not strictly blocking.</p>
+<h2 id="section-41">41. Delete a project<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Only a closed project can be deleted. The entire <code>save/projects/&lt;slug&gt;/</code> directory is removed permanently, without an internal trash. Export a ZIP first.</p>
+<h2 id="section-42">42. Differences between exports<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Content</th>
+<th style="text-align:right">Figures</th>
+<th>Reimport</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Individual dataset <code>.rds</code></td>
+<td>One phyloseq</td>
+<td style="text-align:right">No</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Project data <code>.rds</code></td>
+<td>Dataset list + active name</td>
+<td style="text-align:right">No</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Complete project <code>.zip</code></td>
+<td>Project directory</td>
+<td style="text-align:right">Yes</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-43">43. Projects and OpenMetaBar data<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Importing a phyloseq does not copy the remote OpenMetaBar run directory. Raw reads, Nextflow logs, <code>work/</code>, containers, reference databases and cluster outputs require separate archiving.</p>
+<h2 id="section-44">44. Projects and figure histories<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Only figures actually stored in module histories are guaranteed to be in the project. A plot merely displayed on screen may not be archived.</p>
+<h2 id="section-45">45. Physical project location<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Projects are stored under <code>&lt;BarCodeR-working-directory&gt;/save/projects/</code>. On Docker or server deployments this folder must use persistent storage. On shared installations, privacy and isolation depend on deployment permissions and authentication.</p>
+<h2 id="section-46">46. Recommended daily workflow<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<ol>
+<li>Open or create the correct project.</li>
+<li>Load data.</li>
+<li>Check the registry and active dataset.</li>
+<li>Add useful notes and tags.</li>
+<li>Duplicate before major edits.</li>
+<li>Save regularly.</li>
+<li>Export critical datasets.</li>
+<li>Periodically export a complete ZIP to external storage.</li>
+</ol>
+<h2 id="section-47">47. Before a risky operation<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Save the project, confirm success, export the important dataset, export the complete project when appropriate, and verify the downloaded files before filtering, mass editing, deleting, restoring, switching projects or upgrading the application.</p>
+<h2 id="section-48">48. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<h3 id="section-48-1">48.1. A dataset is missing<a aria-label="Permalink" class="heading-anchor" href="#section-48-1">#</a></h3>
+<p>Check whether import completed, whether the correct project is open, whether the dataset was removed, and whether an older registry was restored.</p>
+<h3 id="section-48-2">48.2. A module uses the wrong dataset<a aria-label="Permalink" class="heading-anchor" href="#section-48-2">#</a></h3>
+<p>Check both the global active dataset and the module-specific selection.</p>
+<h3 id="section-48-3">48.3. Active selection is not preserved<a aria-label="Permalink" class="heading-anchor" href="#section-48-3">#</a></h3>
+<p>Save the project after changing it.</p>
+<h3 id="section-48-4">48.4. The entered name changed<a aria-label="Permalink" class="heading-anchor" href="#section-48-4">#</a></h3>
+<p>Unsafe characters were normalized.</p>
+<h3 id="section-48-5">48.5. <code>_2</code> was added<a aria-label="Permalink" class="heading-anchor" href="#section-48-5">#</a></h3>
+<p>A dataset with the same final name already existed.</p>
+<h3 id="section-48-6">48.6. Modified date did not change<a aria-label="Permalink" class="heading-anchor" href="#section-48-6">#</a></h3>
+<p>Notes, tags and renaming are not represented by that date source.</p>
+<h3 id="section-48-7">48.7. A copy keeps original provenance<a aria-label="Permalink" class="heading-anchor" href="#section-48-7">#</a></h3>
+<p>Duplication copies attributes and does not create a “copy” provenance.</p>
+<h3 id="section-48-8">48.8. A filtered dataset no longer shows as filtered<a aria-label="Permalink" class="heading-anchor" href="#section-48-8">#</a></h3>
+<p>Its parent may have been deleted and the parent field cleared. Inspect <code>attr(ps, "filtration_log")</code>.</p>
+<h3 id="section-48-9">48.9. A deleted dataset returned<a aria-label="Permalink" class="heading-anchor" href="#section-48-9">#</a></h3>
+<p>The deletion was not saved and an older registry was restored.</p>
+<h3 id="section-48-10">48.10. Empty project cannot be saved<a aria-label="Permalink" class="heading-anchor" href="#section-48-10">#</a></h3>
+<p>Quick save requires at least one dataset. Create a new project when needed.</p>
+<h3 id="section-48-11">48.11. Reload removed edits<a aria-label="Permalink" class="heading-anchor" href="#section-48-11">#</a></h3>
+<p>Reload replaces memory with the saved registry.</p>
+<h3 id="section-48-12">48.12. No save exists<a aria-label="Permalink" class="heading-anchor" href="#section-48-12">#</a></h3>
+<p>The project has not yet written <code>registry.rds</code>.</p>
+<h3 id="section-48-13">48.13. Project opens empty with registry error<a aria-label="Permalink" class="heading-anchor" href="#section-48-13">#</a></h3>
+<p>Do not overwrite the project. Copy its folder and test <code>readRDS()</code> externally.</p>
+<h3 id="section-48-14">48.14. New project name refused<a aria-label="Permalink" class="heading-anchor" href="#section-48-14">#</a></h3>
+<p>It is empty or already used, ignoring case and outer whitespace.</p>
+<h3 id="section-48-15">48.15. Folder kept old name after rename<a aria-label="Permalink" class="heading-anchor" href="#section-48-15">#</a></h3>
+<p>Only the display name changes by design.</p>
+<h3 id="section-48-16">48.16. Opening a project reloads the app<a aria-label="Permalink" class="heading-anchor" href="#section-48-16">#</a></h3>
+<p>This is required to reinitialize module paths.</p>
+<h3 id="section-48-17">48.17. Save error while opening another project<a aria-label="Permalink" class="heading-anchor" href="#section-48-17">#</a></h3>
+<p>The switch may still continue. Reopen and verify the previous project.</p>
+<h3 id="section-48-18">48.18. Multiple-tab warning<a aria-label="Permalink" class="heading-anchor" href="#section-48-18">#</a></h3>
+<p>Close other tabs before switching projects.</p>
+<h3 id="section-48-19">48.19. Duplicate lacks latest changes<a aria-label="Permalink" class="heading-anchor" href="#section-48-19">#</a></h3>
+<p>Save explicitly before duplicating.</p>
+<h3 id="section-48-20">48.20. Current project cannot be deleted<a aria-label="Permalink" class="heading-anchor" href="#section-48-20">#</a></h3>
+<p>Open another project first.</p>
+<h3 id="section-48-21">48.21. Project deletion fails<a aria-label="Permalink" class="heading-anchor" href="#section-48-21">#</a></h3>
+<p>Check permissions, locks, disk errors and the target directory.</p>
+<h3 id="section-48-22">48.22. ZIP is very large<a aria-label="Permalink" class="heading-anchor" href="#section-48-22">#</a></h3>
+<p>Remove unnecessary histories or export data only.</p>
+<h3 id="section-48-23">48.23. ZIP exceeds 500 MB<a aria-label="Permalink" class="heading-anchor" href="#section-48-23">#</a></h3>
+<p>Increase <code>shiny.maxRequestSize</code>, reduce the archive, copy the project directory directly or use external storage.</p>
+<h3 id="section-48-24">48.24. Imported project did not open<a aria-label="Permalink" class="heading-anchor" href="#section-48-24">#</a></h3>
+<p>Select it in the list and click <strong>Open</strong>.</p>
+<h3 id="section-48-25">48.25. Archive is invalid<a aria-label="Permalink" class="heading-anchor" href="#section-48-25">#</a></h3>
+<p>Check ZIP integrity and the presence of recognized project markers.</p>
+<h3 id="section-48-26">48.26. Imported project has zero datasets<a aria-label="Permalink" class="heading-anchor" href="#section-48-26">#</a></h3>
+<p>It may contain histories only or an unreadable/missing registry.</p>
+<h3 id="section-48-27">48.27. ZIP lacks latest data<a aria-label="Permalink" class="heading-anchor" href="#section-48-27">#</a></h3>
+<p>The pre-export save may have failed; review notifications.</p>
+<h3 id="section-48-28">48.28. Project dataset count looks wrong<a aria-label="Permalink" class="heading-anchor" href="#section-48-28">#</a></h3>
+<p>Save and refresh; the list reflects persisted metadata.</p>
+<h3 id="section-48-29">48.29. Project size is delayed<a aria-label="Permalink" class="heading-anchor" href="#section-48-29">#</a></h3>
+<p>The size calculation is cached briefly.</p>
+<h3 id="section-48-30">48.30. Projects disappear after redeployment<a aria-label="Permalink" class="heading-anchor" href="#section-48-30">#</a></h3>
+<p>Mount <code>save/projects/</code> on persistent storage.</p>
+<h2 id="section-49">49. Checklist before saving<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct project is open.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Expected datasets are present.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct dataset is active.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Names, notes and tags are correct.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Deletions and duplicates are intentional.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>No important operation is pending.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>No error notification is visible.</li>
+</ul>
+<h2 id="section-50">50. Checklist before switching projects<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Save the current project.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirm the success notification.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Export critical datasets.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Close dialogs and finish calculations.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Close other BarCodeR tabs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify the target project name.</li>
+</ul>
+<h2 id="section-51">51. Checklist before deleting a dataset<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify its exact name and active status.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Check filtered descendants.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Export it if needed.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Archive the project.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Delete and verify the new active dataset.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Save the project.</li>
+</ul>
+<h2 id="section-52">52. Checklist before deleting a project<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ensure it is not current.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Export and verify a ZIP archive.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Export critical datasets individually.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirm raw data and OpenMetaBar outputs are archived elsewhere.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Delete only after these checks.</li>
+</ul>
+<h2 id="section-53">53. Recommended backup strategy<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>Use at least three layers:</p>
+<ol>
+<li>regular internal <strong>Save project</strong>;</li>
+<li>individual RDS exports of critical datasets;</li>
+<li>periodic complete ZIP archives stored outside the BarCodeR installation.</li>
+</ol>
+<p>Internal storage alone does not protect against disk loss, deployment replacement or server failure.</p>
+<h2 id="section-54">54. Traceability principles<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>Use explicit project and dataset names, consistent tags, meaningful notes, preserved provenance, copies before major edits, frequent saves, reference exports, recorded BarCodeR versions and separate raw-data archives.</p>
+<h2 id="section-55">55. Current limitations<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<ul>
+<li>Dataset actions are memory-first and become persistent only after saving.</li>
+<li>An empty project cannot be quick-saved.</li>
+<li>Modified date is incomplete.</li>
+<li>Filtered provenance depends on a named parent.</li>
+<li>Duplication keeps provenance attributes.</li>
+<li>Dataset names are not guaranteed to be ASCII.</li>
+<li>Project switching is global to the R instance.</li>
+<li>Save errors do not always block project switching or duplication.</li>
+<li>The save indicator mainly tracks registry and active dataset.</li>
+<li>ZIP exports exclude external scientific files.</li>
+<li>Archives above 500 MB may not be importable through the interface.</li>
+<li><code>save/projects/</code> must use persistent storage.</li>
+</ul>
+<h2 id="verified-internal-sources">Verified internal sources<a aria-label="Permalink" class="heading-anchor" href="#verified-internal-sources">#</a></h2>
+<ol>
+<li><code>modules/datasets/mod_datasets_ui.R</code></li>
+<li><code>modules/datasets/mod_datasets_server.R</code></li>
+<li><code>modules/_shared/_dataset_naming.R</code></li>
+<li><code>modules/_shared/_project_store.R</code></li>
+<li><code>modules/_shared/_ui_state.R</code></li>
+<li><code>app.R</code></li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Overview</a><a class="toc-l2" href="#section-2">2. Essential definitions</a><a class="toc-l3" href="#section-2-1">2.1. Dataset</a><a class="toc-l3" href="#section-2-2">2.2. Active dataset</a><a class="toc-l3" href="#section-2-3">2.3. Dataset registry</a><a class="toc-l3" href="#section-2-4">2.4. Session</a><a class="toc-l3" href="#section-2-5">2.5. Project</a><a class="toc-l2" href="#section-3">3. Dataset versus project</a><a class="toc-l2" href="#section-4">4. Tab layout</a><a class="toc-l2" href="#section-5">5. Global active dataset</a><a class="toc-l3" href="#section-5-1">5.1. Selector role</a><a class="toc-l3" href="#section-5-2">5.2. Synchronization</a><a class="toc-l3" href="#section-5-3">5.3. Local module selections</a><a class="toc-l3" href="#section-5-4">5.4. Effect of changing the active dataset</a><a class="toc-l2" href="#section-6">6. No dataset in memory</a><a class="toc-l2" href="#section-7">7. Dataset registry</a><a class="toc-l2" href="#section-8">8. Registry columns</a><a class="toc-l3" href="#section-8-1">8.1. Active state</a><a class="toc-l3" href="#section-8-2">8.2. Name</a><a class="toc-l3" href="#section-8-3">8.3. ASV</a><a class="toc-l3" href="#section-8-4">8.4. Samples</a><a class="toc-l3" href="#section-8-5">8.5. Provenance</a><a class="toc-l3" href="#section-8-6">8.6. Parent</a><a class="toc-l3" href="#section-8-7">8.7. Note and tags</a><a class="toc-l3" href="#section-8-8">8.8. Modified</a><a class="toc-l3" href="#section-8-9">8.9. Actions</a><a class="toc-l2" href="#section-9">9. Refresh registry</a><a class="toc-l2" href="#section-10">10. Set a dataset active</a><a class="toc-l2" href="#section-11">11. Edit a dataset</a><a class="toc-l2" href="#section-12">12. Rename a dataset</a><a class="toc-l3" href="#section-12-1">12.1. Name cleaning</a><a class="toc-l3" href="#section-12-2">12.2. Non-ASCII characters</a><a class="toc-l3" href="#section-12-3">12.3. Name collision</a><a class="toc-l3" href="#section-12-4">12.4. Active dataset update</a><a class="toc-l3" href="#section-12-5">12.5. Filtered descendants</a><a class="toc-l3" href="#section-12-6">12.6. Items not renamed</a><a class="toc-l2" href="#section-13">13. Add a note</a><a class="toc-l2" href="#section-14">14. Add tags</a><a class="toc-l2" href="#section-15">15. dataset_meta attribute</a><a class="toc-l2" href="#section-16">16. Duplicate a dataset</a><a class="toc-l3" href="#section-16-1">16.1. Proposed name</a><a class="toc-l3" href="#section-16-2">16.2. Copied content</a><a class="toc-l3" href="#section-16-3">16.3. Active dataset</a><a class="toc-l3" href="#section-16-4">16.4. Later independence</a><a class="toc-l3" href="#section-16-5">16.5. Provenance</a><a class="toc-l2" href="#section-17">17. Reorder datasets</a><a class="toc-l2" href="#section-18">18. Export an individual dataset</a><a class="toc-l2" href="#section-19">19. Remove a dataset from the session</a><a class="toc-l3" href="#section-19-1">19.1. Immediate effects</a><a class="toc-l3" href="#section-19-2">19.2. Removing the active dataset</a><a class="toc-l3" href="#section-19-3">19.3. Filtered descendants</a><a class="toc-l3" href="#section-19-4">19.4. Memory only</a><a class="toc-l3" href="#section-19-5">19.5. Make deletion persistent</a><a class="toc-l3" href="#section-19-6">19.6. Deleting the last dataset</a><a class="toc-l2" href="#section-20">20. Unsaved changes state</a><a class="toc-l2" href="#section-21">21. Projects section</a><a class="toc-l2" href="#section-22">22. Current project</a><a class="toc-l2" href="#section-23">23. Display name and internal slug</a><a class="toc-l2" href="#section-24">24. Project disk structure</a><a class="toc-l3" href="#section-24-1">24.1. registry.rds</a><a class="toc-l3" href="#section-24-2">24.2. manifest.rds</a><a class="toc-l3" href="#section-24-3">24.3. ui_state.rds</a><a class="toc-l3" href="#section-24-4">24.4. Module folders</a><a class="toc-l2" href="#section-25">25. What a project does not automatically contain</a><a class="toc-l2" href="#section-26">26. Save project</a><a class="toc-l3" href="#section-26-1">26.1. Saved content</a><a class="toc-l3" href="#section-26-2">26.2. Figure histories</a><a class="toc-l3" href="#section-26-3">26.3. Empty project</a><a class="toc-l3" href="#section-26-4">26.4. Protection from empty overwrite</a><a class="toc-l3" href="#section-26-5">26.5. Success</a><a class="toc-l2" href="#section-27">27. Available save status</a><a class="toc-l2" href="#section-28">28. Reload from disk</a><a class="toc-l2" href="#section-29">29. Save not found</a><a class="toc-l2" href="#section-30">30. Unreadable save</a><a class="toc-l2" href="#section-31">31. Export data only as .rds</a><a class="toc-l2" href="#section-32">32. Export complete project as .zip</a><a class="toc-l2" href="#section-33">33. Size warning</a><a class="toc-l2" href="#section-34">34. Import a project .zip</a><a class="toc-l2" href="#section-35">35. Create a new project</a><a class="toc-l2" href="#section-36">36. Open another project</a><a class="toc-l2" href="#section-37">37. Multiple BarCodeR browser tabs</a><a class="toc-l2" href="#section-38">38. Rename the current project</a><a class="toc-l2" href="#section-39">39. Project list</a><a class="toc-l2" href="#section-40">40. Duplicate a project</a><a class="toc-l2" href="#section-41">41. Delete a project</a><a class="toc-l2" href="#section-42">42. Differences between exports</a><a class="toc-l2" href="#section-43">43. Projects and OpenMetaBar data</a><a class="toc-l2" href="#section-44">44. Projects and figure histories</a><a class="toc-l2" href="#section-45">45. Physical project location</a><a class="toc-l2" href="#section-46">46. Recommended daily workflow</a><a class="toc-l2" href="#section-47">47. Before a risky operation</a><a class="toc-l2" href="#section-48">48. Troubleshooting</a><a class="toc-l3" href="#section-48-1">48.1. A dataset is missing</a><a class="toc-l3" href="#section-48-2">48.2. A module uses the wrong dataset</a><a class="toc-l3" href="#section-48-3">48.3. Active selection is not preserved</a><a class="toc-l3" href="#section-48-4">48.4. The entered name changed</a><a class="toc-l3" href="#section-48-5">48.5. _2 was added</a><a class="toc-l3" href="#section-48-6">48.6. Modified date did not change</a><a class="toc-l3" href="#section-48-7">48.7. A copy keeps original provenance</a><a class="toc-l3" href="#section-48-8">48.8. A filtered dataset no longer shows as filtered</a><a class="toc-l3" href="#section-48-9">48.9. A deleted dataset returned</a><a class="toc-l3" href="#section-48-10">48.10. Empty project cannot be saved</a><a class="toc-l3" href="#section-48-11">48.11. Reload removed edits</a><a class="toc-l3" href="#section-48-12">48.12. No save exists</a><a class="toc-l3" href="#section-48-13">48.13. Project opens empty with registry error</a><a class="toc-l3" href="#section-48-14">48.14. New project name refused</a><a class="toc-l3" href="#section-48-15">48.15. Folder kept old name after rename</a><a class="toc-l3" href="#section-48-16">48.16. Opening a project reloads the app</a><a class="toc-l3" href="#section-48-17">48.17. Save error while opening another project</a><a class="toc-l3" href="#section-48-18">48.18. Multiple-tab warning</a><a class="toc-l3" href="#section-48-19">48.19. Duplicate lacks latest changes</a><a class="toc-l3" href="#section-48-20">48.20. Current project cannot be deleted</a><a class="toc-l3" href="#section-48-21">48.21. Project deletion fails</a><a class="toc-l3" href="#section-48-22">48.22. ZIP is very large</a><a class="toc-l3" href="#section-48-23">48.23. ZIP exceeds 500 MB</a><a class="toc-l3" href="#section-48-24">48.24. Imported project did not open</a><a class="toc-l3" href="#section-48-25">48.25. Archive is invalid</a><a class="toc-l3" href="#section-48-26">48.26. Imported project has zero datasets</a><a class="toc-l3" href="#section-48-27">48.27. ZIP lacks latest data</a><a class="toc-l3" href="#section-48-28">48.28. Project dataset count looks wrong</a><a class="toc-l3" href="#section-48-29">48.29. Project size is delayed</a><a class="toc-l3" href="#section-48-30">48.30. Projects disappear after redeployment</a><a class="toc-l2" href="#section-49">49. Checklist before saving</a><a class="toc-l2" href="#section-50">50. Checklist before switching projects</a><a class="toc-l2" href="#section-51">51. Checklist before deleting a dataset</a><a class="toc-l2" href="#section-52">52. Checklist before deleting a project</a><a class="toc-l2" href="#section-53">53. Recommended backup strategy</a><a class="toc-l2" href="#section-54">54. Traceability principles</a><a class="toc-l2" href="#section-55">55. Current limitations</a><a class="toc-l2" href="#verified-internal-sources">Verified internal sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Datasets</span><span>Documentation version 1.8.0</span></footer>
+</body>
+</html>

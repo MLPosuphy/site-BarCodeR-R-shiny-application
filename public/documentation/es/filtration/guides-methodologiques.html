@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Filtración — Guías metodológicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="guide" data-module="filtration" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Guías metodológicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+    
+      <a class="module-link active" href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Filtración</a><span>›</span><span>Guías metodológicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">Filtración — Guía metodológica</h1>
+<h2 id="section-1">1. Función general de la pestaña<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>La pestaña <strong>Filtración</strong> permite construir un subconjunto de un objeto <code>phyloseq</code> ya cargado en BarCodeR. Puede eliminar taxones según su anotación taxonómica, ASV poco abundantes o poco prevalentes, muestras según profundidad, riqueza, nombre o metadatos, y secuencias que no cumplan criterios técnicos.</p>
+<p>El resultado se construye primero como un objeto reactivo temporal:</p>
+<pre tabindex="0"><code class="language-r">ps_filtered
+</code></pre>
+<p>Después puede revisarse en el resumen, guardarse con otro nombre, sustituir a su dataset padre, inspeccionarse en Description, compararse con otros datasets y exportarse.</p>
+<h3 id="diferencia-con-data-edition">Diferencia con Data Edition<a aria-label="Permalink" class="heading-anchor" href="#diferencia-con-data-edition">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Data Edition</th>
+<th>Filtración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modifica directamente las tablas del dataset seleccionado</td>
+<td>Construye primero un objeto derivado temporal</td>
+</tr>
+<tr>
+<td>Los cambios son inmediatos en <code>datasets()</code></td>
+<td>El padre permanece intacto durante el ajuste</td>
+</tr>
+<tr>
+<td>Adecuado para corregir celdas y estructura</td>
+<td>Adecuado para retirar muestras o taxones mediante criterios</td>
+</tr>
+<tr>
+<td>Registra ediciones en <code>edit_log</code></td>
+<td>Registra la filtración en <code>filtration_log</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Mientras no se guarde, el resultado no aparece en Datasets, no está disponible para los demás módulos, no se escribe en disco y puede perderse al recargar la sesión.</p>
+<h2 id="section-2">2. Funcionamiento automático y ciclo de vida<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>No existe un botón <strong>Aplicar filtros</strong>. La filtración se recalcula automáticamente al cambiar un parámetro activo: activar un bloque, cambiar un umbral, seleccionar un valor taxonómico, añadir una condición de metadatos o cambiar de dataset.</p>
+<p>En un dataset grande, cada cambio puede leer la OTU table, recalcular abundancia y prevalencia, ejecutar varios <code>prune_taxa()</code> o <code>prune_samples()</code>, analizar secuencias y reconstruir el log y el resumen. Conviene modificar los parámetros progresivamente y esperar a que finalice el cálculo.</p>
+<h3 id="el-padre-permanece-intacto-durante-el-ajuste">El padre permanece intacto durante el ajuste<a aria-label="Permalink" class="heading-anchor" href="#el-padre-permanece-intacto-durante-el-ajuste">#</a></h3>
+<pre tabindex="0"><code class="language-text">dataset padre
+      ↓
+cálculo reactivo
+      ↓
+dataset filtrado temporal
+</code></pre>
+<p>El padre solo se reemplaza al guardar el resultado con el mismo nombre.</p>
+<h3 id="atenci-n-al-nombre-vac-o">Atención al nombre vacío<a aria-label="Permalink" class="heading-anchor" href="#atenci-n-al-nombre-vac-o">#</a></h3>
+<p>El campo de guardado está vacío por defecto. Un valor vacío significa:</p>
+<blockquote>
+<p>Guardar el resultado con el nombre del padre y sustituir al padre.</p>
+</blockquote>
+<p>No se solicita confirmación adicional. Para conservar el dataset bruto, introduzca un nombre diferente, por ejemplo <code>COI_raw</code> y <code>COI_filtered</code>.</p>
+<p>Guardar solo modifica la memoria de BarCodeR. Después debe utilizarse <strong>Datasets → Guardar proyecto</strong> para persistir el resultado.</p>
+<h2 id="section-3">3. Orden fijo de los filtros<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Los filtros se aplican siempre en este orden:</p>
+<pre tabindex="0"><code class="language-text">1. Taxonomía
+2. Abundancia de ASV
+3. Muestras
+4. Secuencias
+</code></pre>
+<p>El orden no depende de cómo se abran o configuren las cajas.</p>
+<h3 id="consecuencias">Consecuencias<a aria-label="Permalink" class="heading-anchor" href="#consecuencias">#</a></h3>
+<p>Cada bloque trabaja sobre el resultado del anterior. Por ejemplo:</p>
+<ol>
+<li>se eliminan cloroplastos;</li>
+<li>se recalculan total y prevalencia de las ASV restantes;</li>
+<li>se recalculan reads y riqueza de las muestras;</li>
+<li>se retiran muestras insuficientes;</li>
+<li>se retiran secuencias que no cumplen criterios técnicos.</li>
+</ol>
+<p>Por tanto, los umbrales de muestras no utilizan necesariamente los valores brutos mostrados en Description.</p>
+<h3 id="un-nico-paso-sin-convergencia">Un único paso, sin convergencia<a aria-label="Permalink" class="heading-anchor" href="#un-nico-paso-sin-convergencia">#</a></h3>
+<p>El pipeline no vuelve al principio después del último bloque. En consecuencia:</p>
+<ul>
+<li>retirar muestras puede reducir la prevalencia de algunas ASV por debajo del umbral sin una segunda pasada;</li>
+<li>filtrar secuencias puede reducir reads o riqueza de muestras sin volver a aplicar los umbrales de muestras;</li>
+<li>pueden quedar taxones con abundancia cero o muestras con cero reads.</li>
+</ul>
+<p>Una segunda pasada puede eliminar más elementos que la primera.</p>
+<h2 id="section-4">4. Selección del dataset y persistencia de parámetros<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>El selector está sincronizado con el dataset activo global. Cambiar el dataset en Filtration actualiza <code>active_ds()</code>, cambia el dataset por defecto en otros módulos y puede marcar el proyecto como no guardado.</p>
+<h3 id="no-todos-los-par-metros-se-reinician">No todos los parámetros se reinician<a aria-label="Permalink" class="heading-anchor" href="#no-todos-los-par-metros-se-reinician">#</a></h3>
+<p>Al cambiar de dataset pueden permanecer activos:</p>
+<ul>
+<li>umbrales de abundancia;</li>
+<li>umbrales de muestras;</li>
+<li>criterios de secuencia;</li>
+<li>palabras clave taxonómicas;</li>
+<li>condiciones avanzadas;</li>
+<li>nombre de guardado.</li>
+</ul>
+<p>Se actualizan las listas dependientes del dataset: rangos y valores taxonómicos, nombres de muestras y variables de metadatos.</p>
+<p>Una condición avanzada puede seguir presente aunque su variable no exista en el nuevo dataset. La filtración puede quedar bloqueada hasta corregirla o eliminarla.</p>
+<p>Revise todos los bloques después de cambiar de dataset y antes de guardar.</p>
+<h2 id="section-5">5. Interpretación del estado de la interfaz<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Cada bloque tiene un estado visual.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gris</td>
+<td>Ningún parámetro activo o modificado</td>
+</tr>
+<tr>
+<td>Naranja</td>
+<td>Hay parámetros modificados, pero el bloque está desactivado</td>
+</tr>
+<tr>
+<td>Verde</td>
+<td>La casilla de activación está marcada</td>
+</tr>
+</tbody>
+</table></div>
+<p>Un borde verde no garantiza que se elimine nada. El bloque ASV puede estar activo con todos los umbrales a cero: aparece verde, pero los criterios son neutros.</p>
+<p>El banner global intenta identificar los bloques realmente configurados, pero un dataset puede recibir un <code>filtration_log</code> sin que se haya eliminado ningún elemento.</p>
+<h3 id="previsualizaciones-gr-ficas">Previsualizaciones gráficas<a aria-label="Permalink" class="heading-anchor" href="#previsualizaciones-gr-ficas">#</a></h3>
+<p>Los histogramas de umbrales se calculan sobre el dataset padre seleccionado, no sobre el objeto filtrado progresivamente. Incluyen total de reads por ASV, prevalencia, abundancia relativa máxima, reads y riqueza por muestra, longitud y GC.</p>
+<p>La línea de umbral permite examinar la distribución inicial, pero no siempre representa los valores usados tras los bloques anteriores. El resumen <strong>antes/después</strong> es la principal previsualización del resultado final.</p>
+<h2 id="section-6">6. Filtración taxonómica<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>La filtración taxonómica requiere una <code>tax_table</code>. Permite excluir valores de un rango, conservar únicamente ciertos valores y excluir anotaciones que contienen palabras clave.</p>
+<h3 id="par-metros-preseleccionados">Parámetros preseleccionados<a aria-label="Permalink" class="heading-anchor" href="#par-metros-preseleccionados">#</a></h3>
+<p>Las palabras clave seleccionadas por defecto son:</p>
+<pre tabindex="0"><code class="language-text">chloroplast
+mitochondria
+</code></pre>
+<p>No se aplican hasta activar el bloque. Sin embargo, marcar <strong>Activar la filtración</strong> puede retirar inmediatamente los taxones que contienen estos términos.</p>
+<p>No son contaminantes universales: según el marcador y el objetivo, pueden ser la señal biológica buscada.</p>
+<h3 id="excluir-y-conservar-por-rango">Excluir y conservar por rango<a aria-label="Permalink" class="heading-anchor" href="#excluir-y-conservar-por-rango">#</a></h3>
+<p>Para el rango seleccionado:</p>
+<ul>
+<li><strong>Excluir</strong> elimina las ASV cuyo valor coincide exactamente con un valor elegido;</li>
+<li><strong>Conservar únicamente</strong> retiene las ASV que coinciden con los valores elegidos.</li>
+</ul>
+<p>El orden interno es:</p>
+<pre tabindex="0"><code class="language-text">1. Exclusión
+2. Conservación
+3. Búsqueda por palabras clave
+</code></pre>
+<p>Criterios contradictorios pueden eliminar todos los taxones.</p>
+<h3 id="b-squeda-por-palabras-clave">Búsqueda por palabras clave<a aria-label="Permalink" class="heading-anchor" href="#b-squeda-por-palabras-clave">#</a></h3>
+<p>Las palabras se buscan en todas las columnas taxonómicas, sin distinguir mayúsculas, como subcadenas y mediante un patrón combinado con <code>|</code>.</p>
+<p>Así, <code>chloroplast</code> puede coincidir con <code>Chloroplast</code>, <code>chloroplastidae</code> o <code>Unclassified chloroplast sequence</code>. La búsqueda no se limita al rango seleccionado.</p>
+<h3 id="taxonom-a-ausente">Taxonomía ausente<a aria-label="Permalink" class="heading-anchor" href="#taxonom-a-ausente">#</a></h3>
+<p>Si el bloque está activo sin taxonomía, el filtro se omite. Los demás bloques pueden seguir produciendo un resultado. Consulte el resumen real y no solo el color verde.</p>
+<h2 id="section-7">7. Filtración de ASV por abundancia<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Hay tres criterios aplicados sucesivamente:</p>
+<pre tabindex="0"><code class="language-text">1. Total de reads
+2. Prevalencia
+3. Abundancia relativa máxima
+</code></pre>
+<p>Se supone que los valores de la OTU table son abundancias interpretables. Pueden ser engañosos con datos CLR, abundancias relativas, transformaciones logarítmicas, valores negativos o matrices normalizadas.</p>
+<h3 id="total-de-reads-por-asv">Total de reads por ASV<a aria-label="Permalink" class="heading-anchor" href="#total-de-reads-por-asv">#</a></h3>
+<p>Para cada ASV:</p>
+<pre tabindex="0"><code class="language-text">Total = suma de abundancias en las muestras presentes en esta etapa
+</code></pre>
+<p>La regla es estricta:</p>
+<pre tabindex="0"><code class="language-text">Total &gt; umbral
+</code></pre>
+<p>Con un umbral de 10, un total de 10 se elimina y un total de 11 se conserva.</p>
+<h3 id="prevalencia">Prevalencia<a aria-label="Permalink" class="heading-anchor" href="#prevalencia">#</a></h3>
+<p>Es el número de muestras con abundancia estrictamente superior a cero. La regla es:</p>
+<pre tabindex="0"><code class="language-text">Prevalencia ≥ umbral
+</code></pre>
+<p>Con umbral 3, una ASV presente exactamente en tres muestras se conserva.</p>
+<p>Un umbral absoluto depende del tamaño del proyecto: tres muestras son el 30 % de un proyecto de diez, pero solo el 3 % de uno de cien.</p>
+<h3 id="abundancia-relativa-m-xima">Abundancia relativa máxima<a aria-label="Permalink" class="heading-anchor" href="#abundancia-relativa-m-xima">#</a></h3>
+<p>Para cada ASV, BarCodeR calcula su abundancia relativa en cada muestra y retiene el máximo:</p>
+<pre tabindex="0"><code class="language-text">Máximo de: abundancia ASV / abundancia total de la muestra × 100
+</code></pre>
+<p>La regla es:</p>
+<pre tabindex="0"><code class="language-text">Abundancia relativa máxima ≥ umbral
+</code></pre>
+<p>Permite conservar una ASV rara globalmente pero importante localmente.</p>
+<p>Se calcula después de los filtros de total y prevalencia. Retirar taxones cambia los denominadores y aumenta mecánicamente la proporción relativa de los taxones restantes.</p>
+<h2 id="section-8">8. Filtración de muestras<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Los criterios se aplican en este orden:</p>
+<pre tabindex="0"><code class="language-text">1. Reads mínimos
+2. Riqueza mínima
+3. Nombres de muestra
+4. Condición simple de metadatos
+5. Condiciones avanzadas
+</code></pre>
+<h3 id="reads-m-nimos">Reads mínimos<a aria-label="Permalink" class="heading-anchor" href="#reads-m-nimos">#</a></h3>
+<p>Se recalculan después de la filtración taxonómica y de abundancia:</p>
+<pre tabindex="0"><code class="language-text">Reads = suma de abundancias de los taxones todavía presentes
+</code></pre>
+<p>La regla es inclusiva:</p>
+<pre tabindex="0"><code class="language-text">Reads ≥ umbral
+</code></pre>
+<h3 id="riqueza-m-nima">Riqueza mínima<a aria-label="Permalink" class="heading-anchor" href="#riqueza-m-nima">#</a></h3>
+<p>La riqueza es el número de taxones con abundancia estrictamente superior a cero. La regla es:</p>
+<pre tabindex="0"><code class="language-text">Riqueza ≥ umbral
+</code></pre>
+<p>Puede diferir de la riqueza del padre mostrada en Description.</p>
+<h3 id="filtraci-n-por-nombre">Filtración por nombre<a aria-label="Permalink" class="heading-anchor" href="#filtraci-n-por-nombre">#</a></h3>
+<p>Los nombres coinciden exactamente con <code>sample_names(ps)</code>. No hay búsqueda parcial ni insensible a mayúsculas.</p>
+<ul>
+<li><strong>Conservar</strong> retiene solo los nombres elegidos;</li>
+<li><strong>Excluir</strong> elimina los nombres elegidos.</li>
+</ul>
+<p>Esta etapa se ejecuta después de reads y riqueza. Una muestra seleccionada para conservar puede haber sido retirada antes.</p>
+<h3 id="condici-n-simple-de-metadatos">Condición simple de metadatos<a aria-label="Permalink" class="heading-anchor" href="#condici-n-simple-de-metadatos">#</a></h3>
+<p>El módulo distingue principalmente columnas numéricas y factores o cadenas. Fechas, columnas lógicas y clases especiales pueden no tratarse correctamente.</p>
+<h4>Variables numéricas</h4>
+<p>Los operadores son <code>≥</code>, <code>&gt;</code>, <code>≤</code>, <code>&lt;</code> y <code>entre</code>. <code>Entre</code> incluye los límites. Si se invierten, BarCodeR usa automáticamente el menor y el mayor.</p>
+<p>Los valores iniciales como mediana o cuartiles son ayudas, no recomendaciones científicas.</p>
+<p>Con <strong>Conservar</strong>, los valores ausentes suelen eliminarse. Con <strong>Excluir</strong>, suelen conservarse porque no cumplen la condición antes de invertirla.</p>
+<h4>Variables categóricas</h4>
+<p>Las comparaciones son exactas tras convertir a texto y son sensibles a mayúsculas, espacios y ortografía.</p>
+<p>Varias modalidades en una condición se combinan con O.</p>
+<p>Los valores ausentes suelen eliminarse con Conservar y mantenerse con Excluir.</p>
+<h2 id="section-9">9. Condiciones avanzadas de metadatos<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Cada condición define una variable, una acción Conservar o Excluir, una comparación o valores y un botón de eliminación.</p>
+<p>Todas las condiciones se combinan mediante <strong>Y</strong>.</p>
+<p>Ejemplo:</p>
+<pre tabindex="0"><code class="language-text">Conservar Campaña = 2026
+Y
+Excluir Sitio = control
+Y
+Conservar Profundidad ≥ 50
+</code></pre>
+<p>No se ofrece O entre variables distintas.</p>
+<p>En una variable categórica, seleccionar varias modalidades en una misma fila constituye un O interno, por ejemplo <code>Sitio = A o B</code>.</p>
+<p>Las variables no reconocidas como numéricas se tratan como texto. Una fecha puede seleccionarse como categoría, pero no como intervalo temporal real.</p>
+<h3 id="condici-n-incompleta">Condición incompleta<a aria-label="Permalink" class="heading-anchor" href="#condici-n-incompleta">#</a></h3>
+<p>Una condición avanzada incompleta puede impedir totalmente la creación del resultado temporal aunque los demás filtros sean válidos. Debe completarse o eliminarse.</p>
+<h2 id="section-10">10. Filtración técnica de secuencias<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Utiliza <code>refseq(ps)</code> y puede aplicar longitud, GC, bases ambiguas y homopolímeros. Se ejecuta al final.</p>
+<h3 id="secuencias-ausentes-o-mal-alineadas">Secuencias ausentes o mal alineadas<a aria-label="Permalink" class="heading-anchor" href="#secuencias-ausentes-o-mal-alineadas">#</a></h3>
+<p>Si falta <code>refseq</code>, el bloque se omite y se añade una línea al log.</p>
+<p>BarCodeR intenta alinear las secuencias con <code>taxa_names(ps)</code>:</p>
+<ul>
+<li>si no tienen nombre pero el número coincide exactamente, se supone el mismo orden;</li>
+<li>si tienen nombre, se emparejan por identificador.</li>
+</ul>
+<p>Si ninguna secuencia se alinea, el bloque se omite.</p>
+<p>Si la cobertura es parcial, se evalúan las ASV con secuencia y se conservan sin prueba las ASV sin secuencia.</p>
+<p>Los gráficos de longitud y GC usan un alineamiento más estricto y pueden faltar aunque el filtro se aplique parcialmente.</p>
+<h3 id="longitud">Longitud<a aria-label="Permalink" class="heading-anchor" href="#longitud">#</a></h3>
+<p>Los límites son inclusivos:</p>
+<pre tabindex="0"><code class="language-text">Longitud mínima ≤ longitud ≤ longitud máxima
+</code></pre>
+<p>Un máximo igual a cero desactiva el límite superior. Si el mínimo supera al máximo, todas las secuencias pueden rechazarse.</p>
+<h3 id="gc">GC<a aria-label="Permalink" class="heading-anchor" href="#gc">#</a></h3>
+<p>El GC del filtro se calcula con A, C, G y T:</p>
+<pre tabindex="0"><code class="language-text">G + C
+────────────── × 100
+A + C + G + T
+</code></pre>
+<p>Las bases ambiguas quedan fuera del denominador. Los límites son inclusivos y los valores neutros son 0 % y 100 %.</p>
+<h3 id="bases-ambiguas">Bases ambiguas<a aria-label="Permalink" class="heading-anchor" href="#bases-ambiguas">#</a></h3>
+<p>Se cuentan:</p>
+<pre tabindex="0"><code class="language-text">N R Y S W K M B D H V
+</code></pre>
+<p>Gaps, puntos y otros símbolos no se cuentan explícitamente.</p>
+<p>En la implementación actual, <strong>Máximo de ambigüedades = 0</strong> desactiva el filtro; no permite exigir estrictamente cero bases ambiguas.</p>
+<h3 id="homopol-meros">Homopolímeros<a aria-label="Permalink" class="heading-anchor" href="#homopol-meros">#</a></h3>
+<p>BarCodeR busca la serie más larga de caracteres idénticos consecutivos. <code>AAAATCG</code> tiene una longitud máxima de 4.</p>
+<p>Pueden contarse todos los caracteres, incluidas bases ambiguas y símbolos repetidos. Se conserva la secuencia si la serie máxima es menor o igual al umbral. Cero también desactiva este criterio.</p>
+<h3 id="consecuencia-del-orden">Consecuencia del orden<a aria-label="Permalink" class="heading-anchor" href="#consecuencia-del-orden">#</a></h3>
+<p>Los umbrales de muestras no se recalculan después de este bloque. Pueden quedar muestras por debajo de reads o riqueza, o con cero reads.</p>
+<h2 id="section-11">11. Protección frente a resultados vacíos y límites de validación<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Antes de eliminar todos los taxones o todas las muestras, BarCodeR detiene el cálculo y muestra un error.</p>
+<p>Esto solo garantiza que quede al menos un taxón y una muestra. No garantiza suficientes réplicas, una profundidad o riqueza final mínima, ausencia de ceros ni adecuación para análisis estadístico.</p>
+<p>Revise el resultado final en Description.</p>
+<h2 id="section-12">12. Log de filtración y procedencia<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>El resultado recibe:</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>Puede contener nombre del padre, fecha, dimensiones antes/después, líneas descriptivas, parámetros estructurados, taxones eliminados y muestras eliminadas.</p>
+<h3 id="par-metros-estructurados">Parámetros estructurados<a aria-label="Permalink" class="heading-anchor" href="#par-metros-estructurados">#</a></h3>
+<p>Se guardan en:</p>
+<pre tabindex="0"><code class="language-r">filtration_log$params
+</code></pre>
+<p>Incluyen bloques activos, rango, valores excluidos o conservados, palabras clave, umbrales, filtros por nombre, condiciones de metadatos y parámetros de secuencia.</p>
+<p>Es la fuente más fiable para reproducir o auditar la filtración.</p>
+<h3 id="idioma-del-log">Idioma del log<a aria-label="Permalink" class="heading-anchor" href="#idioma-del-log">#</a></h3>
+<p>El texto se guarda en el idioma activo durante el cálculo y no se traduce después.</p>
+<p>La columna <strong>Bloques activos</strong> busca actualmente ciertas expresiones francesas en el texto. Puede mostrar <code>—</code> para datasets filtrados en otro idioma. Los parámetros estructurados son más fiables.</p>
+<h3 id="tablas-de-elementos-eliminados">Tablas de elementos eliminados<a aria-label="Permalink" class="heading-anchor" href="#tablas-de-elementos-eliminados">#</a></h3>
+<p><code>removed_taxa</code> y <code>removed_samples</code> usan métricas del padre bruto antes de todos los filtros.</p>
+<p>Una muestra eliminada porque queda con 800 reads tras la filtración taxonómica puede aparecer con 5 000 reads en la tabla.</p>
+<p>Las tablas no siempre proporcionan una causa exacta por elemento; el log describe sobre todo efectos globales.</p>
+<h3 id="filtraciones-sucesivas">Filtraciones sucesivas<a aria-label="Permalink" class="heading-anchor" href="#filtraciones-sucesivas">#</a></h3>
+<p>Una nueva pasada sustituye el <code>filtration_log</code> anterior; no se acumulan logs.</p>
+<p>Conserve las etapas con nombres distintos:</p>
+<pre tabindex="0"><code class="language-text">COI_raw
+COI_tax
+COI_abundance
+COI_final
+</code></pre>
+<h3 id="atributos-conservados-o-potencialmente-perdidos">Atributos conservados o potencialmente perdidos<a aria-label="Permalink" class="heading-anchor" href="#atributos-conservados-o-potencialmente-perdidos">#</a></h3>
+<p>BarCodeR copia explícitamente <code>openmetabar_run</code> y <code>edit_log</code>.</p>
+<p>El pruning puede eliminar otros atributos no estándar, como <code>dataset_meta</code>, notas, etiquetas o atributos personalizados. Revíselo después de filtrar.</p>
+<h2 id="section-13">13. Guardado y riesgo de sobrescritura<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Hay tres casos.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nombre introducido</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Campo vacío o nombre del padre</td>
+<td>Sustitución inmediata del padre</td>
+</tr>
+<tr>
+<td>Nombre nuevo</td>
+<td>Creación de un nuevo dataset</td>
+</tr>
+<tr>
+<td>Nombre de otro dataset</td>
+<td>Confirmación antes de sustituir</td>
+</tr>
+</tbody>
+</table></div>
+<p>El nombre se normaliza con el helper común. A diferencia de Input data, no se añade automáticamente <code>_2</code> en caso de colisión.</p>
+<h3 id="solo-en-memoria">Solo en memoria<a aria-label="Permalink" class="heading-anchor" href="#solo-en-memoria">#</a></h3>
+<p>El botón Guardar modifica <code>datasets()</code>. No guarda el proyecto en disco.</p>
+<p>El resultado guardado se convierte en dataset activo.</p>
+<h3 id="reaplicaci-n-autom-tica">Reaplicación automática<a aria-label="Permalink" class="heading-anchor" href="#reaplicaci-n-autom-tica">#</a></h3>
+<p>Como el selector sigue al dataset activo, el resultado guardado se convierte inmediatamente en el nuevo padre y los filtros activos vuelven a aplicarse:</p>
+<pre tabindex="0"><code class="language-text">padre bruto
+    ↓
+primer resultado guardado
+    ↓
+mismos filtros activos
+    ↓
+nuevo resultado temporal
+</code></pre>
+<p>Un segundo clic puede eliminar más elementos.</p>
+<p>Después de guardar:</p>
+<ol>
+<li>no vuelva a pulsar inmediatamente;</li>
+<li>desactive los filtros o salga de la pestaña;</li>
+<li>revise el resultado en Description;</li>
+<li>guarde el proyecto en Datasets.</li>
+</ol>
+<h2 id="section-14">14. Inspección y exportaciones<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>La sección inferior muestra los datasets del registro, pero no el resultado temporal no guardado.</p>
+<p>La tabla puede incluir nombre, estado filtrado, padre, fecha, dimensiones antes/después, números eliminados y bloques activos.</p>
+<p>Un dataset aparece como filtrado en cuanto existe un <code>filtration_log</code>, aunque no se haya eliminado nada.</p>
+<p>Si sustituye al padre con el mismo nombre, puede mostrarse como su propio padre.</p>
+<p>Si después se modifica en Data Edition, las dimensiones actuales pueden dejar de reflejar solo la filtración.</p>
+<h3 id="panel-de-detalle">Panel de detalle<a aria-label="Permalink" class="heading-anchor" href="#panel-de-detalle">#</a></h3>
+<p>Permite ver log, parámetros, taxones y muestras eliminados, OTU table, taxonomía, metadatos, secuencias e histogramas.</p>
+<p>Particularidades:</p>
+<ul>
+<li>el gráfico llamado Reads representa en realidad el total por taxón;</li>
+<li>el histograma logarítmico usa <code>log10(total + 1)</code>;</li>
+<li>el GC del detalle divide por la longitud total de la cadena y puede diferir del GC del filtro;</li>
+<li>la OTU table se transpone siempre sin normalizar de forma fiable la orientación;</li>
+<li>algunos paneles pueden quedar vacíos o dar error si falta el componente.</li>
+</ul>
+<h3 id="exportaciones-tsv">Exportaciones TSV<a aria-label="Permalink" class="heading-anchor" href="#exportaciones-tsv">#</a></h3>
+<p>Los nombres son genéricos:</p>
+<pre tabindex="0"><code class="language-text">otu_table.tsv
+taxonomy.tsv
+metadata.tsv
+</code></pre>
+<p>No incluyen nombre del dataset ni fecha. Los rownames se exportan como primera columna, a veces sin encabezado explícito.</p>
+<p>La OTU table también se transpone siempre, por lo que la orientación depende del phyloseq original.</p>
+<h3 id="exportaci-n-biom">Exportación BIOM<a aria-label="Permalink" class="heading-anchor" href="#exportaci-n-biom">#</a></h3>
+<p>El BIOM contiene solo la matriz de abundancia. No incluye automáticamente taxonomía, metadatos, secuencias, árbol ni log.</p>
+<p>Se usa directamente la orientación almacenada. Si los taxones están en columnas, el archivo puede quedar invertido.</p>
+<p>Si falta <code>biomformat</code>, BarCodeR genera actualmente un archivo <code>.biom</code> que contiene un mensaje de texto. No es un BIOM válido.</p>
+<h2 id="section-15">15. Interpretación científica y estrategia recomendada<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>BarCodeR no puede elegir automáticamente umbrales adecuados. Dependen del marcador, tecnología, protocolo, número de muestras, profundidad, controles, diversidad esperada, pipeline y objetivo científico.</p>
+<h3 id="taxones-raros">Taxones raros<a aria-label="Permalink" class="heading-anchor" href="#taxones-raros">#</a></h3>
+<p>Una ASV rara puede ser un error, contaminación, artefacto, taxón raro real o evento biológico importante. La rareza por sí sola no justifica eliminarla.</p>
+<h3 id="grupos-experimentales">Grupos experimentales<a aria-label="Permalink" class="heading-anchor" href="#grupos-experimentales">#</a></h3>
+<p>Un umbral global puede desequilibrar los grupos. Tras filtrar, revise muestras por grupo, controles conservados, número de réplicas y profundidad de cada grupo.</p>
+<h3 id="comparaci-n-de-estrategias">Comparación de estrategias<a aria-label="Permalink" class="heading-anchor" href="#comparaci-n-de-estrategias">#</a></h3>
+<p>Compare métodos desde el mismo padre:</p>
+<pre tabindex="0"><code class="language-text">COI_raw → método A
+COI_raw → método B
+</code></pre>
+<p>Evite <code>COI_raw → método A → método B</code>, salvo que la filtración progresiva sea el objetivo explícito.</p>
+<h3 id="flujo-recomendado">Flujo recomendado<a aria-label="Permalink" class="heading-anchor" href="#flujo-recomendado">#</a></h3>
+<ol>
+<li>Guardar el proyecto.</li>
+<li>Conservar el dataset bruto.</li>
+<li>Seleccionar el padre.</li>
+<li>Revisar parámetros heredados.</li>
+<li>Activar un bloque cada vez.</li>
+<li>Examinar dimensiones tras cada bloque.</li>
+<li>Añadir criterios progresivamente.</li>
+<li>Revisar grupos y controles.</li>
+<li>Introducir un nombre nuevo.</li>
+<li>Guardar una sola vez.</li>
+<li>Salir o desactivar filtros.</li>
+<li>Revisar en Description.</li>
+<li>Comprobar ceros, notas, etiquetas y procedencia.</li>
+<li>Guardar el proyecto.</li>
+<li>Exportar el dataset final.</li>
+</ol>
+<h2 id="section-16">16. Resolución de problemas y controles<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="problemas-de-par-metros">Problemas de parámetros<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-par-metros">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa probable</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filtros antiguos se aplican al nuevo dataset</td>
+<td>Los parámetros persisten</td>
+<td>Revisar todos los bloques</td>
+</tr>
+<tr>
+<td>Caja verde sin eliminación</td>
+<td>Criterios neutros</td>
+<td>Revisar umbrales y resumen</td>
+</tr>
+<tr>
+<td>Caja naranja</td>
+<td>Parámetros modificados, bloque desactivado</td>
+<td>Activar o restaurar valores neutros</td>
+</tr>
+<tr>
+<td>Activar taxonomía elimina ASV</td>
+<td>Palabras preseleccionadas</td>
+<td>Revisar <code>chloroplast</code> y <code>mitochondria</code></td>
+</tr>
+<tr>
+<td>No hay resultado</td>
+<td>Condición incompleta o filtro demasiado estricto</td>
+<td>Completar, eliminar o relajar</td>
+</tr>
+<tr>
+<td>Se eliminarían todos los taxones o muestras</td>
+<td>Criterios contradictorios o excesivos</td>
+<td>Reducir umbrales</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="problemas-de-umbrales">Problemas de umbrales<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-umbrales">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Explicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASV exactamente en el umbral total se elimina</td>
+<td>El total usa <code>&gt;</code></td>
+</tr>
+<tr>
+<td>ASV poco abundante supera el umbral relativo</td>
+<td>Es importante en al menos una muestra</td>
+</tr>
+<tr>
+<td>Muestra por encima del umbral gráfico se elimina</td>
+<td>El umbral real se aplica tras retirar taxones</td>
+</tr>
+<tr>
+<td>Valor ausente se elimina con Conservar</td>
+<td>No satisface la condición</td>
+</tr>
+<tr>
+<td>Valor ausente permanece con Excluir</td>
+<td>No coincide antes de invertir</td>
+</tr>
+<tr>
+<td>Condiciones avanzadas muy restrictivas</td>
+<td>Se combinan con Y</td>
+</tr>
+<tr>
+<td>No puede crearse O entre variables</td>
+<td>No está soportado directamente</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="problemas-de-secuencias">Problemas de secuencias<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-secuencias">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa o comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No hay gráfico de longitud o GC</td>
+<td>Falta RefSeq o alineamiento incompleto</td>
+</tr>
+<tr>
+<td>Bloque activo ignorado</td>
+<td>No hay secuencias alineables</td>
+</tr>
+<tr>
+<td>Permanecen ASV sin secuencia</td>
+<td>Cobertura parcial</td>
+</tr>
+<tr>
+<td>Máximo de ambigüedades cero no filtra</td>
+<td>Cero desactiva el criterio</td>
+</tr>
+<tr>
+<td>Máximo de homopolímero cero no filtra</td>
+<td>Cero desactiva el criterio</td>
+</tr>
+<tr>
+<td>Permanecen muestras con cero reads</td>
+<td>No se reaplican umbrales de muestras</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="problemas-de-log-y-procedencia">Problemas de log y procedencia<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-log-y-procedencia">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa probable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabla de eliminados con métricas superiores al umbral</td>
+<td>Métricas del padre bruto</td>
+</tr>
+<tr>
+<td>No hay razón exacta por elemento</td>
+<td>El log registra sobre todo efectos globales</td>
+</tr>
+<tr>
+<td>Desapareció el log anterior</td>
+<td>La nueva pasada sustituyó <code>filtration_log</code></td>
+</tr>
+<tr>
+<td>Desaparecieron notas o etiquetas</td>
+<td>Atributo perdido durante pruning</td>
+</tr>
+<tr>
+<td>Estado Filtrado sin eliminación</td>
+<td>Basta con que exista el log</td>
+</tr>
+<tr>
+<td>Bloques activos mostrados como <code>—</code></td>
+<td>Log textual en otro idioma</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="problemas-de-guardado">Problemas de guardado<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-guardado">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa o acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Se sobrescribió el padre</td>
+<td>Nombre vacío o igual al padre</td>
+</tr>
+<tr>
+<td>No se añadió <code>_2</code></td>
+<td>Filtration sustituye en vez de renombrar</td>
+</tr>
+<tr>
+<td>Resultado perdido al cerrar</td>
+<td>Proyecto no guardado en Datasets</td>
+</tr>
+<tr>
+<td>Resultado cambia tras guardar</td>
+<td>Filtros reaplicados al nuevo activo</td>
+</tr>
+<tr>
+<td>Segundo clic elimina más</td>
+<td>Segunda pasada sobre el primer resultado</td>
+</tr>
+<tr>
+<td>Guardado rechazado</td>
+<td>IDs OTU, metadata o taxonomía incoherentes</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="problemas-de-inspecci-n-o-exportaci-n">Problemas de inspección o exportación<a aria-label="Permalink" class="heading-anchor" href="#problemas-de-inspecci-n-o-exportaci-n">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa probable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>El resultado temporal no aparece</td>
+<td>Aún no se ha guardado</td>
+</tr>
+<tr>
+<td>Histograma Reads basado en ASV</td>
+<td>Calcula total por taxón</td>
+</tr>
+<tr>
+<td>GC diferente entre gráficos</td>
+<td>Denominadores distintos</td>
+</tr>
+<tr>
+<td>OTU table transpuesta</td>
+<td>El panel llama siempre a <code>t()</code></td>
+</tr>
+<tr>
+<td>BIOM invertido</td>
+<td>Orientación no corregida</td>
+</tr>
+<tr>
+<td>Archivo <code>.biom</code> contiene texto</td>
+<td>Falta <code>biomformat</code></td>
+</tr>
+<tr>
+<td>Error en pestaña de detalle</td>
+<td>Falta un componente phyloseq</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="checklist-antes-de-filtrar">Checklist antes de filtrar<a aria-label="Permalink" class="heading-anchor" href="#checklist-antes-de-filtrar">#</a></h3>
+<ul>
+<li>Confirmar dataset y proyecto activos.</li>
+<li>Guardar el proyecto.</li>
+<li>Conservar una versión bruta.</li>
+<li>Confirmar que las abundancias son adecuadas para umbrales.</li>
+<li>Revisar orientación OTU.</li>
+<li>Revisar taxonomía, metadata y RefSeq.</li>
+<li>Definir el objetivo científico de cada filtro.</li>
+<li>Revisar parámetros heredados.</li>
+</ul>
+<h3 id="checklist-antes-de-guardar">Checklist antes de guardar<a aria-label="Permalink" class="heading-anchor" href="#checklist-antes-de-guardar">#</a></h3>
+<ul>
+<li>Leer el resumen completo.</li>
+<li>Revisar ASV y muestras antes/después.</li>
+<li>Revisar pasos ignorados.</li>
+<li>Revisar condiciones avanzadas.</li>
+<li>Introducir un nuevo nombre para conservar el padre.</li>
+<li>Pulsar Guardar una sola vez.</li>
+<li>No confundir guardado en registro con persistencia del proyecto.</li>
+</ul>
+<h3 id="checklist-despu-s-de-guardar">Checklist después de guardar<a aria-label="Permalink" class="heading-anchor" href="#checklist-despu-s-de-guardar">#</a></h3>
+<ul>
+<li>Abrir Description.</li>
+<li>Revisar dimensiones.</li>
+<li>Revisar reads y riqueza.</li>
+<li>Revisar taxones y muestras a cero.</li>
+<li>Revisar tamaños de grupos.</li>
+<li>Revisar taxonomía, RefSeq y árbol.</li>
+<li>Revisar notas, etiquetas y log.</li>
+<li>Guardar en Datasets.</li>
+<li>Exportar el dataset final.</li>
+</ul>
+<h2 id="section-17">17. Principales límites del módulo<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Debe tenerse en cuenta:</p>
+<ul>
+<li>el recálculo automático puede ser costoso;</li>
+<li>los histogramas se basan en el padre bruto;</li>
+<li>el orden de filtros es fijo;</li>
+<li>no hay reevaluación iterativa de umbrales;</li>
+<li>no hay limpieza final de ceros;</li>
+<li>los parámetros persisten al cambiar de dataset;</li>
+<li>hay palabras taxonómicas preseleccionadas;</li>
+<li>fechas y clases especiales tienen soporte limitado;</li>
+<li>las condiciones avanzadas solo usan Y entre filas;</li>
+<li>el control actual no permite imponer cero ambigüedades;</li>
+<li>pueden conservarse ASV sin secuencia;</li>
+<li>un nuevo log sustituye al anterior;</li>
+<li>no siempre se guarda una causa exacta por elemento;</li>
+<li>las métricas de eliminados provienen del padre bruto;</li>
+<li>pueden perderse atributos personalizados;</li>
+<li>un nombre vacío sobrescribe al padre sin confirmación;</li>
+<li>los filtros se reaplican después de guardar;</li>
+<li>Guardar no escribe el proyecto en disco;</li>
+<li>la detección de bloques activos es imperfecta entre idiomas;</li>
+<li>las orientaciones de exportación pueden ser ambiguas;</li>
+<li>el BIOM es mínimo y depende de <code>biomformat</code>.</li>
+</ul>
+<h2 id="fuentes-internas-verificadas">Fuentes internas verificadas<a aria-label="Permalink" class="heading-anchor" href="#fuentes-internas-verificadas">#</a></h2>
+<p>Esta documentación se basa en el comportamiento actual de:</p>
+<ol>
+<li><code>modules/filtration/mod_filtration_ui.R</code>: interfaz principal y cuatro bloques.</li>
+<li><code>modules/filtration/mod_filtration_server.R</code>: parsing numérico, orden, cálculos, protecciones, log y resultado temporal.</li>
+<li><code>modules/filtration/io/mod_filtration_io_ui.R</code>: guardado, inspección y exportaciones.</li>
+<li><code>modules/filtration/io/mod_filtration_io_server.R</code>: sobrescritura, inserción en registro, tablas, detalles y BIOM.</li>
+<li><code>modules/_shared/_provenance.R</code>: conservación de atributos durante pruning.</li>
+<li><code>modules/_shared/_dataset_naming.R</code>: normalización de nombres.</li>
+<li><code>modules/_shared/_ps_guard.R</code>: control de integridad antes de insertar.</li>
+<li><code>app.R</code>: ensamblaje, registro global y dataset activo.</li>
+<li><code>.claude/architecture/23-filtration.md</code>: arquitectura prevista contrastada con el comportamiento real.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Función general de la pestaña</a><a class="toc-l3" href="#diferencia-con-data-edition">Diferencia con Data Edition</a><a class="toc-l2" href="#section-2">2. Funcionamiento automático y ciclo de vida</a><a class="toc-l3" href="#el-padre-permanece-intacto-durante-el-ajuste">El padre permanece intacto durante el ajuste</a><a class="toc-l3" href="#atenci-n-al-nombre-vac-o">Atención al nombre vacío</a><a class="toc-l2" href="#section-3">3. Orden fijo de los filtros</a><a class="toc-l3" href="#consecuencias">Consecuencias</a><a class="toc-l3" href="#un-nico-paso-sin-convergencia">Un único paso, sin convergencia</a><a class="toc-l2" href="#section-4">4. Selección del dataset y persistencia de parámetros</a><a class="toc-l3" href="#no-todos-los-par-metros-se-reinician">No todos los parámetros se reinician</a><a class="toc-l2" href="#section-5">5. Interpretación del estado de la interfaz</a><a class="toc-l3" href="#previsualizaciones-gr-ficas">Previsualizaciones gráficas</a><a class="toc-l2" href="#section-6">6. Filtración taxonómica</a><a class="toc-l3" href="#par-metros-preseleccionados">Parámetros preseleccionados</a><a class="toc-l3" href="#excluir-y-conservar-por-rango">Excluir y conservar por rango</a><a class="toc-l3" href="#b-squeda-por-palabras-clave">Búsqueda por palabras clave</a><a class="toc-l3" href="#taxonom-a-ausente">Taxonomía ausente</a><a class="toc-l2" href="#section-7">7. Filtración de ASV por abundancia</a><a class="toc-l3" href="#total-de-reads-por-asv">Total de reads por ASV</a><a class="toc-l3" href="#prevalencia">Prevalencia</a><a class="toc-l3" href="#abundancia-relativa-m-xima">Abundancia relativa máxima</a><a class="toc-l2" href="#section-8">8. Filtración de muestras</a><a class="toc-l3" href="#reads-m-nimos">Reads mínimos</a><a class="toc-l3" href="#riqueza-m-nima">Riqueza mínima</a><a class="toc-l3" href="#filtraci-n-por-nombre">Filtración por nombre</a><a class="toc-l3" href="#condici-n-simple-de-metadatos">Condición simple de metadatos</a><a class="toc-l2" href="#section-9">9. Condiciones avanzadas de metadatos</a><a class="toc-l3" href="#condici-n-incompleta">Condición incompleta</a><a class="toc-l2" href="#section-10">10. Filtración técnica de secuencias</a><a class="toc-l3" href="#secuencias-ausentes-o-mal-alineadas">Secuencias ausentes o mal alineadas</a><a class="toc-l3" href="#longitud">Longitud</a><a class="toc-l3" href="#gc">GC</a><a class="toc-l3" href="#bases-ambiguas">Bases ambiguas</a><a class="toc-l3" href="#homopol-meros">Homopolímeros</a><a class="toc-l3" href="#consecuencia-del-orden">Consecuencia del orden</a><a class="toc-l2" href="#section-11">11. Protección frente a resultados vacíos y límites de validación</a><a class="toc-l2" href="#section-12">12. Log de filtración y procedencia</a><a class="toc-l3" href="#par-metros-estructurados">Parámetros estructurados</a><a class="toc-l3" href="#idioma-del-log">Idioma del log</a><a class="toc-l3" href="#tablas-de-elementos-eliminados">Tablas de elementos eliminados</a><a class="toc-l3" href="#filtraciones-sucesivas">Filtraciones sucesivas</a><a class="toc-l3" href="#atributos-conservados-o-potencialmente-perdidos">Atributos conservados o potencialmente perdidos</a><a class="toc-l2" href="#section-13">13. Guardado y riesgo de sobrescritura</a><a class="toc-l3" href="#solo-en-memoria">Solo en memoria</a><a class="toc-l3" href="#reaplicaci-n-autom-tica">Reaplicación automática</a><a class="toc-l2" href="#section-14">14. Inspección y exportaciones</a><a class="toc-l3" href="#panel-de-detalle">Panel de detalle</a><a class="toc-l3" href="#exportaciones-tsv">Exportaciones TSV</a><a class="toc-l3" href="#exportaci-n-biom">Exportación BIOM</a><a class="toc-l2" href="#section-15">15. Interpretación científica y estrategia recomendada</a><a class="toc-l3" href="#taxones-raros">Taxones raros</a><a class="toc-l3" href="#grupos-experimentales">Grupos experimentales</a><a class="toc-l3" href="#comparaci-n-de-estrategias">Comparación de estrategias</a><a class="toc-l3" href="#flujo-recomendado">Flujo recomendado</a><a class="toc-l2" href="#section-16">16. Resolución de problemas y controles</a><a class="toc-l3" href="#problemas-de-par-metros">Problemas de parámetros</a><a class="toc-l3" href="#problemas-de-umbrales">Problemas de umbrales</a><a class="toc-l3" href="#problemas-de-secuencias">Problemas de secuencias</a><a class="toc-l3" href="#problemas-de-log-y-procedencia">Problemas de log y procedencia</a><a class="toc-l3" href="#problemas-de-guardado">Problemas de guardado</a><a class="toc-l3" href="#problemas-de-inspecci-n-o-exportaci-n">Problemas de inspección o exportación</a><a class="toc-l3" href="#checklist-antes-de-filtrar">Checklist antes de filtrar</a><a class="toc-l3" href="#checklist-antes-de-guardar">Checklist antes de guardar</a><a class="toc-l3" href="#checklist-despu-s-de-guardar">Checklist después de guardar</a><a class="toc-l2" href="#section-17">17. Principales límites del módulo</a><a class="toc-l2" href="#fuentes-internas-verificadas">Fuentes internas verificadas</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Filtración</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

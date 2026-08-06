@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Datasets — Guides méthodologiques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="guide" data-module="datasets" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Guides méthodologiques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link active" href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Datasets</a><span>›</span><span>Guides méthodologiques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Datasets — Guides méthodologiques</h1>
+<h2 id="section-1">1. Présentation générale<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>L’onglet <strong>Datasets</strong> centralise la gestion des données déjà présentes dans BarCodeR.</p>
+<p>Il permet de gérer deux niveaux distincts.</p>
+<h3 id="niveau-1-les-datasets">Niveau 1 — Les datasets<a aria-label="Permalink" class="heading-anchor" href="#niveau-1-les-datasets">#</a></h3>
+<p>Un dataset correspond à un objet <code>phyloseq</code> chargé dans la session actuelle.</p>
+<p>L’onglet permet notamment de :</p>
+<ul>
+<li>choisir le dataset actif ;</li>
+<li>consulter la liste des datasets en mémoire ;</li>
+<li>renommer un dataset ;</li>
+<li>ajouter une note ou des tags ;</li>
+<li>dupliquer un dataset ;</li>
+<li>modifier son ordre dans la liste ;</li>
+<li>exporter un dataset ;</li>
+<li>supprimer un dataset de la mémoire.</li>
+</ul>
+<h3 id="niveau-2-les-projets">Niveau 2 — Les projets<a aria-label="Permalink" class="heading-anchor" href="#niveau-2-les-projets">#</a></h3>
+<p>Un projet BarCodeR correspond à un espace de travail enregistré sur le disque.</p>
+<p>Il peut contenir :</p>
+<ul>
+<li>les datasets ;</li>
+<li>le dataset actif ;</li>
+<li>l’état de navigation de l’application ;</li>
+<li>certains paramètres d’interface ;</li>
+<li>les historiques de figures ;</li>
+<li>les fichiers produits et sauvegardés par les différents modules.</li>
+</ul>
+<p>L’onglet permet notamment de :</p>
+<ul>
+<li>sauvegarder le projet courant ;</li>
+<li>recharger sa dernière sauvegarde ;</li>
+<li>créer plusieurs projets ;</li>
+<li>passer d’un projet à un autre ;</li>
+<li>renommer un projet ;</li>
+<li>dupliquer un projet complet ;</li>
+<li>exporter un projet ;</li>
+<li>importer un projet ;</li>
+<li>supprimer un projet.</li>
+</ul>
+<h2 id="section-2">2. Définitions indispensables<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. Dataset<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>Dans BarCodeR, un dataset est un élément nommé de la liste réactive :</p>
+<pre tabindex="0"><code class="language-r">datasets()
+</code></pre>
+<p>Chaque élément est normalement un objet <code>phyloseq</code>.</p>
+<pre tabindex="0"><code class="language-r">datasets &lt;- list(
+  COI = ps_coi,
+  `16S` = ps_16s,
+  COI_filtered = ps_coi_filtered
+)
+</code></pre>
+<p>Le nom du dataset sert à l’identifier dans toute l’application.</p>
+<h3 id="section-2-2">2.2. Dataset actif<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>Le dataset actif est enregistré séparément dans :</p>
+<pre tabindex="0"><code class="language-r">active_ds()
+</code></pre>
+<p>Il désigne le dataset utilisé par défaut dans les autres onglets.</p>
+<pre tabindex="0"><code class="language-r">active_ds &lt;- "COI"
+</code></pre>
+<p>Le dataset actif n’est pas une copie supplémentaire. Il s’agit uniquement du nom de l’objet actuellement sélectionné comme référence globale.</p>
+<h3 id="section-2-3">2.3. Registre des datasets<a aria-label="Permalink" class="heading-anchor" href="#section-2-3">#</a></h3>
+<p>Le registre correspond à l’ensemble des datasets présents en mémoire, avec leur nom, leur ordre, leurs attributs et le dataset actif.</p>
+<p>Il ne correspond pas automatiquement à ce qui est enregistré sur le disque.</p>
+<h3 id="section-2-4">2.4. Session<a aria-label="Permalink" class="heading-anchor" href="#section-2-4">#</a></h3>
+<p>La session correspond à l’état actuel de l’application dans le navigateur.</p>
+<p>Une modification effectuée dans le registre agit d’abord sur cette session. Tant que le projet n’a pas été sauvegardé, fermer l’application ou recharger une ancienne sauvegarde peut faire perdre ces modifications.</p>
+<h3 id="section-2-5">2.5. Projet<a aria-label="Permalink" class="heading-anchor" href="#section-2-5">#</a></h3>
+<p>Un projet est un dossier persistant situé dans l’arborescence de BarCodeR :</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;identifiant-interne-du-projet&gt;/
+</code></pre>
+<p>Ce dossier peut contenir :</p>
+<pre tabindex="0"><code class="language-text">registry.rds
+manifest.rds
+ui_state.rds
+barplot/
+alpha_div/
+venn_diag/
+heat_tree/
+tax_quality/
+phylo_tree/
+Ordination/
+DAA/
+Analyse/
+multiview/
+...
+</code></pre>
+<p>Le contenu exact dépend des modules utilisés.</p>
+<h2 id="section-3">3. Différence entre dataset et projet<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th style="text-align:right">Dataset</th>
+<th style="text-align:right">Projet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contient un objet phyloseq</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui, éventuellement plusieurs</td>
+</tr>
+<tr>
+<td>Possède un nom dans l’application</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui</td>
+</tr>
+<tr>
+<td>Peut être actif</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui, comme projet courant</td>
+</tr>
+<tr>
+<td>Peut être dupliqué</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui</td>
+</tr>
+<tr>
+<td>Peut être exporté seul</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Non applicable</td>
+</tr>
+<tr>
+<td>Contient les historiques de figures</td>
+<td style="text-align:right">Non</td>
+<td style="text-align:right">Oui</td>
+</tr>
+<tr>
+<td>Contient plusieurs datasets</td>
+<td style="text-align:right">Non</td>
+<td style="text-align:right">Oui</td>
+</tr>
+<tr>
+<td>Est stocké automatiquement sur le disque</td>
+<td style="text-align:right">Non</td>
+<td style="text-align:right">Partiellement selon les modules</td>
+</tr>
+<tr>
+<td>Nécessite une sauvegarde du registre</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui</td>
+</tr>
+<tr>
+<td>Peut être supprimé uniquement de la mémoire</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Non</td>
+</tr>
+<tr>
+<td>Peut être supprimé physiquement du disque</td>
+<td style="text-align:right">Non depuis l’action dataset</td>
+<td style="text-align:right">Oui</td>
+</tr>
+</tbody>
+</table></div>
+<p>Une suppression de dataset et une suppression de projet sont donc deux opérations complètement différentes.</p>
+<h2 id="section-4">4. Organisation de l’onglet<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>L’onglet contient trois grandes zones :</p>
+<ol>
+<li><strong>Dataset actif global</strong> ;</li>
+<li><strong>Registre des datasets</strong> ;</li>
+<li><strong>Projets</strong>.</li>
+</ol>
+<p>Chaque zone répond à un besoin différent.</p>
+<h2 id="section-5">5. Dataset actif global<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Rôle du sélecteur<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>La première carte contient le sélecteur <strong>Dataset actif</strong>.</p>
+<p>Le dataset sélectionné devient le dataset de travail par défaut de l’ensemble de l’application. Il est notamment utilisé par défaut dans Description, Data Edition, Filtration, Exploration et Analyse.</p>
+<h3 id="section-5-2">5.2. Synchronisation avec l’application<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>Le sélecteur est synchronisé avec le dataset actif global, le sélecteur disponible dans la barre latérale de contrôle et les autres composants liés à <code>active_ds()</code>.</p>
+<p>Changer le dataset actif dans Datasets le change également dans les autres sélecteurs globaux.</p>
+<h3 id="section-5-3">5.3. Sélections locales dans les modules<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Certains modules permettent de choisir localement un autre dataset.</p>
+<p>Dans ce cas :</p>
+<ul>
+<li>le dataset actif reste la référence globale ;</li>
+<li>le module peut temporairement utiliser un autre dataset ;</li>
+<li>selon le module, la sélection locale peut ou non modifier <code>active_ds()</code>.</li>
+</ul>
+<p>Il faut donc toujours vérifier le dataset indiqué dans le module avant de lancer une opération.</p>
+<h3 id="section-5-4">5.4. Effets du changement de dataset actif<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>Changer le dataset actif :</p>
+<ul>
+<li>ne modifie aucune abondance ;</li>
+<li>ne filtre aucune donnée ;</li>
+<li>ne copie aucun objet ;</li>
+<li>ne supprime aucun objet ;</li>
+<li>modifie uniquement la référence globale utilisée par l’application.</li>
+</ul>
+<p>Cette modification marque néanmoins la session comme ayant des changements non sauvegardés, car le choix du dataset actif est enregistré dans le projet.</p>
+<h2 id="section-6">6. Aucun dataset en mémoire<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Lorsque la session ne contient aucun dataset, le registre affiche qu’aucun dataset n’est en mémoire.</p>
+<p>Les principales méthodes pour obtenir un dataset sont alors :</p>
+<ul>
+<li>importer un objet avec Input data ;</li>
+<li>récupérer un objet produit par OpenMetaBar ;</li>
+<li>ouvrir un projet déjà enregistré ;</li>
+<li>importer une archive de projet ;</li>
+<li>restaurer une sauvegarde existante.</li>
+</ul>
+<h2 id="section-7">7. Le registre des datasets<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Le registre présente une ligne par dataset présent dans la mémoire de la session.</p>
+<p>Il ne scanne pas directement les fichiers du disque. Les informations sont calculées à partir des objets actuellement présents dans :</p>
+<pre tabindex="0"><code class="language-r">datasets()
+</code></pre>
+<h2 id="section-8">8. Colonnes du registre<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. État actif<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>Une étoile indique le dataset actif. Un cercle indique un dataset présent mais non actif.</p>
+<p>L’étoile ne fournit aucune information sur la qualité du dataset, son niveau de filtration, sa date ou son statut de sauvegarde.</p>
+<h3 id="section-8-2">8.2. Nom<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>Le nom est la clé utilisée dans la liste <code>datasets()</code>.</p>
+<p>Ce nom est utilisé dans les sélecteurs, les rapports, les exports, les historiques, la provenance des datasets filtrés, certaines légendes et certains noms de fichiers.</p>
+<h3 id="section-8-3">8.3. ASV<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>La colonne <strong>ASV</strong> affiche en réalité la valeur retournée par :</p>
+<pre tabindex="0"><code class="language-r">phyloseq::ntaxa()
+</code></pre>
+<p>Il s’agit donc du nombre de taxons de l’objet.</p>
+<p>Selon la méthode ayant produit le dataset, ces unités peuvent correspondre à des ASV, des OTU, des ZOTU ou d’autres unités taxonomiques ou séquentielles. L’intitulé « ASV » ne garantit pas la nature exacte des unités.</p>
+<h3 id="section-8-4">8.4. Échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>La colonne affiche la valeur retournée par :</p>
+<pre tabindex="0"><code class="language-r">phyloseq::nsamples()
+</code></pre>
+<p>Elle représente le nombre d’échantillons présents dans l’objet au moment de l’affichage.</p>
+<h3 id="section-8-5">8.5. Provenance<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>Trois provenances principales sont affichées.</p>
+<h4>Chargé</h4>
+<p>Le dataset ne possède pas d’attribut indiquant qu’il provient d’OpenMetaBar ou d’une filtration.</p>
+<p>Il peut notamment avoir été chargé avec Input data, construit dans R, importé depuis un projet ou dupliqué à partir d’un dataset chargé.</p>
+<h4>OpenMetaBar</h4>
+<p>Le dataset possède l’attribut :</p>
+<pre tabindex="0"><code class="language-r">openmetabar_run
+</code></pre>
+<p>Il a donc été intégré depuis un run OpenMetaBar, ou est une copie d’un objet conservant cet attribut.</p>
+<h4>Filtré</h4>
+<p>Le dataset possède un <code>filtration_log</code> contenant un parent nommé.</p>
+<p>La provenance <strong>Filtré</strong> est prioritaire sur <strong>OpenMetaBar</strong>. Un objet produit par OpenMetaBar puis filtré est donc affiché comme Filtré.</p>
+<h3 id="section-8-6">8.6. Parent<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>La colonne Parent affiche le nom du dataset d’origine enregistré dans :</p>
+<pre tabindex="0"><code class="language-r">filtration_log$parent_dataset
+</code></pre>
+<p>Il s’agit d’un nom enregistré dans un attribut, pas d’un lien dynamique entre deux objets.</p>
+<p>Si le parent est renommé depuis Datasets, BarCodeR met à jour ce nom dans les descendants reconnus. Si le parent est supprimé, le nom du parent est effacé dans les descendants concernés.</p>
+<h3 id="section-8-7">8.7. Note et tags<a aria-label="Permalink" class="heading-anchor" href="#section-8-7">#</a></h3>
+<p>La note et les tags sont lus dans l’attribut :</p>
+<pre tabindex="0"><code class="language-r">dataset_meta
+</code></pre>
+<p>Structure attendue :</p>
+<pre tabindex="0"><code class="language-r">list(
+  note = "...",
+  tags = c("tag1", "tag2")
+)
+</code></pre>
+<p>Les notes et les tags font partie de l’objet <code>phyloseq</code> en mémoire. Ils sont donc inclus lors de l’export du dataset, de la sauvegarde du projet, de la duplication du dataset et de l’export du projet.</p>
+<h3 id="section-8-8">8.8. Modifié<a aria-label="Permalink" class="heading-anchor" href="#section-8-8">#</a></h3>
+<p>La date affichée est recherchée dans cet ordre :</p>
+<ol>
+<li>dernière entrée de <code>edit_log</code> ;</li>
+<li>date de <code>filtration_log</code>.</li>
+</ol>
+<p>Elle ne représente pas nécessairement la dernière modification effectuée dans Datasets.</p>
+<p>Les actions suivantes ne mettent pas directement à jour cette date : changement du nom, modification de la note, modification des tags, changement d’ordre et changement de dataset actif.</p>
+<p>Une date ancienne ou absente ne signifie donc pas nécessairement que le dataset n’a jamais été manipulé.</p>
+<h3 id="section-8-9">8.9. Actions<a aria-label="Permalink" class="heading-anchor" href="#section-8-9">#</a></h3>
+<p>Chaque ligne contient les actions suivantes :</p>
+<ul>
+<li>définir comme actif ;</li>
+<li>modifier ;</li>
+<li>dupliquer ;</li>
+<li>exporter ;</li>
+<li>monter ;</li>
+<li>descendre ;</li>
+<li>supprimer.</li>
+</ul>
+<h2 id="section-9">9. Rafraîchir le registre<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Le bouton <strong>Rafraîchir</strong> force le recalcul visuel du registre.</p>
+<p>Il peut actualiser les nombres d’échantillons et de taxons, les attributs, les notes, les tags, la provenance et les dates affichées.</p>
+<p>Il ne réalise pas une lecture de <code>registry.rds</code>, un scan des projets, un rechargement depuis le disque ou une restauration des données.</p>
+<p>Pour recharger la sauvegarde du projet courant, utiliser <strong>Recharger depuis le disque</strong>.</p>
+<h2 id="section-10">10. Définir un dataset comme actif<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Cliquer sur l’étoile de la ligne définit immédiatement ce dataset comme actif.</p>
+<p>Cette action :</p>
+<ul>
+<li>met à jour <code>active_ds()</code> ;</li>
+<li>synchronise le sélecteur global ;</li>
+<li>modifie la référence utilisée dans les autres onglets ;</li>
+<li>marque le projet comme modifié.</li>
+</ul>
+<p>Elle ne sauvegarde pas automatiquement le choix sur le disque. Pour conserver ce choix au prochain démarrage, sauvegarder le projet.</p>
+<h2 id="section-11">11. Modifier un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Le bouton de modification ouvre une fenêtre contenant le nom du dataset, une note libre et des tags.</p>
+<h2 id="section-12">12. Renommer un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Nettoyage du nom<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Le nom est traité par la fonction commune :</p>
+<pre tabindex="0"><code class="language-r">bcr_clean_label()
+</code></pre>
+<p>Elle supprime les espaces externes, remplace certains caractères non autorisés par <code>_</code>, supprime les <code>_</code> situés aux extrémités et utilise <code>dataset</code> si le résultat est vide.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nom saisi</th>
+<th>Nom obtenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>COI brut</code></td>
+<td><code>COI_brut</code></td>
+</tr>
+<tr>
+<td><code>COI / brut</code></td>
+<td><code>COI_brut</code></td>
+</tr>
+<tr>
+<td><code> 16S </code></td>
+<td><code>16S</code></td>
+</tr>
+<tr>
+<td><code>***</code></td>
+<td><code>dataset</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-12-2">12.2. Caractères non ASCII<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Le nettoyage repose sur la classe locale <code>[:alnum:]</code>. Il ne garantit donc pas un nom entièrement ASCII.</p>
+<p>Selon la configuration de R, des caractères accentués, chinois ou hindi peuvent être conservés.</p>
+<p>Pour maximiser la portabilité entre systèmes, il est préférable d’utiliser des lettres ASCII, des chiffres, <code>_</code> et <code>-</code>.</p>
+<h3 id="section-12-3">12.3. Collision de noms<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Si le nom existe déjà, un suffixe est ajouté.</p>
+<pre tabindex="0"><code class="language-text">COI
+COI_2
+COI_3
+</code></pre>
+<p>Le dataset existant n’est pas écrasé.</p>
+<h3 id="section-12-4">12.4. Mise à jour du dataset actif<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Si le dataset renommé était actif, son nouveau nom devient automatiquement la valeur de <code>active_ds()</code>.</p>
+<h3 id="section-12-5">12.5. Mise à jour des descendants filtrés<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Si d’autres datasets déclarent le dataset renommé comme parent dans leur <code>filtration_log</code>, BarCodeR remplace l’ancien nom du parent par le nouveau.</p>
+<pre tabindex="0"><code class="language-text">Avant :
+COI
+└── COI_filtered, parent = COI
+
+Après renommage de COI en COI_raw :
+COI_raw
+└── COI_filtered, parent = COI_raw
+</code></pre>
+<h3 id="section-12-6">12.6. Ce qui n’est pas renommé<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>Renommer un dataset dans le registre ne renomme pas automatiquement les fichiers précédemment exportés, le fichier RDS d’origine, les anciennes figures, les textes déjà intégrés dans d’anciens rapports, le nom du projet ou le slug interne du projet.</p>
+<h2 id="section-13">13. Ajouter une note<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>La note est un texte libre associé au dataset.</p>
+<p>Elle peut servir à enregistrer le traitement réalisé, une particularité du dataset, un contrôle à effectuer, la version d’une base, un statut de validation ou une restriction d’utilisation.</p>
+<p>La note est débarrassée de ses espaces externes. Elle est stockée dans l’objet et non dans une base externe.</p>
+<p>Modifier la note ne modifie pas directement la colonne <strong>Modifié</strong> du registre.</p>
+<h2 id="section-14">14. Ajouter des tags<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Les tags sont saisis sous forme de texte séparé par des virgules.</p>
+<pre tabindex="0"><code class="language-text">COI, PacBio, filtré, publication
+</code></pre>
+<p>Après traitement, ils deviennent :</p>
+<pre tabindex="0"><code class="language-r">c("COI", "PacBio", "filtré", "publication")
+</code></pre>
+<p>Les espaces externes sont supprimés. Les valeurs vides sont ignorées.</p>
+<h3 id="section-14-1">14.1. Limites des tags<a aria-label="Permalink" class="heading-anchor" href="#section-14-1">#</a></h3>
+<p>Dans l’implémentation actuelle :</p>
+<ul>
+<li>les doublons ne sont pas supprimés automatiquement ;</li>
+<li>la casse est conservée ;</li>
+<li>une virgule ne peut pas faire partie d’un tag ;</li>
+<li>aucun vocabulaire contrôlé n’est imposé.</li>
+</ul>
+<p>Ainsi, <code>COI</code>, <code>coi</code> et <code>Coi</code> restent différents. Il est conseillé de définir une convention homogène.</p>
+<h2 id="section-15">15. Attribut <code>dataset_meta</code><a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Lors de l’enregistrement de la modification, BarCodeR remplace l’attribut <code>dataset_meta</code> par une liste contenant uniquement :</p>
+<pre tabindex="0"><code class="language-r">list(
+  note = note,
+  tags = tags
+)
+</code></pre>
+<p>Si un objet externe utilisait déjà <code>dataset_meta</code> pour stocker d’autres informations personnalisées, ces champs supplémentaires peuvent être remplacés.</p>
+<p>Les informations métier importantes ne devraient donc pas être stockées dans cet attribut sans tenir compte de ce comportement.</p>
+<h2 id="section-16">16. Dupliquer un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Le bouton <strong>Dupliquer</strong> crée une nouvelle entrée dans <code>datasets()</code>.</p>
+<h3 id="section-16-1">16.1. Nom proposé<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>Le nom initial proposé est :</p>
+<pre tabindex="0"><code class="language-text">&lt;nom&gt;_copie
+</code></pre>
+<p>En cas de collision, un suffixe est ajouté.</p>
+<h3 id="section-16-2">16.2. Contenu de la copie<a aria-label="Permalink" class="heading-anchor" href="#section-16-2">#</a></h3>
+<p>La copie reprend l’objet entier au moment de la duplication : OTU table, metadata, taxonomie, séquences, arbre, logs, provenance, note, tags et autres attributs.</p>
+<h3 id="section-16-3">16.3. Dataset actif<a aria-label="Permalink" class="heading-anchor" href="#section-16-3">#</a></h3>
+<p>La copie devient automatiquement le dataset actif.</p>
+<h3 id="section-16-4">16.4. Indépendance ultérieure<a aria-label="Permalink" class="heading-anchor" href="#section-16-4">#</a></h3>
+<p>La copie commence avec le même contenu que la source. Les modifications ultérieures appliquées à l’un des objets dans BarCodeR sont ensuite enregistrées dans l’entrée sélectionnée du registre.</p>
+<h3 id="section-16-5">16.5. Provenance de la copie<a aria-label="Permalink" class="heading-anchor" href="#section-16-5">#</a></h3>
+<p>La duplication ne crée pas une nouvelle provenance spécifique « Copie ».</p>
+<p>La copie conserve les attributs de la source : la copie d’un dataset OpenMetaBar reste affichée comme OpenMetaBar, la copie d’un dataset filtré conserve son parent et la copie d’un dataset chargé reste affichée comme Chargé.</p>
+<p>La source de la duplication n’est pas enregistrée séparément comme parent.</p>
+<h2 id="section-17">17. Modifier l’ordre des datasets<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Les flèches vers le haut et vers le bas modifient l’ordre des éléments dans la liste <code>datasets()</code>.</p>
+<p>La première ligne ne peut pas être montée. La dernière ligne ne peut pas être descendue.</p>
+<h3 id="section-17-1">17.1. Effets de l’ordre<a aria-label="Permalink" class="heading-anchor" href="#section-17-1">#</a></h3>
+<p>L’ordre peut influencer l’affichage du registre, l’ordre des sélecteurs, l’ordre de certains traitements multi-datasets, le dataset choisi par défaut lorsqu’aucun actif valide n’est disponible et le premier dataset sélectionné après certaines suppressions ou restaurations.</p>
+<h3 id="section-17-2">17.2. Persistance<a aria-label="Permalink" class="heading-anchor" href="#section-17-2">#</a></h3>
+<p>Le nouvel ordre reste uniquement en mémoire tant que le projet n’est pas sauvegardé.</p>
+<h2 id="section-18">18. Exporter un dataset individuel<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Le bouton d’export d’une ligne enregistre directement l’objet <code>phyloseq</code> correspondant.</p>
+<p>Le fichier produit suit une structure proche de :</p>
+<pre tabindex="0"><code class="language-text">dataset_&lt;nom&gt;_&lt;date-heure&gt;.rds
+</code></pre>
+<h3 id="section-18-1">18.1. Contenu<a aria-label="Permalink" class="heading-anchor" href="#section-18-1">#</a></h3>
+<p>L’export contient l’objet actuel en mémoire, avec ses tables, séquences, arbre, attributs, notes, tags, logs et provenance.</p>
+<h3 id="section-18-2">18.2. Éléments non contenus<a aria-label="Permalink" class="heading-anchor" href="#section-18-2">#</a></h3>
+<p>L’export individuel ne contient pas les autres datasets, le nom du projet, le dataset actif global, les figures du projet, les historiques des modules, les FASTQ d’origine, les fichiers du cluster OpenMetaBar ou la base taxonomique originale.</p>
+<h3 id="section-18-3">18.3. Réimportation<a aria-label="Permalink" class="heading-anchor" href="#section-18-3">#</a></h3>
+<p>Le fichier peut être réimporté avec <strong>Input data</strong>.</p>
+<h2 id="section-19">19. Supprimer un dataset de la session<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>Le bouton de suppression retire le dataset de la liste en mémoire. La fenêtre rappelle qu’aucun fichier disque n’est modifié.</p>
+<h3 id="section-19-1">19.1. Effets immédiats<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>Après confirmation :</p>
+<ul>
+<li>le dataset disparaît de <code>datasets()</code> ;</li>
+<li>il disparaît des sélecteurs ;</li>
+<li>il ne peut plus être utilisé par les modules dans la session ;</li>
+<li>le projet est marqué comme modifié.</li>
+</ul>
+<h3 id="section-19-2">19.2. Dataset actif supprimé<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>Si le dataset supprimé était actif, le premier dataset restant devient actif, ou <code>active_ds()</code> devient vide si aucun dataset ne reste.</p>
+<h3 id="section-19-3">19.3. Parent d’un dataset filtré<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>Si le dataset supprimé est déclaré comme parent par des datasets filtrés, leur champ <code>parent_dataset</code> est vidé.</p>
+<p>La détection de la provenance <strong>Filtré</strong> exige actuellement un parent non vide. Après la suppression du parent, un descendant peut donc ne plus être affiché comme Filtré : il peut redevenir OpenMetaBar s’il possède aussi cet attribut, sinon apparaître comme Chargé.</p>
+<h3 id="section-19-4">19.4. Suppression en mémoire uniquement<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>La sauvegarde précédente du projet n’est pas immédiatement modifiée.</p>
+<p>Tant que le projet n’est pas sauvegardé, recharger depuis le disque peut faire réapparaître le dataset, fermer sans enregistrer peut annuler la suppression et ouvrir un autre projet peut déclencher une tentative de sauvegarde.</p>
+<h3 id="section-19-5">19.5. Rendre la suppression persistante<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>Pour enregistrer la suppression dans le projet courant :</p>
+<ol>
+<li>supprimer le dataset ;</li>
+<li>vérifier le registre ;</li>
+<li>cliquer sur <strong>Sauvegarder le projet</strong>.</li>
+</ol>
+<h3 id="section-19-6">19.6. Supprimer le dernier dataset<a aria-label="Permalink" class="heading-anchor" href="#section-19-6">#</a></h3>
+<p>Après suppression du dernier dataset, la mémoire devient vide.</p>
+<p>Cependant, la fonction de sauvegarde rapide refuse actuellement de sauvegarder un projet sans aucun dataset. Une ancienne sauvegarde non vide peut donc rester présente sur le disque.</p>
+<p>Pour obtenir un espace de travail réellement vide et persistant, il est généralement plus clair de créer un nouveau projet.</p>
+<h2 id="section-20">20. État « modifications non enregistrées »<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>BarCodeR maintient un indicateur global de modification du projet.</p>
+<p>Cet indicateur devient actif lorsque la liste <code>datasets()</code> change ou lorsque le dataset actif change.</p>
+<p>Exemples : import d’un dataset, création d’un dataset filtré, duplication, renommage, modification de note ou tags, changement d’ordre, suppression et changement du dataset actif.</p>
+<h3 id="section-20-1">20.1. Portée réelle de l’indicateur<a aria-label="Permalink" class="heading-anchor" href="#section-20-1">#</a></h3>
+<p>L’indicateur suit principalement le registre des datasets et le dataset actif.</p>
+<p>Il ne constitue pas nécessairement un suivi exhaustif de tout ce qui existe dans le projet. Certaines figures sont enregistrées directement dans leur historique, certains paramètres d’interface ne déclenchent pas forcément l’état modifié et une modification saisie dans une fenêtre mais non confirmée n’est pas enregistrée.</p>
+<p>L’indication « projet enregistré » signifie surtout que le registre en mémoire correspond à la dernière sauvegarde connue.</p>
+<h2 id="section-21">21. Section Projets<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>La section Projets gère les espaces de travail persistants.</p>
+<p>Elle comprend le nom du projet courant, la sauvegarde, la création d’un projet, la restauration, les exports, l’import et la liste des projets disponibles.</p>
+<h2 id="section-22">22. Projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Le projet courant est le projet dans lequel les opérations persistantes sont enregistrées.</p>
+<p>BarCodeR conserve son identifiant dans :</p>
+<pre tabindex="0"><code class="language-text">save/projects/.current
+</code></pre>
+<p>Au prochain démarrage, l’application tente de rouvrir ce projet.</p>
+<p>Si le projet pointé n’existe plus, BarCodeR revient au projet par défaut :</p>
+<pre tabindex="0"><code class="language-text">sans-titre
+</code></pre>
+<h2 id="section-23">23. Nom visible et identifiant interne du projet<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Un projet possède un nom visible, un identifiant interne ou slug, et un dossier sur le disque.</p>
+<pre tabindex="0"><code class="language-text">Nom visible : Étude sol 2024
+Slug : etude-sol-2024
+Dossier : save/projects/etude-sol-2024/
+</code></pre>
+<h3 id="section-23-1">23.1. Construction du slug<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>Le slug est en minuscules, limité à des caractères ASCII, sécurisé pour un chemin, limité à 80 caractères et rendu unique.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nom du projet</th>
+<th>Slug possible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Étude sol 2024</code></td>
+<td><code>etude-sol-2024</code></td>
+</tr>
+<tr>
+<td><code>Projet COI</code></td>
+<td><code>projet-coi</code></td>
+</tr>
+<tr>
+<td>nom uniquement chinois</td>
+<td><code>projet-&lt;empreinte&gt;</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-23-2">23.2. Renommage ultérieur<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>Renommer un projet modifie uniquement son nom visible.</p>
+<p>Le slug et le dossier restent inchangés. Cela évite de casser les chemins déjà utilisés par les modules.</p>
+<h2 id="section-24">24. Structure d’un projet sur le disque<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Un projet est stocké sous :</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;slug&gt;/
+</code></pre>
+<h3 id="section-24-1">24.1. <code>registry.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Contient :</p>
+<pre tabindex="0"><code class="language-r">list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = ...,
+  datasets = ...,
+  active_ds = ...
+)
+</code></pre>
+<p>Il représente la dernière sauvegarde explicite du registre.</p>
+<h3 id="section-24-2">24.2. <code>manifest.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Contient notamment le nom visible, la date de création, la date de modification et le nombre de datasets enregistré.</p>
+<p>Il permet d’afficher rapidement la liste des projets sans relire systématiquement tous les objets phyloseq.</p>
+<h3 id="section-24-3">24.3. <code>ui_state.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Peut contenir l’onglet principal, certains sous-onglets et certains paramètres d’interface.</p>
+<p>La restauration de ces éléments dépend des réglages de l’application et des modules.</p>
+<h3 id="section-24-4">24.4. Dossiers des modules<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>Les modules peuvent enregistrer leurs historiques dans des sous-dossiers, par exemple :</p>
+<pre tabindex="0"><code class="language-text">barplot/
+alpha_div/
+venn_diag/
+heat_tree/
+tax_quality/
+phylo_tree/
+Ordination/
+DAA/
+Analyse/
+multiview/
+</code></pre>
+<p>Les fichiers peuvent inclure des images, des objets R, des paramètres, des métadonnées de figure et des exports intermédiaires.</p>
+<h2 id="section-25">25. Ce qu’un projet ne contient pas automatiquement<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Un projet BarCodeR ne constitue pas une copie automatique de tous les fichiers ayant servi à l’analyse.</p>
+<p>Il ne contient pas nécessairement les FASTQ originaux, les fichiers BAM, les fichiers FASTA de référence, la base taxonomique, les fichiers de design OpenMetaBar, les résultats distants du cluster, les scripts externes, les fichiers importés avant leur conversion en phyloseq ou les bases de données utilisées par les outils.</p>
+<p>Ces éléments doivent être archivés séparément.</p>
+<p>Un phyloseq peut conserver certaines informations dans ses attributs, mais cela ne remplace pas l’archivage des fichiers sources.</p>
+<h2 id="section-26">26. Sauvegarder le projet<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Le bouton <strong>Sauvegarder le projet</strong> enregistre l’état courant du registre dans le projet ouvert.</p>
+<h3 id="section-26-1">26.1. Éléments sauvegardés<a aria-label="Permalink" class="heading-anchor" href="#section-26-1">#</a></h3>
+<p>L’opération enregistre principalement :</p>
+<ul>
+<li>la liste des datasets ;</li>
+<li>leur ordre ;</li>
+<li>leurs objets complets ;</li>
+<li>leurs attributs ;</li>
+<li>le dataset actif ;</li>
+<li>le nombre de datasets dans le manifeste ;</li>
+<li>l’état de navigation disponible ;</li>
+<li>certains paramètres d’interface.</li>
+</ul>
+<h3 id="section-26-2">26.2. Historiques de figures<a aria-label="Permalink" class="heading-anchor" href="#section-26-2">#</a></h3>
+<p>Les historiques de figures sont généralement enregistrés directement par les modules dans le dossier du projet.</p>
+<p>Le bouton de sauvegarde ne recalcule pas ces figures. Il permet surtout de synchroniser le registre des datasets avec le disque.</p>
+<h3 id="section-26-3">26.3. Projet vide<a aria-label="Permalink" class="heading-anchor" href="#section-26-3">#</a></h3>
+<p>Le bouton refuse la sauvegarde si aucun dataset n’est présent.</p>
+<h3 id="section-26-4">26.4. Protection contre l’écrasement par une mémoire vide<a aria-label="Permalink" class="heading-anchor" href="#section-26-4">#</a></h3>
+<p>Une protection supplémentaire empêche d’écraser une sauvegarde non vide par une mémoire vide.</p>
+<p>Cette situation peut se produire si <code>registry.rds</code> est devenu illisible, si l’application s’est ouverte sans pouvoir charger les données, ou si une opération essaie ensuite de sauvegarder automatiquement.</p>
+<p>Dans ce cas, BarCodeR refuse l’écriture afin de préserver le fichier existant.</p>
+<h3 id="section-26-5">26.5. Succès<a aria-label="Permalink" class="heading-anchor" href="#section-26-5">#</a></h3>
+<p>Après une sauvegarde réussie :</p>
+<ul>
+<li>le registre sur le disque correspond à la mémoire ;</li>
+<li>l’état « modifications non enregistrées » est retiré ;</li>
+<li>la date du projet est actualisée ;</li>
+<li>le nombre de datasets du manifeste est mis à jour.</li>
+</ul>
+<h2 id="section-27">27. Sauvegarde disponible<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Sous les boutons, BarCodeR indique si une sauvegarde rapide existe et affiche sa dernière date d’écriture.</p>
+<p>Cette date correspond à la date de modification du fichier <code>registry.rds</code>.</p>
+<p>Elle ne représente pas nécessairement la dernière figure produite, la dernière analyse exécutée, la dernière modification d’un fichier d’historique ou la dernière action effectuée dans l’application.</p>
+<h2 id="section-28">28. Recharger depuis le disque<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Le bouton <strong>Recharger depuis le disque</strong> relit le fichier <code>registry.rds</code> du projet courant.</p>
+<h3 id="section-28-1">28.1. Conséquence<a aria-label="Permalink" class="heading-anchor" href="#section-28-1">#</a></h3>
+<p>La restauration remplace tous les datasets actuellement en mémoire par ceux de la sauvegarde.</p>
+<p>Elle ne réalise pas une fusion.</p>
+<h3 id="section-28-2">28.2. Données perdues<a aria-label="Permalink" class="heading-anchor" href="#section-28-2">#</a></h3>
+<p>Les modifications non sauvegardées peuvent être perdues : nouveaux datasets, renommages, suppressions, duplications, modifications des tables, filtrations non sauvegardées, notes et tags, ordre des datasets et changement de dataset actif.</p>
+<h3 id="section-28-3">28.3. Dataset actif restauré<a aria-label="Permalink" class="heading-anchor" href="#section-28-3">#</a></h3>
+<p>Le dataset actif enregistré dans <code>registry.rds</code> est restauré.</p>
+<p>S’il n’existe plus dans la liste sauvegardée, le premier dataset devient actif.</p>
+<h3 id="section-28-4">28.4. État sauvegardé<a aria-label="Permalink" class="heading-anchor" href="#section-28-4">#</a></h3>
+<p>Après restauration, la mémoire est considérée comme identique à la sauvegarde. Le voyant de modifications non enregistrées est donc réinitialisé.</p>
+<h3 id="section-28-5">28.5. Ce que la restauration ne fait pas<a aria-label="Permalink" class="heading-anchor" href="#section-28-5">#</a></h3>
+<p>Cette action ne recharge pas entièrement la page, ne change pas de projet, ne fusionne pas les datasets, ne réimporte pas une archive, ne restaure pas nécessairement immédiatement tous les paramètres d’interface et ne supprime pas les historiques déjà présents sur le disque.</p>
+<h2 id="section-29">29. Sauvegarde introuvable<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>Si aucun <code>registry.rds</code> n’existe pour le projet courant, BarCodeR indique qu’aucune sauvegarde rapide n’a été trouvée.</p>
+<p>Cela peut correspondre à un nouveau projet, un projet contenant uniquement des figures, un projet jamais sauvegardé, un fichier supprimé manuellement ou une importation partielle.</p>
+<h2 id="section-30">30. Sauvegarde illisible<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Si <code>registry.rds</code> existe mais ne peut pas être lu, BarCodeR peut ouvrir le projet avec une mémoire vide et afficher un avertissement persistant.</p>
+<p>Cette situation peut être causée par un fichier corrompu, une écriture interrompue, un problème de disque, une incompatibilité R, une classe indisponible ou une copie incomplète.</p>
+<h3 id="section-30-1">30.1. Protection appliquée<a aria-label="Permalink" class="heading-anchor" href="#section-30-1">#</a></h3>
+<p>BarCodeR évite alors d’écraser silencieusement le fichier illisible avec une liste vide. La sauvegarde d’une mémoire vide est refusée.</p>
+<h3 id="section-30-2">30.2. Conduite à tenir<a aria-label="Permalink" class="heading-anchor" href="#section-30-2">#</a></h3>
+<ul>
+<li>ne pas supprimer immédiatement <code>registry.rds</code> ;</li>
+<li>faire une copie du dossier du projet ;</li>
+<li>essayer de lire le fichier dans R ;</li>
+<li>vérifier les sauvegardes externes ;</li>
+<li>importer une archive antérieure ;</li>
+<li>charger un dataset valide avant de décider d’écraser la sauvegarde.</li>
+</ul>
+<h2 id="section-31">31. Exporter les données seules en <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Le bouton <strong>Exporter les données seules, sans les figures (.rds)</strong> produit un fichier contenant la liste actuelle des datasets en mémoire, le dataset actif, la date d’export et la version du format.</p>
+<pre tabindex="0"><code class="language-r">list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = Sys.time(),
+  datasets = datasets(),
+  active_ds = active_ds()
+)
+</code></pre>
+<h3 id="section-31-1">31.1. Différence avec la sauvegarde rapide<a aria-label="Permalink" class="heading-anchor" href="#section-31-1">#</a></h3>
+<p>L’export <code>.rds</code> est téléchargé sur le poste de l’utilisateur.</p>
+<p>La sauvegarde rapide est écrite dans le dossier interne du projet sur la machine exécutant BarCodeR.</p>
+<h3 id="section-31-2">31.2. Contenu exclu<a aria-label="Permalink" class="heading-anchor" href="#section-31-2">#</a></h3>
+<p>L’export <code>.rds</code> ne contient pas les figures, les historiques, les fichiers propres aux modules, le manifeste, le nom visible du projet, l’état de navigation, les paramètres d’interface ou les fichiers sources externes.</p>
+<h3 id="section-31-3">31.3. Réimportation<a aria-label="Permalink" class="heading-anchor" href="#section-31-3">#</a></h3>
+<p>Ce fichier peut être chargé depuis <strong>Input data</strong>. Il ajoute ou remplace alors les datasets dans le projet courant.</p>
+<h2 id="section-32">32. Exporter le projet complet en <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>Le bouton <strong>Exporter le projet (.zip)</strong> archive l’ensemble du dossier du projet courant.</p>
+<h3 id="section-32-1">32.1. Contenu potentiel<a aria-label="Permalink" class="heading-anchor" href="#section-32-1">#</a></h3>
+<p>L’archive peut contenir <code>registry.rds</code>, <code>manifest.rds</code>, <code>ui_state.rds</code>, les historiques des figures, les exports internes des modules et les fichiers présents dans les sous-dossiers du projet.</p>
+<h3 id="section-32-2">32.2. Sauvegarde avant export<a aria-label="Permalink" class="heading-anchor" href="#section-32-2">#</a></h3>
+<p>Avant de créer l’archive, BarCodeR tente de sauvegarder le registre actuellement en mémoire.</p>
+<p>L’objectif est que l’archive contienne les dernières modifications.</p>
+<h3 id="section-32-3">32.3. Échec de la sauvegarde préalable<a aria-label="Permalink" class="heading-anchor" href="#section-32-3">#</a></h3>
+<p>Si cette sauvegarde échoue ou est refusée, une erreur est signalée, mais l’export peut néanmoins continuer.</p>
+<p>L’archive peut alors contenir la dernière version valide déjà présente dans <code>registry.rds</code>, et non l’état actuel de la mémoire.</p>
+<p>Il faut donc lire les notifications avant de considérer l’archive comme à jour.</p>
+<h3 id="section-32-4">32.4. Projet vide<a aria-label="Permalink" class="heading-anchor" href="#section-32-4">#</a></h3>
+<p>L’export échoue si le dossier du projet n’existe pas ou ne contient aucun élément à archiver.</p>
+<h3 id="section-32-5">32.5. Nom du fichier<a aria-label="Permalink" class="heading-anchor" href="#section-32-5">#</a></h3>
+<p>Le fichier suit une structure proche de :</p>
+<pre tabindex="0"><code class="language-text">projet_&lt;nom-normalisé&gt;_&lt;date-heure&gt;.zip
+</code></pre>
+<h2 id="section-33">33. Avertissement de taille<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>BarCodeR affiche un avertissement lorsque le projet dépasse :</p>
+<pre tabindex="0"><code class="language-text">200 Mo
+</code></pre>
+<p>Cette taille inclut les figures et l’ensemble des fichiers du projet.</p>
+<p>Le message indique que l’export peut être long, lourd à télécharger et difficile à partager.</p>
+<h3 id="section-33-1">33.1. Taille calculée<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>La taille correspond à la somme des fichiers présents dans le dossier du projet.</p>
+<p>Elle peut inclure de nombreuses images, des objets R volumineux, des exports multiples et des historiques anciens.</p>
+<h3 id="section-33-2">33.2. Actualisation<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>Le calcul de taille est temporairement mis en cache pour éviter de reparcourir continuellement tous les fichiers.</p>
+<p>Une modification récente peut donc mettre quelques secondes à apparaître.</p>
+<h3 id="section-33-3">33.3. Limite d’import<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>La limite globale de téléversement de BarCodeR est actuellement de :</p>
+<pre tabindex="0"><code class="language-text">500 Mo
+</code></pre>
+<p>Une archive supérieure à 500 Mo peut être exportée, mais ne pourra normalement pas être réimportée par le sélecteur de fichiers sans modifier cette limite.</p>
+<p>Pour les projets très volumineux : nettoyer les historiques inutiles, conserver une archive directement sur le serveur, copier manuellement le dossier du projet ou augmenter la limite dans un environnement contrôlé.</p>
+<h2 id="section-34">34. Importer un projet <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>Le champ <strong>Importer un projet (.zip)</strong> permet de charger une archive de projet complète.</p>
+<h3 id="section-34-1">34.1. Import dans un nouveau projet<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>L’archive n’est jamais fusionnée avec le projet courant.</p>
+<p>Elle est extraite dans un nouveau dossier de projet. Le projet courant reste ouvert.</p>
+<p>Après l’import, il faut sélectionner le nouveau projet dans la liste puis cliquer sur <strong>Ouvrir</strong>.</p>
+<h3 id="section-34-2">34.2. Détection du projet<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>BarCodeR recherche notamment <code>registry.rds</code>, <code>manifest.rds</code> et des dossiers d’historique connus.</p>
+<p>L’archive peut contenir les fichiers directement à sa racine ou dans un dossier parent unique.</p>
+<h3 id="section-34-3">34.3. Nom du projet importé<a aria-label="Permalink" class="heading-anchor" href="#section-34-3">#</a></h3>
+<p>Le nom est lu dans <code>manifest.rds</code> lorsqu’il est disponible. Sinon, le nom utilisé est <strong>Projet importé</strong>.</p>
+<h3 id="section-34-4">34.4. Collision de noms<a aria-label="Permalink" class="heading-anchor" href="#section-34-4">#</a></h3>
+<p>Si un projet porte déjà le même nom, un suffixe est ajouté.</p>
+<h3 id="section-34-5">34.5. Projet sans registre<a aria-label="Permalink" class="heading-anchor" href="#section-34-5">#</a></h3>
+<p>Une archive contenant uniquement des dossiers d’historique reconnus peut être acceptée comme projet, même sans <code>registry.rds</code>.</p>
+<p>Elle peut donc apparaître dans la liste avec zéro dataset.</p>
+<h3 id="section-34-6">34.6. Archive invalide<a aria-label="Permalink" class="heading-anchor" href="#section-34-6">#</a></h3>
+<p>L’import est refusé si le ZIP est illisible, si aucun contenu n’est extrait, si aucun marqueur de projet n’est trouvé, si la copie vers le dossier final échoue, si les permissions sont insuffisantes ou si le disque est plein.</p>
+<h2 id="section-35">35. Créer un nouveau projet<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Le bouton <strong>Nouveau projet</strong> ouvre une fenêtre demandant un nom.</p>
+<h3 id="section-35-1">35.1. Fonctionnement<a aria-label="Permalink" class="heading-anchor" href="#section-35-1">#</a></h3>
+<p>Après confirmation :</p>
+<ol>
+<li>un dossier de projet vide est créé ;</li>
+<li>le projet courant fait l’objet d’une tentative de sauvegarde ;</li>
+<li>le nouveau projet est défini comme projet courant ;</li>
+<li>la page est entièrement rechargée ;</li>
+<li>l’application revient dans l’onglet Datasets.</li>
+</ol>
+<h3 id="section-35-2">35.2. Nom obligatoire<a aria-label="Permalink" class="heading-anchor" href="#section-35-2">#</a></h3>
+<p>Un nom vide est refusé.</p>
+<h3 id="section-35-3">35.3. Nom déjà utilisé<a aria-label="Permalink" class="heading-anchor" href="#section-35-3">#</a></h3>
+<p>Deux projets ne peuvent pas avoir le même nom visible, sans distinction de casse ni d’espaces externes.</p>
+<h3 id="section-35-4">35.4. Projet initialement vide<a aria-label="Permalink" class="heading-anchor" href="#section-35-4">#</a></h3>
+<p>Le nouveau projet contient d’abord son dossier et son manifeste. Il ne possède pas encore nécessairement de <code>registry.rds</code>.</p>
+<h3 id="section-35-5">35.5. Vérification avant création<a aria-label="Permalink" class="heading-anchor" href="#section-35-5">#</a></h3>
+<p>Avant de changer de projet :</p>
+<ul>
+<li>sauvegarder explicitement le projet courant ;</li>
+<li>vérifier l’absence d’erreur ;</li>
+<li>exporter les données importantes ;</li>
+<li>fermer les autres onglets BarCodeR ouverts.</li>
+</ul>
+<h2 id="section-36">36. Ouvrir un autre projet<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>Cliquer sur <strong>Ouvrir</strong> déclenche un changement complet de projet.</p>
+<h3 id="section-36-1">36.1. Étapes<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<p>BarCodeR :</p>
+<ol>
+<li>tente de sauvegarder le projet courant ;</li>
+<li>écrit le nouvel identifiant dans <code>.current</code> ;</li>
+<li>mémorise que l’ouverture provient du gestionnaire de projets ;</li>
+<li>recharge entièrement la session ;</li>
+<li>initialise les modules sous le nouveau projet ;</li>
+<li>recharge le registre du nouveau projet ;</li>
+<li>revient sur l’onglet Datasets.</li>
+</ol>
+<h3 id="section-36-2">36.2. Pourquoi la page est rechargée<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>De nombreux modules enregistrent leurs historiques dans un dossier calculé lors de leur initialisation.</p>
+<p>Le rechargement complet garantit que les figures vont dans le bon projet, que les historiques lus sont ceux du bon projet, que les chemins des modules sont recalculés et que les ressources statiques sont reliées au bon dossier.</p>
+<h3 id="section-36-3">36.3. Échec de sauvegarde du projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-36-3">#</a></h3>
+<p>Dans l’implémentation actuelle, l’ouverture du nouveau projet peut continuer même si la sauvegarde du projet courant a signalé une erreur.</p>
+<p>Une notification rouge ne doit donc pas être ignorée.</p>
+<p>Si la sauvegarde échoue, ne pas supposer que les modifications en mémoire sont conservées : réouvrir le projet précédent, vérifier son registre et restaurer un export si nécessaire.</p>
+<h2 id="section-37">37. Plusieurs onglets BarCodeR ouverts<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Le projet courant est partagé au niveau du processus R.</p>
+<p>Si plusieurs onglets ou sessions utilisent la même instance, changer de projet dans l’un peut perturber les chemins utilisés par les autres.</p>
+<p>BarCodeR détecte les autres sessions connues et affiche un avertissement.</p>
+<h3 id="section-37-1">37.1. Risque<a aria-label="Permalink" class="heading-anchor" href="#section-37-1">#</a></h3>
+<p>Les autres onglets peuvent continuer à afficher l’ancien projet, conserver des chemins initialisés pour l’ancien projet, enregistrer des figures dans un projet inattendu ou mélanger des états provenant de projets différents.</p>
+<h3 id="section-37-2">37.2. Recommandation<a aria-label="Permalink" class="heading-anchor" href="#section-37-2">#</a></h3>
+<p>Avant de changer de projet :</p>
+<ol>
+<li>sauvegarder ;</li>
+<li>fermer les autres onglets BarCodeR ;</li>
+<li>vérifier qu’aucun calcul n’est en cours ;</li>
+<li>ouvrir le projet cible depuis une seule session.</li>
+</ol>
+<p>Le bouton <strong>Changer quand même</strong> doit rester exceptionnel.</p>
+<h2 id="section-38">38. Renommer le projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Le bouton <strong>Renommer</strong> change le nom visible du projet.</p>
+<h3 id="section-38-1">38.1. Ce qui change<a aria-label="Permalink" class="heading-anchor" href="#section-38-1">#</a></h3>
+<ul>
+<li>le nom affiché dans Datasets ;</li>
+<li>le nom du manifeste ;</li>
+<li>le nom utilisé pour les futurs exports.</li>
+</ul>
+<h3 id="section-38-2">38.2. Ce qui ne change pas<a aria-label="Permalink" class="heading-anchor" href="#section-38-2">#</a></h3>
+<ul>
+<li>le slug ;</li>
+<li>le chemin du dossier ;</li>
+<li>les chemins d’historique ;</li>
+<li>le contenu du projet ;</li>
+<li>les datasets ;</li>
+<li>le dataset actif.</li>
+</ul>
+<pre tabindex="0"><code class="language-text">Avant :
+Nom = Étude initiale
+Dossier = save/projects/etude-initiale/
+
+Après :
+Nom = Étude finale
+Dossier = save/projects/etude-initiale/
+</code></pre>
+<h3 id="section-38-3">38.3. Collision<a aria-label="Permalink" class="heading-anchor" href="#section-38-3">#</a></h3>
+<p>Un nom déjà utilisé par un autre projet est refusé.</p>
+<h2 id="section-39">39. Liste des projets<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>La section <strong>Vos projets</strong> affiche les projets enregistrés sur le disque.</p>
+<p>Pour chaque projet, elle indique le nom visible, s’il est ouvert, le nombre de datasets sauvegardés, sa taille totale et sa date de modification.</p>
+<h3 id="section-39-1">39.1. Ordre de la liste<a aria-label="Permalink" class="heading-anchor" href="#section-39-1">#</a></h3>
+<p>Les projets sont triés de la date de modification la plus récente à la plus ancienne.</p>
+<h3 id="section-39-2">39.2. Nombre de datasets<a aria-label="Permalink" class="heading-anchor" href="#section-39-2">#</a></h3>
+<p>Le nombre provient en priorité du manifeste. Pour les anciens projets dont le manifeste ne contient pas ce champ, BarCodeR lit <code>registry.rds</code>.</p>
+<p>Le nombre représente les datasets sauvegardés sur le disque, pas forcément l’état non sauvegardé de la mémoire.</p>
+<h3 id="section-39-3">39.3. Date de modification<a aria-label="Permalink" class="heading-anchor" href="#section-39-3">#</a></h3>
+<p>La date provient du manifeste du projet.</p>
+<p>Elle est notamment actualisée lors d’une sauvegarde, d’un renommage, d’une création, d’une duplication et d’un import.</p>
+<p>Elle ne correspond pas nécessairement à la dernière modification d’un fichier de figure.</p>
+<h2 id="section-40">40. Dupliquer un projet<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Le bouton <strong>Dupliquer</strong> copie l’intégralité du dossier d’un projet.</p>
+<h3 id="section-40-1">40.1. Contenu copié<a aria-label="Permalink" class="heading-anchor" href="#section-40-1">#</a></h3>
+<p>La copie peut inclure le registre, le manifeste, l’état d’interface, les datasets, les figures, les historiques et les autres fichiers présents.</p>
+<h3 id="section-40-2">40.2. Nom<a aria-label="Permalink" class="heading-anchor" href="#section-40-2">#</a></h3>
+<p>Le nom proposé est <code>&lt;nom du projet&gt; (copie)</code>. En cas de collision, un suffixe supplémentaire est utilisé.</p>
+<h3 id="section-40-3">40.3. Date de création<a aria-label="Permalink" class="heading-anchor" href="#section-40-3">#</a></h3>
+<p>Le projet dupliqué reçoit sa propre date de création.</p>
+<h3 id="section-40-4">40.4. Duplication du projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-40-4">#</a></h3>
+<p>Si le projet à dupliquer est ouvert, BarCodeR tente d’abord de le sauvegarder.</p>
+<p>Cependant, le résultat de cette sauvegarde n’est pas bloquant dans le flux actuel de duplication.</p>
+<p>Pour garantir que la copie inclut les toutes dernières modifications :</p>
+<ol>
+<li>cliquer d’abord sur <strong>Sauvegarder le projet</strong> ;</li>
+<li>vérifier le message de succès ;</li>
+<li>seulement ensuite cliquer sur <strong>Dupliquer</strong>.</li>
+</ol>
+<h3 id="section-40-5">40.5. Projet non courant<a aria-label="Permalink" class="heading-anchor" href="#section-40-5">#</a></h3>
+<p>La duplication d’un projet fermé copie son état enregistré sur le disque. Elle ne peut pas inclure des modifications qui existeraient uniquement dans une autre session non sauvegardée.</p>
+<h2 id="section-41">41. Supprimer un projet<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Seuls les projets non ouverts peuvent être supprimés.</p>
+<h3 id="section-41-1">41.1. Portée de la suppression<a aria-label="Permalink" class="heading-anchor" href="#section-41-1">#</a></h3>
+<p>La suppression retire physiquement le dossier :</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;slug&gt;/
+</code></pre>
+<p>Elle supprime donc les datasets sauvegardés, le registre, le manifeste, les figures, les historiques, les paramètres et tous les fichiers présents dans le projet.</p>
+<h3 id="section-41-2">41.2. Action irréversible<a aria-label="Permalink" class="heading-anchor" href="#section-41-2">#</a></h3>
+<p>La suppression n’utilise pas une corbeille interne.</p>
+<p>Elle est irréversible, sauf si une copie existe dans une archive ZIP, une sauvegarde système, un autre dossier ou un autre serveur.</p>
+<h3 id="section-41-3">41.3. Projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-41-3">#</a></h3>
+<p>Le projet actuellement ouvert ne peut pas être supprimé.</p>
+<p>Pour le supprimer : ouvrir un autre projet, revenir dans la liste, puis supprimer l’ancien projet.</p>
+<h3 id="section-41-4">41.4. Contrôle du résultat<a aria-label="Permalink" class="heading-anchor" href="#section-41-4">#</a></h3>
+<p>BarCodeR vérifie que le dossier a réellement disparu avant d’annoncer le succès.</p>
+<p>Une erreur peut être causée par des permissions insuffisantes, un fichier verrouillé, un dossier utilisé ou une erreur du système de fichiers.</p>
+<h2 id="section-42">42. Différences entre les trois exports<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Contenu</th>
+<th style="text-align:right">Figures</th>
+<th style="text-align:right">Plusieurs datasets</th>
+<th>Réimport</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dataset individuel <code>.rds</code></td>
+<td>Un phyloseq</td>
+<td style="text-align:right">Non</td>
+<td style="text-align:right">Non</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Données du projet <code>.rds</code></td>
+<td>Liste des datasets + actif</td>
+<td style="text-align:right">Non</td>
+<td style="text-align:right">Oui</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Projet complet <code>.zip</code></td>
+<td>Dossier du projet</td>
+<td style="text-align:right">Oui</td>
+<td style="text-align:right">Oui</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-42-1">42.1. Dataset individuel<a aria-label="Permalink" class="heading-anchor" href="#section-42-1">#</a></h3>
+<p>À utiliser pour transmettre un phyloseq, travailler dans R, archiver un objet précis ou réimporter un seul dataset.</p>
+<h3 id="section-42-2">42.2. Données seules du projet<a aria-label="Permalink" class="heading-anchor" href="#section-42-2">#</a></h3>
+<p>À utiliser pour sauvegarder plusieurs phyloseq dans un fichier compact, transférer uniquement les données, exclure les figures ou recharger les datasets dans un projet existant.</p>
+<h3 id="section-42-3">42.3. Projet complet<a aria-label="Permalink" class="heading-anchor" href="#section-42-3">#</a></h3>
+<p>À utiliser pour archiver l’ensemble de l’espace de travail, conserver les figures, déplacer un projet vers une autre installation ou créer un nouveau projet identique lors de l’import.</p>
+<h2 id="section-43">43. Projets et données OpenMetaBar<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Importer un phyloseq produit par OpenMetaBar dans BarCodeR ne copie pas automatiquement le dossier distant du run dans le projet local.</p>
+<p>Le projet peut contenir l’objet phyloseq importé, ses attributs de provenance et les analyses et figures effectuées dans BarCodeR.</p>
+<p>Il ne contient pas nécessairement les FASTQ, les logs complets du cluster, le dossier <code>work/</code>, les sorties Nextflow, les conteneurs, la base de référence ou le dossier distant du run.</p>
+<p>Ces éléments doivent être archivés séparément depuis OpenMetaBar ou le cluster.</p>
+<h2 id="section-44">44. Projets et historiques de figures<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Les figures enregistrées dans les modules sont associées au projet courant au moment de leur sauvegarde.</p>
+<p>Changer de projet modifie donc le dossier dans lequel les futurs historiques seront enregistrés.</p>
+<p>Une figure seulement affichée à l’écran mais non enregistrée dans un historique peut ne pas être incluse dans le projet.</p>
+<p>Il faut distinguer : résultat calculé en mémoire, figure enregistrée dans l’historique, figure exportée sur le poste et figure présente dans l’archive complète.</p>
+<h2 id="section-45">45. Emplacement physique des projets<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Les projets sont enregistrés relativement au dossier de travail de BarCodeR :</p>
+<pre tabindex="0"><code class="language-text">&lt;dossier-de-BarCodeR&gt;/save/projects/
+</code></pre>
+<h3 id="section-45-1">45.1. Permissions<a aria-label="Permalink" class="heading-anchor" href="#section-45-1">#</a></h3>
+<p>La machine exécutant BarCodeR doit permettre la création de dossiers, l’écriture de fichiers RDS, la création de ZIP, la suppression de dossiers et la lecture des projets existants.</p>
+<h3 id="section-45-2">45.2. Déploiement Docker ou serveur<a aria-label="Permalink" class="heading-anchor" href="#section-45-2">#</a></h3>
+<p>Sur un environnement conteneurisé, le dossier doit être placé sur un volume persistant.</p>
+<p>Sans volume persistant, les projets peuvent disparaître lors d’un redémarrage du conteneur, d’une mise à jour, d’un redéploiement ou d’une reconstruction de l’image.</p>
+<h3 id="section-45-3">45.3. Instance partagée<a aria-label="Permalink" class="heading-anchor" href="#section-45-3">#</a></h3>
+<p>Sur une instance partagée, les projets se trouvent sur le système de fichiers du serveur.</p>
+<p>Le niveau d’isolation dépend de la configuration de déploiement. BarCodeR ne transforme pas automatiquement le gestionnaire de projets en espace privé par utilisateur.</p>
+<p>Il faut donc contrôler les permissions, l’authentification, l’isolation des sessions, le stockage et les sauvegardes serveur.</p>
+<h2 id="section-46">46. Parcours recommandé pour un travail courant<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<ol>
+<li>Ouvrir ou créer le bon projet.</li>
+<li>Charger les données depuis Input data ou OpenMetaBar.</li>
+<li>Vérifier le registre.</li>
+<li>Choisir le dataset actif.</li>
+<li>Ajouter des notes et des tags.</li>
+<li>Réaliser les éditions et analyses.</li>
+<li>Créer des copies avant les modifications majeures.</li>
+<li>Sauvegarder régulièrement le projet.</li>
+<li>Exporter les datasets importants individuellement.</li>
+<li>Exporter périodiquement une archive ZIP complète.</li>
+<li>Stocker cette archive hors de l’installation BarCodeR.</li>
+</ol>
+<h2 id="section-47">47. Parcours recommandé avant une opération risquée<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Avant une filtration importante, une édition massive, une suppression, un remplacement, une restauration, un changement de projet ou une mise à jour de l’application :</p>
+<ol>
+<li><strong>Sauvegarder le projet</strong> ;</li>
+<li>vérifier le message de succès ;</li>
+<li>exporter le dataset important ;</li>
+<li>exporter le projet complet si nécessaire ;</li>
+<li>vérifier la présence du fichier téléchargé.</li>
+</ol>
+<h2 id="section-48">48. Résolution des problèmes<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<h3 id="section-48-1">48.1. Un dataset n’apparaît pas dans le registre<a aria-label="Permalink" class="heading-anchor" href="#section-48-1">#</a></h3>
+<p>Causes possibles : import non terminé, objet refusé, dataset ajouté dans un autre projet, projet différent actuellement ouvert, dataset supprimé ou session rechargée sans sauvegarde.</p>
+<p>Vérifier Input data, le projet courant, la sauvegarde sur disque et les notifications.</p>
+<h3 id="section-48-2">48.2. Le mauvais dataset est utilisé dans un module<a aria-label="Permalink" class="heading-anchor" href="#section-48-2">#</a></h3>
+<p>Le dataset actif global et la sélection locale du module peuvent être différents.</p>
+<p>Vérifier les deux sélecteurs et définir explicitement le dataset actif.</p>
+<h3 id="section-48-3">48.3. Le changement de dataset actif n’est pas conservé<a aria-label="Permalink" class="heading-anchor" href="#section-48-3">#</a></h3>
+<p>Le projet n’a pas été sauvegardé après le changement. Cliquer sur <strong>Sauvegarder le projet</strong>.</p>
+<h3 id="section-48-4">48.4. Le nom saisi a été modifié<a aria-label="Permalink" class="heading-anchor" href="#section-48-4">#</a></h3>
+<p>Les espaces et caractères spéciaux ont été normalisés. Utiliser un nom simple avec lettres, chiffres, <code>_</code> et <code>-</code>.</p>
+<h3 id="section-48-5">48.5. Un suffixe <code>_2</code> a été ajouté<a aria-label="Permalink" class="heading-anchor" href="#section-48-5">#</a></h3>
+<p>Un dataset de même nom existait déjà. Utiliser un nom différent ou supprimer/renommer l’ancien dataset.</p>
+<h3 id="section-48-6">48.6. Une date de modification n’a pas changé<a aria-label="Permalink" class="heading-anchor" href="#section-48-6">#</a></h3>
+<p>La colonne ne suit que <code>edit_log</code> et <code>filtration_log</code>. Les notes, tags et renommages ne modifient pas cette date.</p>
+<h3 id="section-48-7">48.7. Un dataset dupliqué conserve la provenance de l’original<a aria-label="Permalink" class="heading-anchor" href="#section-48-7">#</a></h3>
+<p>La duplication copie l’objet et ses attributs. La provenance indique la manière dont l’objet initial a été produit, pas l’action de duplication.</p>
+<h3 id="section-48-8">48.8. Un dataset filtré n’est plus indiqué comme filtré<a aria-label="Permalink" class="heading-anchor" href="#section-48-8">#</a></h3>
+<p>Son parent a peut-être été supprimé et le nom du parent vidé. Examiner :</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<h3 id="section-48-9">48.9. Un dataset supprimé réapparaît<a aria-label="Permalink" class="heading-anchor" href="#section-48-9">#</a></h3>
+<p>La suppression n’avait pas été sauvegardée et une ancienne version du registre a été restaurée. Supprimer de nouveau, puis sauvegarder le projet.</p>
+<h3 id="section-48-10">48.10. Impossible de sauvegarder un projet vide<a aria-label="Permalink" class="heading-anchor" href="#section-48-10">#</a></h3>
+<p>La sauvegarde rapide exige au moins un dataset. Créer un nouveau projet, conserver au moins un dataset ou supprimer le projet complet si l’objectif est de repartir de zéro.</p>
+<h3 id="section-48-11">48.11. La restauration a supprimé des modifications<a aria-label="Permalink" class="heading-anchor" href="#section-48-11">#</a></h3>
+<p>La restauration remplace la mémoire par <code>registry.rds</code>. Rechercher un export individuel, une archive ZIP, un autre projet ou les fichiers sources.</p>
+<h3 id="section-48-12">48.12. Aucun fichier de sauvegarde n’existe<a aria-label="Permalink" class="heading-anchor" href="#section-48-12">#</a></h3>
+<p>Le projet n’a jamais été sauvegardé. Ajouter au moins un dataset puis cliquer sur <strong>Sauvegarder le projet</strong>.</p>
+<h3 id="section-48-13">48.13. Le projet s’ouvre vide avec une erreur de registre<a aria-label="Permalink" class="heading-anchor" href="#section-48-13">#</a></h3>
+<p><code>registry.rds</code> existe mais est illisible. Copier immédiatement le dossier du projet, ne pas écraser le fichier, tester <code>readRDS()</code> dans R et restaurer une archive si nécessaire.</p>
+<h3 id="section-48-14">48.14. Un nouveau projet porte un nom refusé<a aria-label="Permalink" class="heading-anchor" href="#section-48-14">#</a></h3>
+<p>Le nom est vide ou déjà utilisé, éventuellement avec une casse différente. Choisir un nom distinct.</p>
+<h3 id="section-48-15">48.15. Le projet a changé mais le dossier garde l’ancien nom<a aria-label="Permalink" class="heading-anchor" href="#section-48-15">#</a></h3>
+<p>Le renommage ne modifie que le nom visible. Ce comportement est normal et évite de casser les chemins.</p>
+<h3 id="section-48-16">48.16. L’ouverture d’un projet recharge toute l’application<a aria-label="Permalink" class="heading-anchor" href="#section-48-16">#</a></h3>
+<p>Les modules doivent être réinitialisés avec les chemins du nouveau projet. Les calculs ou modifications non confirmés peuvent être perdus.</p>
+<h3 id="section-48-17">48.17. Une erreur de sauvegarde apparaît pendant l’ouverture d’un projet<a aria-label="Permalink" class="heading-anchor" href="#section-48-17">#</a></h3>
+<p>Le changement de projet peut tout de même continuer. Noter le projet précédent, le rouvrir, vérifier les datasets et restaurer un export si nécessaire.</p>
+<h3 id="section-48-18">48.18. Avertissement sur plusieurs onglets ouverts<a aria-label="Permalink" class="heading-anchor" href="#section-48-18">#</a></h3>
+<p>Plusieurs sessions utilisent la même instance de BarCodeR. Fermer les autres onglets avant de changer de projet.</p>
+<h3 id="section-48-19">48.19. La duplication d’un projet ne contient pas les dernières modifications<a aria-label="Permalink" class="heading-anchor" href="#section-48-19">#</a></h3>
+<p>Le projet courant n’avait peut-être pas été correctement sauvegardé avant la duplication. Sauvegarder explicitement avant de dupliquer.</p>
+<h3 id="section-48-20">48.20. Impossible de supprimer le projet courant<a aria-label="Permalink" class="heading-anchor" href="#section-48-20">#</a></h3>
+<p>BarCodeR protège le projet ouvert. Ouvrir un autre projet, puis supprimer le premier.</p>
+<h3 id="section-48-21">48.21. La suppression d’un projet échoue<a aria-label="Permalink" class="heading-anchor" href="#section-48-21">#</a></h3>
+<p>Causes possibles : permissions insuffisantes, fichier verrouillé, dossier utilisé, erreur disque, antivirus ou répertoire réseau indisponible.</p>
+<p>Vérifier le dossier <code>save/projects/&lt;slug&gt;/</code> et les droits de l’utilisateur exécutant BarCodeR.</p>
+<h3 id="section-48-22">48.22. L’archive ZIP est très lourde<a aria-label="Permalink" class="heading-anchor" href="#section-48-22">#</a></h3>
+<p>Causes possibles : nombreuses figures, historiques anciens, datasets volumineux, exports dupliqués ou objets intermédiaires.</p>
+<p>Supprimer les historiques inutiles, exporter les données seules, dupliquer puis nettoyer le projet ou archiver directement le dossier sur le serveur.</p>
+<h3 id="section-48-23">48.23. L’archive ZIP dépasse 500 Mo<a aria-label="Permalink" class="heading-anchor" href="#section-48-23">#</a></h3>
+<p>Elle peut ne pas être importable par l’interface actuelle.</p>
+<p>Solutions : augmenter <code>shiny.maxRequestSize</code>, réduire l’archive, copier directement le projet dans <code>save/projects/</code> ou utiliser un stockage externe.</p>
+<h3 id="section-48-24">48.24. L’archive importée n’apparaît pas automatiquement<a aria-label="Permalink" class="heading-anchor" href="#section-48-24">#</a></h3>
+<p>L’import crée un nouveau projet mais ne l’ouvre pas. Le sélectionner dans <strong>Vos projets</strong>, puis cliquer sur <strong>Ouvrir</strong>.</p>
+<h3 id="section-48-25">48.25. L’archive est déclarée invalide<a aria-label="Permalink" class="heading-anchor" href="#section-48-25">#</a></h3>
+<p>Causes possibles : ZIP corrompu, archive non produite par BarCodeR, projet trop profondément imbriqué, absence de registre, manifeste et historique reconnu, ou extraction échouée.</p>
+<h3 id="section-48-26">48.26. Le projet importé contient zéro dataset<a aria-label="Permalink" class="heading-anchor" href="#section-48-26">#</a></h3>
+<p>Causes possibles : absence de <code>registry.rds</code>, registre illisible, archive composée seulement de figures ou projet jamais sauvegardé.</p>
+<p>Ouvrir le projet pour vérifier ses historiques, importer séparément les datasets ou retrouver une archive plus complète.</p>
+<h3 id="section-48-27">48.27. L’export ZIP n’inclut pas les dernières données<a aria-label="Permalink" class="heading-anchor" href="#section-48-27">#</a></h3>
+<p>La sauvegarde préalable a peut-être échoué ou été refusée. Toujours vérifier le message de sauvegarde avant de conserver l’archive comme référence.</p>
+<h3 id="section-48-28">48.28. Le nombre de datasets de la liste semble incorrect<a aria-label="Permalink" class="heading-anchor" href="#section-48-28">#</a></h3>
+<p>Causes possibles : manifeste non actualisé, sauvegarde non effectuée, ancien projet ou cache d’affichage. Sauvegarder, rafraîchir et vérifier <code>registry.rds</code>.</p>
+<h3 id="section-48-29">48.29. La taille du projet n’est pas immédiatement mise à jour<a aria-label="Permalink" class="heading-anchor" href="#section-48-29">#</a></h3>
+<p>Le calcul de taille est mis en cache pendant quelques secondes. Attendre puis rafraîchir.</p>
+<h3 id="section-48-30">48.30. Les projets disparaissent après un redéploiement<a aria-label="Permalink" class="heading-anchor" href="#section-48-30">#</a></h3>
+<p>Le dossier <code>save/projects/</code> n’était pas situé sur un stockage persistant. Monter ce dossier dans un volume persistant et conserver des exports ZIP externes.</p>
+<h2 id="section-49">49. Checklist avant une sauvegarde<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Le bon projet est ouvert.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les datasets attendus sont présents.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Le bon dataset est actif.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les noms sont corrects.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les notes et tags sont à jour.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les suppressions sont volontaires.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les duplications inutiles ont été retirées.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Les modifications des tables ont été confirmées.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Aucun calcul important n’est encore en attente.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Aucun message d’erreur n’est visible.</li>
+</ul>
+<h2 id="section-50">50. Checklist avant un changement de projet<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sauvegarder le projet courant.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le message de succès.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Exporter les datasets importants.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Fermer les modales ouvertes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Terminer ou annuler les calculs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Fermer les autres onglets BarCodeR.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nom du projet cible.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Accepter que la page soit rechargée.</li>
+</ul>
+<h2 id="section-51">51. Checklist avant la suppression d’un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nom exact.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier s’il est actif.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier s’il possède des descendants filtrés.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Exporter le dataset si nécessaire.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sauvegarder une archive du projet.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Supprimer.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nouvel actif.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sauvegarder le projet pour rendre la suppression persistante.</li>
+</ul>
+<h2 id="section-52">52. Checklist avant la suppression d’un projet<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier que ce n’est pas le projet courant.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Exporter une archive ZIP.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le téléchargement de l’archive.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les datasets importants individuellement.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier que les données brutes sont archivées ailleurs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les résultats OpenMetaBar sur le cluster.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirmer la suppression uniquement après ces contrôles.</li>
+</ul>
+<h2 id="section-53">53. Stratégie de sauvegarde recommandée<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>Pour un projet important, conserver au minimum trois niveaux.</p>
+<h3 id="niveau-1-sauvegarde-interne-r-guli-re">Niveau 1 — Sauvegarde interne régulière<a aria-label="Permalink" class="heading-anchor" href="#niveau-1-sauvegarde-interne-r-guli-re">#</a></h3>
+<p>Cliquer régulièrement sur <strong>Sauvegarder le projet</strong>.</p>
+<h3 id="niveau-2-export-des-datasets-critiques">Niveau 2 — Export des datasets critiques<a aria-label="Permalink" class="heading-anchor" href="#niveau-2-export-des-datasets-critiques">#</a></h3>
+<p>Exporter individuellement les objets importants :</p>
+<pre tabindex="0"><code class="language-text">dataset_&lt;nom&gt;_&lt;date&gt;.rds
+</code></pre>
+<h3 id="niveau-3-archive-compl-te-externe">Niveau 3 — Archive complète externe<a aria-label="Permalink" class="heading-anchor" href="#niveau-3-archive-compl-te-externe">#</a></h3>
+<p>Exporter périodiquement :</p>
+<pre tabindex="0"><code class="language-text">projet_&lt;nom&gt;_&lt;date&gt;.zip
+</code></pre>
+<p>puis conserver cette archive sur un NAS, un serveur institutionnel, une sauvegarde versionnée ou un support distinct de la machine exécutant BarCodeR.</p>
+<p>La sauvegarde interne seule ne protège pas contre une panne disque, une suppression du dossier, un redéploiement, une erreur système ou la perte du serveur.</p>
+<h2 id="section-54">54. Principes de traçabilité<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>Pour conserver un historique exploitable :</p>
+<ul>
+<li>utiliser des noms de projet explicites ;</li>
+<li>éviter les noms de datasets ambigus ;</li>
+<li>ajouter des notes ;</li>
+<li>utiliser des tags homogènes ;</li>
+<li>conserver la provenance ;</li>
+<li>dupliquer avant une modification majeure ;</li>
+<li>sauvegarder après chaque étape importante ;</li>
+<li>exporter les états de référence ;</li>
+<li>noter la date et la version de BarCodeR ;</li>
+<li>conserver les fichiers bruts séparément ;</li>
+<li>ne pas confondre sauvegarde du projet et archivage scientifique complet.</li>
+</ul>
+<h2 id="section-55">55. Limites actuelles à connaître<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<h3 id="section-55-1">55.1. Les actions dataset agissent d’abord en mémoire<a aria-label="Permalink" class="heading-anchor" href="#section-55-1">#</a></h3>
+<p>Elles ne deviennent persistantes qu’après sauvegarde.</p>
+<h3 id="section-55-2">55.2. Un projet vide ne peut pas être sauvegardé rapidement<a aria-label="Permalink" class="heading-anchor" href="#section-55-2">#</a></h3>
+<p>Une ancienne sauvegarde peut donc rester présente après suppression de tous les datasets.</p>
+<h3 id="section-55-3">55.3. La date Modifié est partielle<a aria-label="Permalink" class="heading-anchor" href="#section-55-3">#</a></h3>
+<p>Elle ne suit pas toutes les actions du registre.</p>
+<h3 id="section-55-4">55.4. La provenance Filtré dépend du nom du parent<a aria-label="Permalink" class="heading-anchor" href="#section-55-4">#</a></h3>
+<p>Supprimer le parent peut modifier le badge du descendant.</p>
+<h3 id="section-55-5">55.5. La duplication conserve les attributs de provenance<a aria-label="Permalink" class="heading-anchor" href="#section-55-5">#</a></h3>
+<p>Il n’existe pas de provenance spécifique « copie ».</p>
+<h3 id="section-55-6">55.6. Les noms de datasets ne sont pas garantis ASCII<a aria-label="Permalink" class="heading-anchor" href="#section-55-6">#</a></h3>
+<p>Le résultat dépend en partie de la locale R.</p>
+<h3 id="section-55-7">55.7. Le changement de projet est global à l’instance R<a aria-label="Permalink" class="heading-anchor" href="#section-55-7">#</a></h3>
+<p>Plusieurs onglets ouverts peuvent interférer.</p>
+<h3 id="section-55-8">55.8. Une erreur de sauvegarde ne bloque pas toujours le changement de projet<a aria-label="Permalink" class="heading-anchor" href="#section-55-8">#</a></h3>
+<p>Les notifications doivent être lues attentivement.</p>
+<h3 id="section-55-9">55.9. La duplication du projet courant ne vérifie pas strictement le succès de la sauvegarde préalable<a aria-label="Permalink" class="heading-anchor" href="#section-55-9">#</a></h3>
+<p>Une sauvegarde manuelle est recommandée.</p>
+<h3 id="section-55-10">55.10. Le voyant de sauvegarde ne suit pas tous les fichiers du projet<a aria-label="Permalink" class="heading-anchor" href="#section-55-10">#</a></h3>
+<p>Il reflète principalement le registre et le dataset actif.</p>
+<h3 id="section-55-11">55.11. L’export ZIP n’inclut pas les fichiers externes<a aria-label="Permalink" class="heading-anchor" href="#section-55-11">#</a></h3>
+<p>Les données brutes et résultats distants doivent être archivés séparément.</p>
+<h3 id="section-55-12">55.12. Une archive supérieure à 500 Mo peut ne pas être importable par l’interface<a aria-label="Permalink" class="heading-anchor" href="#section-55-12">#</a></h3>
+<p>La limite globale de téléversement s’applique.</p>
+<h3 id="section-55-13">55.13. Le stockage doit être persistant<a aria-label="Permalink" class="heading-anchor" href="#section-55-13">#</a></h3>
+<p>Le dossier <code>save/projects/</code> doit survivre aux redémarrages et mises à jour.</p>
+<h2 id="sources-internes-v-rifi-es">Sources internes vérifiées<a aria-label="Permalink" class="heading-anchor" href="#sources-internes-v-rifi-es">#</a></h2>
+<p>Cette documentation a été reconstruite à partir du code actuel de BarCodeR :</p>
+<ol>
+<li><code>modules/datasets/mod_datasets_ui.R</code> : interface, dataset actif, registre, gestionnaire de projets et exports.</li>
+<li><code>modules/datasets/mod_datasets_server.R</code> : provenance, parenté, notes, actions par ligne, sauvegarde, restauration et gestion des projets.</li>
+<li><code>modules/_shared/_dataset_naming.R</code> : nettoyage et unicité des noms de datasets.</li>
+<li><code>modules/_shared/_project_store.R</code> : racine des projets, slug, pointeur courant, registre, manifeste, taille, export, import, duplication et suppression.</li>
+<li><code>modules/_shared/_ui_state.R</code> : stockage de la navigation et des paramètres restaurables.</li>
+<li><code>app.R</code> : limite globale de téléversement, registre global, dataset actif, état sauvegardé et changement de projet.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Présentation générale</a><a class="toc-l3" href="#niveau-1-les-datasets">Niveau 1 — Les datasets</a><a class="toc-l3" href="#niveau-2-les-projets">Niveau 2 — Les projets</a><a class="toc-l2" href="#section-2">2. Définitions indispensables</a><a class="toc-l3" href="#section-2-1">2.1. Dataset</a><a class="toc-l3" href="#section-2-2">2.2. Dataset actif</a><a class="toc-l3" href="#section-2-3">2.3. Registre des datasets</a><a class="toc-l3" href="#section-2-4">2.4. Session</a><a class="toc-l3" href="#section-2-5">2.5. Projet</a><a class="toc-l2" href="#section-3">3. Différence entre dataset et projet</a><a class="toc-l2" href="#section-4">4. Organisation de l’onglet</a><a class="toc-l2" href="#section-5">5. Dataset actif global</a><a class="toc-l3" href="#section-5-1">5.1. Rôle du sélecteur</a><a class="toc-l3" href="#section-5-2">5.2. Synchronisation avec l’application</a><a class="toc-l3" href="#section-5-3">5.3. Sélections locales dans les modules</a><a class="toc-l3" href="#section-5-4">5.4. Effets du changement de dataset actif</a><a class="toc-l2" href="#section-6">6. Aucun dataset en mémoire</a><a class="toc-l2" href="#section-7">7. Le registre des datasets</a><a class="toc-l2" href="#section-8">8. Colonnes du registre</a><a class="toc-l3" href="#section-8-1">8.1. État actif</a><a class="toc-l3" href="#section-8-2">8.2. Nom</a><a class="toc-l3" href="#section-8-3">8.3. ASV</a><a class="toc-l3" href="#section-8-4">8.4. Échantillons</a><a class="toc-l3" href="#section-8-5">8.5. Provenance</a><a class="toc-l3" href="#section-8-6">8.6. Parent</a><a class="toc-l3" href="#section-8-7">8.7. Note et tags</a><a class="toc-l3" href="#section-8-8">8.8. Modifié</a><a class="toc-l3" href="#section-8-9">8.9. Actions</a><a class="toc-l2" href="#section-9">9. Rafraîchir le registre</a><a class="toc-l2" href="#section-10">10. Définir un dataset comme actif</a><a class="toc-l2" href="#section-11">11. Modifier un dataset</a><a class="toc-l2" href="#section-12">12. Renommer un dataset</a><a class="toc-l3" href="#section-12-1">12.1. Nettoyage du nom</a><a class="toc-l3" href="#section-12-2">12.2. Caractères non ASCII</a><a class="toc-l3" href="#section-12-3">12.3. Collision de noms</a><a class="toc-l3" href="#section-12-4">12.4. Mise à jour du dataset actif</a><a class="toc-l3" href="#section-12-5">12.5. Mise à jour des descendants filtrés</a><a class="toc-l3" href="#section-12-6">12.6. Ce qui n’est pas renommé</a><a class="toc-l2" href="#section-13">13. Ajouter une note</a><a class="toc-l2" href="#section-14">14. Ajouter des tags</a><a class="toc-l3" href="#section-14-1">14.1. Limites des tags</a><a class="toc-l2" href="#section-15">15. Attribut dataset_meta</a><a class="toc-l2" href="#section-16">16. Dupliquer un dataset</a><a class="toc-l3" href="#section-16-1">16.1. Nom proposé</a><a class="toc-l3" href="#section-16-2">16.2. Contenu de la copie</a><a class="toc-l3" href="#section-16-3">16.3. Dataset actif</a><a class="toc-l3" href="#section-16-4">16.4. Indépendance ultérieure</a><a class="toc-l3" href="#section-16-5">16.5. Provenance de la copie</a><a class="toc-l2" href="#section-17">17. Modifier l’ordre des datasets</a><a class="toc-l3" href="#section-17-1">17.1. Effets de l’ordre</a><a class="toc-l3" href="#section-17-2">17.2. Persistance</a><a class="toc-l2" href="#section-18">18. Exporter un dataset individuel</a><a class="toc-l3" href="#section-18-1">18.1. Contenu</a><a class="toc-l3" href="#section-18-2">18.2. Éléments non contenus</a><a class="toc-l3" href="#section-18-3">18.3. Réimportation</a><a class="toc-l2" href="#section-19">19. Supprimer un dataset de la session</a><a class="toc-l3" href="#section-19-1">19.1. Effets immédiats</a><a class="toc-l3" href="#section-19-2">19.2. Dataset actif supprimé</a><a class="toc-l3" href="#section-19-3">19.3. Parent d’un dataset filtré</a><a class="toc-l3" href="#section-19-4">19.4. Suppression en mémoire uniquement</a><a class="toc-l3" href="#section-19-5">19.5. Rendre la suppression persistante</a><a class="toc-l3" href="#section-19-6">19.6. Supprimer le dernier dataset</a><a class="toc-l2" href="#section-20">20. État « modifications non enregistrées »</a><a class="toc-l3" href="#section-20-1">20.1. Portée réelle de l’indicateur</a><a class="toc-l2" href="#section-21">21. Section Projets</a><a class="toc-l2" href="#section-22">22. Projet courant</a><a class="toc-l2" href="#section-23">23. Nom visible et identifiant interne du projet</a><a class="toc-l3" href="#section-23-1">23.1. Construction du slug</a><a class="toc-l3" href="#section-23-2">23.2. Renommage ultérieur</a><a class="toc-l2" href="#section-24">24. Structure d’un projet sur le disque</a><a class="toc-l3" href="#section-24-1">24.1. registry.rds</a><a class="toc-l3" href="#section-24-2">24.2. manifest.rds</a><a class="toc-l3" href="#section-24-3">24.3. ui_state.rds</a><a class="toc-l3" href="#section-24-4">24.4. Dossiers des modules</a><a class="toc-l2" href="#section-25">25. Ce qu’un projet ne contient pas automatiquement</a><a class="toc-l2" href="#section-26">26. Sauvegarder le projet</a><a class="toc-l3" href="#section-26-1">26.1. Éléments sauvegardés</a><a class="toc-l3" href="#section-26-2">26.2. Historiques de figures</a><a class="toc-l3" href="#section-26-3">26.3. Projet vide</a><a class="toc-l3" href="#section-26-4">26.4. Protection contre l’écrasement par une mémoire vide</a><a class="toc-l3" href="#section-26-5">26.5. Succès</a><a class="toc-l2" href="#section-27">27. Sauvegarde disponible</a><a class="toc-l2" href="#section-28">28. Recharger depuis le disque</a><a class="toc-l3" href="#section-28-1">28.1. Conséquence</a><a class="toc-l3" href="#section-28-2">28.2. Données perdues</a><a class="toc-l3" href="#section-28-3">28.3. Dataset actif restauré</a><a class="toc-l3" href="#section-28-4">28.4. État sauvegardé</a><a class="toc-l3" href="#section-28-5">28.5. Ce que la restauration ne fait pas</a><a class="toc-l2" href="#section-29">29. Sauvegarde introuvable</a><a class="toc-l2" href="#section-30">30. Sauvegarde illisible</a><a class="toc-l3" href="#section-30-1">30.1. Protection appliquée</a><a class="toc-l3" href="#section-30-2">30.2. Conduite à tenir</a><a class="toc-l2" href="#section-31">31. Exporter les données seules en .rds</a><a class="toc-l3" href="#section-31-1">31.1. Différence avec la sauvegarde rapide</a><a class="toc-l3" href="#section-31-2">31.2. Contenu exclu</a><a class="toc-l3" href="#section-31-3">31.3. Réimportation</a><a class="toc-l2" href="#section-32">32. Exporter le projet complet en .zip</a><a class="toc-l3" href="#section-32-1">32.1. Contenu potentiel</a><a class="toc-l3" href="#section-32-2">32.2. Sauvegarde avant export</a><a class="toc-l3" href="#section-32-3">32.3. Échec de la sauvegarde préalable</a><a class="toc-l3" href="#section-32-4">32.4. Projet vide</a><a class="toc-l3" href="#section-32-5">32.5. Nom du fichier</a><a class="toc-l2" href="#section-33">33. Avertissement de taille</a><a class="toc-l3" href="#section-33-1">33.1. Taille calculée</a><a class="toc-l3" href="#section-33-2">33.2. Actualisation</a><a class="toc-l3" href="#section-33-3">33.3. Limite d’import</a><a class="toc-l2" href="#section-34">34. Importer un projet .zip</a><a class="toc-l3" href="#section-34-1">34.1. Import dans un nouveau projet</a><a class="toc-l3" href="#section-34-2">34.2. Détection du projet</a><a class="toc-l3" href="#section-34-3">34.3. Nom du projet importé</a><a class="toc-l3" href="#section-34-4">34.4. Collision de noms</a><a class="toc-l3" href="#section-34-5">34.5. Projet sans registre</a><a class="toc-l3" href="#section-34-6">34.6. Archive invalide</a><a class="toc-l2" href="#section-35">35. Créer un nouveau projet</a><a class="toc-l3" href="#section-35-1">35.1. Fonctionnement</a><a class="toc-l3" href="#section-35-2">35.2. Nom obligatoire</a><a class="toc-l3" href="#section-35-3">35.3. Nom déjà utilisé</a><a class="toc-l3" href="#section-35-4">35.4. Projet initialement vide</a><a class="toc-l3" href="#section-35-5">35.5. Vérification avant création</a><a class="toc-l2" href="#section-36">36. Ouvrir un autre projet</a><a class="toc-l3" href="#section-36-1">36.1. Étapes</a><a class="toc-l3" href="#section-36-2">36.2. Pourquoi la page est rechargée</a><a class="toc-l3" href="#section-36-3">36.3. Échec de sauvegarde du projet courant</a><a class="toc-l2" href="#section-37">37. Plusieurs onglets BarCodeR ouverts</a><a class="toc-l3" href="#section-37-1">37.1. Risque</a><a class="toc-l3" href="#section-37-2">37.2. Recommandation</a><a class="toc-l2" href="#section-38">38. Renommer le projet courant</a><a class="toc-l3" href="#section-38-1">38.1. Ce qui change</a><a class="toc-l3" href="#section-38-2">38.2. Ce qui ne change pas</a><a class="toc-l3" href="#section-38-3">38.3. Collision</a><a class="toc-l2" href="#section-39">39. Liste des projets</a><a class="toc-l3" href="#section-39-1">39.1. Ordre de la liste</a><a class="toc-l3" href="#section-39-2">39.2. Nombre de datasets</a><a class="toc-l3" href="#section-39-3">39.3. Date de modification</a><a class="toc-l2" href="#section-40">40. Dupliquer un projet</a><a class="toc-l3" href="#section-40-1">40.1. Contenu copié</a><a class="toc-l3" href="#section-40-2">40.2. Nom</a><a class="toc-l3" href="#section-40-3">40.3. Date de création</a><a class="toc-l3" href="#section-40-4">40.4. Duplication du projet courant</a><a class="toc-l3" href="#section-40-5">40.5. Projet non courant</a><a class="toc-l2" href="#section-41">41. Supprimer un projet</a><a class="toc-l3" href="#section-41-1">41.1. Portée de la suppression</a><a class="toc-l3" href="#section-41-2">41.2. Action irréversible</a><a class="toc-l3" href="#section-41-3">41.3. Projet courant</a><a class="toc-l3" href="#section-41-4">41.4. Contrôle du résultat</a><a class="toc-l2" href="#section-42">42. Différences entre les trois exports</a><a class="toc-l3" href="#section-42-1">42.1. Dataset individuel</a><a class="toc-l3" href="#section-42-2">42.2. Données seules du projet</a><a class="toc-l3" href="#section-42-3">42.3. Projet complet</a><a class="toc-l2" href="#section-43">43. Projets et données OpenMetaBar</a><a class="toc-l2" href="#section-44">44. Projets et historiques de figures</a><a class="toc-l2" href="#section-45">45. Emplacement physique des projets</a><a class="toc-l3" href="#section-45-1">45.1. Permissions</a><a class="toc-l3" href="#section-45-2">45.2. Déploiement Docker ou serveur</a><a class="toc-l3" href="#section-45-3">45.3. Instance partagée</a><a class="toc-l2" href="#section-46">46. Parcours recommandé pour un travail courant</a><a class="toc-l2" href="#section-47">47. Parcours recommandé avant une opération risquée</a><a class="toc-l2" href="#section-48">48. Résolution des problèmes</a><a class="toc-l3" href="#section-48-1">48.1. Un dataset n’apparaît pas dans le registre</a><a class="toc-l3" href="#section-48-2">48.2. Le mauvais dataset est utilisé dans un module</a><a class="toc-l3" href="#section-48-3">48.3. Le changement de dataset actif n’est pas conservé</a><a class="toc-l3" href="#section-48-4">48.4. Le nom saisi a été modifié</a><a class="toc-l3" href="#section-48-5">48.5. Un suffixe _2 a été ajouté</a><a class="toc-l3" href="#section-48-6">48.6. Une date de modification n’a pas changé</a><a class="toc-l3" href="#section-48-7">48.7. Un dataset dupliqué conserve la provenance de l’original</a><a class="toc-l3" href="#section-48-8">48.8. Un dataset filtré n’est plus indiqué comme filtré</a><a class="toc-l3" href="#section-48-9">48.9. Un dataset supprimé réapparaît</a><a class="toc-l3" href="#section-48-10">48.10. Impossible de sauvegarder un projet vide</a><a class="toc-l3" href="#section-48-11">48.11. La restauration a supprimé des modifications</a><a class="toc-l3" href="#section-48-12">48.12. Aucun fichier de sauvegarde n’existe</a><a class="toc-l3" href="#section-48-13">48.13. Le projet s’ouvre vide avec une erreur de registre</a><a class="toc-l3" href="#section-48-14">48.14. Un nouveau projet porte un nom refusé</a><a class="toc-l3" href="#section-48-15">48.15. Le projet a changé mais le dossier garde l’ancien nom</a><a class="toc-l3" href="#section-48-16">48.16. L’ouverture d’un projet recharge toute l’application</a><a class="toc-l3" href="#section-48-17">48.17. Une erreur de sauvegarde apparaît pendant l’ouverture d’un projet</a><a class="toc-l3" href="#section-48-18">48.18. Avertissement sur plusieurs onglets ouverts</a><a class="toc-l3" href="#section-48-19">48.19. La duplication d’un projet ne contient pas les dernières modifications</a><a class="toc-l3" href="#section-48-20">48.20. Impossible de supprimer le projet courant</a><a class="toc-l3" href="#section-48-21">48.21. La suppression d’un projet échoue</a><a class="toc-l3" href="#section-48-22">48.22. L’archive ZIP est très lourde</a><a class="toc-l3" href="#section-48-23">48.23. L’archive ZIP dépasse 500 Mo</a><a class="toc-l3" href="#section-48-24">48.24. L’archive importée n’apparaît pas automatiquement</a><a class="toc-l3" href="#section-48-25">48.25. L’archive est déclarée invalide</a><a class="toc-l3" href="#section-48-26">48.26. Le projet importé contient zéro dataset</a><a class="toc-l3" href="#section-48-27">48.27. L’export ZIP n’inclut pas les dernières données</a><a class="toc-l3" href="#section-48-28">48.28. Le nombre de datasets de la liste semble incorrect</a><a class="toc-l3" href="#section-48-29">48.29. La taille du projet n’est pas immédiatement mise à jour</a><a class="toc-l3" href="#section-48-30">48.30. Les projets disparaissent après un redéploiement</a><a class="toc-l2" href="#section-49">49. Checklist avant une sauvegarde</a><a class="toc-l2" href="#section-50">50. Checklist avant un changement de projet</a><a class="toc-l2" href="#section-51">51. Checklist avant la suppression d’un dataset</a><a class="toc-l2" href="#section-52">52. Checklist avant la suppression d’un projet</a><a class="toc-l2" href="#section-53">53. Stratégie de sauvegarde recommandée</a><a class="toc-l3" href="#niveau-1-sauvegarde-interne-r-guli-re">Niveau 1 — Sauvegarde interne régulière</a><a class="toc-l3" href="#niveau-2-export-des-datasets-critiques">Niveau 2 — Export des datasets critiques</a><a class="toc-l3" href="#niveau-3-archive-compl-te-externe">Niveau 3 — Archive complète externe</a><a class="toc-l2" href="#section-54">54. Principes de traçabilité</a><a class="toc-l2" href="#section-55">55. Limites actuelles à connaître</a><a class="toc-l3" href="#section-55-1">55.1. Les actions dataset agissent d’abord en mémoire</a><a class="toc-l3" href="#section-55-2">55.2. Un projet vide ne peut pas être sauvegardé rapidement</a><a class="toc-l3" href="#section-55-3">55.3. La date Modifié est partielle</a><a class="toc-l3" href="#section-55-4">55.4. La provenance Filtré dépend du nom du parent</a><a class="toc-l3" href="#section-55-5">55.5. La duplication conserve les attributs de provenance</a><a class="toc-l3" href="#section-55-6">55.6. Les noms de datasets ne sont pas garantis ASCII</a><a class="toc-l3" href="#section-55-7">55.7. Le changement de projet est global à l’instance R</a><a class="toc-l3" href="#section-55-8">55.8. Une erreur de sauvegarde ne bloque pas toujours le changement de projet</a><a class="toc-l3" href="#section-55-9">55.9. La duplication du projet courant ne vérifie pas strictement le succès de la sauvegarde préalable</a><a class="toc-l3" href="#section-55-10">55.10. Le voyant de sauvegarde ne suit pas tous les fichiers du projet</a><a class="toc-l3" href="#section-55-11">55.11. L’export ZIP n’inclut pas les fichiers externes</a><a class="toc-l3" href="#section-55-12">55.12. Une archive supérieure à 500 Mo peut ne pas être importable par l’interface</a><a class="toc-l3" href="#section-55-13">55.13. Le stockage doit être persistant</a><a class="toc-l2" href="#sources-internes-v-rifi-es">Sources internes vérifiées</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Datasets</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

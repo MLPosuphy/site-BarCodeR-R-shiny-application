@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Analyse — Guides méthodologiques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="guide" data-module="analyse" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Guides méthodologiques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link active" href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Analyse</a><span>›</span><span>Guides méthodologiques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Analyse — Guide méthodologique</h1>
+<h2 id="section-1">1. Rôle général et organisation de l’onglet<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>L’onglet <strong>Analyse</strong> regroupe les méthodes statistiques destinées à tester, comparer ou modéliser la structure des données de métabarcoding.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sous-onglet</th>
+<th>Question principale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Analyses différentielles</strong></td>
+<td>Quels taxons changent d’abondance entre des conditions ?</td>
+</tr>
+<tr>
+<td><strong>Ordinations</strong></td>
+<td>Comment les échantillons se structurent-ils selon leur composition ?</td>
+</tr>
+<tr>
+<td><strong>Comparaison de matrices</strong></td>
+<td>Plusieurs datasets décrivent-ils une structure écologique similaire ?</td>
+</tr>
+<tr>
+<td><strong>Réseaux d’associations</strong></td>
+<td>Quels taxons varient ensemble ou en sens opposé ?</td>
+</tr>
+<tr>
+<td><strong>PERMANOVA / Dispersion</strong></td>
+<td>Les groupes diffèrent-ils en composition et/ou en dispersion ?</td>
+</tr>
+<tr>
+<td><strong>Clustering</strong></td>
+<td>Quels groupes naturels émergent sans utiliser les métadonnées comme réponse ?</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ces outils ne sont pas interchangeables. Une analyse répond uniquement à la question définie par la méthode, la transformation, la distance, le modèle, les échantillons inclus, les filtres, les covariables et le niveau taxonomique.</p>
+<h2 id="section-2">2. Fonctionnement commun aux modules d’Analyse<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>La majorité des sous-modules séparent les <strong>paramètres scientifiques</strong>, qui nécessitent un nouveau calcul, des <strong>paramètres visuels</strong>, qui modifient seulement la représentation du dernier résultat. Après un changement de dataset, rang, transformation, distance, modèle, covariable, référence ou nombre de permutations, relancer explicitement le calcul. Une ancienne figure peut rester visible alors qu’elle ne correspond plus aux paramètres affichés.</p>
+<p>Une filtration locale temporaire est disponible dans Analyses différentielles, Ordinations, Comparaison de matrices, Réseaux et Clustering. Elle ne modifie pas <code>datasets()</code>, n’est pas partagée entre sous-modules et doit être reproduite dans l’onglet Filtration pour devenir persistante. PERMANOVA utilise ses propres critères de rang et de prévalence.</p>
+<p>Les sélections sont principalement locales. Une méthode peut échouer si le nombre d’échantillons, de taxons ou de réplicats devient insuffisant, si la metadata ou l’arbre manque, si les données ne sont pas des comptes, si le modèle n’est pas estimable ou si un package spécialisé est absent. Le journal d’exécution doit être lu avant toute interprétation.</p>
+<h2 id="section-3">3. Analyses différentielles<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>L’analyse différentielle cherche les taxons dont l’abondance varie entre des groupes en tenant compte, selon le moteur, du caractère compositionnel, des zéros et des covariables.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Moteur</th>
+<th>Principe</th>
+<th>Échelle principale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ANCOM-BC2</strong></td>
+<td>Correction du biais d’échantillonnage</td>
+<td>Log-fold-change en logarithme naturel</td>
+</tr>
+<tr>
+<td><strong>LinDA</strong></td>
+<td>Modèle linéaire sur log-ratios avec correction de biais</td>
+<td>Log2 fold-change</td>
+</tr>
+<tr>
+<td><strong>ALDEx2</strong></td>
+<td>Monte-Carlo Dirichlet puis CLR</td>
+<td>Différence en unités CLR</td>
+</tr>
+<tr>
+<td><strong>corncob</strong></td>
+<td>Régression bêta-binomiale</td>
+<td>Coefficient logit</td>
+</tr>
+<tr>
+<td><strong>MaAsLin 3</strong></td>
+<td>Modèles multivariables d’abondance et de prévalence</td>
+<td>Coefficient log2 pour l’abondance</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le modèle peut inclure une variable principale, un niveau de référence, des covariables et, selon le moteur, des effets aléatoires. Exemple :</p>
+<pre tabindex="0"><code class="language-text">Abondance ~ Traitement + Site + Batch + (1 | Individu)
+</code></pre>
+<p>Le signe de l’effet dépend de la référence. Une covariable ne corrige pas une confusion complète entre deux facteurs. Les effets aléatoires sont utiles pour les mesures répétées ou les blocs, mais ne sont pas pris en charge par ALDEx2 et corncob ; ces moteurs sont alors exclus proprement.</p>
+<p>Ces méthodes supposent principalement des comptes. Les proportions, CLR, valeurs négatives ou matrices déjà transformées peuvent rendre l’analyse invalide. ALDEx2 exige explicitement des valeurs assimilables à des comptes entiers.</p>
+<h2 id="section-4">4. Comparaison de plusieurs moteurs différentiels<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Avec plusieurs moteurs, BarCodeR applique un filtre de prévalence commun afin que les méthodes testent le même ensemble de taxons. Le consensus compare uniquement la <strong>significativité corrigée</strong> et la <strong>direction de l’effet</strong>. Il ne compare jamais les amplitudes, car les échelles sont incompatibles.</p>
+<p>Les seuils d’effet propres aux moteurs pilotent leurs figures individuelles. Le vote de consensus repose sur la q-value et le signe. corncob peut produire une sortie de dispersion séparée et MaAsLin 3 une sortie de prévalence ; ces questions ne participent pas au consensus d’abondance. Pour les facteurs à plus de deux modalités, certains tests corncob sont omnibus et ne peuvent pas être interprétés comme un contraste pairwise.</p>
+<p>Les p-values doivent être corrigées de façon cohérente, généralement par Benjamini-Hochberg. Examiner conjointement effet, q-value, prévalence, abondance, nombre d’échantillons et accord entre méthodes. Une discordance entre moteurs n’est pas nécessairement une erreur : elle peut refléter des hypothèses statistiques différentes.</p>
+<h2 id="section-5">5. Ordinations<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Les ordinations résument une structure multivariée en deux ou trois dimensions.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Usage principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PCA</strong></td>
+<td>Gradients d’une matrice transformée dans une géométrie euclidienne</td>
+</tr>
+<tr>
+<td><strong>PCoA</strong></td>
+<td>Représentation d’une matrice de distances</td>
+</tr>
+<tr>
+<td><strong>NMDS</strong></td>
+<td>Préservation de l’ordre relatif des distances</td>
+</tr>
+<tr>
+<td><strong>CCA</strong></td>
+<td>Réponse unimodale contrainte par des variables</td>
+</tr>
+<tr>
+<td><strong>RDA</strong></td>
+<td>Réponse linéaire contrainte</td>
+</tr>
+<tr>
+<td><strong>dbRDA</strong></td>
+<td>Modèle contraint appliqué à une distance</td>
+</tr>
+</tbody>
+</table></div>
+<p>La PCA peut utiliser centrage, réduction, Hellinger, log1p, abondance relative, CLR ou VST. Une PCA sur comptes bruts est souvent dominée par la profondeur et les taxons abondants. La PCoA accepte Bray-Curtis, Jaccard, Aitchison, Canberra, Gower, Morisita-Horn, Euclidienne, Manhattan et UniFrac. Des valeurs propres négatives peuvent apparaître avec une distance non euclidienne.</p>
+<p>La NMDS doit être évaluée avec le stress, la convergence, la goodness et le diagramme de Shepard. Repères approximatifs : stress &lt; 0,10 bon ; 0,10–0,20 interprétable avec prudence ; &gt; 0,20 douteux. Un stress faible ne suffit pas si l’algorithme n’a pas convergé.</p>
+<p>CCA, RDA et dbRDA peuvent intégrer variables explicatives, covariables conditionnelles, blocs de permutation et tests. La longueur du gradient DCA aide au choix : gradient court, méthode linéaire ; gradient long, environ supérieur à quatre écarts-types, méthode unimodale.</p>
+<h2 id="section-6">6. Paramètres et diagnostics des ordinations<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Les transformations disponibles comprennent aucune, abondance relative, Hellinger, log1p, CLR et VST. CLR exige un pseudo-count positif ; VST nécessite DESeq2. Toutes les combinaisons transformation-distance ne sont pas cohérentes : CLR suivi de Bray-Curtis est problématique, Aitchison intègre déjà une transformation log-ratio, Jaccard convient à la présence-absence et UniFrac exige un arbre.</p>
+<p>La raréfaction optionnelle nécessite des comptes entiers. Elle retire des reads, peut exclure des échantillons et ajoute une variabilité aléatoire ; une graine la rend reproductible. UniFrac exige des feuilles alignées sur les taxons et idéalement un arbre biologiquement enraciné.</p>
+<p>Les overlays peuvent inclure couleurs, formes, labels, trajectoires, facettes, enveloppes, ellipses, centroïdes, vecteurs de taxons et <code>envfit</code>. Une ellipse séparée visuellement n’est pas un test. <code>envfit</code> mesure une association avec la structure représentée, pas une causalité.</p>
+<p>Les ordinations sauvegardées peuvent être comparées par Procrustes. Une forte concordance signifie que les configurations se ressemblent après rotation et changement d’échelle, pas que les méthodes reposent sur les mêmes hypothèses.</p>
+<h2 id="section-7">7. Comparaison de matrices<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Ce module compare plusieurs datasets décrivant les mêmes unités biologiques, par exemple plusieurs marqueurs mesurés sur les mêmes échantillons. L’appariement est obligatoire et peut utiliser le nettoyage des noms, une colonne de metadata ou plusieurs colonnes. Les doublons ou les clés ambiguës invalident la comparaison.</p>
+<p>Les métriques principales comprennent Aitchison, Bray-Curtis, UniFrac non pondérée et UniFrac pondérée. Les méthodes disponibles incluent :</p>
+<ul>
+<li><strong>Mantel</strong> : corrélation de Spearman entre matrices de distances testée par permutations ;</li>
+<li><strong>Procrustes / PROTEST</strong> : superposition des ordinations, résidu m², concordance et p-value ;</li>
+<li><strong>Co-inertie</strong> : axes de variation communs à deux tables, avec <code>ade4</code> ;</li>
+<li><strong>MCOA</strong> : consensus multi-datasets à partir de l’intersection des échantillons communs.</li>
+</ul>
+<p>Une forte corrélation Mantel n’identifie pas les échantillons responsables. Les flèches Procrustes les mettent en évidence. La MCOA avec trois datasets ou plus peut produire une configuration consensus, des projections partielles et des distances au consensus, mais une petite intersection commune peut être peu représentative des datasets initiaux.</p>
+<p>Le module fournit également recouvrement d’échantillons et de taxons, PCoA A/B, alpha-diversité A/B, PERMANOVA et dispersion, Venn/UpSet et synthèses de cohérence. Les sous-vues A/B peuvent changer la paire affichée sans recalculer tout le run lorsque les résultats sont déjà disponibles.</p>
+<h2 id="section-8">8. Réseaux d’associations<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Un réseau représente des associations statistiques entre taxons : nœuds = taxons, arêtes = associations positives ou négatives. Une arête ne démontre pas une interaction directe ; elle peut refléter une réponse environnementale commune, un effet de groupe, une association indirecte ou un artefact compositionnel.</p>
+<p>Le module peut agréger à un rang, filtrer par prévalence et abondance moyenne, limiter le nombre de taxons, retirer les non assignés, cibler une lignée, normaliser, transformer et retirer les taxons à variance nulle. Il faut au minimum quatre échantillons et trois taxons après préparation.</p>
+<p>Les normalisations comprennent aucune, rarefaction au minimum, rarefaction plafonnée à la médiane, TSS et CSS. La rarefaction médiane n’égalise pas tous les totaux : elle réduit seulement les échantillons au-dessus de la médiane. Les transformations de corrélation comprennent CLR, mCLR, VST et log1p.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Nature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLR + Spearman / Pearson</td>
+<td>Corrélation exploratoire</td>
+</tr>
+<tr>
+<td>Proportionnalité rho</td>
+<td>Association log-ratio</td>
+</tr>
+<tr>
+<td>SPIEC-EASI MB / glasso</td>
+<td>Réseau conditionnel parcimonieux</td>
+</tr>
+<tr>
+<td>SparCC</td>
+<td>Corrélation compositionnelle</td>
+</tr>
+<tr>
+<td>gCoda / CCLasso</td>
+<td>Réseau conditionnel ou corrélation compositionnelle</td>
+</tr>
+<tr>
+<td>mixOmics sPLS</td>
+<td>Associations taxons-métadonnées</td>
+</tr>
+</tbody>
+</table></div>
+<p>Les méthodes compositionnelles appliquent leur propre préparation ; BarCodeR neutralise certaines transformations externes pour éviter une double correction. Les arêtes peuvent être filtrées par poids, q-value, signe et stabilité bootstrap. Le module calcule degré, centralités, hubs, modules, composantes, densité et modularité. Un hub n’est pas automatiquement une espèce clé.</p>
+<h2 id="section-9">9. Comparaison et réseaux multi-domaines<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Un réseau peut être construit séparément pour les modalités d’une variable de metadata puis comparé selon les arêtes communes ou spécifiques, leur signe, les hubs, les modules et la similarité de Jaccard. Des groupes très déséquilibrés peuvent produire des différences dues à la puissance statistique plutôt qu’à la biologie. Les tests différentiels d’arêtes utilisent des permutations et une correction multiple.</p>
+<p>Le mode multi-domaines combine des datasets appariés, par exemple 16S, ITS et 18S. L’appariement peut utiliser noms exacts, noms nettoyés ou colonnes de metadata. Seuls les échantillons communs sont conservés. SPIEC-EASI est appliqué à une liste de matrices pour distinguer associations intra-domaines et inter-domaines.</p>
+<p>Les sorties comprennent réseau interactif, matrice de domaines, répartition intra/cross-domaines, hubs, Sankey, Chord, tables d’arêtes et GraphML. Une association inter-domaines reste une hypothèse et ne prouve pas une interaction biologique directe.</p>
+<h2 id="section-10">10. PERMANOVA et dispersion<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>PERMANOVA teste si les centroïdes des groupes diffèrent dans l’espace d’une distance, avec <code>vegan::adonis2()</code>. PERMDISP teste si les dispersions autour des centroïdes diffèrent, avec <code>betadisper(type = "centroid")</code> et permutations.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>PERMANOVA</th>
+<th>PERMDISP</th>
+<th>Lecture prudente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Significative</td>
+<td>Non significative</td>
+<td>Différence de position compatible avec les données</td>
+</tr>
+<tr>
+<td>Significative</td>
+<td>Significative</td>
+<td>Effet potentiellement confondu avec la dispersion</td>
+</tr>
+<tr>
+<td>Non significative</td>
+<td>Significative</td>
+<td>Pas de position détectée, mais dispersion différente</td>
+</tr>
+<tr>
+<td>Non significative</td>
+<td>Non significative</td>
+<td>Aucune différence détectée ; pas une preuve d’égalité</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le modèle peut inclure facteur principal, covariables, formule libre, blocs de permutation, tests séquentiels ou marginaux et pairwise. En séquentiel, l’ordre des termes modifie l’attribution de variance. En marginal, chaque terme est testé après ajustement pour les autres et les R² ne sont pas nécessairement additifs. Lorsque des covariables sont sélectionnées en mode additif, BarCodeR utilise une décomposition marginale pour ajuster réellement le facteur principal.</p>
+<p>La variable <code>strata</code> restreint les permutations dans les blocs et est essentielle pour les mesures répétées ou plans appariés. Bray-Curtis cible les abondances, Jaccard la présence-absence, Aitchison les log-ratios et UniFrac la phylogénie. Les pairwise doivent être corrigés pour comparaisons multiples.</p>
+<h2 id="section-11">11. Clustering<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Le clustering cherche des groupes non supervisés d’échantillons, de taxons ou des deux. Il peut appliquer agglomération taxonomique, retrait des non assignés, filtration locale, sélection des taxons les plus abondants ou variables, transformation et distance.</p>
+<p>Transformations : brut, relatif, Hellinger, présence-absence, log1p et CLR. Distances : Euclidienne, Bray-Curtis, Jaccard, Manhattan, Canberra et Aitchison. Certaines combinaisons sont refusées, par exemple CLR + Bray-Curtis ; Aitchison intègre déjà une transformation log-ratio.</p>
+<p>Le clustering hiérarchique compare Ward.D, Ward.D2, single, complete, average, McQuitty, median et centroid. Les méthodes Ward sont exclues si la distance n’est pas compatible. La corrélation cophénétique mesure la fidélité du dendrogramme aux distances originales et peut déterminer la méthode proposée par défaut ; elle ne garantit pas un sens biologique.</p>
+<p>Le nombre de clusters peut être évalué avec silhouette, Dunn, saut de hauteur et tailles des groupes. Une silhouette proche de 1 indique une bonne séparation, proche de 0 un objet intermédiaire, négative une affectation potentiellement mauvaise. Le meilleur <code>k</code> statistique n’est pas automatiquement le meilleur choix biologique.</p>
+<p>Les dendrogrammes peuvent être colorés par metadata ou taxonomie. La heatmap peut être ordonnée par clustering, alphabet, abondance ou ordre original et mise à l’échelle par taxon ou échantillon. Une mise à l’échelle par taxon masque les différences absolues. Les profils de clusters sont descriptifs et ne constituent pas un test.</p>
+<h2 id="section-12">12. Transformations, distances et nature des données<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>La transformation et la distance définissent la notion de similarité.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Préparation</th>
+<th>Interprétation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comptages bruts + Bray</td>
+<td>Proximité des abondances absolues</td>
+</tr>
+<tr>
+<td>Abondances relatives + Bray</td>
+<td>Proximité des compositions relatives</td>
+</tr>
+<tr>
+<td>Présence-absence + Jaccard</td>
+<td>Partage de taxons</td>
+</tr>
+<tr>
+<td>CLR + Euclidienne / Aitchison</td>
+<td>Proximité des log-ratios</td>
+</tr>
+<tr>
+<td>UniFrac</td>
+<td>Proximité phylogénétique</td>
+</tr>
+</tbody>
+</table></div>
+<p>Les données de métabarcoding sont compositionnelles : la somme contrainte relie mécaniquement les proportions. Les méthodes adaptées incluent CLR/Aitchison, ANCOM-BC, ALDEx2, LinDA, MaAsLin 3, SPIEC-EASI, SparCC et proportionnalité.</p>
+<p>Raréfaction, ALDEx2, ANCOM-BC et plusieurs méthodes de réseaux supposent des comptes. Ne jamais utiliser une matrice CLR comme si elle contenait des reads. Les zéros peuvent représenter absence, non-détection ou profondeur insuffisante ; un pseudo-count permet le logarithme mais ne détermine pas leur nature biologique.</p>
+<h2 id="section-13">13. Plans expérimentaux, modèles et interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Les méthodes statistiques ne remplacent pas les réplicats biologiques. Avec un échantillon par groupe, l’effet du groupe ne peut pas être séparé de la variabilité individuelle. Trop de covariables pour peu d’échantillons produit des modèles instables.</p>
+<p>Une confusion complète, par exemple tous les témoins au site A et tous les traitements au site B, empêche de séparer l’effet du site et du traitement. Une interaction teste si l’effet d’un facteur dépend d’un autre et nécessite des observations dans les différentes combinaisons.</p>
+<p>Les milliers de tests taxonomiques exigent une correction multiple. Examiner les q-values plutôt que les p-values brutes. Les tests par permutations ont une résolution limitée : avec 999 permutations, la plus petite p-value est approximativement 0,001.</p>
+<p>Une p-value faible ne garantit pas une importance biologique. Examiner taille d’effet, R², stabilité, prévalence, abondance, cohérence entre méthodes et pertinence écologique.</p>
+<h2 id="section-14">14. Historiques, figures, exports et reproductibilité<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Chaque sous-module possède son historique dans le projet courant. Un calcul terminé n’est pas automatiquement sauvegardé : utiliser le bouton de sauvegarde après avoir vérifié calcul et rendu. Les snapshots peuvent contenir paramètres, résultats, figures PNG, objets RDS, tables XLSX/TSV, logs, données de reproduction et versions de packages.</p>
+<p>Le bouton <strong>Code R</strong> génère un script tentant de reproduire la figure ou l’analyse. Les commentaires sont principalement en français. Le script peut dépendre du RDS du snapshot, des versions de packages et de la graine aléatoire ; il doit être relu avant publication.</p>
+<p>Les figures sauvegardées peuvent être reprises dans MultiView lorsque leur type est compatible. Les exports incluent selon le module PNG, HTML interactif, TSV, XLSX, RDS, GraphML et rapports HTML. GraphML permet de poursuivre l’analyse des réseaux dans Cytoscape ou Gephi.</p>
+<h2 id="section-15">15. Performance et dépendances<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Analyse est un onglet coûteux. Les situations les plus lourdes sont : plusieurs moteurs différentiels au niveau ASV, NMDS et nombreuses permutations, MCOA multi-datasets, réseaux avec bootstrap ou SPIEC-EASI, PERMANOVA pairwise et clustering de grandes matrices.</p>
+<p>Réduire le coût en commençant à un rang agrégé, filtrant les taxons rares, limitant moteurs, contrastes et permutations, évitant ASV au premier essai et limitant le nombre de taxons des réseaux.</p>
+<p>Les méthodes peuvent nécessiter <code>ANCOMBC</code>, <code>MicrobiomeStat</code>, <code>ALDEx2</code>, <code>corncob</code>, <code>maaslin3</code>, <code>vegan</code>, <code>ape</code>, <code>ade4</code>, <code>SpiecEasi</code>, <code>propr</code>, <code>gCoda</code>, <code>CCLasso</code>, <code>mixOmics</code>, <code>metagenomeSeq</code>, <code>DESeq2</code>, <code>cluster</code> et <code>openxlsx</code>. En cas d’absence, le moteur est désactivé, ignoré ou remplacé par une méthode de repli, avec une entrée dans le journal.</p>
+<p>L’annulation peut n’être prise en compte qu’entre deux datasets, moteurs, rangs ou unités de calcul. Une fonction externe déjà lancée n’est pas toujours interrompue immédiatement.</p>
+<h2 id="section-16">16. Résolution des problèmes<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause probable</th>
+<th>Correction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Figure ancienne</td>
+<td>Nouveau calcul non lancé</td>
+<td>Vérifier « Recalcul requis » et relancer</td>
+</tr>
+<tr>
+<td>Filtre absent dans un autre module</td>
+<td>Filtration locale</td>
+<td>Reproduire dans Filtration si elle doit persister</td>
+</tr>
+<tr>
+<td>Aucun résultat</td>
+<td>Données ou modèle insuffisants</td>
+<td>Lire le log et réduire le modèle</td>
+</tr>
+<tr>
+<td>Moteur différentiel ignoré</td>
+<td>Package, données ou effet aléatoire incompatible</td>
+<td>Corriger ou choisir un autre moteur</td>
+</tr>
+<tr>
+<td>Effets différents entre moteurs</td>
+<td>Échelles et hypothèses différentes</td>
+<td>Comparer direction et q-value, pas amplitude</td>
+</tr>
+<tr>
+<td>CLR + Bray averti</td>
+<td>Combinaison incohérente</td>
+<td>Utiliser Aitchison/Euclidienne ou changer transformation</td>
+</tr>
+<tr>
+<td>UniFrac indisponible</td>
+<td>Arbre absent ou incompatible</td>
+<td>Vérifier feuilles et enracinement</td>
+</tr>
+<tr>
+<td>NMDS instable</td>
+<td>Convergence, graine ou stress</td>
+<td>Augmenter essais, dimensions ou revoir les données</td>
+</tr>
+<tr>
+<td>Peu d’échantillons communs</td>
+<td>Clé d’appariement incorrecte</td>
+<td>Vérifier doublons et normalisation des noms</td>
+</tr>
+<tr>
+<td>Réseau trop dense</td>
+<td>Seuil de poids trop faible</td>
+<td>Augmenter seuil ou réduire les taxons</td>
+</tr>
+<tr>
+<td>Réseau vide</td>
+<td>Filtration trop stricte ou faible puissance</td>
+<td>Assouplir et vérifier l’effectif</td>
+</tr>
+<tr>
+<td>PERMANOVA et PERMDISP significatives</td>
+<td>Dispersion confondante</td>
+<td>Interpréter avec prudence et visualiser les distances</td>
+</tr>
+<tr>
+<td>Ward absent</td>
+<td>Distance incompatible</td>
+<td>Choisir Euclidienne/Aitchison ou une autre liaison</td>
+</tr>
+<tr>
+<td>Clusters changent selon la transformation</td>
+<td>Définition de similarité modifiée</td>
+<td>Justifier transformation-distance ensemble</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-17">17. Checklists et parcours recommandé<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<h3 id="avant-une-analyse-diff-rentielle">Avant une analyse différentielle<a aria-label="Permalink" class="heading-anchor" href="#avant-une-analyse-diff-rentielle">#</a></h3>
+<ul>
+<li>Vérifier que les données sont des comptes.</li>
+<li>Vérifier groupe, référence, réplicats et valeurs manquantes.</li>
+<li>Identifier covariables et effets aléatoires.</li>
+<li>Commencer à un rang agrégé.</li>
+<li>Utiliser un filtre partagé pour comparer les moteurs.</li>
+<li>Examiner effet, q-value, prévalence et table complète.</li>
+</ul>
+<h3 id="avant-une-ordination-ou-une-permanova">Avant une ordination ou une PERMANOVA<a aria-label="Permalink" class="heading-anchor" href="#avant-une-ordination-ou-une-permanova">#</a></h3>
+<ul>
+<li>Définir la question écologique.</li>
+<li>Choisir transformation et distance de façon cohérente.</li>
+<li>Vérifier l’arbre avant UniFrac.</li>
+<li>Définir les blocs de permutation.</li>
+<li>Examiner stress, valeurs propres et PERMDISP.</li>
+<li>Ne pas conclure seulement à partir du chevauchement visuel.</li>
+</ul>
+<h3 id="avant-une-comparaison-de-matrices-ou-un-r-seau">Avant une comparaison de matrices ou un réseau<a aria-label="Permalink" class="heading-anchor" href="#avant-une-comparaison-de-matrices-ou-un-r-seau">#</a></h3>
+<ul>
+<li>Construire une clé d’appariement fiable.</li>
+<li>Vérifier l’intersection d’échantillons.</li>
+<li>Limiter les taxons rares.</li>
+<li>Choisir une méthode compositionnelle.</li>
+<li>Mesurer la robustesse des arêtes.</li>
+<li>Ne pas interpréter une association comme une interaction démontrée.</li>
+</ul>
+<h3 id="parcours-recommand">Parcours recommandé<a aria-label="Permalink" class="heading-anchor" href="#parcours-recommand">#</a></h3>
+<ol>
+<li>Vérifier les données dans Description.</li>
+<li>Conserver un dataset brut et définir une filtration persistante.</li>
+<li>Commencer par une ordination descriptive.</li>
+<li>Examiner la dispersion puis PERMANOVA.</li>
+<li>Identifier les taxons avec l’analyse différentielle.</li>
+<li>Comparer plusieurs moteurs lorsque nécessaire.</li>
+<li>Utiliser la comparaison de matrices pour les études multi-marqueurs.</li>
+<li>Utiliser réseaux et clustering comme outils de génération d’hypothèses.</li>
+<li>Lire diagnostics et logs.</li>
+<li>Sauvegarder figures et tables.</li>
+<li>Vérifier le code R reproductible.</li>
+<li>Sauvegarder le projet et documenter les décisions.</li>
+</ol>
+<h2 id="section-18">18. Limites principales et sources internes<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<h3 id="limites-principales">Limites principales<a aria-label="Permalink" class="heading-anchor" href="#limites-principales">#</a></h3>
+<ul>
+<li>Les états et filtrations sont indépendants entre sous-modules.</li>
+<li>Une figure visible peut correspondre à un ancien calcul.</li>
+<li>Les moteurs différentiels utilisent des échelles incompatibles.</li>
+<li>Tous les moteurs ne gèrent pas les effets aléatoires.</li>
+<li>Les transformations et distances ne sont pas toutes compatibles.</li>
+<li>Une ordination réduit une structure complexe à quelques axes.</li>
+<li>PERMANOVA peut être influencée par la dispersion.</li>
+<li>Les permutations doivent respecter le plan expérimental.</li>
+<li>La comparaison de matrices dépend entièrement de l’appariement.</li>
+<li>MCOA utilise uniquement l’intersection commune.</li>
+<li>Les réseaux représentent des associations, pas des causalités.</li>
+<li>Le clustering dépend fortement de la préparation et du choix de distance.</li>
+<li>Le meilleur <code>k</code> statistique n’est pas automatiquement biologiquement pertinent.</li>
+<li>Les analyses lourdes consomment beaucoup de mémoire et de temps.</li>
+<li>Les historiques doivent être sauvegardés manuellement.</li>
+<li>Les scripts reproductibles peuvent dépendre du snapshot RDS.</li>
+</ul>
+<h3 id="sources-internes-v-rifi-es">Sources internes vérifiées<a aria-label="Permalink" class="heading-anchor" href="#sources-internes-v-rifi-es">#</a></h3>
+<ol>
+<li><code>modules/analyse/mod_analyse_main_ui.R</code> et <code>mod_analyse_main_server.R</code>.</li>
+<li><code>modules/analyse/daa_ancombc/</code> pour les cinq moteurs différentiels et le consensus.</li>
+<li><code>modules/analyse/ordination/</code> pour PCA, PCoA, NMDS, CCA, RDA, dbRDA et Procrustes.</li>
+<li><code>modules/analyse/comparaison_matrices/</code> pour l’appariement, Mantel, Procrustes, co-inertie et MCOA.</li>
+<li><code>modules/analyse/reseaux_d_association/</code> pour les réseaux simples, comparés et multi-domaines.</li>
+<li><code>modules/analyse/_shared/fct_permanova.R</code> et <code>modules/analyse/permanova_dispersion/</code>.</li>
+<li><code>modules/analyse/clustering/</code> pour dendrogrammes, diagnostics de <code>k</code>, heatmaps et historiques.</li>
+<li><code>modules/_shared/_active_dataset_sync.R</code> pour la synchronisation des sélections.</li>
+<li><code>.claude/architecture/40-analyse-daa-ancombc.md</code> à <code>45-analyse-clustering.md</code>, confrontés au code effectif.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Rôle général et organisation de l’onglet</a><a class="toc-l2" href="#section-2">2. Fonctionnement commun aux modules d’Analyse</a><a class="toc-l2" href="#section-3">3. Analyses différentielles</a><a class="toc-l2" href="#section-4">4. Comparaison de plusieurs moteurs différentiels</a><a class="toc-l2" href="#section-5">5. Ordinations</a><a class="toc-l2" href="#section-6">6. Paramètres et diagnostics des ordinations</a><a class="toc-l2" href="#section-7">7. Comparaison de matrices</a><a class="toc-l2" href="#section-8">8. Réseaux d’associations</a><a class="toc-l2" href="#section-9">9. Comparaison et réseaux multi-domaines</a><a class="toc-l2" href="#section-10">10. PERMANOVA et dispersion</a><a class="toc-l2" href="#section-11">11. Clustering</a><a class="toc-l2" href="#section-12">12. Transformations, distances et nature des données</a><a class="toc-l2" href="#section-13">13. Plans expérimentaux, modèles et interprétation</a><a class="toc-l2" href="#section-14">14. Historiques, figures, exports et reproductibilité</a><a class="toc-l2" href="#section-15">15. Performance et dépendances</a><a class="toc-l2" href="#section-16">16. Résolution des problèmes</a><a class="toc-l2" href="#section-17">17. Checklists et parcours recommandé</a><a class="toc-l3" href="#avant-une-analyse-diff-rentielle">Avant une analyse différentielle</a><a class="toc-l3" href="#avant-une-ordination-ou-une-permanova">Avant une ordination ou une PERMANOVA</a><a class="toc-l3" href="#avant-une-comparaison-de-matrices-ou-un-r-seau">Avant une comparaison de matrices ou un réseau</a><a class="toc-l3" href="#parcours-recommand">Parcours recommandé</a><a class="toc-l2" href="#section-18">18. Limites principales et sources internes</a><a class="toc-l3" href="#limites-principales">Limites principales</a><a class="toc-l3" href="#sources-internes-v-rifi-es">Sources internes vérifiées</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Analyse</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

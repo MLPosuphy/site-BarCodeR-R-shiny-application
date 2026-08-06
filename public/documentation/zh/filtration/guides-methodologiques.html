@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>过滤 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="filtration" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link active" href="../filtration/guides-methodologiques.html">过滤</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">过滤</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">过滤 — 方法学指南</h1>
+<h2 id="section-1">1. 选项卡的总体作用<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>过滤</strong>选项卡用于从 BarCodeR 中已加载的 <code>phyloseq</code> 对象构建子数据集。它可以根据分类注释删除分类单元，删除低丰度或低出现率的 ASV，根据测序深度、丰富度、名称或元数据删除样本，以及删除不满足技术条件的序列。</p>
+<p>结果首先以临时反应式对象的形式构建：</p>
+<pre tabindex="0"><code class="language-r">ps_filtered
+</code></pre>
+<p>随后可在摘要中检查、以新名称保存、用于替换父数据集、在 Description 中检查、与其他数据集比较或导出。</p>
+<h3 id="data-edition">与 Data Edition 的区别<a aria-label="Permalink" class="heading-anchor" href="#data-edition">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Data Edition</th>
+<th>过滤</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接修改所选数据集的表</td>
+<td>先构建临时派生对象</td>
+</tr>
+<tr>
+<td>修改立即写入 <code>datasets()</code></td>
+<td>调参期间父数据集保持不变</td>
+</tr>
+<tr>
+<td>适合修正单元格和结构</td>
+<td>适合按条件删除样本或分类单元</td>
+</tr>
+<tr>
+<td>将编辑记录到 <code>edit_log</code></td>
+<td>将过滤记录到 <code>filtration_log</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>结果在保存前不会出现在 Datasets 中，其他模块无法使用，也不会写入磁盘；重新加载会话时可能丢失。</p>
+<h2 id="section-2">2. 自动运行方式与结果生命周期<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>界面中没有<strong>应用过滤器</strong>按钮。只要活动参数发生变化，过滤就会自动重新计算，例如启用某个模块、修改阈值、选择分类值、添加元数据条件或切换数据集。</p>
+<p>对于大型数据集，每次修改都可能重新读取 OTU 表、计算丰度与出现率、执行多个 <code>prune_taxa()</code> 或 <code>prune_samples()</code>、分析序列并重建日志和摘要。建议逐步修改参数，并等待计算完成后再继续。</p>
+<h3 id="section">调参期间父数据集保持不变<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h3>
+<pre tabindex="0"><code class="language-text">父数据集
+   ↓
+反应式计算
+   ↓
+临时过滤结果
+</code></pre>
+<p>只有在以父数据集相同名称保存时，父数据集才会被替换。</p>
+<h3 id="section-3">空名称字段的风险<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h3>
+<p>保存名称默认为空。空值表示：</p>
+<blockquote>
+<p>使用父数据集名称保存结果，并替换父数据集。</p>
+</blockquote>
+<p>不会再弹出额外确认。为了保留原始数据，应显式输入不同名称，例如 <code>COI_raw</code> 和 <code>COI_filtered</code>。</p>
+<p>保存只修改 BarCodeR 内存。要持久化结果，还必须使用 <strong>Datasets → 保存项目</strong>。</p>
+<h2 id="section-3-2">3. 固定的过滤顺序<a aria-label="Permalink" class="heading-anchor" href="#section-3-2">#</a></h2>
+<p>过滤始终按以下顺序执行：</p>
+<pre tabindex="0"><code class="language-text">1. 分类学
+2. ASV 丰度
+3. 样本
+4. 序列
+</code></pre>
+<p>此顺序固定，与打开或设置各个框的顺序无关。</p>
+<h3 id="section-4">后果<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h3>
+<p>每个模块使用前一个模块的结果。例如：</p>
+<ol>
+<li>删除叶绿体；</li>
+<li>重新计算剩余 ASV 的总量和出现率；</li>
+<li>重新计算样本 reads 和丰富度；</li>
+<li>删除不满足条件的样本；</li>
+<li>删除不满足技术标准的序列。</li>
+</ol>
+<p>因此，样本阈值并不一定使用 Description 中显示的原始值。</p>
+<h3 id="section-5">只执行一次，不迭代至稳定<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h3>
+<p>最后一步之后，流程不会重新从第一步开始。因此：</p>
+<ul>
+<li>删除样本后，一些 ASV 的出现率可能降到阈值以下，但不会再次删除；</li>
+<li>序列过滤可能使样本 reads 或丰富度低于阈值，但不会再次应用样本条件；</li>
+<li>最终结果中可能保留零 reads 的样本或零丰度的分类单元。</li>
+</ul>
+<p>第二次过滤可能因此删除比第一次更多的元素。</p>
+<h2 id="section-4-2">4. 数据集选择与参数保留<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h2>
+<p>主选择器与全局活动数据集同步。在过滤选项卡中切换数据集会更新 <code>active_ds()</code>，改变其他模块默认使用的数据集，并可能把项目标记为未保存。</p>
+<h3 id="section-6">参数不会全部重置<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h3>
+<p>切换数据集后，以下设置可能仍然保留：</p>
+<ul>
+<li>丰度阈值；</li>
+<li>样本阈值；</li>
+<li>序列条件；</li>
+<li>分类关键词；</li>
+<li>高级条件；</li>
+<li>保存名称。</li>
+</ul>
+<p>与数据集相关的列表会更新，包括分类等级和值、样本名和元数据变量。</p>
+<p>高级条件可能继续引用新数据集中不存在的变量，从而阻止过滤结果生成，直到该条件被修正或删除。</p>
+<p>每次切换数据集后，在保存前都应检查全部模块。</p>
+<h2 id="section-5-2">5. 如何理解界面状态<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h2>
+<p>每个过滤模块都有颜色状态。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>颜色</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>灰色</td>
+<td>没有活动或已修改的参数</td>
+</tr>
+<tr>
+<td>橙色</td>
+<td>参数已修改，但模块未启用</td>
+</tr>
+<tr>
+<td>绿色</td>
+<td>模块启用复选框已勾选</td>
+</tr>
+</tbody>
+</table></div>
+<p>绿色边框不保证真正删除任何内容。例如 ASV 模块可以处于启用状态，但所有阈值均为 0；它会显示绿色，但条件是中性的。</p>
+<p>全局提示栏会尝试识别真正设置了条件的模块，但即使没有删除任何内容，数据集仍可能获得 <code>filtration_log</code>。</p>
+<h3 id="section-7">图形预览<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h3>
+<p>阈值直方图基于所选父数据集计算，而不是逐步过滤后的对象。它们包括：ASV 总 reads、出现率、最大相对丰度、每个样本 reads、每个样本丰富度、序列长度和 GC。</p>
+<p>阈值线用于查看初始分布，但不一定代表前面模块执行后真正使用的值。<strong>过滤前/后摘要</strong>才是最终结果的主要预览。</p>
+<h2 id="section-6-2">6. 分类学过滤<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h2>
+<p>分类学过滤需要 <code>tax_table</code>。它可以按某一分类等级排除值、仅保留选定值，以及删除包含关键词的注释。</p>
+<h3 id="section-8">默认选择的关键词<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h3>
+<p>默认已选择：</p>
+<pre tabindex="0"><code class="language-text">chloroplast
+mitochondria
+</code></pre>
+<p>在模块启用前不会应用。但仅勾选<strong>启用过滤</strong>就可能立即删除包含这些词的分类单元。</p>
+<p>这些词并不是通用污染物。根据标记基因和研究目标，它们可能正是目标生物信号。</p>
+<h3 id="section-9">按分类等级排除或保留<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h3>
+<p>对于所选等级：</p>
+<ul>
+<li><strong>排除</strong>：删除值与所选值完全一致的 ASV；</li>
+<li><strong>仅保留</strong>：保留与所选值一致的 ASV。</li>
+</ul>
+<p>内部顺序为：</p>
+<pre tabindex="0"><code class="language-text">1. 排除
+2. 保留
+3. 关键词搜索
+</code></pre>
+<p>相互矛盾的规则可能删除全部分类单元。</p>
+<h3 id="section-10">关键词搜索<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h3>
+<p>关键词会在所有分类列中搜索，不区分大小写，按子字符串匹配，并使用 <code>|</code> 组合模式。</p>
+<p>因此 <code>chloroplast</code> 可以匹配 <code>Chloroplast</code>、<code>chloroplastidae</code> 或 <code>Unclassified chloroplast sequence</code>。搜索不限于所选分类等级。</p>
+<h3 id="section-11">缺少分类表<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h3>
+<p>如果启用了模块但没有分类表，该模块会被跳过。其他模块仍可能生成结果。应查看真实摘要，而不是只依赖绿色状态。</p>
+<h2 id="section-7-2">7. 按丰度过滤 ASV<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h2>
+<p>有三个条件，按顺序执行：</p>
+<pre tabindex="0"><code class="language-text">1. 总 reads
+2. 出现率
+3. 最大相对丰度
+</code></pre>
+<p>这些条件假设 OTU 表中的值可解释为丰度。对于 CLR、相对丰度、对数转换、负值或已标准化矩阵，结果可能具有误导性。</p>
+<h3 id="asv-reads">每个 ASV 的总 reads<a aria-label="Permalink" class="heading-anchor" href="#asv-reads">#</a></h3>
+<pre tabindex="0"><code class="language-text">总量 = 当前阶段所有剩余样本中的丰度之和
+</code></pre>
+<p>规则是严格大于：</p>
+<pre tabindex="0"><code class="language-text">总量 &gt; 阈值
+</code></pre>
+<p>阈值为 10 时，总量等于 10 的 ASV 会被删除，总量 11 的会保留。</p>
+<h3 id="section-12">出现率<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h3>
+<p>出现率是丰度严格大于 0 的样本数。规则为：</p>
+<pre tabindex="0"><code class="language-text">出现率 ≥ 阈值
+</code></pre>
+<p>阈值为 3 时，恰好出现在 3 个样本中的 ASV 会保留。</p>
+<p>绝对阈值必须结合样本总数解释。3 个样本在 10 个样本项目中是 30%，在 100 个样本项目中只有 3%。</p>
+<h3 id="section-13">最大相对丰度<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h3>
+<p>BarCodeR 对每个 ASV 在每个样本中计算相对丰度，并保留其中最大值：</p>
+<pre tabindex="0"><code class="language-text">最大值：ASV 丰度 / 样本总丰度 × 100
+</code></pre>
+<p>规则为：</p>
+<pre tabindex="0"><code class="language-text">最大相对丰度 ≥ 阈值
+</code></pre>
+<p>这可以保留总体稀少但在某个样本中很重要的 ASV。</p>
+<p>该计算在总量和出现率过滤后执行。删除分类单元会改变分母，并机械性提高剩余分类单元的相对比例。</p>
+<h2 id="section-8-2">8. 样本过滤<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h2>
+<p>样本条件按以下顺序执行：</p>
+<pre tabindex="0"><code class="language-text">1. 最小 reads
+2. 最小丰富度
+3. 样本名称
+4. 简单元数据条件
+5. 高级条件
+</code></pre>
+<h3 id="reads">最小 reads<a aria-label="Permalink" class="heading-anchor" href="#reads">#</a></h3>
+<p>在分类学和丰度过滤后重新计算：</p>
+<pre tabindex="0"><code class="language-text">Reads = 当前剩余分类单元丰度之和
+</code></pre>
+<p>规则包含等号：</p>
+<pre tabindex="0"><code class="language-text">Reads ≥ 阈值
+</code></pre>
+<h3 id="section-14">最小丰富度<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h3>
+<p>丰富度为丰度严格大于 0 的分类单元数。规则为：</p>
+<pre tabindex="0"><code class="language-text">丰富度 ≥ 阈值
+</code></pre>
+<p>它可能与 Description 中父数据集显示的丰富度不同。</p>
+<h3 id="section-15">按样本名过滤<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h3>
+<p>名称与 <code>sample_names(ps)</code> 完全匹配，不支持部分匹配或忽略大小写。</p>
+<ul>
+<li><strong>保留</strong>：只保留所选名称；</li>
+<li><strong>排除</strong>：删除所选名称。</li>
+</ul>
+<p>此步骤在 reads 和丰富度阈值之后执行。因此，即使某个样本被选择保留，它也可能已在前一步被删除。</p>
+<h3 id="section-16">简单元数据条件<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h3>
+<p>模块主要区分数值列与因子/字符列。日期、逻辑值和特殊类型可能无法在简单过滤器中正确处理。</p>
+<h4>数值变量</h4>
+<p>可用运算符为 <code>≥</code>、<code>&gt;</code>、<code>≤</code>、<code>&lt;</code> 和“区间”。区间包含两端；如果输入顺序相反，BarCodeR 会自动使用较小和较大值。</p>
+<p>默认提供的中位数或四分位数只是操作便利，不是科学推荐值。</p>
+<p>使用<strong>保留</strong>时，缺失值通常会被删除；使用<strong>排除</strong>时，缺失值通常会被保留，因为反转前它们不满足条件。</p>
+<h4>分类变量</h4>
+<p>转换为文本后进行精确比较，区分大小写、空格和拼写。</p>
+<p>同一条件中选择多个值时使用“或”。</p>
+<p>缺失值通常在“保留”时被删除，在“排除”时被保留。</p>
+<h2 id="section-9-2">9. 高级元数据条件<a aria-label="Permalink" class="heading-anchor" href="#section-9-2">#</a></h2>
+<p>每个高级条件包含变量、保留/排除操作、比较或多个值，以及删除按钮。</p>
+<p>所有条件之间使用<strong>且（AND）</strong>。</p>
+<p>例如：</p>
+<pre tabindex="0"><code class="language-text">保留 Campaign = 2026
+且
+排除 Site = control
+且
+保留 Depth ≥ 50
+</code></pre>
+<p>不同变量之间不能直接使用“或”。</p>
+<p>对于分类变量，同一行选择多个值提供内部“或”，例如 <code>Site = A 或 B</code>。</p>
+<p>未识别为数值的变量会作为文本处理。日期可以作为分类值选择，但不能作为真实时间区间过滤。</p>
+<h3 id="section-17">不完整条件<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h3>
+<p>一个未完成的高级条件可能完全阻止临时结果生成，即使其他过滤条件都有效。必须补全或删除该条件。</p>
+<h2 id="section-10-2">10. 序列技术过滤<a aria-label="Permalink" class="heading-anchor" href="#section-10-2">#</a></h2>
+<p>技术过滤使用 <code>refseq(ps)</code>，可按长度、GC、模糊碱基和同聚物进行过滤，并在最后执行。</p>
+<h3 id="section-18">缺失或无法对齐的序列<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h3>
+<p>如果没有 <code>refseq</code>，该模块会跳过并在日志中记录。</p>
+<p>BarCodeR 尝试将序列与 <code>taxa_names(ps)</code> 对齐：</p>
+<ul>
+<li>序列没有名称但数量完全相同时，假设顺序一致；</li>
+<li>有名称时按标识符匹配。</li>
+</ul>
+<p>如果没有任何序列可对齐，模块会跳过。</p>
+<p>如果覆盖不完整，有序列的 ASV 会接受评估，没有序列的 ASV 会保留且不检查。</p>
+<p>长度和 GC 图使用更严格的对齐，因此图形可能缺失，即使过滤被部分应用。</p>
+<h3 id="section-19">长度<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h3>
+<p>边界包含端点：</p>
+<pre tabindex="0"><code class="language-text">最小长度 ≤ 长度 ≤ 最大长度
+</code></pre>
+<p>最大长度为 0 时禁用上限。如果最小值大于最大值，所有序列都可能被拒绝。</p>
+<h3 id="gc">GC<a aria-label="Permalink" class="heading-anchor" href="#gc">#</a></h3>
+<p>过滤器使用 A、C、G、T 计算 GC：</p>
+<pre tabindex="0"><code class="language-text">G + C
+────────────── × 100
+A + C + G + T
+</code></pre>
+<p>模糊碱基不进入分母。上下限均包含端点，中性范围为 0% 到 100%。</p>
+<h3 id="section-20">模糊碱基<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h3>
+<p>计数字符为：</p>
+<pre tabindex="0"><code class="language-text">N R Y S W K M B D H V
+</code></pre>
+<p>缺口、点和其他符号未被明确计入。</p>
+<p>当前实现中，<strong>最大模糊数 = 0</strong> 表示禁用过滤，而不是强制要求零模糊碱基。</p>
+<h3 id="section-21">同聚物<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h3>
+<p>BarCodeR 查找最长的连续相同字符。<code>AAAATCG</code> 的最大同聚物长度为 4。</p>
+<p>所有字符都可能被计数，包括模糊碱基和重复符号。最长连续长度小于或等于阈值时保留；0 同样表示禁用。</p>
+<h3 id="section-22">顺序带来的后果<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h3>
+<p>技术过滤后不会重新计算样本阈值，因此最终样本可能低于 reads 或丰富度阈值，甚至变为零 reads。</p>
+<h2 id="section-11-2">11. 防止空结果及验证边界<a aria-label="Permalink" class="heading-anchor" href="#section-11-2">#</a></h2>
+<p>如果某一步会删除全部分类单元或全部样本，BarCodeR 会停止并显示错误。</p>
+<p>这只保证至少保留一个分类单元和一个样本，并不保证复制数足够、最终深度或丰富度达标、不存在零值，或适合统计分析。</p>
+<p>最终结果必须在 Description 中检查。</p>
+<h2 id="section-12-2">12. 过滤日志与来源<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h2>
+<p>结果获得属性：</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>其中可包含父数据集名称、日期、过滤前后维度、描述文本、结构化参数、删除的分类单元和删除的样本。</p>
+<h3 id="section-23">结构化参数<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h3>
+<p>保存在：</p>
+<pre tabindex="0"><code class="language-r">filtration_log$params
+</code></pre>
+<p>包括启用模块、分类等级、排除/保留值、关键词、丰度阈值、名称过滤、元数据条件和序列参数。</p>
+<p>这是复现和审计过滤过程最可靠的来源。</p>
+<h3 id="section-24">日志语言<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h3>
+<p>日志文本使用计算时的活动语言保存，之后不会自动翻译。</p>
+<p>“活动模块”列目前会在文本日志中查找部分法语表达式，因此对于使用其他语言过滤的数据集可能显示 <code>—</code>。结构化参数更可靠。</p>
+<h3 id="section-25">删除元素表<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h3>
+<p><code>removed_taxa</code> 和 <code>removed_samples</code> 使用所有过滤之前父数据集的指标。</p>
+<p>例如，一个样本在分类学过滤后只剩 800 reads 而被删除，但删除样本表中可能仍显示原始的 5,000 reads。</p>
+<p>这些表不一定为每一项提供精确删除原因；日志步骤主要记录总体影响。</p>
+<h3 id="section-26">连续过滤<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h3>
+<p>新一轮过滤会替换旧的 <code>filtration_log</code>，不会自动堆叠历史。</p>
+<p>建议用不同名称保留阶段：</p>
+<pre tabindex="0"><code class="language-text">COI_raw
+COI_tax
+COI_abundance
+COI_final
+</code></pre>
+<h3 id="section-27">保留或可能丢失的属性<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h3>
+<p>BarCodeR 会显式复制 <code>openmetabar_run</code> 和 <code>edit_log</code>。</p>
+<p>pruning 可能丢失其他非标准属性，例如 <code>dataset_meta</code>、备注、标签或自定义属性。过滤后应检查这些信息。</p>
+<h2 id="section-13-2">13. 保存结果与覆盖风险<a aria-label="Permalink" class="heading-anchor" href="#section-13-2">#</a></h2>
+<p>可能出现三种情况。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>输入名称</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空字段或父数据集名称</td>
+<td>立即替换父数据集</td>
+</tr>
+<tr>
+<td>新名称</td>
+<td>创建新数据集</td>
+</tr>
+<tr>
+<td>其他数据集名称</td>
+<td>替换前要求确认</td>
+</tr>
+</tbody>
+</table></div>
+<p>名称使用 BarCodeR 通用 helper 规范化。与 Input data 不同，冲突时不会自动添加 <code>_2</code>。</p>
+<h3 id="section-28">只写入内存<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h3>
+<p>保存按钮修改 <code>datasets()</code>，不会把项目写入磁盘。</p>
+<p>保存后的结果会成为活动数据集。</p>
+<h3 id="section-29">自动再次应用过滤<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h3>
+<p>由于过滤选择器跟随活动数据集，保存结果会立即成为新的父数据集，活动过滤条件会再次应用：</p>
+<pre tabindex="0"><code class="language-text">原始父数据集
+    ↓
+第一次保存结果
+    ↓
+过滤条件仍然活动
+    ↓
+新的临时结果
+</code></pre>
+<p>第二次点击保存可能继续删除更多元素。</p>
+<p>保存后应：</p>
+<ol>
+<li>不要立即再次点击；</li>
+<li>禁用过滤或离开选项卡；</li>
+<li>在 Description 中检查结果；</li>
+<li>在 Datasets 中保存项目。</li>
+</ol>
+<h2 id="section-14-2">14. 数据集检查与导出<a aria-label="Permalink" class="heading-anchor" href="#section-14-2">#</a></h2>
+<p>下方区域显示注册表中的数据集，但不显示尚未保存的临时结果。</p>
+<p>表格可显示名称、过滤状态、父数据集、日期、过滤前后维度、删除数量和活动模块。</p>
+<p>只要存在 <code>filtration_log</code>，数据集就会显示为已过滤，即使没有删除任何元素。</p>
+<p>如果结果以相同名称覆盖父数据集，可能显示为自己的父数据集。</p>
+<p>之后若在 Data Edition 中修改，当前维度可能不再只反映过滤。</p>
+<h3 id="section-30">详细信息面板<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h3>
+<p>面板可查看日志、参数、删除的分类单元和样本、OTU 表、分类表、元数据、序列和直方图。</p>
+<p>需要注意：</p>
+<ul>
+<li>名为 Reads 的图实际上显示每个分类单元的总量；</li>
+<li>对数图使用 <code>log10(total + 1)</code>；</li>
+<li>详细面板中的 GC 使用字符串总长度作为分母，可能与过滤 GC 不同；</li>
+<li>OTU 表始终被转置，方向没有可靠标准化；</li>
+<li>对应组件缺失时，某些面板可能为空或报错。</li>
+</ul>
+<h3 id="tsv">TSV 导出<a aria-label="Permalink" class="heading-anchor" href="#tsv">#</a></h3>
+<p>文件名是通用的：</p>
+<pre tabindex="0"><code class="language-text">otu_table.tsv
+taxonomy.tsv
+metadata.tsv
+</code></pre>
+<p>不包含数据集名称或日期。行名作为第一列导出，有时没有明确列名。</p>
+<p>OTU 表导出时同样始终转置，因此方向取决于原始 phyloseq。</p>
+<h3 id="biom">BIOM 导出<a aria-label="Permalink" class="heading-anchor" href="#biom">#</a></h3>
+<p>BIOM 只包含丰度矩阵，不自动包含分类、元数据、序列、树或日志。</p>
+<p>直接使用存储方向。如果分类单元在列中，文件可能方向相反。</p>
+<p>如果未安装 <code>biomformat</code>，BarCodeR 当前会生成扩展名为 <code>.biom</code>、但内容是文本提示的文件。该文件不是有效 BIOM。</p>
+<h2 id="section-15-2">15. 科学解释与推荐策略<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h2>
+<p>BarCodeR 无法自动决定合适阈值。阈值取决于标记基因、技术、实验流程、样本数、测序深度、对照、预期多样性、pipeline 和研究目的。</p>
+<h3 id="section-31">稀有分类单元<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h3>
+<p>稀有 ASV 可能是错误、污染、伪影、真实稀有分类单元或重要生物学事件。仅凭稀有性不能自动删除。</p>
+<h3 id="section-32">实验分组<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h3>
+<p>全局阈值可能严重破坏组间平衡。过滤后应检查每组样本数、保留的对照、重复数和各组深度。</p>
+<h3 id="section-33">比较过滤策略<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h3>
+<p>应从同一父数据集比较：</p>
+<pre tabindex="0"><code class="language-text">COI_raw → 方法 A
+COI_raw → 方法 B
+</code></pre>
+<p>除非目标明确是逐步过滤，否则不要使用 <code>COI_raw → 方法 A → 方法 B</code>。</p>
+<h3 id="section-34">推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h3>
+<ol>
+<li>保存项目。</li>
+<li>保留原始数据集。</li>
+<li>选择父数据集。</li>
+<li>检查继承参数。</li>
+<li>每次只启用一个模块。</li>
+<li>检查每一步后的维度。</li>
+<li>逐步增加其他条件。</li>
+<li>检查分组与对照。</li>
+<li>输入新名称。</li>
+<li>只保存一次。</li>
+<li>离开或禁用过滤。</li>
+<li>在 Description 中检查。</li>
+<li>检查零值、备注、标签和来源。</li>
+<li>保存项目。</li>
+<li>导出最终数据集。</li>
+</ol>
+<h2 id="section-16-2">16. 故障排查与检查<a aria-label="Permalink" class="heading-anchor" href="#section-16-2">#</a></h2>
+<h3 id="section-35">参数问题<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>旧过滤器应用到新数据集</td>
+<td>参数被保留</td>
+<td>切换后检查所有模块</td>
+</tr>
+<tr>
+<td>绿色框但没有删除</td>
+<td>条件为中性</td>
+<td>检查阈值和摘要</td>
+</tr>
+<tr>
+<td>橙色框</td>
+<td>参数已修改但未启用</td>
+<td>启用或恢复中性值</td>
+</tr>
+<tr>
+<td>启用分类学后立即删除 ASV</td>
+<td>默认关键词</td>
+<td>检查 <code>chloroplast</code> 和 <code>mitochondria</code></td>
+</tr>
+<tr>
+<td>没有结果</td>
+<td>高级条件不完整或过严</td>
+<td>补全、删除或放宽</td>
+</tr>
+<tr>
+<td>会删除全部分类单元或样本</td>
+<td>条件冲突或过度</td>
+<td>降低阈值</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-36">阈值问题<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>恰好等于总量阈值的 ASV 被删除</td>
+<td>总量使用 <code>&gt;</code></td>
+</tr>
+<tr>
+<td>总量低的 ASV 通过相对阈值</td>
+<td>它在至少一个样本中重要</td>
+</tr>
+<tr>
+<td>图上高于阈值的样本被删除</td>
+<td>真正阈值在删除分类单元后应用</td>
+</tr>
+<tr>
+<td>缺失值在“保留”时被删除</td>
+<td>不满足条件</td>
+</tr>
+<tr>
+<td>缺失值在“排除”时保留</td>
+<td>反转前不匹配</td>
+</tr>
+<tr>
+<td>高级条件过于严格</td>
+<td>条件之间使用 AND</td>
+</tr>
+<tr>
+<td>无法在变量之间建立 OR</td>
+<td>当前不直接支持</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-37">序列问题<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因或行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>没有长度或 GC 图</td>
+<td>RefSeq 缺失或对齐不完整</td>
+</tr>
+<tr>
+<td>模块活动但被跳过</td>
+<td>没有可对齐序列</td>
+</tr>
+<tr>
+<td>没有序列的 ASV 仍保留</td>
+<td>覆盖不完整</td>
+</tr>
+<tr>
+<td>最大模糊数设为 0 不过滤</td>
+<td>0 表示禁用</td>
+</tr>
+<tr>
+<td>最大同聚物设为 0 不过滤</td>
+<td>0 表示禁用</td>
+</tr>
+<tr>
+<td>零 reads 样本仍保留</td>
+<td>样本阈值未重新应用</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-38">日志与来源问题<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>删除表中的指标高于阈值</td>
+<td>使用原始父数据集指标</td>
+</tr>
+<tr>
+<td>每项没有精确原因</td>
+<td>日志主要记录总体影响</td>
+</tr>
+<tr>
+<td>旧日志消失</td>
+<td>新一轮替换了 <code>filtration_log</code></td>
+</tr>
+<tr>
+<td>备注或标签消失</td>
+<td>pruning 时自定义属性丢失</td>
+</tr>
+<tr>
+<td>没有删除却显示已过滤</td>
+<td>只要日志存在即可</td>
+</tr>
+<tr>
+<td>活动模块显示 <code>—</code></td>
+<td>文本日志使用其他语言</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-39">保存问题<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因或处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>父数据集被覆盖</td>
+<td>名称为空或与父数据集相同</td>
+</tr>
+<tr>
+<td>没有添加 <code>_2</code></td>
+<td>Filtration 使用替换而非自动改名</td>
+</tr>
+<tr>
+<td>关闭后结果丢失</td>
+<td>未在 Datasets 保存项目</td>
+</tr>
+<tr>
+<td>保存后结果变化</td>
+<td>过滤再次应用到新活动数据集</td>
+</tr>
+<tr>
+<td>第二次点击删除更多</td>
+<td>对第一次结果执行第二轮</td>
+</tr>
+<tr>
+<td>保存被拒绝</td>
+<td>OTU、元数据或分类 ID 不一致</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-40">检查或导出问题<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>临时结果未出现在表中</td>
+<td>尚未保存</td>
+</tr>
+<tr>
+<td>Reads 图基于 ASV</td>
+<td>图计算每个分类单元总量</td>
+</tr>
+<tr>
+<td>不同图的 GC 不同</td>
+<td>分母公式不同</td>
+</tr>
+<tr>
+<td>OTU 表被转置</td>
+<td>面板始终调用 <code>t()</code></td>
+</tr>
+<tr>
+<td>BIOM 方向反了</td>
+<td>OTU 方向未纠正</td>
+</tr>
+<tr>
+<td><code>.biom</code> 文件是文本</td>
+<td>缺少 <code>biomformat</code></td>
+</tr>
+<tr>
+<td>详细页报错</td>
+<td>缺少对应 phyloseq 组件</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-41">过滤前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h3>
+<ul>
+<li>确认活动项目和数据集。</li>
+<li>保存项目。</li>
+<li>保留原始版本。</li>
+<li>确认丰度值适合阈值过滤。</li>
+<li>检查 OTU 方向。</li>
+<li>检查分类、元数据和 RefSeq。</li>
+<li>明确每个过滤器的科学目的。</li>
+<li>检查从其他数据集继承的参数。</li>
+</ul>
+<h3 id="section-42">保存前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h3>
+<ul>
+<li>阅读完整摘要。</li>
+<li>检查过滤前后 ASV 和样本数。</li>
+<li>检查被跳过的步骤。</li>
+<li>检查高级条件。</li>
+<li>输入新名称以保留父数据集。</li>
+<li>只点击一次保存。</li>
+<li>不要混淆注册表保存与项目持久化。</li>
+</ul>
+<h3 id="section-43">保存后检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h3>
+<ul>
+<li>打开 Description。</li>
+<li>检查维度。</li>
+<li>检查 reads 和丰富度。</li>
+<li>检查零丰度分类单元和零 reads 样本。</li>
+<li>检查各组样本数。</li>
+<li>检查分类、RefSeq 和树。</li>
+<li>检查备注、标签和日志。</li>
+<li>在 Datasets 中保存。</li>
+<li>导出最终数据集。</li>
+</ul>
+<h2 id="section-17-2">17. 模块的主要限制<a aria-label="Permalink" class="heading-anchor" href="#section-17-2">#</a></h2>
+<p>需要注意：</p>
+<ul>
+<li>自动重算可能消耗较大；</li>
+<li>直方图基于原始父数据集；</li>
+<li>过滤顺序固定；</li>
+<li>阈值不会迭代重评估；</li>
+<li>没有最终零值清理；</li>
+<li>切换数据集时参数仍保留；</li>
+<li>分类关键词默认已选择；</li>
+<li>日期和特殊类型支持有限；</li>
+<li>高级条件行之间只支持 AND；</li>
+<li>当前控件无法强制零模糊碱基；</li>
+<li>无序列 ASV 可能被保留；</li>
+<li>新日志会替换旧日志；</li>
+<li>不总是记录每项精确原因；</li>
+<li>删除元素指标来自原始父数据集；</li>
+<li>自定义属性可能丢失；</li>
+<li>空名称会无确认覆盖父数据集；</li>
+<li>保存后过滤会再次应用；</li>
+<li>保存按钮不会把项目写入磁盘；</li>
+<li>多语言下活动模块检测不完善；</li>
+<li>导出方向可能含糊；</li>
+<li>BIOM 导出内容最小且依赖 <code>biomformat</code>。</li>
+</ul>
+<h2 id="section-44">已核对的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>本文档基于以下当前实现：</p>
+<ol>
+<li><code>modules/filtration/mod_filtration_ui.R</code>：主界面和四个过滤模块。</li>
+<li><code>modules/filtration/mod_filtration_server.R</code>：数值解析、顺序、计算、保护、日志和临时结果。</li>
+<li><code>modules/filtration/io/mod_filtration_io_ui.R</code>：保存、检查和导出。</li>
+<li><code>modules/filtration/io/mod_filtration_io_server.R</code>：覆盖、注册表写入、表格、详细信息和 BIOM 导出。</li>
+<li><code>modules/_shared/_provenance.R</code>：pruning 时保留属性。</li>
+<li><code>modules/_shared/_dataset_naming.R</code>：名称规范化。</li>
+<li><code>modules/_shared/_ps_guard.R</code>：写入注册表前的完整性检查。</li>
+<li><code>app.R</code>：子模块组装、全局注册表和活动数据集。</li>
+<li><code>.claude/architecture/23-filtration.md</code>：将设计架构与实际行为进行核对。</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 选项卡的总体作用</a><a class="toc-l3" href="#data-edition">与 Data Edition 的区别</a><a class="toc-l2" href="#section-2">2. 自动运行方式与结果生命周期</a><a class="toc-l3" href="#section">调参期间父数据集保持不变</a><a class="toc-l3" href="#section-3">空名称字段的风险</a><a class="toc-l2" href="#section-3-2">3. 固定的过滤顺序</a><a class="toc-l3" href="#section-4">后果</a><a class="toc-l3" href="#section-5">只执行一次，不迭代至稳定</a><a class="toc-l2" href="#section-4-2">4. 数据集选择与参数保留</a><a class="toc-l3" href="#section-6">参数不会全部重置</a><a class="toc-l2" href="#section-5-2">5. 如何理解界面状态</a><a class="toc-l3" href="#section-7">图形预览</a><a class="toc-l2" href="#section-6-2">6. 分类学过滤</a><a class="toc-l3" href="#section-8">默认选择的关键词</a><a class="toc-l3" href="#section-9">按分类等级排除或保留</a><a class="toc-l3" href="#section-10">关键词搜索</a><a class="toc-l3" href="#section-11">缺少分类表</a><a class="toc-l2" href="#section-7-2">7. 按丰度过滤 ASV</a><a class="toc-l3" href="#asv-reads">每个 ASV 的总 reads</a><a class="toc-l3" href="#section-12">出现率</a><a class="toc-l3" href="#section-13">最大相对丰度</a><a class="toc-l2" href="#section-8-2">8. 样本过滤</a><a class="toc-l3" href="#reads">最小 reads</a><a class="toc-l3" href="#section-14">最小丰富度</a><a class="toc-l3" href="#section-15">按样本名过滤</a><a class="toc-l3" href="#section-16">简单元数据条件</a><a class="toc-l2" href="#section-9-2">9. 高级元数据条件</a><a class="toc-l3" href="#section-17">不完整条件</a><a class="toc-l2" href="#section-10-2">10. 序列技术过滤</a><a class="toc-l3" href="#section-18">缺失或无法对齐的序列</a><a class="toc-l3" href="#section-19">长度</a><a class="toc-l3" href="#gc">GC</a><a class="toc-l3" href="#section-20">模糊碱基</a><a class="toc-l3" href="#section-21">同聚物</a><a class="toc-l3" href="#section-22">顺序带来的后果</a><a class="toc-l2" href="#section-11-2">11. 防止空结果及验证边界</a><a class="toc-l2" href="#section-12-2">12. 过滤日志与来源</a><a class="toc-l3" href="#section-23">结构化参数</a><a class="toc-l3" href="#section-24">日志语言</a><a class="toc-l3" href="#section-25">删除元素表</a><a class="toc-l3" href="#section-26">连续过滤</a><a class="toc-l3" href="#section-27">保留或可能丢失的属性</a><a class="toc-l2" href="#section-13-2">13. 保存结果与覆盖风险</a><a class="toc-l3" href="#section-28">只写入内存</a><a class="toc-l3" href="#section-29">自动再次应用过滤</a><a class="toc-l2" href="#section-14-2">14. 数据集检查与导出</a><a class="toc-l3" href="#section-30">详细信息面板</a><a class="toc-l3" href="#tsv">TSV 导出</a><a class="toc-l3" href="#biom">BIOM 导出</a><a class="toc-l2" href="#section-15-2">15. 科学解释与推荐策略</a><a class="toc-l3" href="#section-31">稀有分类单元</a><a class="toc-l3" href="#section-32">实验分组</a><a class="toc-l3" href="#section-33">比较过滤策略</a><a class="toc-l3" href="#section-34">推荐流程</a><a class="toc-l2" href="#section-16-2">16. 故障排查与检查</a><a class="toc-l3" href="#section-35">参数问题</a><a class="toc-l3" href="#section-36">阈值问题</a><a class="toc-l3" href="#section-37">序列问题</a><a class="toc-l3" href="#section-38">日志与来源问题</a><a class="toc-l3" href="#section-39">保存问题</a><a class="toc-l3" href="#section-40">检查或导出问题</a><a class="toc-l3" href="#section-41">过滤前检查清单</a><a class="toc-l3" href="#section-42">保存前检查清单</a><a class="toc-l3" href="#section-43">保存后检查清单</a><a class="toc-l2" href="#section-17-2">17. 模块的主要限制</a><a class="toc-l2" href="#section-44">已核对的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 过滤</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

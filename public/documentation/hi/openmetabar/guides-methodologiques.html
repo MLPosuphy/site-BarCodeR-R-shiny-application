@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>OpenMetaBar — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="openmetabar" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link active" href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">OpenMetaBar</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">OpenMetaBar — पद्धति संबंधी मार्गदर्शिकाएँ</h1>
+<h2 id="section-1">1. सामान्य परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>OpenMetaBar</strong> टैब FASTQ फ़ाइलों से पूर्ण मेटाबारकोडिंग डेटा-प्रसंस्करण पाइपलाइन शुरू करने और उसकी निगरानी करने देता है।</p>
+<p>विश्लेषण सीधे Shiny एप्लिकेशन के भीतर नहीं चलता। BarCodeR तैयारी, सबमिशन और मॉनिटरिंग इंटरफ़ेस के रूप में काम करता है:</p>
+<ol>
+<li>उपयोगकर्ता विश्लेषण का जैविक और तकनीकी संदर्भ चुनता है;</li>
+<li>FASTQ फ़ाइलें, प्रयोगात्मक design file और reference database चुने जाते हैं;</li>
+<li>BarCodeR फ़ाइलों की जाँच करता है और उनके transfer की तैयारी करता है;</li>
+<li>उपयोगकर्ता cluster resources और pipeline parameters निर्धारित करता है;</li>
+<li>BarCodeR run के लिए अलग directory बनाता है;</li>
+<li>एप्लिकेशन में शामिल OpenMetaBar pipeline cluster पर कॉपी होता है;</li>
+<li>आवश्यक Singularity images की जाँच या स्थापना होती है;</li>
+<li>Slurm job submit होता है;</li>
+<li>एप्लिकेशन execution की निगरानी करता है और बने हुए files पहचानता है;</li>
+<li>अंत में phyloseq object को BarCodeR में जोड़ा जा सकता है।</li>
+</ol>
+<p>OpenMetaBar कई technologies और analysis routes का समर्थन करता है:</p>
+<ul>
+<li>Oxford Nanopore Technologies (ONT);</li>
+<li>PacBio;</li>
+<li>Illumina;</li>
+<li>LotuS3;</li>
+<li>NextITS;</li>
+<li>IDMABIO report route।</li>
+</ul>
+<h2 id="section-2">2. OpenMetaBar क्या करता है और क्या नहीं करता<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. OpenMetaBar द्वारा स्वचालित कार्य<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>OpenMetaBar निम्न कार्य स्वचालित करता है:</p>
+<ul>
+<li>working directory की तैयारी;</li>
+<li>files की प्रारम्भिक validation;</li>
+<li>local files का transfer;</li>
+<li>design file में FASTQ paths को दोबारा लिखना;</li>
+<li>Nextflow configuration बनाना;</li>
+<li>Slurm resources तैयार करना;</li>
+<li>pipeline deployment;</li>
+<li>Singularity images का प्रबंधन;</li>
+<li>job submission;</li>
+<li>Slurm status monitoring;</li>
+<li>results की पहचान;</li>
+<li>phyloseq object import।</li>
+</ul>
+<h3 id="section-2-2">2.2. उपयोगकर्ता की जिम्मेदारी<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>एप्लिकेशन स्वतः यह निर्धारित नहीं कर सकता कि:</p>
+<ul>
+<li>चुना गया marker वास्तव में प्रयोग किए गए primers से मेल खाता है या नहीं;</li>
+<li>दर्ज की गई expected length जैविक रूप से उपयुक्त है या नहीं;</li>
+<li>reference database marker और अध्ययन किए गए organisms के लिए उपयुक्त है या नहीं;</li>
+<li>quality thresholds sequencing technology के अनुसार उचित हैं या नहीं;</li>
+<li>coding-sequence filter उपयोगी है या नहीं;</li>
+<li>clustering या denoising method अध्ययन के उद्देश्य के अनुकूल है या नहीं;</li>
+<li>taxonomic parameters पर्याप्त विश्वसनीय identification देते हैं या नहीं;</li>
+<li>माँगे गए Slurm resources डेटा की मात्रा के लिए पर्याप्त हैं या नहीं।</li>
+</ul>
+<blockquote>
+<p><strong>महत्वपूर्ण सिद्धान्त —</strong> एप्लिकेशन का default value सार्वभौमिक recommendation नहीं है।</p>
+</blockquote>
+<h2 id="section-3">3. कार्यप्रवाह का अवलोकन<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>अनुशंसित क्रम:</p>
+<ol>
+<li><strong>Cluster connection जाँचें या स्थापित करें।</strong></li>
+<li><strong>Analysis context निर्धारित करें।</strong></li>
+<li><strong>Context validate करें।</strong></li>
+<li><strong>FASTQ, design file और reference database चुनें।</strong></li>
+<li><strong>आवश्यक होने पर design file बनाएँ या सुधारें।</strong></li>
+<li><strong>Files validate करें और transfer तैयार करें।</strong></li>
+<li><strong>Run और Slurm resources configure करें।</strong></li>
+<li><strong>General configuration validate करें।</strong></li>
+<li><strong>चुने गए route के विशेष parameters configure करें।</strong></li>
+<li><strong>Optional previews जाँचें।</strong></li>
+<li><strong>Analysis launch करें।</strong></li>
+<li><strong>Steps और execution logs की निगरानी करें।</strong></li>
+<li><strong>Results की जाँच करें।</strong></li>
+<li><strong>Phyloseq को BarCodeR में import करें।</strong></li>
+<li><strong>History से run manage करें।</strong></li>
+</ol>
+<p>Context validation cluster connection के बिना किया जा सकता है। Remote files browse करने, files transfer करने, remote directory जाँचने, Slurm partitions पहचानने, containers तैयार करने, run submit और monitor करने तथा पुराने runs देखने के लिए connection आवश्यक है।</p>
+<h2 id="section-4">4. Analysis route चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p><strong>Technology + marker + engine</strong> का संयोजन तय करता है कि कौन-सा sub-pipeline चलेगा।</p>
+<h3 id="section-4-1">4.1. उपलब्ध routes<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Marker</th>
+<th>उपलब्ध engine</th>
+<th>मुख्य route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ONT</td>
+<td>COI</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>COI-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>PacBio 16S</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>ITS</td>
+<td>LotuS3 या NextITS</td>
+<td>PacBio ITS</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>LSU</td>
+<td>LotuS3 या NextITS</td>
+<td>PacBio LSU</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>ITS</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>LSU</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>-idmabio</code> variants केवल तब दिखाई देते हैं जब एप्लिकेशन compatible biglogin cluster connection पहचानता है।</p>
+<h3 id="section-4-2">4.2. Route के प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>Context तय करता है:</p>
+<ul>
+<li>MiniBar उपलब्ध होगा या नहीं;</li>
+<li>NextITS engine इस्तेमाल किया जा सकता है या नहीं;</li>
+<li>कौन-से parameters दिखाई देंगे;</li>
+<li>कौन-सी Singularity images अनिवार्य हैं;</li>
+<li>कौन-से pipeline steps चलेंगे;</li>
+<li>कौन-से outputs बन सकते हैं।</li>
+</ul>
+<p>Validation के बाद technology, marker या engine बदलने पर context अमान्य हो जाता है और संबंधित steps फिर से जाँचने पड़ते हैं।</p>
+<h2 id="section-5">5. Cluster से connection<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Connection window खोलना<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>टैब के ऊपर स्थित button status दिखाता है:</p>
+<ul>
+<li><strong>Cluster connected नहीं है</strong>: कोई active SSH connection नहीं;</li>
+<li><strong>Connection active है, जाँच बाकी है</strong>: SSH खुला है, लेकिन कुछ prerequisites पुष्ट नहीं हुए;</li>
+<li><strong>Cluster connected है</strong>: connection और मुख्य आवश्यक commands पहचाने गए हैं।</li>
+</ul>
+<p>Button पर क्लिक करने से connection window खुलती है।</p>
+<h3 id="section-5-2">5.2. आवश्यक जानकारी<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>Server address, SSH port, username और आवश्यकता होने पर password दर्ज करें। यदि SSH key authentication पहले से configured और कार्यरत है तो password खाली छोड़ा जा सकता है।</p>
+<h3 id="section-5-3">5.3. की जाने वाली जाँचें<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Connection के बाद BarCodeR Bash, <code>find</code>, <code>tar</code>, <code>sbatch</code>, <code>squeue</code>, <code>sacct</code>, <code>scancel</code>, <code>sinfo</code>, Rscript, उपलब्ध Slurm partitions तथा time, memory और CPU limits की जाँच करता है।</p>
+<p>इसलिए SSH connection खुला होने पर भी cluster OpenMetaBar चलाने के लिए तैयार न माना जा सकता है।</p>
+<h3 id="section-5-4">5.4. biglogin cluster<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>समर्थित infrastructure में connection सीधे या, direct connection उपलब्ध न होने पर, bigm9 relay से हो सकता है। यह प्रक्रिया एप्लिकेशन स्वतः संभालता है।</p>
+<h3 id="section-5-5">5.5. Run के दौरान disconnect होना<a aria-label="Permalink" class="heading-anchor" href="#section-5-5">#</a></h3>
+<p>एप्लिकेशन से disconnect होने पर Slurm job cancel नहीं होता। Submit होने के बाद computation cluster पर चलता रहता है। उसी cluster से दोबारा जुड़ने, compatible root directory और उचित permissions होने पर run history से पुनः पाया जा सकता है।</p>
+<h2 id="section-6">6. Analysis context निर्धारित करना<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>पहला configuration card pipeline route निर्धारित करता है।</p>
+<h3 id="section-6-1">6.1. Sequencing technology<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<h4>Oxford Nanopore Technologies</h4>
+<p><strong>ONT</strong> चुनने पर COI, 16S और 18S markers, संभव IDMABIO variants, MiniBar demultiplexing और ONT + LotuS3 route उपलब्ध होते हैं।</p>
+<h4>PacBio</h4>
+<p><strong>PacBio</strong> चुनने पर 16S, ITS और LSU दिखाई देते हैं। ITS/LSU के लिए LotuS3 या NextITS चुना जा सकता है, MiniBar छिपा रहता है और PacBio-specific route चलता है।</p>
+<h4>Illumina</h4>
+<p><strong>Illumina</strong> चुनने पर 16S, ITS और LSU दिखाई देते हैं, LotuS3 उपयोग होता है, MiniBar छिपता है और design file के अनुसार single-end या paired-end files समर्थित होते हैं।</p>
+<h3 id="section-6-2">6.2. Marker या target<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>Marker route चुनने, database type सुझाने, NextITS region सुझाने, IDMABIO variants पहचानने और visible parameters अनुकूलित करने के लिए उपयोग होता है। यह design file के primers की वास्तविक specificity validate नहीं करता।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>सुझाया database type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COI</td>
+<td>BOLD</td>
+</tr>
+<tr>
+<td>16S</td>
+<td>SILVA</td>
+</tr>
+<tr>
+<td>18S</td>
+<td>PR2</td>
+</tr>
+<tr>
+<td>ITS</td>
+<td>UNITE</td>
+</tr>
+<tr>
+<td>LSU</td>
+<td>SILVA</td>
+</tr>
+</tbody>
+</table></div>
+<p>यह suggestion केवल <strong>declared database type</strong> बदलता है; कोई नया FASTA file स्वतः चयनित नहीं होता।</p>
+<h3 id="section-6-3">6.3. Reference database type<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>उपलब्ध विकल्प BOLD, SILVA, PR2, UNITE, NCBI nt और custom हैं। Declared type मुख्यतः pipeline को FASTA headers पढ़ने और taxonomy mapping बनाने की विधि बताता है।</p>
+<p>Declared type और चुना गया FASTA अलग जानकारी हैं और दोनों का संगत होना आवश्यक है। Personal FASTA को BOLD घोषित करने से वह BOLD database नहीं बनता।</p>
+<h3 id="section-6-4">6.4. Analysis engine<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<p>Selector केवल PacBio + ITS और PacBio + LSU पर दिखाई देता है। विकल्प <strong>LotuS3</strong> और <strong>NextITS</strong> हैं। अन्य contexts में selector छिपा रहता है और route पर प्रभाव नहीं डालता।</p>
+<h3 id="section-6-5">6.5. Context validation<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<p><strong>Context validate करें</strong> पर क्लिक करने के बाद file selection खुलता है। बाद में technology, marker या engine बदलने पर यह step फिर lock हो जाता है।</p>
+<h2 id="section-7">7. Run files चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Context validation के बाद <strong>Run files चुनें</strong> button उपलब्ध होता है। FASTQ files, design file और reference database आवश्यक हैं। NextITS के लिए chimera database भी चाहिए।</p>
+<h3 id="section-7-1">7.1. FASTQ files चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<h4>Local source</h4>
+<p>Local FASTQ एप्लिकेशन के file browser से चुने जाते हैं। वे सामान्य web upload के रूप में नहीं जाते; BarCodeR वास्तविक path उपयोग करता है और फिर cluster पर transfer करता है।</p>
+<p>इसलिए सामान्य Shiny upload limit लागू नहीं होती, लेकिन transfer पूरा होने तक files accessible रहने चाहिए।</p>
+<h4>Cluster source</h4>
+<p>FASTQ cluster पर पहले से मौजूद हो सकते हैं। Path दर्ज करके या remote browser से चुने जा सकते हैं। Active SSH connection आवश्यक है।</p>
+<h4>एक या अनेक FASTQ</h4>
+<p>एप्लिकेशन अनेक files स्वीकार करता है और उन्हें अलग रखता है; स्वतः concatenate नहीं करता। Basename सुरक्षित रहता है, इसलिए अलग directories में समान filename collision पैदा करता है।</p>
+<p>समस्या वाला उदाहरण:</p>
+<pre tabindex="0"><code class="language-text">/run1/sample.fastq.gz
+/run2/sample.fastq.gz
+</code></pre>
+<p>अपेक्षित extensions: <code>.fastq</code>, <code>.fastq.gz</code>, <code>.fq</code>, <code>.fq.gz</code>।</p>
+<h4>पहले से demultiplexed FASTQ</h4>
+<p>यदि प्रत्येक file एक sample है, ONT में MiniBar बंद करें, design में प्रति row एक sample रखें और सही FASTQ जोड़ें।</p>
+<h4>Demultiplex न किए गए FASTQ</h4>
+<p>यदि एक file में barcode द्वारा पहचाने जाने वाले कई samples हैं, MiniBar चालू करें और प्रत्येक sample के barcodes तथा primers दर्ज करें। कई design rows एक ही FASTQ की ओर संकेत कर सकती हैं।</p>
+<h3 id="section-7-2">7.2. Design file चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Design local, remote या integrated editor में बनाया/बदला जा सकता है। TSV और CSV समर्थित हैं।</p>
+<h4>Pipeline द्वारा आवश्यक columns</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sample_ID</code></td>
+<td>Unique sample identifier</td>
+</tr>
+<tr>
+<td><code>fastq_path</code></td>
+<td>एक या अनेक FASTQ का path</td>
+</tr>
+<tr>
+<td><code>barcodeF</code></td>
+<td>Forward barcode</td>
+</tr>
+<tr>
+<td><code>barcodeR</code></td>
+<td>Reverse barcode</td>
+</tr>
+<tr>
+<td><code>primerF</code></td>
+<td>Forward primer</td>
+</tr>
+<tr>
+<td><code>primerR</code></td>
+<td>Reverse primer</td>
+</tr>
+</tbody>
+</table></div>
+<p>Barcodes उपयोग न होने पर भी columns मौजूद होने चाहिए। Pipeline की अपेक्षा के अनुसार खाली cell की जगह स्पष्ट <code>NA</code> उपयोग करना उपयुक्त हो सकता है।</p>
+<blockquote>
+<p><strong>ध्यान दें —</strong> Integrated editor दो-column table को editable मान सकता है, लेकिन पूर्ण pipeline validation को छह exact columns चाहिए। Editor में “consistent” design भी launch पर reject हो सकता है।</p>
+</blockquote>
+<h4>Sample identifiers</h4>
+<p>Identifiers भरे हुए, unique और preferably <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, <code>.</code>, <code>-</code>, <code>_</code> तक सीमित हों।</p>
+<p>Automatic correction accents transliterate करता है, invalid characters बदलता है, शुरुआत/अंत के separators हटाता है और duplicates में suffix जोड़ता है। Case सुरक्षित रहता है।</p>
+<h4>Path column</h4>
+<p>दूसरे column को path column के रूप में पहचाना जाना चाहिए। Supported names में <code>path</code>, <code>fastq_path</code>, <code>filepath</code>, <code>file_path</code>, <code>input_dir</code>, <code>directory</code>, <code>dir</code>, <code>folder</code> शामिल हैं। अस्पष्टता से बचने के लिए <code>fastq_path</code> उपयोग करें।</p>
+<p>Launch से पहले column <code>fastq_path</code> नाम से लिखा जाता है और remote run directory के paths डाले जाते हैं।</p>
+<h4>Paired-end files</h4>
+<p>Illumina pair के लिए <code>fastq_path</code> में comma-separated files हो सकती हैं:</p>
+<pre tabindex="0"><code class="language-text">sample_R1.fastq.gz,sample_R2.fastq.gz
+</code></pre>
+<p>दोनों files चुनी हुई हों और filenames exact match करें।</p>
+<h4>Design और FASTQ matching</h4>
+<p>हर referenced file किसी selected filename से match होनी चाहिए। Extension, case, suffix या typing error समस्या पैदा कर सकता है।</p>
+<h4>Single FASTQ case</h4>
+<p>यदि सभी rows एक raw file की ओर संकेत करती हैं, एप्लिकेशन paths को rewrite कर सकता है ताकि सभी samples वही remote FASTQ उपयोग करें, विशेषतः MiniBar से पहले।</p>
+<h3 id="section-7-3">7.3. Design file में primers<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p><code>primerF</code> और <code>primerR</code> orientation के लिए उपयोग होते हैं। इन्हें 5′→3′ दिशा में valid IUPAC nucleotide characters और बिना spaces के दर्ज करें। Degenerate bases समर्थित हैं।</p>
+<p>Orientation enabled होने पर प्रत्येक FASTQ के लिए unique primer pair अपेक्षित है। Pair न मिलना, एक FASTQ के लिए कई अलग pairs या invalid character error पैदा करते हैं।</p>
+<h3 id="section-7-4">7.4. Design file में barcodes<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p>MiniBar <code>barcodeF</code> और <code>barcodeR</code> उपयोग करता है। बहुत समान barcodes और अधिक error tolerance गलत sample assignment का जोखिम बढ़ाते हैं।</p>
+<h3 id="section-7-5">7.5. Reference database चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-7-5">#</a></h3>
+<p>Database local या remote compatible FASTA (<code>.fa</code>, <code>.fna</code>, <code>.fasta</code>, <code>.fas</code>, संभवतः gzip compressed) हो सकता है।</p>
+<p>यह cleaned FASTA, headers से taxonomy table और taxonomic assignment बनाने में उपयोग होता है।</p>
+<p>Marker compatibility, सही alphabet, unique identifiers, usable taxonomy headers, declared type consistency और cluster readability जाँचें।</p>
+<h2 id="section-8">8. Design editor का उपयोग<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. Cells बदलना<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>Cells सीधे बदले जा सकते हैं। हर change के बाद minimum structure, path column, sample identifiers और FASTQ matching फिर जाँचे जाते हैं।</p>
+<h3 id="section-8-2">8.2. Rows जोड़ना या हटाना<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>एक row जोड़ी और कई rows हटाई जा सकती हैं। पूरी तरह खाली rows save पर ignore होती हैं, लेकिन warning देती हैं।</p>
+<h3 id="section-8-3">8.3. Column जोड़ना, rename करना या हटाना<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>तीनों operations समर्थित हैं। कम-से-कम दो columns रहें। पूर्ण design में <code>Sample_ID</code>, <code>fastq_path</code>, <code>barcodeF</code>, <code>barcodeR</code>, <code>primerF</code>, <code>primerR</code> हों।</p>
+<h3 id="section-8-4">8.4. Sample names सुधारना<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>Correction button characters साफ करता है, empty identifiers रोकता है और names unique बनाता है। Changes जाँचें, क्योंकि यही names results और phyloseq में आएँगे।</p>
+<h3 id="section-8-5">8.5. FASTQ से design बनाना<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>केवल MiniBar disabled होने पर उपलब्ध। एप्लिकेशन प्रारम्भ में <code>SampleID</code> और <code>path</code> बनाता है।</p>
+<p>यह पूर्ण design नहीं है। Columns को <code>Sample_ID</code>, <code>fastq_path</code> rename करें, बाकी चार columns जोड़ें और values भरें।</p>
+<h3 id="section-8-6">8.6. Design save करना<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>Structural error होने पर save blocked रहता है। चयन temporary local file <code>design_edite.tsv</code> से बदलता है। Full pipeline validation launch पर होती है।</p>
+<h2 id="section-9">9. Files validate और prepare करना<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><strong>Validate और transfer</strong> के लिए active connection चाहिए। यह selections, file existence, FASTQ शुरुआत, design की कुछ समस्याएँ, sample names और remote disk space जाँचता है। Local files staging area में भेजता है और remote files के paths रखता है।</p>
+<p>Disk-space check preventive है और कुछ systems पर approximate हो सकता है। पूरा होने पर button <strong>Files ready</strong> दिखाता है।</p>
+<h2 id="section-10">10. Run और cluster configuration<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<h3 id="section-10-1">10.1. Run root directory<a aria-label="Permalink" class="heading-anchor" href="#section-10-1">#</a></h3>
+<p>हर run के लिए unique subdirectory बनती है। User को create, write, execute, read और cleanup permissions चाहिए। Embedded pipeline run directory में copy होता है और cleanup logic के अनुसार हटता है।</p>
+<h3 id="section-10-2">10.2. Slurm partition<a aria-label="Permalink" class="heading-anchor" href="#section-10-2">#</a></h3>
+<p><code>sinfo</code> उपलब्ध होने पर detected partitions दिखते हैं। Partition resources, maximum duration, priority और account restrictions प्रभावित करता है। Visible partition उपयोग के लिए authorised हो, यह आवश्यक नहीं।</p>
+<h3 id="section-10-3">10.3. LotuS3 memory<a aria-label="Permalink" class="heading-anchor" href="#section-10-3">#</a></h3>
+<p>Memory में unit होनी चाहिए, जैसे <code>16G</code>, <code>70G</code>, <code>120G</code>। केवल <code>70</code> न दें; Slurm इसे लगभग 70 MB समझ सकता है।</p>
+<p>कम memory <code>OUT_OF_MEMORY</code> दे सकती है; बहुत अधिक memory queue time बढ़ा सकती है।</p>
+<h3 id="section-10-4">10.4. LotuS3 cores<a aria-label="Permalink" class="heading-anchor" href="#section-10-4">#</a></h3>
+<p>Core count Slurm CPUs, LotuS3 threads और कुछ child-process resources निर्धारित करता है। अधिक cores समान अनुपात में speed नहीं देते और scheduling कठिन कर सकते हैं।</p>
+<h3 id="section-10-5">10.5. Container module<a aria-label="Permalink" class="heading-anchor" href="#section-10-5">#</a></h3>
+<p>Singularity या Singularity-CE देने वाले module से exact match होना चाहिए, जैसे <code>singularity-ce/4.1.0</code>।</p>
+<h3 id="section-10-6">10.6. Nextflow module<a aria-label="Permalink" class="heading-anchor" href="#section-10-6">#</a></h3>
+<p>Nextflow version, जैसे <code>nextflow/25.10.4</code>। Missing या incompatible module launch रोकता है।</p>
+<h3 id="section-10-7">10.7. Run name<a aria-label="Permalink" class="heading-anchor" href="#section-10-7">#</a></h3>
+<p>Directory, Slurm job और history पहचानने में सहायक। एप्लिकेशन date, session identifier और random suffix जोड़ता है। बहुत लंबे नाम, special characters और sensitive information से बचें।</p>
+<h3 id="section-10-8">10.8. Intermediate files रखना<a aria-label="Permalink" class="heading-anchor" href="#section-10-8">#</a></h3>
+<p>Debug option success के बाद <code>work/</code> रखता है। यह commands और diagnosis के लिए उपयोगी लेकिन बहुत बड़ा हो सकता है। Failure के बाद intermediates पहले से सुरक्षित रहते हैं। बाद में history से साफ किया जा सकता है।</p>
+<h2 id="section-11">11. Initial values समझना<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>एप्लिकेशन की प्रारम्भिक settings मुख्यतः <strong>ONT + COI</strong> के लिए हैं: orientation enabled, length filter enabled, expected length 658, minimum quality 20, coding filter enabled और translation table 5।</p>
+<p>ये values 16S, 18S, ITS या LSU के लिए स्वतः उपयुक्त नहीं हैं। Coding filter, length, genetic code, amplicon type और taxonomic group पुनः जाँचें।</p>
+<p>कुछ parameters पहली बार बदलने पर “optimised initial value” warning दिखाते हैं। इसका अर्थ केवल controlled initial value है, universal optimum नहीं।</p>
+<h2 id="section-12">12. MiniBar demultiplexing — ONT routes<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. MiniBar enable या disable<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>एक FASTQ में कई barcode-labelled samples और पूर्ण design information होने पर enable करें। MiniBar sample-wise FASTQ और demultiplexed/retained read metrics बनाता है। Unknown या ambiguous reads assigned samples के रूप में publish नहीं होते।</p>
+<p>Files पहले से sample-wise हों या upstream demultiplexing हो चुका हो तो disable करें।</p>
+<h3 id="section-12-2">12.2. Identification method — <code>M</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Methods 1, 2 और 3 <code>-M</code> के साथ सीधे MiniBar को भेजे जाते हैं और internal assignment strategy बदलते हैं।</p>
+<p>एप्लिकेशन algorithmic differences नहीं बताता। Validated method बनाए रखें, comparable batches के बीच बिना कारण न बदलें और change के बाद metrics जाँचें।</p>
+<h3 id="section-12-3">12.3. Maximum barcode errors — <code>e</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Low value specificity बढ़ाता है लेकिन noisy reads खो सकता है। High value altered barcodes recover करता है लेकिन similar barcodes confuse कर सकता है। <code>0</code> exact match है।</p>
+<h3 id="section-12-4">12.4. Maximum primer errors — <code>E</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Higher tolerance noisy reads recover करती है लेकिन non-specific matches बढ़ा सकती है। Lower tolerance अधिक specific है लेकिन valid reads हट सकते हैं।</p>
+<h3 id="section-12-5">12.5. MiniBar parameter — <code>l</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Interface इसे <strong>search window</strong> कहता है, जबकि pipeline schema इसे <strong>minimum read length</strong> बताता है। Value सीधे <code>-l</code> में जाता है।</p>
+<p>इस inconsistency के कारण validated value के बिना field खाली रखें, arbitrary interpretation न करें और change से पहले/बाद metrics compare करें।</p>
+<h2 id="section-13">13. Amplicon orientation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<h3 id="section-13-1">13.1. Single-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-1">#</a></h3>
+<p>Pipeline primers खोजता है, दोनों orientations पहचानता है, sequences को <code>primerF → primerR</code> दिशा में रखता है, primers हटाता है और internal region रखता है। Complete primer pair के बिना reads हटते हैं।</p>
+<h3 id="section-13-2">13.2. Non-degenerate और degenerate primers<a aria-label="Permalink" class="heading-anchor" href="#section-13-2">#</a></h3>
+<p>केवल A/C/G/T primers पर वर्तमान step एक mismatch तक स्वीकार करता है। Degenerate IUPAC codes पर degenerate-pattern matching होता है, अतिरिक्त mismatch mode नहीं।</p>
+<h3 id="section-13-3">13.3. Paired-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-3">#</a></h3>
+<p>FASTQ pair के लिए orientation skip होती है और <code>SKIPPED_PAIRED_END</code> मिलता है। इसलिए यह process reads reorient या primers remove नहीं करता।</p>
+<h3 id="section-13-4">13.4. NextITS route<a aria-label="Permalink" class="heading-anchor" href="#section-13-4">#</a></h3>
+<p>NextITS ITS regions और primers के लिए स्वयं processing करता है; general orientation step उसी रूप में लागू नहीं होता।</p>
+<h3 id="section-13-5">13.5. Orientation कब disable करें<a aria-label="Permalink" class="heading-anchor" href="#section-13-5">#</a></h3>
+<p>यदि primers पहले हट चुके हैं, सभी sequences एक दिशा में हैं या upstream processing इसकी गारंटी देता है, तो disable करें।</p>
+<h2 id="section-14">14. Filters का क्रम<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Filters cumulative हैं: quality, length, coding। प्रत्येक filter पिछले filter से बचे reads पर चलता है। कई मध्यम strict settings मिलकर अत्यधिक strict हो सकती हैं। Reads शून्य होने पर pipeline रुकता है।</p>
+<h2 id="section-15">15. Length filter<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. Activation और input<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>Disabled होने पर entered length ignore होती है। Enabled होने पर comma-separated integers दें, जैसे <code>480</code> या <code>450,550</code>।</p>
+<h3 id="section-15-2">15.2. वास्तविक interval<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<p>Pipeline प्रत्येक expected length के आसपास <strong>±100 nucleotides</strong> margin रखता है।</p>
+<p><code>658</code> के लिए <code>558–758</code>; <code>500,800</code> के लिए <code>400–600</code> और <code>700–900</code>।</p>
+<h3 id="section-15-3">15.3. Length कैसे चुनें<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>Primers के बीच region, filter के समय primers मौजूद हैं या नहीं, biological variation, technology और target groups पर निर्भर करता है। <code>658</code> initial COI context का value है, इसे automatically न रखें।</p>
+<h3 id="section-15-4">15.4. Empty या invalid field<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>Current implementation empty/unparsable value को silently <code>658</code> से बदल सकती है। Filter enabled होने पर field खाली न रखें जब तक वास्तव में 658 न चाहिए।</p>
+<h3 id="section-15-5">15.5. Paired-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-15-5">#</a></h3>
+<p>R1 और R2 पर अलग-अलग filter होता है, फिर resynchronisation। यह merged amplicon नहीं बल्कि प्रत्येक read की length देखता है। 250-nt reads के लिए 658 दोनों mates हटाएगा।</p>
+<h3 id="section-15-6">15.6. Resynchronisation<a aria-label="Permalink" class="heading-anchor" href="#section-15-6">#</a></h3>
+<p>Filtering के बाद identifiers से pairs फिर match होते हैं। Retained mate के बिना reads orphan बनते हैं। केवल complete pairs आगे बढ़ते हैं।</p>
+<h2 id="section-16">16. Quality filter<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Minimum threshold SeqKit को भेजा जाता है। High value अधिक stringent और कम reads; low value अधिक depth तथा अधिक noise रखता है। Technology, sequencing generation और upstream preprocessing के अनुसार चुनें।</p>
+<p>Paired-end में R1/R2 पर अलग filter और फिर resynchronisation होती है। केवल एक mate हटने पर दूसरा orphan बनता है।</p>
+<h2 id="section-17">17. Coding-sequence filter<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>चुने genetic code के अनुसार कम-से-कम एक reading frame बिना internal stop codon translate होने पर read रखा जाता है। Current orientation के तीन frames test होते हैं।</p>
+<p>यह COI जैसे coding region के लिए उपयुक्त है और सामान्यतः 16S, 18S, ITS, LSU के लिए नहीं। Orientation disabled होने पर reverse coding sequences reject हो सकती हैं।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Genetic code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Standard code</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Vertebrate mitochondrial</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Invertebrate mitochondrial</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Bacterial, archaeal and plastid</td>
+</tr>
+</tbody>
+</table></div>
+<p>Table 5 invertebrate mitochondrial COI के लिए initial suggestion है, लेकिन हर COI या अन्य marker के लिए नहीं।</p>
+<p>Paired-end में दोनों reads पर अलग filter होता है। यदि हर read coding region का केवल हिस्सा cover करता है तो सावधानी से interpret करें।</p>
+<h2 id="section-18">18. LotuS3 — clustering और assignment<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>PacBio ITS/LSU में NextITS main engine होने के अलावा सभी routes पर LotuS3 parameters दिखते हैं।</p>
+<h3 id="section-18-1">18.1. Platform<a aria-label="Permalink" class="heading-anchor" href="#section-18-1">#</a></h3>
+<p>Options: auto, PacBio, 454, miSeq, hiSeq। Auto में BarCodeR value force नहीं करता। Explicit value internal strategies बदलता है और technology/preprocessing से संगत होना चाहिए।</p>
+<h3 id="section-18-2">18.2. Amplicon type<a aria-label="Permalink" class="heading-anchor" href="#section-18-2">#</a></h3>
+<p>Options: SSU, LSU, ITS, ITS1, ITS2, custom। वास्तविक amplified region के अनुरूप होना चाहिए, केवल project marker name के नहीं।</p>
+<h3 id="section-18-3">18.3. Taxonomic group<a aria-label="Permalink" class="heading-anchor" href="#section-18-3">#</a></h3>
+<p>Options: auto, bacteria, fungi, eukarya। Explicit value कुछ taxonomic decisions प्रभावित करता है। Heterogeneous context या unvalidated case में auto बेहतर है।</p>
+<h3 id="section-18-4">18.4. Clustering या denoising<a aria-label="Permalink" class="heading-anchor" href="#section-18-4">#</a></h3>
+<p>Options: UPARSE, Swarm, CD-HIT, UNOISE, DADA2, VSEARCH। ये समान biological units नहीं देते। Unit count, abundance, rare-sequence sensitivity और error treatment बदल सकते हैं। अलग methods के outputs सीधे equivalent नहीं हैं।</p>
+<h3 id="section-18-5">18.5. Taxonomic assignment tool<a aria-label="Permalink" class="heading-anchor" href="#section-18-5">#</a></h3>
+<p>Options: RDP classifier, BLAST, Lambda, UTAX, SINTAX, VSEARCH, USEARCH। Algorithm, speed, sensitivity, distant sequences और scores प्रभावित होते हैं।</p>
+<h3 id="section-18-6">18.6. RDP confidence threshold<a aria-label="Permalink" class="heading-anchor" href="#section-18-6">#</a></h3>
+<p>केवल <code>RDP_classifier</code> पर दिखता है। High value अधिक stringent और अधिक unassigned; low value अधिक assignments लेकिन कम robustness दे सकता है।</p>
+<h3 id="section-18-7">18.7. Unclassified units रखना<a aria-label="Permalink" class="heading-anchor" href="#section-18-7">#</a></h3>
+<p><code>0</code> हटाता है; <code>1</code> रखता है। Unknown diversity और later reassignment के लिए उपयोगी, लेकिन downstream analyses में स्पष्ट handling चाहिए।</p>
+<h3 id="section-18-8">18.8. Taxonomic exclusion<a aria-label="Permalink" class="heading-anchor" href="#section-18-8">#</a></h3>
+<p>Entered pattern taxa हटाता है। बहुत broad expression अनेक assignments हटा सकता है। Database vocabulary जाँचें, pattern test करें और exclusion document करें।</p>
+<h2 id="section-19">19. Demultiplexed reads save करना<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>प्रभाव</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>विशेष demultiplexed FASTQ publish न करें</td>
+</tr>
+<tr>
+<td>1</td>
+<td>सभी unfiltered demultiplexed reads रखें</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Demultiplexed reads रखकर pipeline रोकें</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Quality-filtered demultiplexed reads रखें</td>
+</tr>
+</tbody>
+</table></div>
+<p>Phyloseq या complete analysis अपेक्षित हो तो mode 2 उपयोग न करें। Modes 1 और 3 disk usage बढ़ाते हैं लेकिन checking/reuse आसान करते हैं।</p>
+<h2 id="section-20">20. LCA और advanced assignment<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<h3 id="section-20-1">20.1. Assignment mode<a aria-label="Permalink" class="heading-anchor" href="#section-20-1">#</a></h3>
+<p>Counter-intuitive convention: <code>0</code> LCA enable करता है; <code>1</code> best BLAST hit उपयोग करता है।</p>
+<p>LCA compatible hits का common ancestor खोजता है और अक्सर conservative होता है। Best hit अधिक precise दिख सकता है, लेकिन गलत references, imbalanced database या nearly equal hits से प्रभावित हो सकता है।</p>
+<h3 id="section-20-2">20.2. Minimum coverage<a aria-label="Permalink" class="heading-anchor" href="#section-20-2">#</a></h3>
+<p>0–1 value। High coverage अधिकांश sequence alignment माँगता है; low coverage partial matches स्वीकारता है। Short fragment पर high identity पूरे amplicon पर high identity के बराबर नहीं।</p>
+<h3 id="section-20-3">20.3. Rank-specific identity thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-20-3">#</a></h3>
+<p>Initial example <code>97,95,93,91,88,78</code>। Identity और taxonomic rank का universal mapping नहीं है। Marker, group, database और region length पर निर्भर करता है। Change taxonomic depth बदलता है।</p>
+<h3 id="section-20-4">20.4. Agreement fraction<a aria-label="Permalink" class="heading-anchor" href="#section-20-4">#</a></h3>
+<p>High value मजबूत consensus माँगता है और higher rank दे सकता है। Low value कम agreement पर decision देता है और conflicts बढ़ा सकता है।</p>
+<h3 id="section-20-5">20.5. Phylogenetic tree<a aria-label="Permalink" class="heading-anchor" href="#section-20-5">#</a></h3>
+<p><code>0</code>: कोई tree नहीं; <code>1</code>: FastTree; <code>2</code>: IQ-TREE 2। Tree computation बढ़ाता है और usable alignment चाहिए। IQ-TREE 2 अधिक costly होता है।</p>
+<h3 id="section-20-6">20.6. Maximum read overlap<a aria-label="Permalink" class="heading-anchor" href="#section-20-6">#</a></h3>
+<p>मुख्यतः paired short reads के लिए। Read length, amplicon length और expected R1/R2 overlap से संगत होना चाहिए।</p>
+<h2 id="section-21">21. Standard ONT route<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>ONT + COI, 16S या 18S।</p>
+<p>Settings के अनुसार design validation, optional MiniBar, sample FASTQ recovery, orientation, filters, mapping preparation, LotuS3, assignment और reports होते हैं।</p>
+<p>COI के लिए वास्तविक length, primers, target organism, genetic code, coding filter और database जाँचें। 16S/18S के लिए coding filter सामान्यतः बंद करें, 658 बदलें/बंद करें और सही amplicon type, group तथा database चुनें।</p>
+<h2 id="section-22">22. ONT IDMABIO route<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p><code>COI-idmabio</code>, <code>16S-idmabio</code>, <code>18S-idmabio</code>। Compatible cluster पहचानने पर ही उपलब्ध। Route marker suffix से trigger होता है, engine selector से नहीं।</p>
+<p>ONT steps के साथ ZOTU-hit validation, IDMABIO outputs, MAFFT alignments और Word report जोड़ता है।</p>
+<h3 id="section-22-1">22.1. Gene type<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>Options: auto, coding, non-coding। Auto में COI coding और अन्य non-coding माने जाते हैं। Explicit value inference override करता है।</p>
+<h3 id="section-22-2">22.2. Retained BLAST hits<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p>Maximum hits निर्धारित करता है। High value अधिक information, file size और संभव processing time; low value useful secondary hits छिपा सकता है।</p>
+<h3 id="section-22-3">22.3. Alignments per sample<a aria-label="Permalink" class="heading-anchor" href="#section-22-3">#</a></h3>
+<p>Outputs में कितने alignments दिखेंगे। यह total retained hits से अलग है।</p>
+<h3 id="section-22-4">22.4. Report language<a aria-label="Permalink" class="heading-anchor" href="#section-22-4">#</a></h3>
+<p>French या English; generated Word report नियंत्रित करता है।</p>
+<h2 id="section-23">23. PacBio + LotuS3 route<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>PacBio + 16S, या PacBio + ITS/LSU with LotuS3। MiniBar उपयोग नहीं होता।</p>
+<p>Orientation enabled हो तो reads में primers मौजूद हों; expected length वास्तविक reads से मेल खाए; 16S/ITS/LSU में coding filter बंद हो; quality threshold corrected PacBio reads के अनुसार हो।</p>
+<p>फिर platform, amplicon type, group, clustering method, taxonomic tool और LCA options configure करें।</p>
+<h2 id="section-24">24. PacBio + NextITS route<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>केवल PacBio + ITS या LSU with NextITS।</p>
+<p>Validation, enabled prefilters, NextITS, ITSx, correction/clustering, chimera detection, dedicated LotuS3 assignment, phyloseq generation और summaries चलते हैं।</p>
+<h3 id="section-24-1">24.1. ITS region<a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Options: ITS1, ITS2, LSU, SSU, ALL। LSU marker LSU सुझाता है और ITS प्रारम्भ में ITS1, लेकिन यह वास्तविक amplified region validate नहीं करता।</p>
+<h3 id="section-24-2">24.2. ITSx group<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Options: all, fungi, tracheophyta, metazoa। बहुत restrictive group heterogeneous environmental samples के लिए अनुपयुक्त हो सकता है।</p>
+<h3 id="section-24-3">24.3. NextITS clustering<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Options: UNOISE, VSEARCH, Swarm। Clustering/denoising बदलता है। Different methods के outputs सीधे identical नहीं हैं।</p>
+<h3 id="section-24-4">24.4. UNOISE option<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>अलग UNOISE denoising step enable करता है; general method selector से अलग है।</p>
+<h3 id="section-24-5">24.5. Homopolymer correction<a aria-label="Permalink" class="heading-anchor" href="#section-24-5">#</a></h3>
+<p>Homopolymer polishing enable करता है। Sequences बदलती हैं; comparable runs में setting consistent रखें।</p>
+<h3 id="section-24-6">24.6. Chimera database<a aria-label="Permalink" class="heading-anchor" href="#section-24-6">#</a></h3>
+<p>Local या remote हो सकती है; मौजूद, readable, expected format और सही group/region की हो। Initial path development environment का हो सकता है; database explicitly चुनें।</p>
+<h3 id="section-24-7">24.7. Primer consistency<a aria-label="Permalink" class="heading-anchor" href="#section-24-7">#</a></h3>
+<p>Route consistent primer pair अपेक्षित करता है। एक run में अलग pairs error या unexpected behaviour दे सकते हैं।</p>
+<h2 id="section-25">25. Illumina + LotuS3 route<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Illumina + 16S, ITS या LSU।</p>
+<p>Design single-end के लिए एक file या paired-end के लिए comma-separated दो files देता है। Paired data पर orientation skip होती है, इसलिए primers इस step से नहीं हटते।</p>
+<p>Quality, length और coding filters R1/R2 पर अलग चलते हैं और फिर resynchronisation होती है। Length filter merged amplicon पर नहीं चलता। Mate हटने पर दूसरा read orphan बनता है।</p>
+<p>16S/ITS/LSU में coding filter सामान्यतः बंद करें, 658 बदलें/बंद करें और amplicon type, group, database जाँचें।</p>
+<h2 id="section-26">26. Design और destination preview<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Previews optional और प्रारम्भ में disabled हैं। Preview run name, example Run ID, design, future directory, FASTQ destinations, rewritten design path, configuration, technology, marker, database type/path, partition, resources और Singularity cache दिखाता है।</p>
+<p>Design का initial content दिखता है; paths launch पर ही rewrite होते हैं।</p>
+<h2 id="section-27">27. Generated configuration preview<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Form से बना Nextflow overlay दिखाता है: paths, enabled parameters, numerical values, LotuS3, IDMABIO, NextITS और Singularity directory।</p>
+<p>File में अन्य routes के parameters भी हो सकते हैं; इसका अर्थ उपयोग होना नहीं। <code>nf-schema</code> emitted values validate करता है, इसलिए invalid value process शुरू होने से पहले run रोक सकता है।</p>
+<h2 id="section-28">28. Launch से पहले जाँच<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<h3 id="context">Context<a aria-label="Permalink" class="heading-anchor" href="#context">#</a></h3>
+<ul>
+<li>सही technology;</li>
+<li>primers से संगत marker;</li>
+<li>सही engine;</li>
+<li>FASTA से संगत database type।</li>
+</ul>
+<h3 id="fastq">FASTQ<a aria-label="Permalink" class="heading-anchor" href="#fastq">#</a></h3>
+<ul>
+<li>सभी files selected;</li>
+<li>duplicate basenames नहीं;</li>
+<li>सही extensions;</li>
+<li>सही R1/R2 order।</li>
+</ul>
+<h3 id="design">Design<a aria-label="Permalink" class="heading-anchor" href="#design">#</a></h3>
+<ul>
+<li>छह required columns;</li>
+<li>unique identifiers;</li>
+<li>exact paths;</li>
+<li>primers 5′→3′;</li>
+<li>MiniBar होने पर barcodes;</li>
+<li>consistent primer pairs।</li>
+</ul>
+<h3 id="filters">Filters<a aria-label="Permalink" class="heading-anchor" href="#filters">#</a></h3>
+<ul>
+<li>उचित length;</li>
+<li>relevant coding filter;</li>
+<li>सही genetic code;</li>
+<li>उचित quality;</li>
+<li>compatible orientation।</li>
+</ul>
+<h3 id="cluster">Cluster<a aria-label="Permalink" class="heading-anchor" href="#cluster">#</a></h3>
+<ul>
+<li>green connection;</li>
+<li>accessible directory;</li>
+<li>authorised partition;</li>
+<li>unit सहित memory;</li>
+<li>existing modules;</li>
+<li>पर्याप्त space।</li>
+</ul>
+<h3 id="nextits">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits">#</a></h3>
+<ul>
+<li>मौजूद chimera database;</li>
+<li>सही region;</li>
+<li>appropriate ITSx group;</li>
+<li>consistent primers।</li>
+</ul>
+<h2 id="section-29">29. Launch पर क्या होता है<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>BarCodeR context फिर पढ़ता है, FASTQ जाँचता है, duplicate names रोकता है, design/identifiers/databases जाँचता है, Run ID बनाता है, <code>results/</code>, <code>work/</code>, <code>meta/</code> बनाता है, design rewrite करता है, FASTQ इकट्ठा करता है, files transfer करता है, images तैयार करता है, pipeline extract करता है, configuration और Slurm script बनाता है, metadata लिखता है, <code>sbatch</code> submit करता है, Job ID लेता है और monitoring शुरू करता है।</p>
+<p>Session में दूसरा run monitor हो रहा हो तो confirmation माँगी जाती है। नया submission पिछले run को स्वतः cancel नहीं करता।</p>
+<h2 id="section-30">30. Singularity images<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Route के अनुसार SeqKit, LotuS3, reports, MiniBar, MAFFT, phyloseq और NextITS images उपयोग होती हैं। Location: <code>&lt;remote_root&gt;/_barcoder_singularity</code>।</p>
+<p>एप्लिकेशन shared image उपयोग/copy करने, missing image prepare/download करने और presence/size verify करने का प्रयास करता है। हर route में हर image आवश्यक नहीं: ONT के लिए MiniBar, IDMABIO के लिए MAFFT, NextITS के लिए NextITS तथा phyloseq environment। Mandatory image missing होने पर launch रुकता है।</p>
+<h2 id="section-31">31. Run timeline पढ़ना<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Steps: FASTQ selected, connection, design ready, remote directory, transfers, Singularity images, pipeline deployment, <code>sbatch</code> submission, Slurm monitoring।</p>
+<p>Timeline local actions, SSH operations, submission status, Slurm status और file detection को जोड़ती है। Pending, running, success, warning और error को संबंधित step के संदर्भ में पढ़ें।</p>
+<h2 id="section-32">32. Slurm states समझना<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<h3 id="pending">PENDING<a aria-label="Permalink" class="heading-anchor" href="#pending">#</a></h3>
+<p>Job resources का इंतज़ार कर रहा है। कारण: unavailable resources, priority, busy partition, high memory/core requests, account limits या dependencies। Configuration बदलने से पहले Slurm reason पढ़ें।</p>
+<h3 id="running">RUNNING<a aria-label="Permalink" class="heading-anchor" href="#running">#</a></h3>
+<p>Job चल रहा है। कुछ समय तक नई files न आना हमेशा blockage नहीं।</p>
+<h3 id="completed">COMPLETED<a aria-label="Permalink" class="heading-anchor" href="#completed">#</a></h3>
+<p>Slurm script सफलतापूर्वक समाप्त। फिर भी Nextflow exit code, results, phyloseq और reports जाँचें।</p>
+<h3 id="failed">FAILED<a aria-label="Permalink" class="heading-anchor" href="#failed">#</a></h3>
+<p>Error log, Slurm outputs, <code>.nextflow.log</code>, report और history देखें।</p>
+<h3 id="out-of-memory">OUT_OF_MEMORY<a aria-label="Permalink" class="heading-anchor" href="#out-of-memory">#</a></h3>
+<p>Memory limit पार हुई। Value बढ़ाने से पहले global memory, specific process, LotuS3, report या NextITS पहचानें।</p>
+<h3 id="timeout">TIMEOUT<a aria-label="Permalink" class="heading-anchor" href="#timeout">#</a></h3>
+<p>Maximum duration पहुँची। अधिक उपयुक्त partition चुनें, complexity घटाएँ या बड़ा limit माँगें।</p>
+<h3 id="cancelled">CANCELLED<a aria-label="Permalink" class="heading-anchor" href="#cancelled">#</a></h3>
+<p>Manual, administrator, rule या dependency से cancel।</p>
+<h3 id="unknown-missing-job">Unknown या missing job<a aria-label="Permalink" class="heading-anchor" href="#unknown-missing-job">#</a></h3>
+<p><code>squeue</code> में न दिखने वाला job <code>sacct</code> में final state रख सकता है। BarCodeR संभव होने पर दोनों query करता है।</p>
+<h2 id="section-33">33. Execution log<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<h3 id="section-33-1">33.1. Local operations<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>Selection, validation, connection, directory creation, transfer, preparation, launch और file detection।</p>
+<h3 id="section-33-2">33.2. Monitoring<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>Job ID, Slurm status, detected progress, new outputs, completion और phyloseq presence।</p>
+<h3 id="section-33-3">33.3. Standard output और standard error<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>Current log के मुख्य tabs नहीं, लेकिन history details, run files, error preview और downloads में उपलब्ध हैं।</p>
+<h3 id="section-33-4">33.4. <code>.nextflow.log</code><a aria-label="Permalink" class="heading-anchor" href="#section-33-4">#</a></h3>
+<p>Processes, commands, errors, resume, work files और validation का विस्तृत log; मुख्य diagnostic source।</p>
+<h2 id="section-34">34. Produced results<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>Route के अनुसार:</p>
+<ul>
+<li><code>Steps/files</code>: preparatory files और published inputs;</li>
+<li><code>Steps/demultiplexing_files</code>: demultiplexing और metrics;</li>
+<li><code>Steps/filters</code>: orientation, quality, length, coding और orphans;</li>
+<li><code>Steps/lotus3</code>: LotuS3 outputs;</li>
+<li><code>Steps/nextITS</code>: NextITS outputs;</li>
+<li><code>Steps/lotus3_taxo</code>: NextITS-associated taxonomy;</li>
+<li><code>Steps/phyloseq</code>: NextITS phyloseq generation/storage;</li>
+<li><code>Steps/tax_db</code>: cleaned database और extracted taxonomy;</li>
+<li><code>OMB_logs</code>: summaries, reports, timeline, trace, graph, versions, parameters;</li>
+<li><code>final_table/idmabio_outputs</code>: IDMABIO tables, alignments और report।</li>
+</ul>
+<p>Exact structure route और options पर निर्भर करती है।</p>
+<h2 id="section-35">35. Phyloseq object import<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>BarCodeR <code>.rds</code>, <code>.rda</code> या <code>.RData</code> files खोजता है जिनमें phyloseq हो सकता है। Filename valid object की गारंटी नहीं।</p>
+<p>Import के दौरान file अस्थायी रूप से download, open, phyloseq objects खोजे, compatibility जाँची, आवश्यकता पर choice दी और selected object जोड़ा जाता है।</p>
+<p>Run, file और object से unique name बनता है। Provenance के लिए run parameters attach हो सकते हैं।</p>
+<p>Failed run में भी phyloseq मिल सकता है। वह partial या failure से पहले बना हो सकता है। उपयोग से पहले logs और content जाँचें।</p>
+<h2 id="section-36">36. Submission के बाद actions<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<h3 id="section-36-1">36.1. Adjust करके relaunch<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<p>Files और parameters रखता है, modifications की अनुमति देता है और नया submission तैयार करता है। Previous run cancel नहीं होता।</p>
+<h3 id="section-36-2">36.2. New analysis — शुरुआत से<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>Files, context, analysis parameters और timeline reset करता है; connection और कुछ cluster settings रखता है। Submitted job चलता रहता है और history में रहता है।</p>
+<h3 id="section-36-3">36.3. Relaunch न करें<a aria-label="Permalink" class="heading-anchor" href="#section-36-3">#</a></h3>
+<p>Panel बंद करता है, monitoring या job नहीं बदलता। बाद में दोबारा खोला जा सकता है।</p>
+<h2 id="section-37">37. Analysis history<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Scan configured root directory के नीचे runs खोजता है। Results path, permissions, metadata, files और Slurm availability पर निर्भर हैं।</p>
+<p>History Run ID, directory, Job ID, state, dates, duration, FASTQ/sample counts, size, memory, CPU, phyloseq और cleanup status दिखा सकती है।</p>
+<h3 id="section-37-1">37.1. Details और monitoring resume<a aria-label="Permalink" class="heading-anchor" href="#section-37-1">#</a></h3>
+<p>Parameters, paths, exit codes, Slurm information, files और errors दिखते हैं। Resume monitoring interface को run से जोड़ता है, computation फिर शुरू नहीं करता।</p>
+<h3 id="section-37-2">37.2. Files browse करना<a aria-label="Permalink" class="heading-anchor" href="#section-37-2">#</a></h3>
+<p>Search, groups open करना, text files की अंतिम 200 lines preview, download और phyloseq import।</p>
+<h3 id="section-37-3">37.3. Job cancel करना<a aria-label="Permalink" class="heading-anchor" href="#section-37-3">#</a></h3>
+<p>Slurm से main job और identifiable child jobs cancel होते हैं। Directory और पहले बने files रहते हैं।</p>
+<h3 id="section-37-4">37.4. Run cleanup<a aria-label="Permalink" class="heading-anchor" href="#section-37-4">#</a></h3>
+<p>Intermediate files हटाता है और सामान्यतः <code>results/</code>, <code>meta/</code> रखता है। Irreversible है: space बचता है, लेकिन resume cache और diagnostic material हटते हैं।</p>
+<h3 id="section-37-5">37.5. Run delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-37-5">#</a></h3>
+<p>पूरा remote directory—results, metadata, logs, intermediates, phyloseq—हटता है। पहले आवश्यक files सुरक्षित करें।</p>
+<h2 id="section-38">38. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>लक्षण</th>
+<th>संभावित कारण</th>
+<th>जाँच / सुधार</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File button locked</td>
+<td>Context validate नहीं या बदला गया</td>
+<td>Technology, marker, engine फिर validate करें</td>
+</tr>
+<tr>
+<td>Connection yellow</td>
+<td>SSH खुला लेकिन prerequisites अधूरे</td>
+<td>Slurm, <code>tar</code>, modules, permissions, root जाँचें</td>
+</tr>
+<tr>
+<td>SSH refused</td>
+<td>Host, port, user, key या relay गलत</td>
+<td>BarCodeR के बाहर वही settings test करें</td>
+</tr>
+<tr>
+<td>Local files नहीं मिलते</td>
+<td>Files moved या mount unavailable</td>
+<td>फिर चुनें और transfer करें</td>
+</tr>
+<tr>
+<td>दो FASTQ same name</td>
+<td>Basename collision</td>
+<td>Selection से पहले rename करें</td>
+</tr>
+<tr>
+<td>Design पहले accept, फिर reject</td>
+<td>Editor ने केवल दो columns जाँचे</td>
+<td>छह exact columns दें</td>
+</tr>
+<tr>
+<td>Design FASTQ missing</td>
+<td>Name, extension, case या path अलग</td>
+<td>Basenames exact compare करें</td>
+</tr>
+<tr>
+<td>Sample names rejected</td>
+<td>Spaces, accents, characters, duplicates</td>
+<td>Automatic correction लगाकर review करें</td>
+</tr>
+<tr>
+<td>Orientation primer नहीं पाता</td>
+<td>Primer absent, reverse, removed या गलत</td>
+<td>FASTQ और 5′→3′ sequences जाँचें</td>
+</tr>
+<tr>
+<td>कोई read नहीं बचा</td>
+<td>Filters strict या inconsistent</td>
+<td>पहली zero metric पहचानें</td>
+</tr>
+<tr>
+<td>Length Illumina हटाता है</td>
+<td>Amplicon length R1/R2 पर लागू</td>
+<td>Individual read length दें या disable करें</td>
+</tr>
+<tr>
+<td><code>nf-schema</code> error</td>
+<td>Invalid value या file</td>
+<td>Logs और <code>.nextflow.log</code> पढ़ें</td>
+</tr>
+<tr>
+<td>Singularity image missing</td>
+<td>Cache, download, module, space, permissions</td>
+<td><code>_barcoder_singularity</code> और resources जाँचें</td>
+</tr>
+<tr>
+<td>लंबे समय PENDING</td>
+<td>Resources, priority, partition, account</td>
+<td>Requests बदलने से पहले Slurm reason पढ़ें</td>
+</tr>
+<tr>
+<td>OUT_OF_MEMORY</td>
+<td>Global या process memory कम</td>
+<td>Trace/logs में failing process पहचानें</td>
+</tr>
+<tr>
+<td>COMPLETED लेकिन phyloseq नहीं</td>
+<td>Step नहीं चला, file अन्यत्र या incomplete</td>
+<td><code>results/</code>, <code>Steps/</code>, exit code जाँचें</td>
+</tr>
+<tr>
+<td>Failure के बाद phyloseq</td>
+<td>Error से पहले object बना</td>
+<td>Dimensions, reads, taxonomy, steps जाँचें</td>
+</tr>
+<tr>
+<td>History empty</td>
+<td>गलत root, cluster या permissions</td>
+<td>Root सुधारकर scan करें</td>
+</tr>
+<tr>
+<td>Cleanup के बाद resume नहीं</td>
+<td><code>work/</code> cache हट गया</td>
+<td>Final results उपयोग करें या नया run submit करें</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-39">39. Final checklist<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<h3 id="context-2">Context<a aria-label="Permalink" class="heading-anchor" href="#context-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही technology, marker और route।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Database type और file संगत।</li>
+</ul>
+<h3 id="design-2">Design<a aria-label="Permalink" class="heading-anchor" href="#design-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>छह required columns।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Unique और safe identifiers।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>FASTQ सही referenced।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही barcodes और primers।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Consistent primer pairs।</li>
+</ul>
+<h3 id="parameters">Parameters<a aria-label="Permalink" class="heading-anchor" href="#parameters">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>MiniBar केवल आवश्यकता पर।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Error tolerances justified।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Orientation compatible।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Length उचित और enabled होने पर field non-empty।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Quality threshold उचित।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Coding filter और genetic code relevant।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Amplicon type और group सही।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Clustering और taxonomic modes documented।</li>
+</ul>
+<h3 id="nextits-2">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही region, ITSx group और chimera database।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Homogeneous primers।</li>
+</ul>
+<h3 id="cluster-2">Cluster<a aria-label="Permalink" class="heading-anchor" href="#cluster-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Green connection।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Accessible root।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही partition।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Unit सहित memory और realistic cores।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Valid modules और पर्याप्त space।</li>
+</ul>
+<h3 id="traceability">Traceability<a aria-label="Permalink" class="heading-anchor" href="#traceability">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>स्पष्ट run name।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Design preview checked।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Generated configuration checked।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Parameters project के साथ सुरक्षित।</li>
+</ul>
+<h2 id="section-40">40. Interpretation और reproducibility<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Results raw files, demultiplexing, primers, filters, clustering method, database, taxonomic algorithm और thresholds सभी पर निर्भर करते हैं। अलग parameters वाले runs की तुलना इन differences को ध्यान में रखे बिना नहीं करनी चाहिए।</p>
+<p>Reproducibility के लिए:</p>
+<ul>
+<li>design file रखें;</li>
+<li>database या version रखें;</li>
+<li>run parameters रखें;</li>
+<li>Nextflow reports रखें;</li>
+<li>initial values से हर change document करें;</li>
+<li>software versions रखें;</li>
+<li>हर step की metrics रखें;</li>
+<li>केवल final phyloseq object पर interpretation आधारित न करें।</li>
+</ul>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य परिचय</a><a class="toc-l2" href="#section-2">2. OpenMetaBar क्या करता है और क्या नहीं करता</a><a class="toc-l3" href="#section-2-1">2.1. OpenMetaBar द्वारा स्वचालित कार्य</a><a class="toc-l3" href="#section-2-2">2.2. उपयोगकर्ता की जिम्मेदारी</a><a class="toc-l2" href="#section-3">3. कार्यप्रवाह का अवलोकन</a><a class="toc-l2" href="#section-4">4. Analysis route चुनना</a><a class="toc-l3" href="#section-4-1">4.1. उपलब्ध routes</a><a class="toc-l3" href="#section-4-2">4.2. Route के प्रभाव</a><a class="toc-l2" href="#section-5">5. Cluster से connection</a><a class="toc-l3" href="#section-5-1">5.1. Connection window खोलना</a><a class="toc-l3" href="#section-5-2">5.2. आवश्यक जानकारी</a><a class="toc-l3" href="#section-5-3">5.3. की जाने वाली जाँचें</a><a class="toc-l3" href="#section-5-4">5.4. biglogin cluster</a><a class="toc-l3" href="#section-5-5">5.5. Run के दौरान disconnect होना</a><a class="toc-l2" href="#section-6">6. Analysis context निर्धारित करना</a><a class="toc-l3" href="#section-6-1">6.1. Sequencing technology</a><a class="toc-l3" href="#section-6-2">6.2. Marker या target</a><a class="toc-l3" href="#section-6-3">6.3. Reference database type</a><a class="toc-l3" href="#section-6-4">6.4. Analysis engine</a><a class="toc-l3" href="#section-6-5">6.5. Context validation</a><a class="toc-l2" href="#section-7">7. Run files चुनना</a><a class="toc-l3" href="#section-7-1">7.1. FASTQ files चुनना</a><a class="toc-l3" href="#section-7-2">7.2. Design file चुनना</a><a class="toc-l3" href="#section-7-3">7.3. Design file में primers</a><a class="toc-l3" href="#section-7-4">7.4. Design file में barcodes</a><a class="toc-l3" href="#section-7-5">7.5. Reference database चुनना</a><a class="toc-l2" href="#section-8">8. Design editor का उपयोग</a><a class="toc-l3" href="#section-8-1">8.1. Cells बदलना</a><a class="toc-l3" href="#section-8-2">8.2. Rows जोड़ना या हटाना</a><a class="toc-l3" href="#section-8-3">8.3. Column जोड़ना, rename करना या हटाना</a><a class="toc-l3" href="#section-8-4">8.4. Sample names सुधारना</a><a class="toc-l3" href="#section-8-5">8.5. FASTQ से design बनाना</a><a class="toc-l3" href="#section-8-6">8.6. Design save करना</a><a class="toc-l2" href="#section-9">9. Files validate और prepare करना</a><a class="toc-l2" href="#section-10">10. Run और cluster configuration</a><a class="toc-l3" href="#section-10-1">10.1. Run root directory</a><a class="toc-l3" href="#section-10-2">10.2. Slurm partition</a><a class="toc-l3" href="#section-10-3">10.3. LotuS3 memory</a><a class="toc-l3" href="#section-10-4">10.4. LotuS3 cores</a><a class="toc-l3" href="#section-10-5">10.5. Container module</a><a class="toc-l3" href="#section-10-6">10.6. Nextflow module</a><a class="toc-l3" href="#section-10-7">10.7. Run name</a><a class="toc-l3" href="#section-10-8">10.8. Intermediate files रखना</a><a class="toc-l2" href="#section-11">11. Initial values समझना</a><a class="toc-l2" href="#section-12">12. MiniBar demultiplexing — ONT routes</a><a class="toc-l3" href="#section-12-1">12.1. MiniBar enable या disable</a><a class="toc-l3" href="#section-12-2">12.2. Identification method — M</a><a class="toc-l3" href="#section-12-3">12.3. Maximum barcode errors — e</a><a class="toc-l3" href="#section-12-4">12.4. Maximum primer errors — E</a><a class="toc-l3" href="#section-12-5">12.5. MiniBar parameter — l</a><a class="toc-l2" href="#section-13">13. Amplicon orientation</a><a class="toc-l3" href="#section-13-1">13.1. Single-end reads</a><a class="toc-l3" href="#section-13-2">13.2. Non-degenerate और degenerate primers</a><a class="toc-l3" href="#section-13-3">13.3. Paired-end reads</a><a class="toc-l3" href="#section-13-4">13.4. NextITS route</a><a class="toc-l3" href="#section-13-5">13.5. Orientation कब disable करें</a><a class="toc-l2" href="#section-14">14. Filters का क्रम</a><a class="toc-l2" href="#section-15">15. Length filter</a><a class="toc-l3" href="#section-15-1">15.1. Activation और input</a><a class="toc-l3" href="#section-15-2">15.2. वास्तविक interval</a><a class="toc-l3" href="#section-15-3">15.3. Length कैसे चुनें</a><a class="toc-l3" href="#section-15-4">15.4. Empty या invalid field</a><a class="toc-l3" href="#section-15-5">15.5. Paired-end reads</a><a class="toc-l3" href="#section-15-6">15.6. Resynchronisation</a><a class="toc-l2" href="#section-16">16. Quality filter</a><a class="toc-l2" href="#section-17">17. Coding-sequence filter</a><a class="toc-l2" href="#section-18">18. LotuS3 — clustering और assignment</a><a class="toc-l3" href="#section-18-1">18.1. Platform</a><a class="toc-l3" href="#section-18-2">18.2. Amplicon type</a><a class="toc-l3" href="#section-18-3">18.3. Taxonomic group</a><a class="toc-l3" href="#section-18-4">18.4. Clustering या denoising</a><a class="toc-l3" href="#section-18-5">18.5. Taxonomic assignment tool</a><a class="toc-l3" href="#section-18-6">18.6. RDP confidence threshold</a><a class="toc-l3" href="#section-18-7">18.7. Unclassified units रखना</a><a class="toc-l3" href="#section-18-8">18.8. Taxonomic exclusion</a><a class="toc-l2" href="#section-19">19. Demultiplexed reads save करना</a><a class="toc-l2" href="#section-20">20. LCA और advanced assignment</a><a class="toc-l3" href="#section-20-1">20.1. Assignment mode</a><a class="toc-l3" href="#section-20-2">20.2. Minimum coverage</a><a class="toc-l3" href="#section-20-3">20.3. Rank-specific identity thresholds</a><a class="toc-l3" href="#section-20-4">20.4. Agreement fraction</a><a class="toc-l3" href="#section-20-5">20.5. Phylogenetic tree</a><a class="toc-l3" href="#section-20-6">20.6. Maximum read overlap</a><a class="toc-l2" href="#section-21">21. Standard ONT route</a><a class="toc-l2" href="#section-22">22. ONT IDMABIO route</a><a class="toc-l3" href="#section-22-1">22.1. Gene type</a><a class="toc-l3" href="#section-22-2">22.2. Retained BLAST hits</a><a class="toc-l3" href="#section-22-3">22.3. Alignments per sample</a><a class="toc-l3" href="#section-22-4">22.4. Report language</a><a class="toc-l2" href="#section-23">23. PacBio + LotuS3 route</a><a class="toc-l2" href="#section-24">24. PacBio + NextITS route</a><a class="toc-l3" href="#section-24-1">24.1. ITS region</a><a class="toc-l3" href="#section-24-2">24.2. ITSx group</a><a class="toc-l3" href="#section-24-3">24.3. NextITS clustering</a><a class="toc-l3" href="#section-24-4">24.4. UNOISE option</a><a class="toc-l3" href="#section-24-5">24.5. Homopolymer correction</a><a class="toc-l3" href="#section-24-6">24.6. Chimera database</a><a class="toc-l3" href="#section-24-7">24.7. Primer consistency</a><a class="toc-l2" href="#section-25">25. Illumina + LotuS3 route</a><a class="toc-l2" href="#section-26">26. Design और destination preview</a><a class="toc-l2" href="#section-27">27. Generated configuration preview</a><a class="toc-l2" href="#section-28">28. Launch से पहले जाँच</a><a class="toc-l3" href="#context">Context</a><a class="toc-l3" href="#fastq">FASTQ</a><a class="toc-l3" href="#design">Design</a><a class="toc-l3" href="#filters">Filters</a><a class="toc-l3" href="#cluster">Cluster</a><a class="toc-l3" href="#nextits">NextITS</a><a class="toc-l2" href="#section-29">29. Launch पर क्या होता है</a><a class="toc-l2" href="#section-30">30. Singularity images</a><a class="toc-l2" href="#section-31">31. Run timeline पढ़ना</a><a class="toc-l2" href="#section-32">32. Slurm states समझना</a><a class="toc-l3" href="#pending">PENDING</a><a class="toc-l3" href="#running">RUNNING</a><a class="toc-l3" href="#completed">COMPLETED</a><a class="toc-l3" href="#failed">FAILED</a><a class="toc-l3" href="#out-of-memory">OUT_OF_MEMORY</a><a class="toc-l3" href="#timeout">TIMEOUT</a><a class="toc-l3" href="#cancelled">CANCELLED</a><a class="toc-l3" href="#unknown-missing-job">Unknown या missing job</a><a class="toc-l2" href="#section-33">33. Execution log</a><a class="toc-l3" href="#section-33-1">33.1. Local operations</a><a class="toc-l3" href="#section-33-2">33.2. Monitoring</a><a class="toc-l3" href="#section-33-3">33.3. Standard output और standard error</a><a class="toc-l3" href="#section-33-4">33.4. .nextflow.log</a><a class="toc-l2" href="#section-34">34. Produced results</a><a class="toc-l2" href="#section-35">35. Phyloseq object import</a><a class="toc-l2" href="#section-36">36. Submission के बाद actions</a><a class="toc-l3" href="#section-36-1">36.1. Adjust करके relaunch</a><a class="toc-l3" href="#section-36-2">36.2. New analysis — शुरुआत से</a><a class="toc-l3" href="#section-36-3">36.3. Relaunch न करें</a><a class="toc-l2" href="#section-37">37. Analysis history</a><a class="toc-l3" href="#section-37-1">37.1. Details और monitoring resume</a><a class="toc-l3" href="#section-37-2">37.2. Files browse करना</a><a class="toc-l3" href="#section-37-3">37.3. Job cancel करना</a><a class="toc-l3" href="#section-37-4">37.4. Run cleanup</a><a class="toc-l3" href="#section-37-5">37.5. Run delete करना</a><a class="toc-l2" href="#section-38">38. Troubleshooting</a><a class="toc-l2" href="#section-39">39. Final checklist</a><a class="toc-l3" href="#context-2">Context</a><a class="toc-l3" href="#design-2">Design</a><a class="toc-l3" href="#parameters">Parameters</a><a class="toc-l3" href="#nextits-2">NextITS</a><a class="toc-l3" href="#cluster-2">Cluster</a><a class="toc-l3" href="#traceability">Traceability</a><a class="toc-l2" href="#section-40">40. Interpretation और reproducibility</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · OpenMetaBar</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

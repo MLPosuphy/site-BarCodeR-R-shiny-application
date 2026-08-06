@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>描述 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="description" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">描述</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">描述</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">描述 — 方法指南</h1>
+<h2 id="section-1">1. 总体介绍<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>描述（Description）</strong>选项卡用于在编辑、过滤或统计分析之前，检查 BarCodeR 中 <code>phyloseq</code> 对象的结构与内容。</p>
+<p>它分为两个互补视图。</p>
+<h3 id="section">数据集视图<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h3>
+<p>一次检查一个 <code>phyloseq</code> 对象，可用于：</p>
+<ul>
+<li>检查维度和可用组件；</li>
+<li>查看描述性指标；</li>
+<li>可视化丰度和观测丰富度；</li>
+<li>检查参考序列；</li>
+<li>计算稀释曲线；</li>
+<li>识别异常样本；</li>
+<li>查看和导出表格；</li>
+<li>查看过滤日志；</li>
+<li>阅读 OpenMetaBar 来源信息。</li>
+</ul>
+<h3 id="section-2">项目视图<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h3>
+<p>比较当前内存中的多个数据集，可用于汇总、选择和比较其维度、测序深度、丰富度、稀疏度、相对参考数据集的差异，以及过滤日志中的删除情况。</p>
+<h2 id="section-2-2">2. 该选项卡的作用<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h2>
+<p>描述选项卡主要用于理解数据、检查导入结果、发现明显异常、为后续方法选择做准备，以及比较多个数据集的一般结构。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>应使用的选项卡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>修改表格</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>删除样本或分类单元</td>
+<td>Filtration</td>
+</tr>
+<tr>
+<td>重命名或删除数据集</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>进行统计分析</td>
+<td>Analysis</td>
+</tr>
+<tr>
+<td>从 FASTQ 启动流程</td>
+<td>OpenMetaBar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. 对数据的影响<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>描述选项卡不会修改 OTU table、分类表、metadata、序列、系统发育树、丰度、标识符或日志。图表和表格基于当前内存中的对象生成。</p>
+<h3 id="section-3-1">3.1. 例外：活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-3-1">#</a></h3>
+<p>数据集视图的主选择器与全局活动数据集同步。更换数据集会更新 <code>active_ds()</code>，影响 BarCodeR 其他模块使用的默认数据集，并可能将项目标记为未保存。</p>
+<p>phyloseq 内容本身不变，但全局工作上下文会改变。</p>
+<h2 id="section-4">4. 必要条件<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>大多数功能至少需要 <code>otu_table</code>。</p>
+<p>以下组件可选：</p>
+<ul>
+<li><code>sample_data</code>；</li>
+<li><code>tax_table</code>；</li>
+<li><code>refseq</code>；</li>
+<li>系统发育树；</li>
+<li>来源属性；</li>
+<li>过滤日志。</li>
+</ul>
+<p>缺少组件会减少可用信息，但不一定阻止打开该选项卡。</p>
+<h2 id="section-5">5. 关于丰度值的重要假设<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>模块将 OTU table 中的值称为 <strong>reads</strong>，但不会验证它们是否为原始、整数、未转换且非负的计数。</p>
+<p>如果对象包含相对丰度、CLR 或对数转换、归一化值、小数或负值，则“reads”不再表示原始测序深度。</p>
+<p>这会直接影响总和、丰富度、优势度、稀释曲线和数据集比较的解释。</p>
+<h2 id="section-6">6. 界面结构<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>主要有两个视图按钮：</p>
+<pre tabindex="0"><code class="language-text">Dataset
+Project
+</code></pre>
+<h3 id="section-7">数据集视图<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h3>
+<ol>
+<li>数据集控制。</li>
+<li>OpenMetaBar 来源。</li>
+<li>快速阅读。</li>
+<li>交互式可视化。</li>
+<li>表格与日志。</li>
+</ol>
+<h3 id="section-8">项目视图<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h3>
+<ol>
+<li>项目总体概览。</li>
+<li>交互式比较。</li>
+</ol>
+<h2 id="section-7-2">7. 选择数据集<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h2>
+<p><strong>选择数据集</strong>字段包含当前会话中的所有数据集。</p>
+<h3 id="section-7-1">7.1. 全局同步<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>它跟随全局活动数据集。在 Datasets、侧边栏或其他全局选择器中更改时，描述选项卡会同步；反过来，在描述中更改也会改变应用的活动数据集。</p>
+<h3 id="section-7-2-2">7.2. 回退值<a aria-label="Permalink" class="heading-anchor" href="#section-7-2-2">#</a></h3>
+<p>若没有有效活动数据集，则使用之前选择且仍存在的数据集，否则使用列表中的第一个。</p>
+<h3 id="section-7-3">7.3. 更换数据集<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>更换后会重新计算指标、图表、表格、分组选项、来源和异常值。</p>
+<blockquote>
+<p><strong>稀释曲线注意：</strong>数据集更换后不会自动重新计算稀释曲线，必须再次点击<strong>计算曲线</strong>。</p>
+</blockquote>
+<h2 id="section-8-2">8. 分组变量<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h2>
+<p><strong>分组变量 — 样本</strong>使用 <code>sample_data</code> 的某一列对样本着色或分组。</p>
+<h3 id="section-8-1">8.1. 可选变量<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>仅提供具有 2–15 个非缺失不同值的列，并排除 <code>Date</code>、<code>POSIXct</code>、<code>POSIXt</code>。</p>
+<h3 id="section-8-2-2">8.2. 数值列<a aria-label="Permalink" class="heading-anchor" href="#section-8-2-2">#</a></h3>
+<p>若数值列仅有 2–15 个不同值，也会作为分类变量提供。例如 <code>10, 15, 20</code> 会被视为三个组，而不是连续变量。</p>
+<h3 id="section-8-3">8.3. 缺失值<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>缺失值统一显示为 <code>NA</code>。文本 <code>"NA"</code> 与真正缺失值可能难以区分。</p>
+<h3 id="section-8-4">8.4. 不分组<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>选择<strong>不分组</strong>时，所有样本归入一个名为 <code>全部</code> 的组。</p>
+<h3 id="section-8-5">8.5. 分组的作用<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>分组影响颜色、组间小提琴图、累计曲线、稀释曲线、异常值上下文和组内异常比例，但不修改数据。</p>
+<h2 id="section-9">9. 分组不会改变异常值检测<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>异常值阈值基于整个数据集计算，而不是在每个组内分别计算。</p>
+<p>分组仅用于解释和着色。因此，某个样本可能在本组内正常，但相对整个数据集被标记为异常。</p>
+<h2 id="section-10">10. “查看日志”按钮<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>该按钮选择“表格与日志”中的<strong>过滤日志</strong>子选项卡。</p>
+<p>当前实现不会自动滚动页面，也不一定展开折叠框。点击后可能需要手动滚动并展开该区域。</p>
+<h2 id="section-11">11. 数据集标题<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>标题显示数据集名称、样本数、分类单元数、总丰度和可用组件。</p>
+<pre tabindex="0"><code class="language-text">130 个样本 • 2 450 个 ASV/OTU • 7 779 736 reads
+</code></pre>
+<h2 id="section-12">12. 组件徽章<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>徽章表示 OTU table、分类表、metadata、参考序列和过滤日志是否存在。</p>
+<h3 id="section-12-1">12.1. OTU<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>表示检测到 <code>otu_table</code>。</p>
+<h3 id="section-12-2">12.2. 分类信息<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>表示存在 <code>tax_table</code>，但不保证所有 ASV 已注释、所有层级完整或分类结果正确。</p>
+<h3 id="section-12-3">12.3. Metadata<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>表示存在 <code>sample_data</code>，但不保证变量可用、类型正确或无缺失值。</p>
+<h3 id="section-12-4">12.4. RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>表示参考序列存在且 <code>Biostrings</code> 可读取。若缺少 <code>Biostrings</code>，即使对象含有 <code>refseq</code>，也可能显示为缺失。</p>
+<h3 id="section-12-5">12.5. 日志<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>表示存在 <code>filtration_log</code> 属性，但不保证其中真的有删除记录。</p>
+<h3 id="section-12-6">12.6. 系统发育树<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>当前没有专用树徽章，因此不能据此判断 <code>phy_tree</code> 是否存在。</p>
+<h2 id="section-13">13. OTU table 方向<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>描述模块会临时将矩阵调整为分类单元在行、样本在列。若原对象相反，只在计算内存中转置，不修改原始 phyloseq。</p>
+<h2 id="section-14">14. 指标：分类单元数量<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>等同于 <code>phyloseq::ntaxa(ps)</code>。界面使用 ASV 一词，但实际单位可能是 ASV、OTU、ZOTU 或其他单位。</p>
+<h2 id="section-15">15. 指标：样本数量<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>等同于 <code>phyloseq::nsamples(ps)</code>。</p>
+<h2 id="section-16">16. 指标：总 reads<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>为 OTU table 所有单元格之和，忽略缺失值。只有矩阵为原始计数时，才可解释为总 reads。</p>
+<h2 id="section-17">17. 指标：每个样本的 reads<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<pre tabindex="0"><code class="language-text">Reads = 该样本所有分类单元丰度之和
+</code></pre>
+<p>随后计算最小值、最大值、均值、中位数和标准差，主卡片显示中位数。</p>
+<h2 id="section-18">18. 指标：观测丰富度<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<pre tabindex="0"><code class="language-text">丰富度 = 丰度严格大于零的分类单元数量
+</code></pre>
+<p>这是原始观测丰富度，不是 Chao1、ACE、Shannon、Simpson，也未校正测序深度。</p>
+<h2 id="section-19">19. 指标：最大优势分类单元的占比<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<pre tabindex="0"><code class="language-text">优势度 (%) =
+最大分类单元丰度
+÷ 样本总丰度
+× 100
+</code></pre>
+<p>高优势度可能来自真实生物学、偏好扩增、污染、组成失衡或低深度，不能单独判定质量差。</p>
+<h2 id="section-20">20. 指标：每个样本的零值比例<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<pre tabindex="0"><code class="language-text">零值 (%) =
+丰度为零的分类单元数量
+÷ 分类单元总数
+× 100
+</code></pre>
+<p>该指标目前不参与异常值判定。</p>
+<h2 id="section-21">21. 指标：全局稀疏度<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<pre tabindex="0"><code class="language-text">零值单元格数
+÷ OTU table 总单元格数
+× 100
+</code></pre>
+<h3 id="section-21-1">21.1. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-21-1">#</a></h3>
+<p>代谢条形码数据常因多样性、分类单元专一性、空间差异、检测限制、深度和流程处理而高度稀疏。</p>
+<h3 id="section-21-2">21.2. 显示阈值<a aria-label="Permalink" class="heading-anchor" href="#section-21-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">稀疏度</th>
+<th>提示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 97%</td>
+<td>非常高</td>
+</tr>
+<tr>
+<td style="text-align:right">90–&lt;97%</td>
+<td>高</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;90%</td>
+<td>可控</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些只是内部显示规则，不是通用科学标准。</p>
+<h3 id="section-21-3">21.3. <code>NA</code> 的影响<a aria-label="Permalink" class="heading-anchor" href="#section-21-3">#</a></h3>
+<p><code>NA</code> 不计为零，但仍留在分母中，因此可能轻微低估稀疏度。</p>
+<h2 id="section-22">22. 深度变异性<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<pre tabindex="0"><code class="language-text">CV (%) =
+样本 reads 标准差
+÷ 样本 reads 均值
+× 100
+</code></pre>
+<p>当 <code>CV ≥ 100%</code> 时显示深度非常不均一。该阈值仅为内部描述规则。</p>
+<h2 id="section-23">23. 分类完整性<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<pre tabindex="0"><code class="language-text">完整性 (%) =
+非缺失且非空的值
+÷ ASV 总数
+× 100
+</code></pre>
+<p>显示的平均完整性是各分类层级百分比的非加权平均。</p>
+<h3 id="section-23-1">23.1. 后果<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>平均值可能掩盖某些层级很完整、另一些层级很缺失的情况，应查看详细表格。</p>
+<h3 id="section-23-2">23.2. 仅含空格的字符串<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>若导入前未清理，可能被视为已填写。</p>
+<h2 id="section-24">24. Metadata 缺失值<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<pre tabindex="0"><code class="language-text">缺失 (%) =
+NA 或空字符串数量
+÷ 样本数量
+× 100
+</code></pre>
+<p>显示的是各变量缺失率的非加权平均。</p>
+<h3 id="section-24-1">24.1. <code>"NA"</code> 文本<a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>文本 <code>"NA"</code> 不是真正的缺失值，可能被计为一个水平。</p>
+<h3 id="section-24-2">24.2. 空格<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>仅含空格的字符串可能被视为非缺失。</p>
+<h3 id="section-24-3">24.3. 显示类型<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>表格显示列的第一个 R 类，如 <code>character</code>、<code>numeric</code>、<code>factor</code>、<code>Date</code>，可用于发现导入后变成文本的列。</p>
+<h2 id="section-25">25. 序列长度<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>当 <code>refseq</code> 和 <code>Biostrings</code> 可用时，计算最小、最大、均值、中位数和标准差，单位为 bp。</p>
+<h3 id="section-25-1">25.1. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-25-1">#</a></h3>
+<p>多峰或范围很宽可能表示多个扩增区域、多个标记、截短序列、indel、非特异产物、过滤不足或真实生物差异。</p>
+<h2 id="section-26">26. GC 百分比<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<pre tabindex="0"><code class="language-text">GC (%) =
+G + C
+÷ A + C + G + T
+× 100
+</code></pre>
+<p>模糊碱基不进入 ACGT 分母，因此 GC 可能只基于序列的非模糊部分。</p>
+<h2 id="section-27">27. 序列名称<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>使用 <code>refseq</code> 中的名称。若无有效名称，则生成：</p>
+<pre tabindex="0"><code class="language-text">ASV_1
+ASV_2
+ASV_3
+</code></pre>
+<p>模块不会全面验证序列名是否与 OTU table 分类单元对应。</p>
+<h2 id="section-28">28. 自动解释信息<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>摘要卡根据 reads 中位数、丰富度中位数、稀疏度和组件存在情况生成文字。</p>
+<p>它只是描述性帮助，不是科学验证、最终质量控制、过滤决策或统计建议。</p>
+<h2 id="section-29">29. 数据集快速阅读<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<h3 id="section-29-1">29.1. 结构<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>reads 中位数、丰富度中位数和稀疏度。</p>
+<h3 id="section-29-2">29.2. 可用内容<a aria-label="Permalink" class="heading-anchor" href="#section-29-2">#</a></h3>
+<p>OTU table、分类信息、metadata 和序列是否存在。</p>
+<h3 id="section-29-3">29.3. 序列<a aria-label="Permalink" class="heading-anchor" href="#section-29-3">#</a></h3>
+<p>若可用，显示长度中位数和 GC 中位数。</p>
+<h3 id="section-29-4">29.4. 过滤<a aria-label="Permalink" class="heading-anchor" href="#section-29-4">#</a></h3>
+<p>若存在 <code>filtration_log</code>，显示删除的 ASV 和样本数。</p>
+<h2 id="section-30">30. 自动诊断<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>可能提示高稀疏度、深度不均、缺少 metadata、分类信息、序列或存在过滤历史。</p>
+<p>这些提示不会修改数据，也不应单独用于排除数据。</p>
+<h2 id="section-31">31. OpenMetaBar 来源<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>该框读取 <code>attr(ps, "openmetabar_run")</code>，不会连接集群。这是导入 phyloseq 时保存的快照。</p>
+<h3 id="section-31-1">31.1. Run 摘要<a aria-label="Permalink" class="heading-anchor" href="#section-31-1">#</a></h3>
+<p>可包括 ID、标签、日期、技术、标记、引擎、数据库、design file、样本和 FASTQ 数量。</p>
+<h3 id="section-31-2">31.2. 拆分样本<a aria-label="Permalink" class="heading-anchor" href="#section-31-2">#</a></h3>
+<p>可包括 MiniBar 是否启用、方法和容错参数。</p>
+<h3 id="section-31-3">31.3. 过滤器<a aria-label="Permalink" class="heading-anchor" href="#section-31-3">#</a></h3>
+<p>可包括方向、质量、长度、编码过滤和遗传密码表。</p>
+<h3 id="section-31-4">31.4. LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-31-4">#</a></h3>
+<p>可包括平台、扩增子类型、聚类和分类赋值。</p>
+<h3 id="section-31-5">31.5. LCA<a aria-label="Permalink" class="heading-anchor" href="#section-31-5">#</a></h3>
+<p>可包括覆盖度、相似性阈值、共识比例和模式。</p>
+<h3 id="section-31-6">31.6. IDMABIO<a aria-label="Permalink" class="heading-anchor" href="#section-31-6">#</a></h3>
+<p>仅在使用该路线时存在。</p>
+<h3 id="section-31-7">31.7. NextITS<a aria-label="Permalink" class="heading-anchor" href="#section-31-7">#</a></h3>
+<p>仅在使用该路线时存在。</p>
+<h3 id="section-31-8">31.8. 集群环境<a aria-label="Permalink" class="heading-anchor" href="#section-31-8">#</a></h3>
+<p>可包括分区、内存、CPU、模块和远程路径。</p>
+<h3 id="section-31-9">31.9. FASTQ 文件<a aria-label="Permalink" class="heading-anchor" href="#section-31-9">#</a></h3>
+<p>显示的是记录的来源路径，不保证文件仍可访问。</p>
+<h3 id="section-31-10">31.10. 样本重命名<a aria-label="Permalink" class="heading-anchor" href="#section-31-10">#</a></h3>
+<p>可保留原名称、修正名称、日期和原因。</p>
+<h3 id="section-31-11">31.11. 缺少来源信息<a aria-label="Permalink" class="heading-anchor" href="#section-31-11">#</a></h3>
+<p>不代表数据集从未由 OpenMetaBar 生成；属性可能在转换、旧版本或外部导出中丢失。</p>
+<h2 id="section-32">32. 交互式可视化 — 总览<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>包括 reads 与丰富度、样本卡、前 15 个样本、前 15 个分类单元以及样本和分类单元累计贡献。</p>
+<h2 id="section-33">33. Reads 与丰富度<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = 总丰度
+Y = 观测丰富度
+</code></pre>
+<p>颜色表示组，形状表示标准或异常。</p>
+<h3 id="section-33-1">33.1. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>可查看深度—丰富度关系、低深度样本和偏离主群的点。</p>
+<h3 id="section-33-2">33.2. 限制<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>正相关不能证明深度是生物差异的唯一原因。</p>
+<h3 id="section-33-3">33.3. 交互<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>点击点会更新样本卡。</p>
+<h2 id="section-34">34. 样本详情卡<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>显示 SampleID、reads、丰富度、优势度、零值比例、状态和最多六个 metadata 值。</p>
+<h3 id="section-34-1">34.1. 初始样本<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>优先显示第一个异常样本，否则显示第一个样本。</p>
+<h3 id="section-34-2">34.2. 显示的 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>完全缺失的列被排除，仅显示前六个可用字段，因此并不完整。</p>
+<h2 id="section-35">35. 前 15 个样本<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>按总丰度排序，最多显示 15 个。点击柱形会更新样本卡。</p>
+<h3 id="section-35-1">35.1. 限制<a aria-label="Permalink" class="heading-anchor" href="#section-35-1">#</a></h3>
+<p>深度最高的样本不一定最好、最丰富或最具代表性。</p>
+<h2 id="section-36">36. 前 15 个分类单元<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>按所有样本的总丰度排序，并在提示中显示出现样本数和比例。</p>
+<h3 id="section-36-1">36.1. 出现率<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">出现率 = 丰度 &gt; 0 的样本数
+</code></pre>
+<h3 id="section-36-2">36.2. 限制<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>使用分类单元 ID 而不是分类注释。仅在一个样本中非常高的 ASV 也可能排在前列。</p>
+<h2 id="section-37">37. 样本累计贡献<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>按丰度降序排列样本，显示前若干样本解释的累计丰度比例。初始陡升表示深度集中于少数样本。</p>
+<h2 id="section-38">38. 分类单元累计贡献<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>显示优势分类单元解释的累计丰度，不考虑分类、出现率、分组或生物学稀有性。</p>
+<h2 id="section-39">39. 丰度选项卡<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>包括 reads 直方图、按组小提琴图和按组累计 reads 曲线。</p>
+<h2 id="section-40">40. Reads 直方图<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>描述每个样本总丰度分布，可发现偏态、过浅或过深样本和多个深度群体。分箱由 Plotly 自动确定。</p>
+<h2 id="section-41">41. 按组的 reads<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>当有多个组时显示小提琴图，包括分布、箱线图、均值和单个点。</p>
+<h3 id="section-41-1">41.1. 无分组<a aria-label="Permalink" class="heading-anchor" href="#section-41-1">#</a></h3>
+<p>若无可用定性变量，则显示提示。</p>
+<h3 id="section-41-2">41.2. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-41-2">#</a></h3>
+<p>该图仅为描述性，不进行统计检验、归一化、组大小或协变量校正。</p>
+<h2 id="section-42">42. 按组累计 reads 贡献<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>每组内部按丰度排序并计算累计比例，因此每条曲线都达到 100%。</p>
+<h3 id="section-42-1">42.1. 后果<a aria-label="Permalink" class="heading-anchor" href="#section-42-1">#</a></h3>
+<p>它描述组内深度集中程度，而不是各组占项目总 reads 的比例。大小不同的组都达到 100%。</p>
+<h2 id="section-43">43. 丰富度选项卡<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>包括丰富度直方图、按组丰富度和丰富度—优势度关系。</p>
+<h2 id="section-44">44. 丰富度直方图<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>显示每个样本观测分类单元数的分布。未校正深度，因此深度更高的样本可能自然观察到更多分类单元。</p>
+<h2 id="section-45">45. 按组丰富度<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>小提琴图比较各组观测丰富度，仅为描述性，不进行统计检验。</p>
+<h2 id="section-46">46. 丰富度与优势度<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = 观测丰富度
+Y = 最大优势分类单元比例
+</code></pre>
+<p>可区分丰富且均匀、丰富但被优势分类单元主导、贫乏且被主导或其他异常模式。</p>
+<h3 id="section-46-1">46.1. 这不是均匀度指数<a aria-label="Permalink" class="heading-anchor" href="#section-46-1">#</a></h3>
+<p>最大优势度不等同于 Pielou、Shannon 或 Simpson。最大优势度相同的群落，其余分类单元分布可能完全不同。</p>
+<h2 id="section-47">47. 序列选项卡<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>包括长度直方图、GC 直方图和长度—GC 关系。需要 <code>refseq</code> 和 <code>Biostrings</code>。</p>
+<h2 id="section-48">48. 长度与 GC<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>每个点代表一条序列，可发现不同长度/组成的群体、极端序列或多个标记，但不能单独证明污染或错误。</p>
+<h2 id="section-49">49. 稀释曲线<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>该子选项卡执行独立计算，不会在打开时自动运行。必须点击<strong>计算曲线</strong>。</p>
+<h2 id="section-50">50. 使用的稀释方法<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>使用：</p>
+<pre tabindex="0"><code class="language-r">vegan::rarefy()
+</code></pre>
+<p>它计算给定深度下观测分类单元数量的解析期望值。它不是重复随机抽样，不创建新 phyloseq，不调用 <code>rarefy_even_depth()</code>，不替换丰度，也不保存归一化结果。</p>
+<h2 id="section-51">51. 稀释计算条件<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>需要 <code>vegan</code>、OTU table、至少两个正丰度样本，以及至少两个 reads ≥ 50 的样本。少于 50 reads 的样本被排除。</p>
+<h3 id="section-51-1">51.1. 50 reads 阈值<a aria-label="Permalink" class="heading-anchor" href="#section-51-1">#</a></h3>
+<p>该阈值写在代码中，目前无法在界面更改，也不是通用标准。</p>
+<h2 id="section-52">52. 稀释所需数据类型<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p><code>vegan::rarefy()</code> 面向计数数据。相对丰度、CLR、负值、连续转换或非整数数据不适合。模块不会阻止所有不适当情况，计算前必须确认 OTU table 的性质。</p>
+<h2 id="section-53">53. 计算深度<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>最多生成约 80 个深度，从 1 到观测最大值。对每个样本，仅保留不超过其总深度的值，并进行取整和去重。</p>
+<h2 id="section-54">54. 单样本曲线<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p><strong>按组着色的单样本曲线</strong>模式每个样本一条线。提示信息包含 SampleID、组、总 reads、稀释深度、期望/观测丰富度和异常状态。</p>
+<h2 id="section-55">55. 单样本曲线子集<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>选项包括全部样本、Top reads、Bottom reads 和异常值。</p>
+<h3 id="section-55-1">55.1. 全部样本<a aria-label="Permalink" class="heading-anchor" href="#section-55-1">#</a></h3>
+<p>显示所有符合条件的曲线。当前实现不应用“最大曲线数”，因此样本很多时图形可能很重。</p>
+<h3 id="section-55-2">55.2. Top reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-2">#</a></h3>
+<p>保留深度最高的样本，数量不超过所选上限。</p>
+<h3 id="section-55-3">55.3. Bottom reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-3">#</a></h3>
+<p>保留 reads ≥ 50 的样本中深度最低者。</p>
+<h3 id="section-55-4">55.4. 异常值<a aria-label="Permalink" class="heading-anchor" href="#section-55-4">#</a></h3>
+<p>仅保留 IQR 规则标记的样本。若无异常值，图可能为空。</p>
+<h2 id="section-56">56. 最大曲线数<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>取值范围 2–200。适用于 Top、Bottom 和异常值，但目前不适用于全部样本。</p>
+<h2 id="section-57">57. 按组聚合曲线<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>将同组所有样本的丰度相加，然后对合并群落计算一条曲线。</p>
+<h3 id="section-57-1">57.1. 曲线表示什么<a aria-label="Permalink" class="heading-anchor" href="#section-57-1">#</a></h3>
+<p>表示该组 reads 池中的期望丰富度，不是单样本曲线平均、每样本平均丰富度或置信区间。</p>
+<h3 id="section-57-2">57.2. 组大小影响<a aria-label="Permalink" class="heading-anchor" href="#section-57-2">#</a></h3>
+<p>样本数或 reads 更多的组拥有更大池，可能达到更高丰富度。解释时需同时查看组内样本数和总 reads。</p>
+<h3 id="section-57-3">57.3. 无分组<a aria-label="Permalink" class="heading-anchor" href="#section-57-3">#</a></h3>
+<p>所有样本合并为一条名为 <code>全部</code> 的曲线。</p>
+<h2 id="section-58">58. 显示图例<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>默认关闭。组很多时开启图例可能降低可读性。单样本曲线每组只显示一个图例项。</p>
+<h2 id="section-59">59. 必须重新计算<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>稀释结果属于点击按钮时的活动数据集。更换数据集不会自动重新计算。</p>
+<h3 id="section-59-1">59.1. 更改分组变量<a aria-label="Permalink" class="heading-anchor" href="#section-59-1">#</a></h3>
+<p>可基于已有结果更新颜色或聚合。</p>
+<h3 id="section-59-2">59.2. 旧结果风险<a aria-label="Permalink" class="heading-anchor" href="#section-59-2">#</a></h3>
+<p>更换数据集后若未重算，缓存结果可能仍来自前一个数据集。应始终重新计算。</p>
+<h2 id="section-60">60. 稀释曲线解释<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>曲线趋平表示新增 reads 带来的新分类单元逐渐减少；持续上升表示增加深度可能发现更多分类单元。</p>
+<p>没有平台并不一定表示质量差或测序不足，也可能来自极高多样性、稀有分类单元、残余噪声、测序错误或真实异质性。</p>
+<h2 id="section-61">61. 稀释曲线的限制<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>不提供置信区间、重复随机抽样均值、外推、Good 覆盖度、Chao1、曲线间统计比较或自动饱和阈值。它只是描述工具。</p>
+<h2 id="section-62">62. 异常值检测<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>基于三个指标：深度、丰富度和优势度。零值比例不参与标记。</p>
+<h2 id="section-63">63. IQR 规则<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<pre tabindex="0"><code class="language-text">Q1 = 第一四分位数
+Q3 = 第三四分位数
+IQR = Q3 - Q1
+下限 = Q1 - 1.5 × IQR
+上限 = Q3 + 1.5 × IQR
+</code></pre>
+<p>超出范围即标记为异常，等同于 Tukey 箱线图规则。</p>
+<h2 id="section-64">64. 高端和低端异常<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>两个方向都会检测：深度、丰富度或优势度过低或过高。实际计算也会识别异常低的优势度。</p>
+<h2 id="section-65">65. IQR 最低条件<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>少于四个值、全部缺失或 IQR 为零时，不检测该指标异常。无异常可能来自真正均一、样本太少或没有变异。</p>
+<h2 id="section-66">66. 样本状态<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>至少一个指标异常则标记 <code>Outlier</code>，否则为 <code>Standard</code>。不会自动删除样本。</p>
+<h2 id="section-67">67. 信号数量<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>表示深度、丰富度、优势度中异常指标的数量，取 0–3。信号越多，审查优先级越高。</p>
+<h2 id="section-68">68. 异常分数<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>每个指标超出边界的距离以 IQR 单位表示，并求和。</p>
+<h3 id="section-68-1">68.1. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-68-1">#</a></h3>
+<p>分数越高表示超出更远，但它不是概率、p 值、通用质量分数或删除阈值。</p>
+<h2 id="section-69">69. 异常优先顺序<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>按信号数量、总分和 reads 排序。第一项成为重点样本。</p>
+<h2 id="section-70">70. 异常摘要<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>显示异常总数、比例、各指标异常数、最常见信号和最受影响的组。</p>
+<h2 id="section-71">71. 组内异常集中度<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<pre tabindex="0"><code class="language-text">异常比例 = 组内异常样本数 ÷ 组内样本总数 × 100
+</code></pre>
+<p>显示最受影响的四个组。</p>
+<h3 id="section-71-1">71.1. 颜色阈值<a aria-label="Permalink" class="heading-anchor" href="#section-71-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">比例</th>
+<th>视觉等级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 30%</td>
+<td>危险</td>
+</tr>
+<tr>
+<td style="text-align:right">15–&lt;30%</td>
+<td>警告</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;15%</td>
+<td>低</td>
+</tr>
+</tbody>
+</table></div>
+<p>这些只是视觉约定，不是统计阈值。</p>
+<h2 id="section-72">72. 全局检测与分组解释<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>异常阈值是全局计算的，然后再按组计算比例。自然不同的组可能集中很多异常，但并不表示技术故障。</p>
+<h2 id="section-73">73. 需关注样本表<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>包含 SampleID、组、信号、信号数、分数、reads、丰富度和优势度，只列出至少一个 IQR 异常的样本，并支持搜索、筛选和导出。</p>
+<h2 id="section-74">74. 完整样本表<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>包含 SampleID、组、信号、reads、丰富度、优势度、零值比例和状态。异常样本排在前面。</p>
+<h2 id="section-75">75. 异常值不代表什么<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>异常值不自动等于错误、污染、应删除样本、测序失败或坏对照。可能是真实生物差异、组差异、低生物量或罕见事件。必须结合 metadata、实验设计、对照、过滤和图表判断。</p>
+<h2 id="section-76">76. 表格与日志<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>初始折叠，包含 OTU table、分类表、metadata、完整性和过滤日志。</p>
+<h2 id="section-77">77. 表格摘要<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>显示 OTU、分类表、metadata 的维度，以及可导出日志行数。维度不包含为显示新增的标识符列。</p>
+<h2 id="section-78">78. 显示的 OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>标准化为分类单元在行、样本在列，并新增 <code>ASV</code> 列，即使实际单位是 OTU 或 ZOTU。</p>
+<h3 id="section-78-1">78.1. 原始方向<a aria-label="Permalink" class="heading-anchor" href="#section-78-1">#</a></h3>
+<p>导出的是标准化显示方向，不一定保留原始方向。</p>
+<h3 id="section-78-2">78.2. 内容<a aria-label="Permalink" class="heading-anchor" href="#section-78-2">#</a></h3>
+<p>数值不变，可能仍为整数、小数、负值、转换值或缺失值。</p>
+<h2 id="section-79">79. 显示的分类表<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>包含 ASV 列和分类层级。</p>
+<h3 id="section-79-1">79.1. 层级名称<a aria-label="Permalink" class="heading-anchor" href="#section-79-1">#</a></h3>
+<p>空名称或重复名称仅为显示/导出而变为唯一，不修改 phyloseq 中的 <code>tax_table</code>。</p>
+<h2 id="section-80">80. 显示的 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p><code>sample_data</code> 的行名变为 <code>SampleID</code> 列。若已有同名列，会改为 <code>SampleID_meta</code> 等。原对象不变。</p>
+<h2 id="section-81">81. 交互式表格功能<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>表格提供列筛选、搜索、纵向/横向滚动、固定首列、分页、复制和 CSV。大矩阵仍会先在 R 内存中完整准备。</p>
+<h2 id="section-82">82. 专用 CSV 导出<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>文件名：</p>
+<pre tabindex="0"><code class="language-text">&lt;dataset&gt;_otu_table.csv
+&lt;dataset&gt;_tax_table.csv
+&lt;dataset&gt;_metadata.csv
+&lt;dataset&gt;_filtration_logs.csv
+</code></pre>
+<h3 id="section-82-1">82.1. 格式<a aria-label="Permalink" class="heading-anchor" href="#section-82-1">#</a></h3>
+<p>使用 <code>write.csv()</code>：逗号分隔、不导出行名、标识符作为显式列、缺失值采用 R 标准表示。</p>
+<h3 id="section-82-2">82.2. 视觉筛选<a aria-label="Permalink" class="heading-anchor" href="#section-82-2">#</a></h3>
+<p>专用按钮导出完整计算表，而不是仅导出当前可见或筛选后的行。</p>
+<h3 id="section-82-3">82.3. 缺少组件<a aria-label="Permalink" class="heading-anchor" href="#section-82-3">#</a></h3>
+<p>相应组件不存在时，可能导出空 CSV。</p>
+<h2 id="section-83">83. 分类完整性<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>每个层级显示已填写和缺失比例，可区分接近完整、部分完整或大范围缺失的层级。</p>
+<h2 id="section-84">84. Metadata 完整性<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>每个变量显示 R 类型、缺失比例和唯一值数量，可发现空列、近似常量、潜在分组变量、变为文本的数值列和近似唯一标识符。</p>
+<h2 id="section-85">85. 可分组变量<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>指具有 2–15 个水平且非时间类型的列。这并不保证生物学意义。</p>
+<h2 id="section-86">86. 过滤日志<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>读取：</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>主要查找 <code>removed_taxa</code> 和 <code>removed_samples</code>。</p>
+<h3 id="section-86-1">86.1. 删除的 ASV<a aria-label="Permalink" class="heading-anchor" href="#section-86-1">#</a></h3>
+<p>可包含 ID、丰度、出现率、原因、参数等。</p>
+<h3 id="section-86-2">86.2. 删除的样本<a aria-label="Permalink" class="heading-anchor" href="#section-86-2">#</a></h3>
+<p>可包含 SampleID、深度、原因和其他信息。</p>
+<h3 id="section-86-3">86.3. 无显式标识符<a aria-label="Permalink" class="heading-anchor" href="#section-86-3">#</a></h3>
+<p>若使用行名，则添加 <code>ASV</code> 或 <code>SampleID</code> 列。</p>
+<h2 id="section-87">87. 日志导出<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>将分类单元和样本日志合并为一个 CSV，新增 <code>log_type</code> 列，取值 <code>removed_taxa</code> 或 <code>removed_samples</code>；缺少的列填充为 NA。</p>
+<h2 id="section-88">88. 过滤日志的范围<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>日志只代表当前对象所附信息，不保证包含所有历史版本、外部步骤或手工修改，也不保证从未被覆盖。</p>
+<h2 id="section-89">89. 项目视图<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>项目视图使用当前内存中 <code>datasets()</code> 的对象，不会直接读取磁盘上的所有项目。</p>
+<h2 id="section-90">90. 项目总体摘要<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>包括已加载数据集数、参与比较的数据集数、样本数总和、丰度总和和平均稀疏度。</p>
+<h2 id="section-91">91. 累计样本数<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>为各数据集样本数之和，不是唯一样本数。同一批样本在多个数据集中会被重复计数。</p>
+<h2 id="section-92">92. 累计 reads<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>为所有数据集丰度之和。只有数值类型可比时才有意义；原始计数、比例和 CLR 不能直接相加解释。</p>
+<h2 id="section-93">93. 项目平均稀疏度<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>是各数据集稀疏度的简单平均，每个数据集权重相同，与矩阵大小无关。</p>
+<h2 id="section-94">94. 项目汇总表<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>包括 Dataset、ASV、样本、总 reads、均值/中位数、平均丰富度、稀疏度、分类完整性、metadata 缺失、组件、日志和删除数量。</p>
+<h2 id="section-95">95. 要比较的数据集<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>多选器决定比较图包含哪些数据集。默认全选或恢复项目中的旧选择。它不修改注册表、活动数据集或对象内容。</p>
+<h2 id="section-96">96. 参考数据集<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>仅用于<strong>相对参考差异</strong>图，不用于热图、点图、绝对柱状图或过滤比较。</p>
+<h3 id="section-96-1">96.1. 参考不在选择中<a aria-label="Permalink" class="heading-anchor" href="#section-96-1">#</a></h3>
+<p>若参考未被选择，图会静默使用第一个已选择数据集作为回退。应始终将参考加入选择。</p>
+<h2 id="section-97">97. 关键指标<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>可选 ASV、样本、reads、平均丰富度和稀疏度。它影响综合文字和相对参考差异图。</p>
+<h2 id="section-98">98. 项目综合解读<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>文字指出所选指标最高的数据集。最高不等于最好：更多 reads 可能是深度失衡，更多 ASV 可能是噪声，更多稀疏度表示更多零值。</p>
+<h2 id="section-99">99. 综合热图<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>比较 ASV、样本、reads、平均丰富度和稀疏度。</p>
+<h3 id="section-99-1">99.1. 归一化<a aria-label="Permalink" class="heading-anchor" href="#section-99-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">归一化值 = (值 - 最小值) ÷ (最大值 - 最小值)
+</code></pre>
+<h3 id="section-99-2">99.2. 相同值<a aria-label="Permalink" class="heading-anchor" href="#section-99-2">#</a></h3>
+<p>若所有数据集相同，则设为 0.5。</p>
+<h3 id="section-99-3">99.3. 解释<a aria-label="Permalink" class="heading-anchor" href="#section-99-3">#</a></h3>
+<p>颜色表示某一指标内部的相对位置。不同指标单位不同，不能直接互比；原始值可在提示中查看。</p>
+<h2 id="section-100">100. 比较点图<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>使用相同的 0–1 归一化。它不是总评分、多变量分析或质量排名。</p>
+<h2 id="section-101">101. 相对参考差异<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<pre tabindex="0"><code class="language-text">差异 (%) =
+(数据集值 - 参考值)
+÷ 参考值
+× 100
+</code></pre>
+<p>参考数据集本身不显示为柱形。</p>
+<h3 id="section-101-1">101.1. 参考为零<a aria-label="Permalink" class="heading-anchor" href="#section-101-1">#</a></h3>
+<p>参考值为零或缺失时不生成图。</p>
+<h3 id="section-101-2">101.2. 只有一个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-101-2">#</a></h3>
+<p>除参考外至少还需一个数据集。</p>
+<h3 id="section-101-3">101.3. 指标相关解释<a aria-label="Permalink" class="heading-anchor" href="#section-101-3">#</a></h3>
+<p>正差异表示所选指标更高，不一定代表改进。</p>
+<h2 id="section-102">102. 过滤比较<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>根据 <code>filtration_log</code> 显示删除的 ASV 和样本数。</p>
+<h3 id="section-102-1">102.1. 重要限制<a aria-label="Permalink" class="heading-anchor" href="#section-102-1">#</a></h3>
+<p>这是绝对数量，没有按初始 ASV、样本、reads 或数据集大小校正。</p>
+<h3 id="section-102-2">102.2. 无日志<a aria-label="Permalink" class="heading-anchor" href="#section-102-2">#</a></h3>
+<p>显示为缺失，不代表没有进行过滤。</p>
+<h2 id="section-103">103. 比较柱状图<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>显示样本数、ASV、总 reads、平均丰富度和稀疏度的绝对值，不做归一化或统计检验。</p>
+<h2 id="section-104">104. 数据集可比性<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>比较前需确认技术、标记、区域、流程、过滤、分类数据库、样本集合、丰度类型、转换水平和分类单位定义是否一致。</p>
+<h2 id="section-105">105. 不同标记的比较<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>COI、16S、ITS 可用于描述性比较，但其 ASV 数、丰富度、reads 和稀疏度不是等价的生物学测量。</p>
+<h2 id="section-106">106. 过滤前后比较<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>应确认过滤数据集确实来自原始数据集、比较同一批样本、丰度未转换、日志存在，并注意父数据集是否被重命名或删除。</p>
+<h2 id="section-107">107. 性能<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>描述模块在内存中执行矩阵求和、所有数据集指标、完整表格转换、序列计算、稀释、Plotly 和多数据集比较。</p>
+<h3 id="section-107-1">107.1. 延迟初始化<a aria-label="Permalink" class="heading-anchor" href="#section-107-1">#</a></h3>
+<p>打开描述选项卡时才初始化，首次显示可能较慢。</p>
+<h3 id="section-107-2">107.2. 大型表格<a aria-label="Permalink" class="heading-anchor" href="#section-107-2">#</a></h3>
+<p>延迟渲染改善浏览，但完整表格仍在 R 中准备。</p>
+<h3 id="section-107-3">107.3. 稀释曲线<a aria-label="Permalink" class="heading-anchor" href="#section-107-3">#</a></h3>
+<p>数百条曲线可能使浏览器变慢，可使用 Top、Bottom 或异常值模式限制。</p>
+<h2 id="section-108">108. 故障排除<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<h3 id="section-108-1">108.1. 未显示数据集<a aria-label="Permalink" class="heading-anchor" href="#section-108-1">#</a></h3>
+<p>可能没有加载、打开了错误项目、导入失败或注册表缺失。使用 Input data、OpenMetaBar 或 Datasets。</p>
+<h3 id="section-108-2">108.2. 其他选项卡的数据集也改变<a aria-label="Permalink" class="heading-anchor" href="#section-108-2">#</a></h3>
+<p>描述选择器与全局活动数据集同步，这是正常行为。</p>
+<h3 id="section-108-3">108.3. 仅查看后项目显示未保存<a aria-label="Permalink" class="heading-anchor" href="#section-108-3">#</a></h3>
+<p>可能更改了活动数据集。若需要保留该选择，应保存项目。</p>
+<h3 id="section-108-4">108.4. Reads 为小数<a aria-label="Permalink" class="heading-anchor" href="#section-108-4">#</a></h3>
+<p>OTU table 可能已转换或归一化，深度和稀释不能按原始计数解释。</p>
+<h3 id="section-108-5">108.5. 丰富度看起来不合理<a aria-label="Permalink" class="heading-anchor" href="#section-108-5">#</a></h3>
+<p>可能来自转换值、负值、未修剪分类单元、深度差异、结构零或方向问题。丰富度只计 &gt;0 的值。</p>
+<h3 id="section-108-6">108.6. 稀疏度过低<a aria-label="Permalink" class="heading-anchor" href="#section-108-6">#</a></h3>
+<p><code>NA</code> 留在分母中但不算零。</p>
+<h3 id="section-108-7">108.7. 没有分组变量<a aria-label="Permalink" class="heading-anchor" href="#section-108-7">#</a></h3>
+<p>可能缺少 metadata、只有一个或超过 15 个水平、变量为日期或全缺失。</p>
+<h3 id="section-108-8">108.8. 数值变量作为组出现<a aria-label="Permalink" class="heading-anchor" href="#section-108-8">#</a></h3>
+<p>它只有 2–15 个不同值。若不适合分类解释，请勿选择。</p>
+<h3 id="section-108-9">108.9. 缺失值成为 <code>NA</code> 组<a aria-label="Permalink" class="heading-anchor" href="#section-108-9">#</a></h3>
+<p>描述模块将缺失值转为组标签，可在 Data Edition 中清理。</p>
+<h3 id="section-108-10">108.10. 查看日志似乎无作用<a aria-label="Permalink" class="heading-anchor" href="#section-108-10">#</a></h3>
+<p>它只选择子选项卡，不自动展开区域。</p>
+<h3 id="section-108-11">108.11. 序列显示缺失<a aria-label="Permalink" class="heading-anchor" href="#section-108-11">#</a></h3>
+<p>可能没有 <code>refseq</code>、缺少 <code>Biostrings</code> 或序列对象无效。</p>
+<h3 id="section-108-12">108.12. GC 异常<a aria-label="Permalink" class="heading-anchor" href="#section-108-12">#</a></h3>
+<p>可能有模糊碱基、短序列、多个标记或非 ACGT 字符。</p>
+<h3 id="section-108-13">108.13. 分类层级名称改变<a aria-label="Permalink" class="heading-anchor" href="#section-108-13">#</a></h3>
+<p>仅为显示而使名称唯一，原对象不变。</p>
+<h3 id="section-108-14">108.14. 出现 <code>SampleID_meta</code><a aria-label="Permalink" class="heading-anchor" href="#section-108-14">#</a></h3>
+<p>metadata 已有 SampleID 列，描述模块保留 SampleID 用于行名。</p>
+<h3 id="section-108-15">108.15. 无法计算稀释曲线<a aria-label="Permalink" class="heading-anchor" href="#section-108-15">#</a></h3>
+<p>可能缺少 <code>vegan</code>、OTU table、足够样本/reads，或数据类型不适合。</p>
+<h3 id="section-108-16">108.16. 曲线来自前一个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-108-16">#</a></h3>
+<p>更换数据集后未重新计算。再次点击计算。</p>
+<h3 id="section-108-17">108.17. 最大曲线数未生效<a aria-label="Permalink" class="heading-anchor" href="#section-108-17">#</a></h3>
+<p>全部样本模式目前忽略该限制。</p>
+<h3 id="section-108-18">108.18. 大组聚合曲线更高<a aria-label="Permalink" class="heading-anchor" href="#section-108-18">#</a></h3>
+<p>该组所有 reads 被相加，不是每样本平均。</p>
+<h3 id="section-108-19">108.19. 未检测到异常<a aria-label="Permalink" class="heading-anchor" href="#section-108-19">#</a></h3>
+<p>可能真正均一、样本太少、IQR 为零或存在缺失值。</p>
+<h3 id="section-108-20">108.20. 生物学正常样本被标记<a aria-label="Permalink" class="heading-anchor" href="#section-108-20">#</a></h3>
+<p>规则为全局计算，不是组内计算，应结合实验背景解释。</p>
+<h3 id="section-108-21">108.21. 很异常的样本未标记<a aria-label="Permalink" class="heading-anchor" href="#section-108-21">#</a></h3>
+<p>相关指标可能不参与、IQR 为零、样本太少、仅零值比例异常或数据已转换。</p>
+<h3 id="section-108-22">108.22. 某组 30% 异常显示红色<a aria-label="Permalink" class="heading-anchor" href="#section-108-22">#</a></h3>
+<p>这是内部视觉阈值，不是 p 值或组效应证据。</p>
+<h3 id="section-108-23">108.23. OTU 导出方向不同<a aria-label="Permalink" class="heading-anchor" href="#section-108-23">#</a></h3>
+<p>导出始终为分类单元在行。</p>
+<h3 id="section-108-24">108.24. CSV 与视觉筛选不一致<a aria-label="Permalink" class="heading-anchor" href="#section-108-24">#</a></h3>
+<p>专用按钮导出完整表；若要导出当前 DataTables 状态，请使用表格内置 CSV。</p>
+<h3 id="section-108-25">108.25. CSV 为空<a aria-label="Permalink" class="heading-anchor" href="#section-108-25">#</a></h3>
+<p>相应组件可能不存在。</p>
+<h3 id="section-108-26">108.26. 缺少日志<a aria-label="Permalink" class="heading-anchor" href="#section-108-26">#</a></h3>
+<p>可能从未在 BarCodeR 中过滤、属性丢失、对象来自其他工具或旧版本。</p>
+<h3 id="section-108-27">108.27. 项目视图重复计数样本<a aria-label="Permalink" class="heading-anchor" href="#section-108-27">#</a></h3>
+<p>跨数据集求和不去重。</p>
+<h3 id="section-108-28">108.28. 热图数值看起来相近<a aria-label="Permalink" class="heading-anchor" href="#section-108-28">#</a></h3>
+<p>每个指标单独归一化为 0–1。</p>
+<h3 id="section-108-29">108.29. 整列热图为 0.5<a aria-label="Permalink" class="heading-anchor" href="#section-108-29">#</a></h3>
+<p>所有数据集在该指标上相同。</p>
+<h3 id="section-108-30">108.30. 未使用所选参考<a aria-label="Permalink" class="heading-anchor" href="#section-108-30">#</a></h3>
+<p>参考不在比较选择中，应将其加入。</p>
+<h3 id="section-108-31">108.31. 差异图不工作<a aria-label="Permalink" class="heading-anchor" href="#section-108-31">#</a></h3>
+<p>可能参考为零/缺失、只选择一个数据集或指标缺失。</p>
+<h3 id="section-108-32">108.32. 过滤比较不公平<a aria-label="Permalink" class="heading-anchor" href="#section-108-32">#</a></h3>
+<p>它比较绝对数量，应相对初始大小解释。</p>
+<h3 id="section-108-33">108.33. 项目视图缓慢<a aria-label="Permalink" class="heading-anchor" href="#section-108-33">#</a></h3>
+<p>减少数据集、比较选择或避免打开大型表格。</p>
+<h2 id="section-109">109. 打开数据集时的检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认数据集名称、样本数和分类单元数。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认总丰度和 OTU table 是否为原始计数。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查分类、metadata、序列和日志。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>阅读稀疏度和深度警告。</li>
+</ul>
+<h2 id="section-110">110. 分组分析前的检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>选择有生物学意义的变量。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查水平、缺失值和组大小。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>避免将连续变量误作分类变量。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>查看组间深度、丰富度和异常值。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>不要把描述图当作统计检验。</li>
+</ul>
+<h2 id="section-111">111. 稀释前的检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认为原始、整数、非负计数。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>至少两个样本有 50 reads。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>选择正确数据集和分组。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>点击计算，并在更换数据集后重算。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>区分单样本曲线和组池曲线。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>不要把平台期当作最终验证。</li>
+</ul>
+<h2 id="section-112">112. 排除异常样本前的检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>查看三个指标、metadata、实验组、阳性/阴性对照和日志。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>查看深度和分类优势度。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>判断偏差是否为预期生物学现象。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>不在描述模块中删除。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>仅在有理由时使用 Filtration。</li>
+</ul>
+<h2 id="section-113">113. 比较数据集前的检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>相同丰度类型和单位定义。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>相同标记或明确比较目的。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>技术、过滤和样本具有可比性。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>参考数据集已加入选择。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>理解求和不去重和 0–1 归一化。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>不将“更高”解释为“更好”。</li>
+</ul>
+<h2 id="section-114">114. 当前限制<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<h3 id="section-114-1">114.1. 不验证原始计数<a aria-label="Permalink" class="heading-anchor" href="#section-114-1">#</a></h3>
+<p>转换数据可能使所有指标误导。</p>
+<h3 id="section-114-2">114.2. ASV 只是通用标签<a aria-label="Permalink" class="heading-anchor" href="#section-114-2">#</a></h3>
+<p>模块不知道单位的生成方法。</p>
+<h3 id="section-114-3">114.3. 不汇总系统发育树<a aria-label="Permalink" class="heading-anchor" href="#section-114-3">#</a></h3>
+<p>不显示 <code>phy_tree</code> 是否存在或一致。</p>
+<h3 id="section-114-4">114.4. 序列与分类单元未全面对齐验证<a aria-label="Permalink" class="heading-anchor" href="#section-114-4">#</a></h3>
+<p>仅描述现有序列。</p>
+<h3 id="section-114-5">114.5. 稀疏度和完整性为简单摘要<a aria-label="Permalink" class="heading-anchor" href="#section-114-5">#</a></h3>
+<p>可能掩盖异质性。</p>
+<h3 id="section-114-6">114.6. 诊断阈值为内部规则<a aria-label="Permalink" class="heading-anchor" href="#section-114-6">#</a></h3>
+<p>不是通用标准。</p>
+<h3 id="section-114-7">114.7. 异常值全局计算<a aria-label="Permalink" class="heading-anchor" href="#section-114-7">#</a></h3>
+<p>不在组内计算。</p>
+<h3 id="section-114-8">114.8. 零值比例不参与异常状态<a aria-label="Permalink" class="heading-anchor" href="#section-114-8">#</a></h3>
+<p>仅显示。</p>
+<h3 id="section-114-9">114.9. 稀释需手动重算<a aria-label="Permalink" class="heading-anchor" href="#section-114-9">#</a></h3>
+<p>更换数据集不会重置结果。</p>
+<h3 id="section-114-10">114.10. 全部样本模式不受曲线数限制<a aria-label="Permalink" class="heading-anchor" href="#section-114-10">#</a></h3>
+<p>可能产生很重的图。</p>
+<h3 id="section-114-11">114.11. 聚合曲线使用合并池<a aria-label="Permalink" class="heading-anchor" href="#section-114-11">#</a></h3>
+<p>不是样本平均。</p>
+<h3 id="section-114-12">114.12. 表格完整加载到内存<a aria-label="Permalink" class="heading-anchor" href="#section-114-12">#</a></h3>
+<p>大对象可能耗时。</p>
+<h3 id="section-114-13">114.13. 导出会重定向表格<a aria-label="Permalink" class="heading-anchor" href="#section-114-13">#</a></h3>
+<p>OTU table 导出为分类单元在行。</p>
+<h3 id="section-114-14">114.14. 显示时可能调整列名<a aria-label="Permalink" class="heading-anchor" href="#section-114-14">#</a></h3>
+<p>原 phyloseq 不变。</p>
+<h3 id="section-114-15">114.15. 项目视图直接求和<a aria-label="Permalink" class="heading-anchor" href="#section-114-15">#</a></h3>
+<p>样本和分类单元不去重。</p>
+<h3 id="section-114-16">114.16. 热图比较相对位置<a aria-label="Permalink" class="heading-anchor" href="#section-114-16">#</a></h3>
+<p>不是共同单位。</p>
+<h3 id="section-114-17">114.17. 过滤比较使用绝对数量<a aria-label="Permalink" class="heading-anchor" href="#section-114-17">#</a></h3>
+<p>未按初始大小校正。</p>
+<h3 id="section-114-18">114.18. 不进行统计检验<a aria-label="Permalink" class="heading-anchor" href="#section-114-18">#</a></h3>
+<p>所有差异仅为描述性。</p>
+<h2 id="section-115">115. 推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<ol>
+<li>导入后打开描述。</li>
+<li>确认活动数据集、维度和组件。</li>
+<li>阅读结构警告并确认丰度类型。</li>
+<li>查看 reads—丰富度、分布和序列。</li>
+<li>选择合理分组，检查异常值，并在计数数据上计算稀释。</li>
+<li>查看表格、完整性和日志。</li>
+<li>在项目视图比较数据集。</li>
+<li>如需修改，进入 Data Edition 或 Filtration。</li>
+</ol>
+<h2 id="section-116">116. 已验证的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>该文档依据当前代码重建：</p>
+<ol>
+<li><code>modules/description/mod_description_ui.R</code>：视图、控件、图表、表格和导出。</li>
+<li><code>modules/description/mod_description_server.R</code>：指标、方向、稀释、异常值、表格和比较。</li>
+<li><code>modules/_shared/_active_dataset_sync.R</code>：活动数据集同步。</li>
+<li><code>modules/_shared/_ui_state.R</code>：界面设置恢复。</li>
+<li><code>app.R</code>：模块初始化。</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 总体介绍</a><a class="toc-l3" href="#section">数据集视图</a><a class="toc-l3" href="#section-2">项目视图</a><a class="toc-l2" href="#section-2-2">2. 该选项卡的作用</a><a class="toc-l2" href="#section-3">3. 对数据的影响</a><a class="toc-l3" href="#section-3-1">3.1. 例外：活动数据集</a><a class="toc-l2" href="#section-4">4. 必要条件</a><a class="toc-l2" href="#section-5">5. 关于丰度值的重要假设</a><a class="toc-l2" href="#section-6">6. 界面结构</a><a class="toc-l3" href="#section-7">数据集视图</a><a class="toc-l3" href="#section-8">项目视图</a><a class="toc-l2" href="#section-7-2">7. 选择数据集</a><a class="toc-l3" href="#section-7-1">7.1. 全局同步</a><a class="toc-l3" href="#section-7-2-2">7.2. 回退值</a><a class="toc-l3" href="#section-7-3">7.3. 更换数据集</a><a class="toc-l2" href="#section-8-2">8. 分组变量</a><a class="toc-l3" href="#section-8-1">8.1. 可选变量</a><a class="toc-l3" href="#section-8-2-2">8.2. 数值列</a><a class="toc-l3" href="#section-8-3">8.3. 缺失值</a><a class="toc-l3" href="#section-8-4">8.4. 不分组</a><a class="toc-l3" href="#section-8-5">8.5. 分组的作用</a><a class="toc-l2" href="#section-9">9. 分组不会改变异常值检测</a><a class="toc-l2" href="#section-10">10. “查看日志”按钮</a><a class="toc-l2" href="#section-11">11. 数据集标题</a><a class="toc-l2" href="#section-12">12. 组件徽章</a><a class="toc-l3" href="#section-12-1">12.1. OTU</a><a class="toc-l3" href="#section-12-2">12.2. 分类信息</a><a class="toc-l3" href="#section-12-3">12.3. Metadata</a><a class="toc-l3" href="#section-12-4">12.4. RefSeq</a><a class="toc-l3" href="#section-12-5">12.5. 日志</a><a class="toc-l3" href="#section-12-6">12.6. 系统发育树</a><a class="toc-l2" href="#section-13">13. OTU table 方向</a><a class="toc-l2" href="#section-14">14. 指标：分类单元数量</a><a class="toc-l2" href="#section-15">15. 指标：样本数量</a><a class="toc-l2" href="#section-16">16. 指标：总 reads</a><a class="toc-l2" href="#section-17">17. 指标：每个样本的 reads</a><a class="toc-l2" href="#section-18">18. 指标：观测丰富度</a><a class="toc-l2" href="#section-19">19. 指标：最大优势分类单元的占比</a><a class="toc-l2" href="#section-20">20. 指标：每个样本的零值比例</a><a class="toc-l2" href="#section-21">21. 指标：全局稀疏度</a><a class="toc-l3" href="#section-21-1">21.1. 解释</a><a class="toc-l3" href="#section-21-2">21.2. 显示阈值</a><a class="toc-l3" href="#section-21-3">21.3. NA 的影响</a><a class="toc-l2" href="#section-22">22. 深度变异性</a><a class="toc-l2" href="#section-23">23. 分类完整性</a><a class="toc-l3" href="#section-23-1">23.1. 后果</a><a class="toc-l3" href="#section-23-2">23.2. 仅含空格的字符串</a><a class="toc-l2" href="#section-24">24. Metadata 缺失值</a><a class="toc-l3" href="#section-24-1">24.1. "NA" 文本</a><a class="toc-l3" href="#section-24-2">24.2. 空格</a><a class="toc-l3" href="#section-24-3">24.3. 显示类型</a><a class="toc-l2" href="#section-25">25. 序列长度</a><a class="toc-l3" href="#section-25-1">25.1. 解释</a><a class="toc-l2" href="#section-26">26. GC 百分比</a><a class="toc-l2" href="#section-27">27. 序列名称</a><a class="toc-l2" href="#section-28">28. 自动解释信息</a><a class="toc-l2" href="#section-29">29. 数据集快速阅读</a><a class="toc-l3" href="#section-29-1">29.1. 结构</a><a class="toc-l3" href="#section-29-2">29.2. 可用内容</a><a class="toc-l3" href="#section-29-3">29.3. 序列</a><a class="toc-l3" href="#section-29-4">29.4. 过滤</a><a class="toc-l2" href="#section-30">30. 自动诊断</a><a class="toc-l2" href="#section-31">31. OpenMetaBar 来源</a><a class="toc-l3" href="#section-31-1">31.1. Run 摘要</a><a class="toc-l3" href="#section-31-2">31.2. 拆分样本</a><a class="toc-l3" href="#section-31-3">31.3. 过滤器</a><a class="toc-l3" href="#section-31-4">31.4. LotuS3</a><a class="toc-l3" href="#section-31-5">31.5. LCA</a><a class="toc-l3" href="#section-31-6">31.6. IDMABIO</a><a class="toc-l3" href="#section-31-7">31.7. NextITS</a><a class="toc-l3" href="#section-31-8">31.8. 集群环境</a><a class="toc-l3" href="#section-31-9">31.9. FASTQ 文件</a><a class="toc-l3" href="#section-31-10">31.10. 样本重命名</a><a class="toc-l3" href="#section-31-11">31.11. 缺少来源信息</a><a class="toc-l2" href="#section-32">32. 交互式可视化 — 总览</a><a class="toc-l2" href="#section-33">33. Reads 与丰富度</a><a class="toc-l3" href="#section-33-1">33.1. 解释</a><a class="toc-l3" href="#section-33-2">33.2. 限制</a><a class="toc-l3" href="#section-33-3">33.3. 交互</a><a class="toc-l2" href="#section-34">34. 样本详情卡</a><a class="toc-l3" href="#section-34-1">34.1. 初始样本</a><a class="toc-l3" href="#section-34-2">34.2. 显示的 metadata</a><a class="toc-l2" href="#section-35">35. 前 15 个样本</a><a class="toc-l3" href="#section-35-1">35.1. 限制</a><a class="toc-l2" href="#section-36">36. 前 15 个分类单元</a><a class="toc-l3" href="#section-36-1">36.1. 出现率</a><a class="toc-l3" href="#section-36-2">36.2. 限制</a><a class="toc-l2" href="#section-37">37. 样本累计贡献</a><a class="toc-l2" href="#section-38">38. 分类单元累计贡献</a><a class="toc-l2" href="#section-39">39. 丰度选项卡</a><a class="toc-l2" href="#section-40">40. Reads 直方图</a><a class="toc-l2" href="#section-41">41. 按组的 reads</a><a class="toc-l3" href="#section-41-1">41.1. 无分组</a><a class="toc-l3" href="#section-41-2">41.2. 解释</a><a class="toc-l2" href="#section-42">42. 按组累计 reads 贡献</a><a class="toc-l3" href="#section-42-1">42.1. 后果</a><a class="toc-l2" href="#section-43">43. 丰富度选项卡</a><a class="toc-l2" href="#section-44">44. 丰富度直方图</a><a class="toc-l2" href="#section-45">45. 按组丰富度</a><a class="toc-l2" href="#section-46">46. 丰富度与优势度</a><a class="toc-l3" href="#section-46-1">46.1. 这不是均匀度指数</a><a class="toc-l2" href="#section-47">47. 序列选项卡</a><a class="toc-l2" href="#section-48">48. 长度与 GC</a><a class="toc-l2" href="#section-49">49. 稀释曲线</a><a class="toc-l2" href="#section-50">50. 使用的稀释方法</a><a class="toc-l2" href="#section-51">51. 稀释计算条件</a><a class="toc-l3" href="#section-51-1">51.1. 50 reads 阈值</a><a class="toc-l2" href="#section-52">52. 稀释所需数据类型</a><a class="toc-l2" href="#section-53">53. 计算深度</a><a class="toc-l2" href="#section-54">54. 单样本曲线</a><a class="toc-l2" href="#section-55">55. 单样本曲线子集</a><a class="toc-l3" href="#section-55-1">55.1. 全部样本</a><a class="toc-l3" href="#section-55-2">55.2. Top reads</a><a class="toc-l3" href="#section-55-3">55.3. Bottom reads</a><a class="toc-l3" href="#section-55-4">55.4. 异常值</a><a class="toc-l2" href="#section-56">56. 最大曲线数</a><a class="toc-l2" href="#section-57">57. 按组聚合曲线</a><a class="toc-l3" href="#section-57-1">57.1. 曲线表示什么</a><a class="toc-l3" href="#section-57-2">57.2. 组大小影响</a><a class="toc-l3" href="#section-57-3">57.3. 无分组</a><a class="toc-l2" href="#section-58">58. 显示图例</a><a class="toc-l2" href="#section-59">59. 必须重新计算</a><a class="toc-l3" href="#section-59-1">59.1. 更改分组变量</a><a class="toc-l3" href="#section-59-2">59.2. 旧结果风险</a><a class="toc-l2" href="#section-60">60. 稀释曲线解释</a><a class="toc-l2" href="#section-61">61. 稀释曲线的限制</a><a class="toc-l2" href="#section-62">62. 异常值检测</a><a class="toc-l2" href="#section-63">63. IQR 规则</a><a class="toc-l2" href="#section-64">64. 高端和低端异常</a><a class="toc-l2" href="#section-65">65. IQR 最低条件</a><a class="toc-l2" href="#section-66">66. 样本状态</a><a class="toc-l2" href="#section-67">67. 信号数量</a><a class="toc-l2" href="#section-68">68. 异常分数</a><a class="toc-l3" href="#section-68-1">68.1. 解释</a><a class="toc-l2" href="#section-69">69. 异常优先顺序</a><a class="toc-l2" href="#section-70">70. 异常摘要</a><a class="toc-l2" href="#section-71">71. 组内异常集中度</a><a class="toc-l3" href="#section-71-1">71.1. 颜色阈值</a><a class="toc-l2" href="#section-72">72. 全局检测与分组解释</a><a class="toc-l2" href="#section-73">73. 需关注样本表</a><a class="toc-l2" href="#section-74">74. 完整样本表</a><a class="toc-l2" href="#section-75">75. 异常值不代表什么</a><a class="toc-l2" href="#section-76">76. 表格与日志</a><a class="toc-l2" href="#section-77">77. 表格摘要</a><a class="toc-l2" href="#section-78">78. 显示的 OTU table</a><a class="toc-l3" href="#section-78-1">78.1. 原始方向</a><a class="toc-l3" href="#section-78-2">78.2. 内容</a><a class="toc-l2" href="#section-79">79. 显示的分类表</a><a class="toc-l3" href="#section-79-1">79.1. 层级名称</a><a class="toc-l2" href="#section-80">80. 显示的 metadata</a><a class="toc-l2" href="#section-81">81. 交互式表格功能</a><a class="toc-l2" href="#section-82">82. 专用 CSV 导出</a><a class="toc-l3" href="#section-82-1">82.1. 格式</a><a class="toc-l3" href="#section-82-2">82.2. 视觉筛选</a><a class="toc-l3" href="#section-82-3">82.3. 缺少组件</a><a class="toc-l2" href="#section-83">83. 分类完整性</a><a class="toc-l2" href="#section-84">84. Metadata 完整性</a><a class="toc-l2" href="#section-85">85. 可分组变量</a><a class="toc-l2" href="#section-86">86. 过滤日志</a><a class="toc-l3" href="#section-86-1">86.1. 删除的 ASV</a><a class="toc-l3" href="#section-86-2">86.2. 删除的样本</a><a class="toc-l3" href="#section-86-3">86.3. 无显式标识符</a><a class="toc-l2" href="#section-87">87. 日志导出</a><a class="toc-l2" href="#section-88">88. 过滤日志的范围</a><a class="toc-l2" href="#section-89">89. 项目视图</a><a class="toc-l2" href="#section-90">90. 项目总体摘要</a><a class="toc-l2" href="#section-91">91. 累计样本数</a><a class="toc-l2" href="#section-92">92. 累计 reads</a><a class="toc-l2" href="#section-93">93. 项目平均稀疏度</a><a class="toc-l2" href="#section-94">94. 项目汇总表</a><a class="toc-l2" href="#section-95">95. 要比较的数据集</a><a class="toc-l2" href="#section-96">96. 参考数据集</a><a class="toc-l3" href="#section-96-1">96.1. 参考不在选择中</a><a class="toc-l2" href="#section-97">97. 关键指标</a><a class="toc-l2" href="#section-98">98. 项目综合解读</a><a class="toc-l2" href="#section-99">99. 综合热图</a><a class="toc-l3" href="#section-99-1">99.1. 归一化</a><a class="toc-l3" href="#section-99-2">99.2. 相同值</a><a class="toc-l3" href="#section-99-3">99.3. 解释</a><a class="toc-l2" href="#section-100">100. 比较点图</a><a class="toc-l2" href="#section-101">101. 相对参考差异</a><a class="toc-l3" href="#section-101-1">101.1. 参考为零</a><a class="toc-l3" href="#section-101-2">101.2. 只有一个数据集</a><a class="toc-l3" href="#section-101-3">101.3. 指标相关解释</a><a class="toc-l2" href="#section-102">102. 过滤比较</a><a class="toc-l3" href="#section-102-1">102.1. 重要限制</a><a class="toc-l3" href="#section-102-2">102.2. 无日志</a><a class="toc-l2" href="#section-103">103. 比较柱状图</a><a class="toc-l2" href="#section-104">104. 数据集可比性</a><a class="toc-l2" href="#section-105">105. 不同标记的比较</a><a class="toc-l2" href="#section-106">106. 过滤前后比较</a><a class="toc-l2" href="#section-107">107. 性能</a><a class="toc-l3" href="#section-107-1">107.1. 延迟初始化</a><a class="toc-l3" href="#section-107-2">107.2. 大型表格</a><a class="toc-l3" href="#section-107-3">107.3. 稀释曲线</a><a class="toc-l2" href="#section-108">108. 故障排除</a><a class="toc-l3" href="#section-108-1">108.1. 未显示数据集</a><a class="toc-l3" href="#section-108-2">108.2. 其他选项卡的数据集也改变</a><a class="toc-l3" href="#section-108-3">108.3. 仅查看后项目显示未保存</a><a class="toc-l3" href="#section-108-4">108.4. Reads 为小数</a><a class="toc-l3" href="#section-108-5">108.5. 丰富度看起来不合理</a><a class="toc-l3" href="#section-108-6">108.6. 稀疏度过低</a><a class="toc-l3" href="#section-108-7">108.7. 没有分组变量</a><a class="toc-l3" href="#section-108-8">108.8. 数值变量作为组出现</a><a class="toc-l3" href="#section-108-9">108.9. 缺失值成为 NA 组</a><a class="toc-l3" href="#section-108-10">108.10. 查看日志似乎无作用</a><a class="toc-l3" href="#section-108-11">108.11. 序列显示缺失</a><a class="toc-l3" href="#section-108-12">108.12. GC 异常</a><a class="toc-l3" href="#section-108-13">108.13. 分类层级名称改变</a><a class="toc-l3" href="#section-108-14">108.14. 出现 SampleID_meta</a><a class="toc-l3" href="#section-108-15">108.15. 无法计算稀释曲线</a><a class="toc-l3" href="#section-108-16">108.16. 曲线来自前一个数据集</a><a class="toc-l3" href="#section-108-17">108.17. 最大曲线数未生效</a><a class="toc-l3" href="#section-108-18">108.18. 大组聚合曲线更高</a><a class="toc-l3" href="#section-108-19">108.19. 未检测到异常</a><a class="toc-l3" href="#section-108-20">108.20. 生物学正常样本被标记</a><a class="toc-l3" href="#section-108-21">108.21. 很异常的样本未标记</a><a class="toc-l3" href="#section-108-22">108.22. 某组 30% 异常显示红色</a><a class="toc-l3" href="#section-108-23">108.23. OTU 导出方向不同</a><a class="toc-l3" href="#section-108-24">108.24. CSV 与视觉筛选不一致</a><a class="toc-l3" href="#section-108-25">108.25. CSV 为空</a><a class="toc-l3" href="#section-108-26">108.26. 缺少日志</a><a class="toc-l3" href="#section-108-27">108.27. 项目视图重复计数样本</a><a class="toc-l3" href="#section-108-28">108.28. 热图数值看起来相近</a><a class="toc-l3" href="#section-108-29">108.29. 整列热图为 0.5</a><a class="toc-l3" href="#section-108-30">108.30. 未使用所选参考</a><a class="toc-l3" href="#section-108-31">108.31. 差异图不工作</a><a class="toc-l3" href="#section-108-32">108.32. 过滤比较不公平</a><a class="toc-l3" href="#section-108-33">108.33. 项目视图缓慢</a><a class="toc-l2" href="#section-109">109. 打开数据集时的检查清单</a><a class="toc-l2" href="#section-110">110. 分组分析前的检查清单</a><a class="toc-l2" href="#section-111">111. 稀释前的检查清单</a><a class="toc-l2" href="#section-112">112. 排除异常样本前的检查清单</a><a class="toc-l2" href="#section-113">113. 比较数据集前的检查清单</a><a class="toc-l2" href="#section-114">114. 当前限制</a><a class="toc-l3" href="#section-114-1">114.1. 不验证原始计数</a><a class="toc-l3" href="#section-114-2">114.2. ASV 只是通用标签</a><a class="toc-l3" href="#section-114-3">114.3. 不汇总系统发育树</a><a class="toc-l3" href="#section-114-4">114.4. 序列与分类单元未全面对齐验证</a><a class="toc-l3" href="#section-114-5">114.5. 稀疏度和完整性为简单摘要</a><a class="toc-l3" href="#section-114-6">114.6. 诊断阈值为内部规则</a><a class="toc-l3" href="#section-114-7">114.7. 异常值全局计算</a><a class="toc-l3" href="#section-114-8">114.8. 零值比例不参与异常状态</a><a class="toc-l3" href="#section-114-9">114.9. 稀释需手动重算</a><a class="toc-l3" href="#section-114-10">114.10. 全部样本模式不受曲线数限制</a><a class="toc-l3" href="#section-114-11">114.11. 聚合曲线使用合并池</a><a class="toc-l3" href="#section-114-12">114.12. 表格完整加载到内存</a><a class="toc-l3" href="#section-114-13">114.13. 导出会重定向表格</a><a class="toc-l3" href="#section-114-14">114.14. 显示时可能调整列名</a><a class="toc-l3" href="#section-114-15">114.15. 项目视图直接求和</a><a class="toc-l3" href="#section-114-16">114.16. 热图比较相对位置</a><a class="toc-l3" href="#section-114-17">114.17. 过滤比较使用绝对数量</a><a class="toc-l3" href="#section-114-18">114.18. 不进行统计检验</a><a class="toc-l2" href="#section-115">115. 推荐流程</a><a class="toc-l2" href="#section-116">116. 已验证的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 描述</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

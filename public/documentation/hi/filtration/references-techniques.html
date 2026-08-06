@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>फ़िल्ट्रेशन — तकनीकी संदर्भ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="reference" data-module="filtration" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">तकनीकी संदर्भ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link active" href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="active" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">फ़िल्ट्रेशन</a><span>›</span><span>तकनीकी संदर्भ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">फ़िल्ट्रेशन — तकनीकी संदर्भ</h1>
+<p>इस BarCodeR संस्करण में मौजूद वास्तविक कोड से बनाया गया तकनीकी इन्वेंटरी।</p>
+<blockquote>
+<p><strong>यह पृष्ठ documentation-src/build_docs.py द्वारा दोबारा बनाया जाता है। Function names, identifiers और line numbers वर्तमान source code से आते हैं।</strong></p>
+</blockquote>
+<h2 id="section-1">1. स्रोत फ़ाइलें<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>भूमिका</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Main filtering interface</td>
+<td><code>modules/filtration/mod_filtration_ui.R</code></td>
+</tr>
+<tr>
+<td>Reactive filtering server</td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+</tr>
+<tr>
+<td>Registry, inspection and export UI</td>
+<td><code>modules/filtration/io/mod_filtration_io_ui.R</code></td>
+</tr>
+<tr>
+<td>Registry, inspection and export server</td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+</tr>
+<tr>
+<td>Provenance carry-over</td>
+<td><code>modules/_shared/_provenance.R</code></td>
+</tr>
+<tr>
+<td>Dataset naming</td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+</tr>
+<tr>
+<td>Phyloseq integrity guard</td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+</tr>
+<tr>
+<td>Active-dataset synchronization</td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/hi/filtration/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/hi/filtration/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">datasets() + active_ds()
+  → selected_ds_filtration
+  → reactive block parameters
+  → ps_filtered()
+      taxonomy
+      → abundance
+      → samples
+      → sequences
+  → filtration_log
+  → temporary result
+</code></pre>
+<pre tabindex="0"><code class="language-text">temporary filtered phyloseq
+  → save name normalization
+  → optional overwrite confirmation
+  → bcr_guard_ps()
+  → add_dataset() / datasets()
+  → active_ds()
+  → explicit project save in Datasets
+</code></pre>
+<h3 id="section-2-1">2.1. Reactive state और memory<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selected_ds_filtration</code></td>
+<td>active_ds() से synchronized parent dataset।</td>
+</tr>
+<tr>
+<td><code>ps_filtered()</code></td>
+<td>हर active parameter पर automatically recalculated temporary phyloseq।</td>
+</tr>
+<tr>
+<td><code>advanced_conditions</code></td>
+<td>AND से जुड़ी metadata conditions की reactive list।</td>
+</tr>
+<tr>
+<td><code>filtration_log</code></td>
+<td>Dimensions, text, parameters और removed items रखने वाला result attribute।</td>
+</tr>
+<tr>
+<td><code>pending_overwrite_name</code></td>
+<td>Overwrite confirmation की प्रतीक्षा कर रहा cleaned name।</td>
+</tr>
+<tr>
+<td><code>datasets()</code> / <code>active_ds()</code></td>
+<td>Result save होने पर ही update होने वाला global registry।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Validation और integrity guard<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Function</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed order</td>
+<td><code>ps_filtered()</code></td>
+<td>Taxonomy → abundance → samples → sequences एक pass में लागू करता है।</td>
+</tr>
+<tr>
+<td>Taxon safeguard</td>
+<td><code>safe_prune_taxa()</code></td>
+<td>सभी taxa हटाने वाली step को रोकता है।</td>
+</tr>
+<tr>
+<td>Sample safeguard</td>
+<td><code>safe_prune_samples()</code></td>
+<td>सभी samples हटाने वाली step को रोकता है।</td>
+</tr>
+<tr>
+<td>Sequences</td>
+<td><code>get_refseq_aligned()</code></td>
+<td>RefSeq align करता है और partial coverage में uncovered ASV बिना test रखता है।</td>
+</tr>
+<tr>
+<td>Traceability</td>
+<td><code>filtration_log$params</code></td>
+<td>Localized text से अलग structured parameters रखता है।</td>
+</tr>
+<tr>
+<td>Saving</td>
+<td><code>io</code> submodule</td>
+<td>datasets() add/overwrite करता है; empty name parent replace करता है।</td>
+</tr>
+<tr>
+<td>Integrity</td>
+<td><code>bcr_guard_ps()</code></td>
+<td>Registry insertion से पहले OTU, samples और taxonomy consistency जाँचता है।</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. Shiny inputs<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ab_min_rel_abund</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:170</code></td>
+<td><code>mod_filtration_server.R:257</code>, <code>mod_filtration_server.R:483</code>, <code>mod_filtration_server.R:1027</code>, <code>mod_filtration_server.R:1437</code>, <code>mod_filtration_server.R:2071</code></td>
+</tr>
+<tr>
+<td><code>ab_min_samples</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:159</code></td>
+<td><code>mod_filtration_server.R:256</code>, <code>mod_filtration_server.R:482</code>, <code>mod_filtration_server.R:1006</code>, <code>mod_filtration_server.R:1436</code>, <code>mod_filtration_server.R:2070</code></td>
+</tr>
+<tr>
+<td><code>ab_min_total_reads</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:148</code></td>
+<td><code>mod_filtration_server.R:255</code>, <code>mod_filtration_server.R:481</code>, <code>mod_filtration_server.R:985</code>, <code>mod_filtration_server.R:1435</code>, <code>mod_filtration_server.R:2069</code></td>
+</tr>
+<tr>
+<td><code>add_meta_filter</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_filtration_ui.R:260</code></td>
+<td><code>mod_filtration_server.R:800</code></td>
+</tr>
+<tr>
+<td><code>confirm_overwrite</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_filtration_io_server.R:234</code></td>
+<td><code>mod_filtration_io_server.R:273</code></td>
+</tr>
+<tr>
+<td><code>enable_abund</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_filtration_ui.R:137</code></td>
+<td><code>mod_filtration_server.R:253</code>, <code>mod_filtration_server.R:386</code>, <code>mod_filtration_server.R:479</code>, <code>mod_filtration_server.R:1431</code>, <code>mod_filtration_server.R:2068</code></td>
+</tr>
+<tr>
+<td><code>enable_samples</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_filtration_ui.R:198</code></td>
+<td><code>mod_filtration_server.R:263</code>, <code>mod_filtration_server.R:389</code>, <code>mod_filtration_server.R:491</code>, <code>mod_filtration_server.R:1173</code>, <code>mod_filtration_server.R:1503</code>, <code>mod_filtration_server.R:2074</code></td>
+</tr>
+<tr>
+<td><code>enable_seq</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_filtration_ui.R:282</code></td>
+<td><code>mod_filtration_server.R:358</code>, <code>mod_filtration_server.R:392</code>, <code>mod_filtration_server.R:512</code>, <code>mod_filtration_server.R:1741</code>, <code>mod_filtration_server.R:2082</code></td>
+</tr>
+<tr>
+<td><code>enable_tax</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_filtration_ui.R:65</code></td>
+<td><code>mod_filtration_server.R:243</code>, <code>mod_filtration_server.R:383</code>, <code>mod_filtration_server.R:468</code>, <code>mod_filtration_server.R:1359</code>, <code>mod_filtration_server.R:2061</code></td>
+</tr>
+<tr>
+<td><code>export_biom</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:460</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_meta</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:459</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_otu</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:457</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_tax</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:458</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>project_table_rows_selected</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:428</code>, <code>mod_filtration_io_server.R:470</code></td>
+</tr>
+<tr>
+<td><code>samp_meta_num_comp</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_server.R:748</code></td>
+<td><code>mod_filtration_server.R:289</code>, <code>mod_filtration_server.R:734</code>, <code>mod_filtration_server.R:1189</code>, <code>mod_filtration_server.R:1602</code>, <code>mod_filtration_server.R:2008</code></td>
+</tr>
+<tr>
+<td><code>samp_meta_op</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_server.R:742</code></td>
+<td><code>mod_filtration_server.R:288</code>, <code>mod_filtration_server.R:298</code>, <code>mod_filtration_server.R:746</code>, <code>mod_filtration_server.R:777</code>, <code>mod_filtration_server.R:1186</code>, <code>mod_filtration_server.R:1599</code>, <code>mod_filtration_server.R:2007</code>, <code>mod_filtration_server.R:2016</code></td>
+</tr>
+<tr>
+<td><code>samp_meta_val</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_server.R:754</code></td>
+<td><code>mod_filtration_server.R:290</code>, <code>mod_filtration_server.R:299</code>, <code>mod_filtration_server.R:300</code>, <code>mod_filtration_server.R:735</code>, <code>mod_filtration_server.R:1190</code>, <code>mod_filtration_server.R:1201</code>, <code>mod_filtration_server.R:1603</code>, <code>mod_filtration_server.R:1625</code>…</td>
+</tr>
+<tr>
+<td><code>samp_meta_val2</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_server.R:759</code></td>
+<td><code>mod_filtration_server.R:291</code>, <code>mod_filtration_server.R:736</code>, <code>mod_filtration_server.R:1191</code>, <code>mod_filtration_server.R:1604</code>, <code>mod_filtration_server.R:2010</code></td>
+</tr>
+<tr>
+<td><code>samp_meta_var</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_ui.R:243</code></td>
+<td><code>mod_filtration_server.R:278</code>, <code>mod_filtration_server.R:498</code>, <code>mod_filtration_server.R:716</code>, <code>mod_filtration_server.R:1076</code>, <code>mod_filtration_server.R:1175</code>, <code>mod_filtration_server.R:1555</code>, <code>mod_filtration_server.R:1996</code>, <code>mod_filtration_server.R:1997</code></td>
+</tr>
+<tr>
+<td><code>samp_min_reads</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:209</code></td>
+<td><code>mod_filtration_server.R:268</code>, <code>mod_filtration_server.R:494</code>, <code>mod_filtration_server.R:1048</code>, <code>mod_filtration_server.R:1509</code>, <code>mod_filtration_server.R:2075</code></td>
+</tr>
+<tr>
+<td><code>samp_min_richness</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:218</code></td>
+<td><code>mod_filtration_server.R:268</code>, <code>mod_filtration_server.R:495</code>, <code>mod_filtration_server.R:1068</code>, <code>mod_filtration_server.R:1510</code>, <code>mod_filtration_server.R:2076</code></td>
+</tr>
+<tr>
+<td><code>samp_name_op</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_ui.R:231</code></td>
+<td><code>mod_filtration_server.R:695</code>, <code>mod_filtration_server.R:1558</code>, <code>mod_filtration_server.R:1990</code></td>
+</tr>
+<tr>
+<td><code>samp_name_values</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:230</code></td>
+</tr>
+<tr>
+<td><code>save_filtered</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_filtration_io_ui.R:29</code></td>
+<td><code>mod_filtration_io_server.R:144</code></td>
+</tr>
+<tr>
+<td><code>save_label</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_filtration_io_ui.R:16</code></td>
+<td><code>mod_filtration_io_server.R:153</code>, <code>mod_filtration_io_server.R:317</code></td>
+</tr>
+<tr>
+<td><code>selected_ds_filtration</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_ui.R:36</code></td>
+<td><code>mod_filtration_server.R:203</code></td>
+</tr>
+<tr>
+<td><code>seq_gc_max</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:312</code></td>
+<td><code>mod_filtration_server.R:363</code>, <code>mod_filtration_server.R:517</code>, <code>mod_filtration_server.R:1157</code>, <code>mod_filtration_server.R:1758</code>, <code>mod_filtration_server.R:2086</code></td>
+</tr>
+<tr>
+<td><code>seq_gc_min</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:307</code></td>
+<td><code>mod_filtration_server.R:362</code>, <code>mod_filtration_server.R:516</code>, <code>mod_filtration_server.R:1156</code>, <code>mod_filtration_server.R:1757</code>, <code>mod_filtration_server.R:2085</code></td>
+</tr>
+<tr>
+<td><code>seq_len_max</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:298</code></td>
+<td><code>mod_filtration_server.R:361</code>, <code>mod_filtration_server.R:515</code>, <code>mod_filtration_server.R:1129</code>, <code>mod_filtration_server.R:1756</code>, <code>mod_filtration_server.R:2084</code></td>
+</tr>
+<tr>
+<td><code>seq_len_min</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:293</code></td>
+<td><code>mod_filtration_server.R:360</code>, <code>mod_filtration_server.R:514</code>, <code>mod_filtration_server.R:1128</code>, <code>mod_filtration_server.R:1755</code>, <code>mod_filtration_server.R:2083</code></td>
+</tr>
+<tr>
+<td><code>seq_max_ambig</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:321</code></td>
+<td><code>mod_filtration_server.R:364</code>, <code>mod_filtration_server.R:518</code>, <code>mod_filtration_server.R:1759</code>, <code>mod_filtration_server.R:2087</code></td>
+</tr>
+<tr>
+<td><code>seq_max_homopolymer</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_filtration_ui.R:326</code></td>
+<td><code>mod_filtration_server.R:365</code>, <code>mod_filtration_server.R:519</code>, <code>mod_filtration_server.R:1760</code>, <code>mod_filtration_server.R:2088</code></td>
+</tr>
+<tr>
+<td><code>tax_exclude_keywords</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:247</code>, <code>mod_filtration_server.R:467</code>, <code>mod_filtration_server.R:1405</code>, <code>mod_filtration_server.R:2065</code></td>
+</tr>
+<tr>
+<td><code>tax_exclude_values</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:245</code>, <code>mod_filtration_server.R:465</code>, <code>mod_filtration_server.R:1366</code>, <code>mod_filtration_server.R:2063</code></td>
+</tr>
+<tr>
+<td><code>tax_keep_values</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:246</code>, <code>mod_filtration_server.R:466</code>, <code>mod_filtration_server.R:1386</code>, <code>mod_filtration_server.R:2064</code></td>
+</tr>
+<tr>
+<td><code>tax_rank</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_filtration_ui.R:80</code></td>
+<td><code>mod_filtration_server.R:647</code>, <code>mod_filtration_server.R:650</code>, <code>mod_filtration_server.R:1363</code>, <code>mod_filtration_server.R:2062</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Shiny outputs<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dataset_details</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_io_ui.R:53</code></td>
+<td><code>mod_filtration_io_server.R:423</code></td>
+</tr>
+<tr>
+<td><code>export_biom</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:460</code></td>
+<td><code>mod_filtration_io_server.R:625</code></td>
+</tr>
+<tr>
+<td><code>export_meta</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:459</code></td>
+<td><code>mod_filtration_io_server.R:616</code></td>
+</tr>
+<tr>
+<td><code>export_otu</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:457</code></td>
+<td><code>mod_filtration_io_server.R:598</code></td>
+</tr>
+<tr>
+<td><code>export_tax</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_filtration_io_server.R:458</code></td>
+<td><code>mod_filtration_io_server.R:607</code></td>
+</tr>
+<tr>
+<td><code>filter_summary</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:2106</code></td>
+</tr>
+<tr>
+<td><code>filtration_box_styles</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:46</code></td>
+<td><code>mod_filtration_server.R:581</code></td>
+</tr>
+<tr>
+<td><code>filtration_params_view</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:455</code></td>
+<td><code>mod_filtration_io_server.R:475</code></td>
+</tr>
+<tr>
+<td><code>filtration_status_local</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:43</code></td>
+<td><code>mod_filtration_server.R:417</code></td>
+</tr>
+<tr>
+<td><code>meta_filters_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:268</code></td>
+<td><code>mod_filtration_server.R:809</code></td>
+</tr>
+<tr>
+<td><code>msg_abund</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:143</code></td>
+<td><code>mod_filtration_server.R:572</code></td>
+</tr>
+<tr>
+<td><code>msg_samples</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:204</code></td>
+<td><code>mod_filtration_server.R:573</code></td>
+</tr>
+<tr>
+<td><code>msg_seq</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:288</code></td>
+<td><code>mod_filtration_server.R:574</code></td>
+</tr>
+<tr>
+<td><code>msg_tax</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:71</code></td>
+<td><code>mod_filtration_server.R:571</code></td>
+</tr>
+<tr>
+<td><code>otu_table_view</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:451</code></td>
+<td><code>mod_filtration_io_server.R:559</code></td>
+</tr>
+<tr>
+<td><code>plot_ab_prev</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:992</code></td>
+</tr>
+<tr>
+<td><code>plot_ab_relmax</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1013</code></td>
+</tr>
+<tr>
+<td><code>plot_ab_total</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:970</code></td>
+</tr>
+<tr>
+<td><code>plot_gc</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:538</code></td>
+</tr>
+<tr>
+<td><code>plot_len</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:549</code></td>
+</tr>
+<tr>
+<td><code>plot_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:532</code></td>
+</tr>
+<tr>
+<td><code>plot_reads</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:526</code></td>
+</tr>
+<tr>
+<td><code>plot_samp_meta</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1074</code></td>
+</tr>
+<tr>
+<td><code>plot_samp_reads</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1034</code></td>
+</tr>
+<tr>
+<td><code>plot_samp_rich</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1054</code></td>
+</tr>
+<tr>
+<td><code>plot_seq_gc</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1136</code></td>
+</tr>
+<tr>
+<td><code>plot_seq_len</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_server.R:1111</code></td>
+</tr>
+<tr>
+<td><code>project_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_ui.R:43</code></td>
+<td><code>mod_filtration_io_server.R:346</code></td>
+</tr>
+<tr>
+<td><code>removed_samples_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:455</code></td>
+<td><code>mod_filtration_io_server.R:585</code></td>
+</tr>
+<tr>
+<td><code>removed_taxa_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:454</code></td>
+<td><code>mod_filtration_io_server.R:574</code></td>
+</tr>
+<tr>
+<td><code>samp_meta_condition_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:250</code></td>
+<td><code>mod_filtration_server.R:714</code></td>
+</tr>
+<tr>
+<td><code>samp_name_values_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_filtration_ui.R:238</code></td>
+<td><code>mod_filtration_server.R:687</code></td>
+</tr>
+<tr>
+<td><code>sample_table_view</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:453</code></td>
+<td><code>mod_filtration_io_server.R:569</code></td>
+</tr>
+<tr>
+<td><code>save_label_warning</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_filtration_io_server.R:311</code></td>
+</tr>
+<tr>
+<td><code>tax_table_view</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_filtration_io_server.R:452</code></td>
+<td><code>mod_filtration_io_server.R:564</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. आंतरिक functions<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Configuration<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_provenance_snapshot()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>144</td>
+<td>Configuration layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-2">5.2. General<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_filtration_server()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>4</td>
+<td>चार blocks को fixed order में लागू करके filtered phyloseq reactively बनाता है।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>17</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>num_or()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>27</td>
+<td>Locale-aware numeric input parse करके invalid होने पर neutral value देता है।</td>
+</tr>
+<tr>
+<td><code>int_or()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>80</td>
+<td>Reads या prevalence integer thresholds normalize और round करता है।</td>
+</tr>
+<tr>
+<td><code>otu_to_mat()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>96</td>
+<td>Source object बदले बिना OTU table matrix निकालता है।</td>
+</tr>
+<tr>
+<td><code>taxa_sums()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>100</td>
+<td>हर taxon की total abundance calculate करता है।</td>
+</tr>
+<tr>
+<td><code>sample_sums()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>104</td>
+<td>हर sample की sequencing depth calculate करता है।</td>
+</tr>
+<tr>
+<td><code>taxa_prev()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>108</td>
+<td>हर taxon के strictly present samples count करता है।</td>
+</tr>
+<tr>
+<td><code>sample_rich()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>112</td>
+<td>हर sample के strictly present taxa count करता है।</td>
+</tr>
+<tr>
+<td><code>max_rel_abund()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>116</td>
+<td>हर taxon की maximum relative abundance calculate करता है।</td>
+</tr>
+<tr>
+<td><code>keep_numeric()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>139</td>
+<td>Numeric metadata comparisons के logical masks बनाता है।</td>
+</tr>
+<tr>
+<td><code>get_refseq_aligned()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>161</td>
+<td>Reference sequences को taxa_names() से align करके partial coverage report करता है।</td>
+</tr>
+<tr>
+<td><code>border_col()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>587</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>add_vline()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>946</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>add_log()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>1322</td>
+<td>Filtering log में localized descriptive line जोड़ता है।</td>
+</tr>
+<tr>
+<td><code>esc()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>2122</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mod_filtration_io_server()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>3</td>
+<td>Results registry में save करता, filtered datasets inspect करता और exports बनाता है।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>9</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>59</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>get_log()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>352</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>blocks_from_lines()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>358</td>
+<td>Text log से active blocks infer करता है; अभी French wording पर निर्भर है।</td>
+</tr>
+<tr>
+<td><code>flatten()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>482</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>rec()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>484</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_carry_provenance()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>40</td>
+<td>Pruning के बाद supported provenance attributes copy करता है।</td>
+</tr>
+<tr>
+<td><code>bcr_provenance_flatten()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>53</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_filtration_digest()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>74</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_edition_digest()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>96</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_prov_one()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>110</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>as_count()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>117</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_provenance_for()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>169</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>pad()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>187</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>ok_num()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>191</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_provenance_code_lines()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>279</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_make_unique_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>35</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sb_try()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>11</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sb_ps_slots()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>17</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_bind_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>30</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_follow_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>51</td>
+<td>General layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-3">5.3. UI / rendering<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>render_box_msg()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>535</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>27</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>68</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_prov_render_one()</code></td>
+<td><code>modules/_shared/_provenance.R</code></td>
+<td>186</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sb_ps_require()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>84</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_guard_message()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>142</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-4">5.4. Validation / formatting<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>safe_prune_taxa()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>1267</td>
+<td>prune_taxa() से पहले सभी taxa हटने से रोकता है।</td>
+</tr>
+<tr>
+<td><code>safe_prune_samples()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>1286</td>
+<td>prune_samples() से पहले सभी samples हटने से रोकता है।</td>
+</tr>
+<tr>
+<td><code>fmt_line()</code></td>
+<td><code>modules/filtration/mod_filtration_server.R</code></td>
+<td>2124</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>format_log_html()</code></td>
+<td><code>modules/filtration/io/mod_filtration_io_server.R</code></td>
+<td>89</td>
+<td>filtration_log lines को readable HTML में बदलता है।</td>
+</tr>
+<tr>
+<td><code>bcr_clean_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>25</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sb_ps_check_ids()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>42</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_guard_ps()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>136</td>
+<td>datasets() insertion से पहले phyloseq consistency जाँचता है।</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. स्रोत फ़ाइलें</a><a class="toc-l2" href="#section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह</a><a class="toc-l3" href="#section-2-1">2.1. Reactive state और memory</a><a class="toc-l3" href="#section-2-2">2.2. Validation और integrity guard</a><a class="toc-l2" href="#section-3">3. Shiny inputs</a><a class="toc-l2" href="#section-4">4. Shiny outputs</a><a class="toc-l2" href="#section-5">5. आंतरिक functions</a><a class="toc-l3" href="#section-5-1">5.1. Configuration</a><a class="toc-l3" href="#section-5-2">5.2. General</a><a class="toc-l3" href="#section-5-3">5.3. UI / rendering</a><a class="toc-l3" href="#section-5-4">5.4. Validation / formatting</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · फ़िल्ट्रेशन</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

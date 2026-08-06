@@ -29,9 +29,9 @@ function useHashRoute() {
   return route;
 }
 
-function Brand() {
+function Brand({ language }: { language: Language }) {
   return (
-    <a className="brand" href="#/" aria-label="BarCodeR et OpenMetaBar — accueil du site">
+    <a className="brand" href="#/" aria-label={language === "fr" ? "BarCodeR et OpenMetaBar — accueil du site" : "BarCodeR and OpenMetaBar — website home"}>
       <img className="brand-barcoder" src={asset("app-previews/barcoder-logo.png")} alt="" />
       <span className="brand-wordmark"><strong>BarCodeR</strong><i>×</i><strong>OpenMetaBar</strong></span>
       <img className="brand-openmetabar" src={asset("app-previews/openmetabar-logo.png")} alt="" />
@@ -42,28 +42,29 @@ function Brand() {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    overview: "Vue d’ensemble", application: "Processus analytique", evidence: "Tutoriels & datasets tests", reproducibility: "Reproductibilité", code: "Code & disponibilité"
+    overview: "Vue d’ensemble", application: "Processus analytique", evidence: "Tutoriels & datasets tests", documentation: "Documentation", reproducibility: "Reproductibilité", code: "Code & disponibilité"
   } : {
-    overview: "Overview", application: "Analytical process", evidence: "Tutorials & test datasets", reproducibility: "Reproducibility", code: "Code & availability"
+    overview: "Overview", application: "Analytical process", evidence: "Tutorials & test datasets", documentation: "Documentation", reproducibility: "Reproducibility", code: "Code & availability"
   };
 
   useEffect(() => setOpen(false), [route]);
 
   return (
     <header className="site-header">
-      <Brand />
+      <Brand language={language} />
       <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={language === "fr" ? "Ouvrir le menu" : "Open menu"}>
         <span /><span />
       </button>
-      <nav className={open ? "primary-nav open" : "primary-nav"} aria-label="Navigation principale">
+      <nav className={open ? "primary-nav open" : "primary-nav"} aria-label={language === "fr" ? "Navigation principale" : "Main navigation"}>
         <a className={route === "/" ? "active" : ""} href="#/">{c.overview}</a>
         <a className={route.startsWith("/application") ? "active" : ""} href="#/application">{c.application}</a>
         <a className={route === "/reproducibility" ? "active" : ""} href="#/reproducibility">{c.reproducibility}</a>
         <a className={route === "/evidence" ? "active" : ""} href="#/evidence">{c.evidence}</a>
+        <a className={route === "/documentation" ? "active" : ""} href="#/documentation">{c.documentation}</a>
         <a className={route === "/availability" ? "active" : ""} href="#/availability">{c.code}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
-          <button className={language === "fr" ? "active" : ""} onClick={() => setLanguage("fr")}>FR</button>
-          <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
+          <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
+          <button className={language === "en" ? "active" : ""} onClick={() => { setLanguage("en"); setOpen(false); }}>EN</button>
         </div>
       </nav>
     </header>
@@ -230,6 +231,99 @@ function EvidencePage({ language }: { language: Language }) {
   return <main><section className="page-hero page-width tutorial-hero"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="tutorial-summary"><div><b>{modules.length}</b><span>{language === "fr" ? "tutoriels prévus" : "planned tutorials"}</span></div><div><b>1</b><span>{language === "fr" ? "trame commune" : "shared framework"}</span></div><div><b>3</b><span>{language === "fr" ? "datasets tests planifiés" : "planned test datasets"}</span></div></div></section><section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{c.tutorials}</Eyebrow><h2>{c.tutorials}</h2></div><p>{c.tutorialP}</p></div><div className="tutorial-grid">{modules.map((module, index) => <article className="tutorial-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="tutorial-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><div className="tutorial-status"><span />{c.status}</div><b>{c.format}</b></article>)}</div></div></section><section className="section page-width"><div className="section-intro"><Eyebrow>{c.datasetsK}</Eyebrow><h2>{c.datasetsT}</h2></div><div className="test-dataset-grid">{c.datasets.map(([title, text, status], index) => <article className={index === 0 ? "available" : ""} key={title}><span>{status}</span><h3>{title}</h3><p>{text}</p></article>)}</div><div className="dataset-demo"><div><Eyebrow>{c.demo}</Eyebrow><h2>{c.demo}</h2><p>{c.demoP}</p></div><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></div></section><section className="figure-gallery page-width">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section><section className="section section-tint"><div className="page-width tutorial-resources"><div><Eyebrow>{c.trace}</Eyebrow><h2>{c.trace}</h2></div><div className="evidence-links"><a className="button primary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/scripts/generate_public_data_figures.R">{c.script}<span>↗</span></a><a className="button secondary" target="_blank" rel="noreferrer" href="https://github.com/MLPosuphy/site-BarCodeR-R-shiny-application/blob/main/public/figures/data-provenance.tsv">{c.data}<span>↗</span></a></div></div></section></main>;
 }
 
+type DocumentationManifest = {
+  documentation_version: string;
+  generated_for_app_version: string;
+  generated: string;
+  languages: string[];
+  modules: string[];
+  sections: string[];
+};
+
+function DocumentationPage({ language }: { language: Language }) {
+  const [manifest, setManifest] = useState<DocumentationManifest | null>(null);
+  const documentationUrl = `${asset("documentation/index.html")}?lang=${language}&module=openmetabar&section=guide`;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(asset("documentation/manifest.json"))
+      .then(response => {
+        if (!response.ok) throw new Error(`Documentation manifest: ${response.status}`);
+        return response.json() as Promise<DocumentationManifest>;
+      })
+      .then(data => { if (!cancelled) setManifest(data); })
+      .catch(() => { if (!cancelled) setManifest(null); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const c = language === "fr" ? {
+    k: "Documentation BarCodeR",
+    title: "La documentation complète, directement dans le site.",
+    p: "Consultez les guides méthodologiques et les références techniques de BarCodeR sans quitter l’écosystème BarCodeR × OpenMetaBar. La documentation reste autonome, multilingue et utilisable hors connexion dans l’application.",
+    modules: "modules documentés",
+    sections: "niveaux de documentation",
+    languages: "langues disponibles",
+    version: "version documentaire",
+    open: "Ouvrir en plein écran",
+    appTab: "Voir l’onglet dans l’application",
+    embedded: "Documentation intégrée",
+    embeddedP: "La navigation, la recherche, le sommaire, le changement de langue et le thème restent disponibles dans le lecteur ci-dessous.",
+    loading: "Chargement de la documentation BarCodeR",
+    source: "Contenu généré pour",
+    generated: "Documentation générée le"
+  } : {
+    k: "BarCodeR documentation",
+    title: "Complete documentation, directly inside the website.",
+    p: "Browse BarCodeR methodological guides and technical references without leaving the BarCodeR × OpenMetaBar ecosystem. The documentation remains standalone, multilingual and available offline inside the application.",
+    modules: "documented modules",
+    sections: "documentation levels",
+    languages: "available languages",
+    version: "documentation version",
+    open: "Open full screen",
+    appTab: "View the application tab",
+    embedded: "Embedded documentation",
+    embeddedP: "Navigation, search, table of contents, language switching and theme controls remain available in the reader below.",
+    loading: "Loading BarCodeR documentation",
+    source: "Content generated for",
+    generated: "Documentation generated on"
+  };
+
+  const metrics = [
+    [String(manifest?.modules.length ?? 9), c.modules],
+    [String(manifest?.sections.length ?? 2), c.sections],
+    [String(manifest?.languages.length ?? 5), c.languages],
+    [manifest?.documentation_version ? `v${manifest.documentation_version}` : "v1.8.0", c.version]
+  ];
+
+  return <main className="documentation-page">
+    <section className="documentation-hero page-width">
+      <div className="documentation-hero-copy">
+        <Eyebrow>{c.k}</Eyebrow>
+        <h1>{c.title}</h1>
+        <p className="lead">{c.p}</p>
+        <div className="documentation-actions">
+          <a className="button primary" href={documentationUrl} target="_blank" rel="noreferrer">{c.open}<span>↗</span></a>
+          <a className="button secondary" href="#/application/documentation">{c.appTab}<span>→</span></a>
+        </div>
+      </div>
+      <div className="documentation-metrics">{metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div>
+      {manifest && <p className="documentation-version-line"><span>{c.source} <strong>{manifest.generated_for_app_version}</strong></span><span>{c.generated} <strong>{manifest.generated}</strong></span></p>}
+    </section>
+    <section className="documentation-reader-section">
+      <div className="page-width">
+        <div className="documentation-reader-intro">
+          <div><Eyebrow>{c.embedded}</Eyebrow><h2>{c.embedded}</h2></div>
+          <p>{c.embeddedP}</p>
+        </div>
+        <div className="documentation-browser">
+          <div className="documentation-browser-bar"><span /><span /><span /><b>docs.barcoder.local</b><a href={documentationUrl} target="_blank" rel="noreferrer" aria-label={c.open}>↗</a></div>
+          <iframe key={`${language}-${documentationUrl}`} src={documentationUrl} title={c.loading} loading="lazy" />
+        </div>
+      </div>
+    </section>
+  </main>;
+}
+
 function ReproducibilityPage({ language }: { language: Language }) {
   const [activeStep, setActiveStep] = useState(0);
   const c = language === "fr" ? {
@@ -261,7 +355,7 @@ function AvailabilityPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/application">{language === "fr" ? "Processus analytique" : "Analytical process"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/evidence">{language === "fr" ? "Tutoriels & datasets tests" : "Tutorials & test datasets"}</a><a href="#/availability">GitHub</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/application">{language === "fr" ? "Processus analytique" : "Analytical process"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/evidence">{language === "fr" ? "Tutoriels & datasets tests" : "Tutorials & test datasets"}</a><a href="#/documentation">Documentation</a><a href="#/availability">GitHub</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -280,7 +374,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Processus analytique au sein de l’application" : "Analytical process within the application") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
+    const label = activeModule ? tx(activeModule.title, language) : route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets") : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation") : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility") : route === "/availability" ? (language === "fr" ? "Code et disponibilité" : "Code and availability") : route === "/application" ? (language === "fr" ? "Processus analytique au sein de l’application" : "Analytical process within the application") : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR × OpenMetaBar`;
   }, [language, route, activeModule]);
 
@@ -296,6 +390,7 @@ export default function App() {
   if (activeModule) page = <ModulePage module={activeModule} language={language} />;
   else if (route === "/application") page = <ApplicationIndex language={language} />;
   else if (route === "/evidence") page = <EvidencePage language={language} />;
+  else if (route === "/documentation") page = <DocumentationPage language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
   else if (route === "/availability") page = <AvailabilityPage language={language} />;
   else page = <Landing language={language} />;

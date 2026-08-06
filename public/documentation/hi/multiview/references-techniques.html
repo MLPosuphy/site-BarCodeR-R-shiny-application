@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>MultiView — तकनीकी संदर्भ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="reference" data-module="multiview" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">तकनीकी संदर्भ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link active" href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="active" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">MultiView</a><span>›</span><span>तकनीकी संदर्भ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">MultiView — तकनीकी संदर्भ</h1>
+<p>इस BarCodeR संस्करण में मौजूद वास्तविक कोड से बनाया गया तकनीकी इन्वेंटरी।</p>
+<blockquote>
+<p><strong>यह पृष्ठ documentation-src/build_docs.py द्वारा दोबारा बनाया जाता है। Function names, identifiers और line numbers वर्तमान source code से आते हैं।</strong></p>
+</blockquote>
+<h2 id="section-1">1. स्रोत फ़ाइलें<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>भूमिका</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MultiView interface</td>
+<td><code>modules/multiview/mod_multiview_ui.R</code></td>
+</tr>
+<tr>
+<td>Library, grid and composition server</td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+</tr>
+<tr>
+<td>Styles, dependencies and JavaScript</td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+</tr>
+<tr>
+<td>Project paths and static resources</td>
+<td><code>modules/_shared/_project_store.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/hi/multiview/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/hi/multiview/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">project history folders
+  → recursive PNG scan (100 newest per folder)
+  → optional matching RDS metadata
+  → filters / favorites / tags
+  → selection
+  → GridStack composition
+  → browser PNG export or RDS composition recipe
+</code></pre>
+<h3 id="section-2-1">2.1. Reactive state और memory<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>library()</code></td>
+<td>Current project के PNG और RDS metadata की inventory।</td>
+</tr>
+<tr>
+<td><code>selection()</code></td>
+<td>Gallery में selected keys।</td>
+</tr>
+<tr>
+<td><code>open_tabs()</code></td>
+<td>Grid में currently open figures।</td>
+</tr>
+<tr>
+<td><code>grid_layout()</code></td>
+<td>GridStack positions और dimensions।</td>
+</tr>
+<tr>
+<td><code>pinned()</code></td>
+<td>Replacement और global close से protected figures।</td>
+</tr>
+<tr>
+<td><code>tags_store()</code></td>
+<td>Project में persisted favorites और tags।</td>
+</tr>
+<tr>
+<td>Compositions</td>
+<td>Figures, layout और pins refer करने वाली RDS recipes।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Main flows<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Flow</th>
+<th>Pipeline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Library scan</td>
+<td>project folders → latest 100 PNG per folder → matching RDS → searchable cards</td>
+</tr>
+<tr>
+<td>Grid</td>
+<td>selection / drag-and-drop → open_tabs → GridStack layout → optional pinning</td>
+</tr>
+<tr>
+<td>Composite export</td>
+<td>browser DOM grid → html-to-image → raster PNG download</td>
+</tr>
+<tr>
+<td>Composition</td>
+<td>figure keys + layout + pins → project RDS → later partial restoration</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>tags.rds → favorites and tags shared within the project</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. Shiny inputs<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto_refresh</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:271</code></td>
+</tr>
+<tr>
+<td><code>clear_selection</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:148</code></td>
+<td><code>mod_multiview_server.R:562</code></td>
+</tr>
+<tr>
+<td><code>close_all</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:185</code></td>
+<td><code>mod_multiview_server.R:891</code></td>
+</tr>
+<tr>
+<td><code>comp_action</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:1198</code>, <code>mod_multiview_server.R:1199</code></td>
+</tr>
+<tr>
+<td><code>comp_descr</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_multiview_server.R:1108</code></td>
+<td><code>mod_multiview_server.R:1124</code></td>
+</tr>
+<tr>
+<td><code>comp_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_multiview_server.R:1106</code></td>
+<td><code>mod_multiview_server.R:1119</code></td>
+</tr>
+<tr>
+<td><code>confirm_rename_composition</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_server.R:1238</code></td>
+<td><code>mod_multiview_server.R:1249</code></td>
+</tr>
+<tr>
+<td><code>confirm_save_composition</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_server.R:1111</code></td>
+<td><code>mod_multiview_server.R:1118</code></td>
+</tr>
+<tr>
+<td><code>dataset_filter</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:455</code>, <code>mod_multiview_server.R:456</code>, <code>mod_multiview_server.R:1131</code></td>
+</tr>
+<tr>
+<td><code>date_preset_30d</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:70</code></td>
+<td><code>mod_multiview_server.R:435</code></td>
+</tr>
+<tr>
+<td><code>date_preset_7d</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:68</code></td>
+<td><code>mod_multiview_server.R:431</code></td>
+</tr>
+<tr>
+<td><code>date_preset_all</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:72</code></td>
+<td><code>mod_multiview_server.R:439</code></td>
+</tr>
+<tr>
+<td><code>date_range</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:459</code>, <code>mod_multiview_server.R:1135</code></td>
+</tr>
+<tr>
+<td><code>detail_add_grid</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_server.R:774</code></td>
+<td><code>mod_multiview_server.R:810</code></td>
+</tr>
+<tr>
+<td><code>detail_toggle_fav</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_server.R:778</code></td>
+<td><code>mod_multiview_server.R:817</code></td>
+</tr>
+<tr>
+<td><code>drop_open</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:886</code>, <code>mod_multiview_server.R:887</code></td>
+</tr>
+<tr>
+<td><code>edit_mode</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:922</code>, <code>mod_multiview_server.R:924</code></td>
+</tr>
+<tr>
+<td><code>export_composite</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:188</code></td>
+<td><code>mod_multiview_server.R:967</code></td>
+</tr>
+<tr>
+<td><code>fav_only</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:466</code>, <code>mod_multiview_server.R:1133</code></td>
+</tr>
+<tr>
+<td><code>grid_action</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:975</code>, <code>mod_multiview_server.R:976</code></td>
+</tr>
+<tr>
+<td><code>import_composition</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_multiview_ui.R:212</code></td>
+<td><code>mod_multiview_server.R:1274</code>, <code>mod_multiview_server.R:1275</code></td>
+</tr>
+<tr>
+<td><code>layout</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:902</code>, <code>mod_multiview_server.R:903</code>, <code>mod_multiview_server.R:904</code></td>
+</tr>
+<tr>
+<td><code>layout_preset</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_multiview_ui.R:173</code></td>
+<td><code>mod_multiview_server.R:53</code>, <code>mod_multiview_server.R:953</code>, <code>mod_multiview_server.R:954</code></td>
+</tr>
+<tr>
+<td><code>open_detail</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:720</code>, <code>mod_multiview_server.R:721</code></td>
+</tr>
+<tr>
+<td><code>open_selected</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:142</code></td>
+<td><code>mod_multiview_server.R:870</code></td>
+</tr>
+<tr>
+<td><code>refresh</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:96</code></td>
+<td><code>mod_multiview_server.R:262</code></td>
+</tr>
+<tr>
+<td><code>refresh_compositions</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:209</code></td>
+<td><code>mod_multiview_server.R:1097</code></td>
+</tr>
+<tr>
+<td><code>rename_comp_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_multiview_server.R:1233</code></td>
+<td><code>mod_multiview_server.R:1251</code></td>
+</tr>
+<tr>
+<td><code>replace_with_selected</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:145</code></td>
+<td><code>mod_multiview_server.R:879</code></td>
+</tr>
+<tr>
+<td><code>reset_layout</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:182</code></td>
+<td><code>mod_multiview_server.R:927</code></td>
+</tr>
+<tr>
+<td><code>save_composition_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:191</code></td>
+<td><code>mod_multiview_server.R:1101</code></td>
+</tr>
+<tr>
+<td><code>save_tags_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_server.R:795</code></td>
+<td><code>mod_multiview_server.R:825</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_multiview_ui.R:51</code></td>
+<td><code>mod_multiview_server.R:479</code>, <code>mod_multiview_server.R:1132</code></td>
+</tr>
+<tr>
+<td><code>select_all</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_multiview_ui.R:139</code></td>
+<td><code>mod_multiview_server.R:569</code></td>
+</tr>
+<tr>
+<td><code>selection</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:556</code>, <code>mod_multiview_server.R:557</code></td>
+</tr>
+<tr>
+<td><code>set_type</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:388</code>, <code>mod_multiview_server.R:389</code></td>
+</tr>
+<tr>
+<td><code>sort_by</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_multiview_ui.R:79</code></td>
+<td><code>mod_multiview_server.R:44</code>, <code>mod_multiview_server.R:489</code></td>
+</tr>
+<tr>
+<td><code>tag_filter</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:471</code>, <code>mod_multiview_server.R:475</code>, <code>mod_multiview_server.R:1134</code></td>
+</tr>
+<tr>
+<td><code>tag_input</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_multiview_server.R:792</code></td>
+<td><code>mod_multiview_server.R:827</code></td>
+</tr>
+<tr>
+<td><code>toggle_fav</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:337</code>, <code>mod_multiview_server.R:338</code></td>
+</tr>
+<tr>
+<td><code>view_mode</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_multiview_server.R:579</code>, <code>mod_multiview_server.R:580</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Shiny outputs<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compositions_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:218</code></td>
+<td><code>mod_multiview_server.R:1148</code></td>
+</tr>
+<tr>
+<td><code>dataset_selector_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:53</code></td>
+<td><code>mod_multiview_server.R:395</code></td>
+</tr>
+<tr>
+<td><code>detail_panel</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:235</code></td>
+<td><code>mod_multiview_server.R:728</code></td>
+</tr>
+<tr>
+<td><code>kpi_strip</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:46</code></td>
+<td><code>mod_multiview_server.R:513</code></td>
+</tr>
+<tr>
+<td><code>library_count</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:124</code></td>
+<td><code>mod_multiview_server.R:545</code></td>
+</tr>
+<tr>
+<td><code>library_view</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:135</code></td>
+<td><code>mod_multiview_server.R:644</code></td>
+</tr>
+<tr>
+<td><code>multiview_notice</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:130</code></td>
+<td><code>mod_multiview_server.R:282</code></td>
+</tr>
+<tr>
+<td><code>open_tabs_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:196</code></td>
+<td><code>mod_multiview_server.R:993</code></td>
+</tr>
+<tr>
+<td><code>pills_type_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:131</code></td>
+<td><code>mod_multiview_server.R:352</code></td>
+</tr>
+<tr>
+<td><code>selection_summary</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:152</code></td>
+<td><code>mod_multiview_server.R:583</code></td>
+</tr>
+<tr>
+<td><code>tag_filter_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_multiview_ui.R:92</code></td>
+<td><code>mod_multiview_server.R:417</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. आंतरिक functions<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Configuration<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>render_params_table()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>752</td>
+<td>Configuration layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-2">5.2. Files और serialization<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>safe_read_rds()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>125</td>
+<td>Files और serialization layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>get_meta_from_rds()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>131</td>
+<td>Files और serialization layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_current_pointer_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>271</td>
+<td>Files और serialization layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_manifest_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>311</td>
+<td>Files और serialization layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-3">5.3. General<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_multiview_server()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>1</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>12</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_log()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>77</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>to_single()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>147</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>load_tags()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>312</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>save_tags()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>323</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>type_of()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>354</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>one_str()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>397</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>one_chr()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>490</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>one_num()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>495</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>type_of()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>517</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>one_str()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>664</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>is_tech()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>745</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>item_by_rid()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>845</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>add_to_grid()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>851</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>replace_grid()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>859</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>apply_one()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>905</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>refresh_compositions()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>1085</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_slug()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>8</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_type_icon()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>20</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_type_color()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>42</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_type_label()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>61</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_extract_badges()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>82</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_relative_date()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>131</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_dependencies()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>148</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_css()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>165</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mv_js()</code></td>
+<td><code>modules/multiview/_shared/mod_multiview_helpers.R</code></td>
+<td>556</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_or()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>46</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>.bcr_name_fingerprint()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>52</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_slugify()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>66</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_set_pending_open()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>105</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_take_pending_open()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>109</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_register_session()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>126</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_unregister_session()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>132</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_other_sessions()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>137</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>norm()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>183</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>norm()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>200</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_migrate_legacy_histories()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>222</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_read_current_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>273</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_write_current_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>294</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_read_manifest()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>375</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_write_manifest()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>384</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_unique_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>462</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>has_marker()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>548</td>
+<td>General layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-4">5.4. State / cleanup<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scan_history()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>186</td>
+<td>State / cleanup layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>rescan_library()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>232</td>
+<td>State / cleanup layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>preset_defs()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>934</td>
+<td>State / cleanup layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-5">5.5. UI / rendering<a aria-label="Permalink" class="heading-anchor" href="#section-5-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make_pill()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>363</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>render_card()</code></td>
+<td><code>modules/multiview/mod_multiview_server.R</code></td>
+<td>592</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-6">5.6. Validation / formatting<a aria-label="Permalink" class="heading-anchor" href="#section-5-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_invalidate_size_cache()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>426</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-5-7">5.7. Phyloseq / datasets<a aria-label="Permalink" class="heading-anchor" href="#section-5-7">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_project_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>86</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_set_project_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>89</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_project_root()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>142</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_project_dir()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>150</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_project_dir_rel()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>160</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_register_project_resource()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>180</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_release_project_resources()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>199</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_registry_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>308</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_save_registry()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>326</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_load_registry()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>348</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_registry_status()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>366</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_project_size_bytes()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>410</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_list_projects()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>435</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_project_name_taken()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>474</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_create_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>489</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_rename_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>501</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_delete_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>508</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_export_project_zip()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>524</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_find_project_root()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>544</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_import_project_zip()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>565</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_duplicate_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>607</td>
+<td>Phyloseq / datasets layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. स्रोत फ़ाइलें</a><a class="toc-l2" href="#section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह</a><a class="toc-l3" href="#section-2-1">2.1. Reactive state और memory</a><a class="toc-l3" href="#section-2-2">2.2. Main flows</a><a class="toc-l2" href="#section-3">3. Shiny inputs</a><a class="toc-l2" href="#section-4">4. Shiny outputs</a><a class="toc-l2" href="#section-5">5. आंतरिक functions</a><a class="toc-l3" href="#section-5-1">5.1. Configuration</a><a class="toc-l3" href="#section-5-2">5.2. Files और serialization</a><a class="toc-l3" href="#section-5-3">5.3. General</a><a class="toc-l3" href="#section-5-4">5.4. State / cleanup</a><a class="toc-l3" href="#section-5-5">5.5. UI / rendering</a><a class="toc-l3" href="#section-5-6">5.6. Validation / formatting</a><a class="toc-l3" href="#section-5-7">5.7. Phyloseq / datasets</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · MultiView</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

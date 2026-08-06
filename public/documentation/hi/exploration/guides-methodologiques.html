@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>एक्सप्लोरेशन — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="exploration" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link active" href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">एक्सप्लोरेशन</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">एक्सप्लोरेशन — पद्धति मार्गदर्शिका</h1>
+<h2 id="section-1">1. उद्देश्य और संरचना<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Exploration</strong> project के <code>phyloseq</code> objects को visualize, summarize और compare करता है। इसमें Barplot, Alpha diversity, Venn/UpSet, Heat Tree, Phylogenetic tree और Taxonomic assignment quality शामिल हैं। कुछ outputs descriptive हैं; targeted taxon tests, Alpha statistics, ANCOM-BC और Faith PD comparisons inferential हैं।</p>
+<h2 id="section-2">2. सामान्य workflow<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>अधिकांश tools scientific calculation और visual rendering को अलग रखते हैं। Dataset, group, rank, index, local filter या statistical method बदलने पर recalculation चाहिए; colors, dimensions, labels और layout आमतौर पर पिछले calculation को reuse करते हैं।</p>
+<p>Scientific setting बदलने के बाद पुरानी figure दिखाई दे सकती है। Recalculation, figure regeneration और save status अवश्य देखें। कई local selectors active dataset को follow करते हैं, लेकिन local choice हमेशा <code>active_ds()</code> नहीं बदलता।</p>
+<h2 id="section-3">3. Local filtering<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Barplot, Alpha, Venn, Heat Tree और Taxonomic Quality अपने temporary local filters रख सकते हैं:</p>
+<pre tabindex="0"><code class="language-text">registry dataset → local staged filter → exploration result
+</code></pre>
+<p>यह global registry को overwrite नहीं करता, दूसरे tools में स्वतः लागू नहीं होता और persistent phyloseq नहीं बनाता। Result बचाने के लिए वही criteria Filtration में लागू करें, नया dataset save करें और project save करें।</p>
+<h2 id="section-4">4. Barplot<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Barplot sample या metadata group के अनुसार taxonomic composition दिखाता है। OTU table आवश्यक है; ranks के लिए taxonomy और grouping के लिए metadata चाहिए। Aggregation <code>tax_glom(..., NArm = FALSE)</code> से होती है, इसलिए unassigned taxa रखे जाते हैं।</p>
+<p>Group mode में पहले reads pool होते हैं, फिर proportions calculate होते हैं। यह individual proportions का mean नहीं, depth-weighted pool है। Top N displayed data से बनता है और बाकी <strong>Other</strong> में जाते हैं। Threshold Top N के बाद लागू होता है; removed rows स्वतः Other में नहीं जातीं। 100%-stacked view remaining segments को visually renormalize करता है।</p>
+<p>Selected taxon के लिए Student, Welch, Wilcoxon, ANOVA/Tukey, Welch ANOVA या Kruskal-Wallis data conditions के अनुसार चुना जा सकता है। Covariates भी जोड़ी जा सकती हैं। यह targeted test है, global compositional differential analysis नहीं।</p>
+<h2 id="section-5">5. Alpha diversity<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Indices में Observed, Shannon, Simpson, InvSimpson, Chao1, ACE, Fisher और Pielou शामिल हैं। <code>Observed ≤ 1</code> पर Pielou missing होता है। Non-integer data को round नहीं किया जाता; Chao1, ACE और Fisher count-like data न होने पर missing रहते हैं।</p>
+<p>Optional rarefaction <code>rarefy_even_depth()</code> और seed <code>2026</code> उपयोग करता है। Target zero होने पर हर dataset अपना positive minimum उपयोग करता है, common global depth नहीं। Rarefaction reads और samples हटा सकता है। Good coverage और rarefaction diagnostics integer counts मांगते हैं।</p>
+<p>Statistics tab एक variable पर automatic parametric/non-parametric tests और कई variables पर <code>Y ~ V1 + V2</code> या <code>Y ~ V1 * V2</code> models चला सकता है। Residual diagnostics, R², Breusch-Pagan और <code>emmeans</code> उपलब्ध हो सकते हैं। Sparse interactions unstable हो सकती हैं।</p>
+<h2 id="section-6">6. Venn और UpSet<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>यह presence/absence compare करता है। Element local filtering के बाद एक बार उपस्थित होने पर present माना जाता है। Inter-dataset mode में datasets sets हैं; intra-dataset mode में metadata levels sets हैं।</p>
+<p>Elements taxonomic labels या exact RefSeq strings हो सकते हैं। Sequence mode alignment या similarity clustering नहीं करता। Regex ambiguous labels हटाती है; normalization prefixes, spaces, underscores और case harmonize करती है, पर distinct labels merge भी कर सकती है।</p>
+<p>Venn अधिकतम सात sets तक है; उससे अधिक पर UpSet स्वतः उपयोग होता है। Intersection shared presence दिखाता है, समान abundance नहीं।</p>
+<h2 id="section-7">7. Heat Tree<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Modes: simple, descriptive differential और multiple-comparison matrix। Simple metrics sum, mean, occurrence, contributing ASVs, median, variance, relative abundance, log abundance, dominance और frequency हो सकते हैं।</p>
+<p>Fast differential mode group medians का log2 ratio है और descriptive है—कोई p-value या multiple correction नहीं।</p>
+<p>ANCOM-BC compositional inferential analysis देता है, जिसमें covariates, prevalence, library threshold, p-adjustment, alpha, structural zeros, convergence, pseudo-count और sensitivity settings हो सकती हैं। Test alpha बदलने पर recomputation चाहिए; q/logFC display thresholds केवल visual filters हैं।</p>
+<p>हर rank और contrast पर ANCOM-BC अलग चलता है। <code>k</code> groups पर <code>k(k-1)/2</code> contrasts होते हैं; ranks × contrasts बहुत महँगा हो सकता है, खासकर ASV level पर।</p>
+<h2 id="section-8">8. Phylogenetic tree<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>पहले से <code>phy_tree</code> होना चाहिए; tool sequences से tree नहीं बनाता। यह rank aggregation, prevalence, total abundance, Top N और label cleaning उपयोग करता है। कम से कम तीन taxa रहने चाहिए।</p>
+<p>Leaf metrics और tree diagnostics tips, nodes, branch lengths, rooting, ultrametricity, binary status, total length और height दिखाते हैं।</p>
+<p>Faith PD <code>picante</code> उपलब्ध होने पर calculate होता है। यह display prevalence/abundance/Top-N filters से पहले calculate होता है, इसलिए वे Faith table नहीं बदलते। Partial tree कुछ taxa ignore कर सकता है; missing taxa और read coverage report होते हैं। Two groups के लिए Wilcoxon और तीन या अधिक के लिए Kruskal-Wallis उपयोग होता है।</p>
+<p>Rendering engines <code>ggtree</code>, <code>phyloseq</code> और <code>ape</code> हैं; पूर्ण interactivity मुख्यतः <code>ggtree</code> में है।</p>
+<h2 id="section-9">9. Taxonomic assignment quality<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>यह हर rank पर assigned taxa percentage, assigned reads percentage और strict continuous assignment depth calculate करता है। बहुत से unknown ASVs कुछ ही reads represent कर सकते हैं।</p>
+<p>Unassigned patterns में NA, empty, unknown, unclassified, uncultured, environmental, metagenome, empty rank prefixes और <code>sp.</code> शामिल हैं। Strict depth पहली missing rank पर रुकता है; नीचे की rank उसे repair नहीं करती।</p>
+<p>Contaminant patterns केवल calculation से taxa exclude करते हैं, dataset नहीं बदलते, लेकिन denominator बदलता है। Defaults marker के अनुसार बदलने चाहिए। Results rank, cumulative depth या दोनों में, percentages या counts के रूप में दिखते हैं।</p>
+<h2 id="section-10">10. Descriptive और inferential outputs<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Main Barplot, Venn, simple Heat Tree, phylogenetic display और assignment quality मुख्यतः descriptive हैं। Targeted Barplot tests, Alpha statistics, ANCOM-BC और Faith comparisons inferential हैं। Visual difference significance नहीं; significance causality नहीं।</p>
+<h2 id="section-11">11. Histories और reproducibility<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>हर tool का project history folder अलग है: <code>barplot/</code>, <code>alpha_div/</code>, <code>venn_diag/</code>, <code>heat_tree/</code>, <code>phylo_tree/figures/</code>, <code>tax_quality/</code>। Visible result स्वतः save नहीं होता। Snapshot में PNG, RDS, metadata, parameters, calculated data, logs और XLSX हो सकते हैं।</p>
+<p>Recent snapshots reproducible R code दे सकते हैं, जो snapshot RDS, package versions और dependencies पर निर्भर हो सकता है। Publication से पहले code review करें। History current project से जुड़ी है और internal trash नहीं है।</p>
+<h2 id="section-12">12. Scientific comparability<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Marker, region, technology, denoising/clustering, ASV/OTU definition, taxonomy database, ranks, samples, abundance type, filtering, normalization और depth compare करने से पहले match करें।</p>
+<p>Rarefaction, Chao1, ACE, Fisher, Good coverage, ANCOM-BC और read/prevalence summaries count-like data मानते हैं। CLR/log data में presence और totals का अर्थ बदलता है। Taxonomic aggregation analysis unit बदलता है; group size pooled results और rare taxa detection को प्रभावित करता है।</p>
+<h2 id="section-13">13. Performance और dependencies<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Cost samples, taxa, datasets, indices, sets, ranks, contrasts और tree tips के साथ बढ़ता है। Multi-rank ANCOM-BC और large interactive trees विशेष रूप से महँगे हैं।</p>
+<p>Packages में <code>phyloseq</code>, <code>vegan</code>, <code>metacoder</code>, <code>ANCOMBC</code>, <code>ComplexUpset</code>, <code>ape</code>, <code>ggtree</code>, <code>picante</code>, <code>plotly</code>, <code>emmeans</code>, <code>lmtest</code> और <code>openxlsx</code> हो सकते हैं। Missing package output disable या fallback कर सकता है; logs देखें।</p>
+<p>Filtering, rank aggregation, groups/ranks/contrasts सीमित करना और heavy interactivity कम करना performance सुधारता है।</p>
+<h2 id="section-14">14. सामान्य समस्याएँ<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>लक्षण</th>
+<th>मुख्य कारण</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Figure current settings से नहीं मिलती</td>
+<td>Recompute करें</td>
+</tr>
+<tr>
+<td>Local filter दूसरे tool में नहीं है</td>
+<td>Independent local states</td>
+</tr>
+<tr>
+<td>Grouped Barplot average नहीं है</td>
+<td>Reads pooled हैं</td>
+</tr>
+<tr>
+<td>Chao1/ACE/Fisher missing</td>
+<td>Non-integer data</td>
+</tr>
+<tr>
+<td>Venn UpSet बन गया</td>
+<td>सात से अधिक sets</td>
+</tr>
+<tr>
+<td>ANCOM-BC बहुत धीमा</td>
+<td>बहुत ranks/contrasts/ASVs</td>
+</tr>
+<tr>
+<td>q threshold बिना recompute nodes बदलता है</td>
+<td>Visual filter</td>
+</tr>
+<tr>
+<td>Top N बदलने पर Faith नहीं बदलता</td>
+<td>Faith display filters से पहले calculate होता है</td>
+</tr>
+<tr>
+<td>Contaminants हटाने पर rate बढ़ता है</td>
+<td>Denominator बदला</td>
+</tr>
+<tr>
+<td>History empty</td>
+<td>Wrong project या result save नहीं हुआ</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-15">15. Checklists<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Exploration से पहले project, datasets, count/transformation status, tables, ranks, metadata types, groups और local filters जाँचें।</p>
+<p>Statistics से पहले replicates, missing values, depth, assumptions, covariates, interactions, multiple correction और effect size जाँचें।</p>
+<p>ANCOM-BC से पहले suitable counts, group/reference, higher ranks, limited contrasts और test alpha बनाम display q स्पष्ट करें।</p>
+<p>Save से पहले calculation और rendering current हों, title/colors/dimensions/logs जाँचें, history save करें और tables export करें।</p>
+<h2 id="section-16">16. मुख्य सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Independent local states, stale plots, pooled grouped compositions, non-integer richness limitations, per-dataset zero-depth rarefaction, first-occurrence Venn logic, label merging, descriptive median Heat Tree, costly ANCOM-BC, Faith on partial trees, regex-dependent quality और project-dependent snapshots।</p>
+<h2 id="section-17">17. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<ol>
+<li>Description में datasets inspect करें।</li>
+<li>Raw counts या transformed values तय करें।</li>
+<li>Groups और replicates जाँचें।</li>
+<li>Local filters केवल exploratory trials के लिए उपयोग करें।</li>
+<li>Simple descriptive plot से शुरू करें।</li>
+<li>Appropriate rank चुनें और displayed elements सीमित रखें।</li>
+<li>Scientific changes के बाद recompute करें।</li>
+<li>Valid design के बाद statistics चलाएँ।</li>
+<li>Logs और diagnostics पढ़ें।</li>
+<li>Figures, parameters और tables save करें।</li>
+<li>Reproducible R code review करें।</li>
+<li>Persistent filters Filtration में लागू कर project save करें।</li>
+</ol>
+<h2 id="section-18">18. सत्यापित आंतरिक स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>यह guide <code>modules/exploration/</code> के main modules, <code>_dirty_tracking.R</code>, <code>_active_dataset_sync.R</code> तथा <code>barplot</code>, <code>alpha</code>, <code>venn</code>, <code>heattree</code>, <code>phylotree</code> और <code>tax_quality</code> code पर आधारित है, और architecture notes 30–35 से cross-check किया गया है।</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. उद्देश्य और संरचना</a><a class="toc-l2" href="#section-2">2. सामान्य workflow</a><a class="toc-l2" href="#section-3">3. Local filtering</a><a class="toc-l2" href="#section-4">4. Barplot</a><a class="toc-l2" href="#section-5">5. Alpha diversity</a><a class="toc-l2" href="#section-6">6. Venn और UpSet</a><a class="toc-l2" href="#section-7">7. Heat Tree</a><a class="toc-l2" href="#section-8">8. Phylogenetic tree</a><a class="toc-l2" href="#section-9">9. Taxonomic assignment quality</a><a class="toc-l2" href="#section-10">10. Descriptive और inferential outputs</a><a class="toc-l2" href="#section-11">11. Histories और reproducibility</a><a class="toc-l2" href="#section-12">12. Scientific comparability</a><a class="toc-l2" href="#section-13">13. Performance और dependencies</a><a class="toc-l2" href="#section-14">14. सामान्य समस्याएँ</a><a class="toc-l2" href="#section-15">15. Checklists</a><a class="toc-l2" href="#section-16">16. मुख्य सीमाएँ</a><a class="toc-l2" href="#section-17">17. Recommended workflow</a><a class="toc-l2" href="#section-18">18. सत्यापित आंतरिक स्रोत</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · एक्सप्लोरेशन</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

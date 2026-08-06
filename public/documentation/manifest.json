@@ -1,0 +1,28 @@
+{
+  "app": "BarCodeR",
+  "documentation_version": "1.8.0",
+  "generated_for_app_version": "BarCodeR_v2.12.8",
+  "languages": [
+    "fr",
+    "en",
+    "es",
+    "zh",
+    "hi"
+  ],
+  "modules": [
+    "openmetabar",
+    "input-data",
+    "datasets",
+    "description",
+    "data-edition",
+    "filtration",
+    "exploration",
+    "analyse",
+    "multiview"
+  ],
+  "sections": [
+    "guides-methodologiques",
+    "references-techniques"
+  ],
+  "generated": "2026-08-05"
+}

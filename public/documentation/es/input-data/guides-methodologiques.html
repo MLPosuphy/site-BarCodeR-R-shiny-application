@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Datos de entrada — Guías metodológicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="guide" data-module="input-data" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Guías metodológicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link active" href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Datos de entrada</a><span>›</span><span>Guías metodológicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">Datos de entrada — Guías metodológicas</h1>
+<h2 id="section-1">1. Presentación general<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>La pestaña <strong>Input data</strong> permite introducir en BarCodeR uno o varios objetos <code>phyloseq</code> ya construidos.</p>
+<p>Acepta objetos R serializados en los formatos <code>.rds</code>, <code>.RData</code>, <code>.rda</code> y <code>.rdata</code>.</p>
+<p>La aplicación determina automáticamente si el archivo contiene:</p>
+<ol>
+<li>un único dataset <code>phyloseq</code>;</li>
+<li>un proyecto con varios datasets <code>phyloseq</code>;</li>
+<li>varios objetos compatibles entre los que el usuario debe elegir;</li>
+<li>un objeto no reconocido, en cuyo caso se rechaza la importación.</li>
+</ol>
+<p>Esta pestaña no reconstruye un objeto <code>phyloseq</code> a partir de tablas independientes. Carga objetos R ya serializados.</p>
+<h2 id="section-2">2. Lugar de Input data en BarCodeR<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Pestaña</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cargar un <code>phyloseq</code> existente</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Cargar varios phyloseq de un proyecto <code>.rds</code></td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Recuperar un phyloseq producido en el clúster</td>
+<td>OpenMetaBar</td>
+</tr>
+<tr>
+<td>Construir o completar un phyloseq con tablas separadas</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>Renombrar, duplicar, eliminar o exportar un dataset</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Importar un proyecto completo con figuras e historial</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Restaurar la copia interna del proyecto actual</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-1">2.1. Operaciones que ya no se realizan aquí<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>La versión actual ya no permite eliminar, renombrar, duplicar o exportar datasets ni gestionar proyectos nombrados directamente desde Input data. Estas funciones se centralizan en <strong>Datasets</strong>.</p>
+<h2 id="section-3">3. Interfaz actual<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>La interfaz contiene una sola zona principal:</p>
+<blockquote>
+<p><strong>Cargar un archivo (.rds / .RData / .rda)</strong></p>
+</blockquote>
+<p>Incluye una explicación de la detección automática, un selector de archivo, una descripción de la limpieza aplicada y un recordatorio sobre la gestión en Datasets.</p>
+<p>Ya no existen selectores separados para dataset/proyecto, selección manual de la orientación de la OTU table, transposición de metadata, corrección taxonómica ni zona de eliminación.</p>
+<h2 id="section-4">4. Límite de tamaño<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>El archivo se carga mediante un <code>fileInput</code> de Shiny. El límite global actual es:</p>
+<pre tabindex="0"><code class="language-text">500 MB
+</code></pre>
+<p>Un archivo superior normalmente no puede transferirse por este campo.</p>
+<h3 id="section-4-1">4.1. Tamaño en disco y memoria<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<p>Un <code>.rds</code> puede estar comprimido. El objeto descomprimido puede ocupar mucho más que el archivo en disco.</p>
+<p>Hay que disponer de memoria suficiente para el objeto cargado, los datasets existentes y las copias temporales creadas durante la lectura y la limpieza.</p>
+<h3 id="section-4-2">4.2. Aplicación ejecutada en un servidor<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>Cuando BarCodeR se ejecuta a distancia, el archivo se envía al servidor Shiny. El tiempo depende del tamaño, la red, la carga del servidor y la memoria disponible.</p>
+<p>La lectura y la limpieza son síncronas; la interfaz puede parecer bloqueada temporalmente con objetos grandes.</p>
+<h2 id="section-5">5. Formatos aceptados<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>Un <code>.rds</code> contiene un solo objeto R. BarCodeR lo lee con <code>readRDS()</code> y determina su tipo.</p>
+<p>El nombre propuesto deriva del nombre del archivo sin extensión:</p>
+<pre tabindex="0"><code class="language-text">metabarcoding_coi.rds
+→ metabarcoding_coi
+</code></pre>
+<h3 id="section-5-2">5.2. <code>.RData</code> o <code>.rda</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>Un <code>.RData</code> puede contener varios objetos. BarCodeR:</p>
+<ol>
+<li>lo carga en un entorno temporal aislado;</li>
+<li>inspecciona cada objeto;</li>
+<li>conserva solo datasets o proyectos reconocidos;</li>
+<li>selecciona automáticamente el único objeto compatible;</li>
+<li>solicita una elección cuando hay varios.</li>
+</ol>
+<p>Los objetos incompatibles se ignoran.</p>
+<h3 id="section-5-3">5.3. Extensiones no compatibles<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Input data no importa directamente <code>.csv</code>, <code>.tsv</code>, <code>.xlsx</code>, <code>.biom</code>, <code>.qza</code>, <code>.zip</code>, <code>.RDS.gz</code>, FASTA, FASTQ ni Newick.</p>
+<p>Las tablas independientes deben tratarse en <strong>Data Edition</strong>. Los proyectos completos <code>.zip</code> deben importarse en <strong>Datasets</strong>.</p>
+<h2 id="section-6">6. Detección automática del contenido<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>La detección se basa en la estructura real del objeto, no solo en el nombre o la extensión.</p>
+<h3 id="section-6-1">6.1. Dataset único<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<p>Se reconoce como dataset un objeto que hereda de la clase <code>phyloseq</code>.</p>
+<h3 id="section-6-2">6.2. Proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>Se reconoce como proyecto:</p>
+<ul>
+<li>una lista con un elemento <code>datasets</code>;</li>
+<li>una estructura histórica con <code>ps_registry</code>;</li>
+<li>una lista no vacía cuyos elementos son todos <code>phyloseq</code>.</li>
+</ul>
+<h3 id="section-6-3">6.3. Detección estructural<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>No es obligatorio que exista un número de versión, un campo <code>format</code>, un nombre de archivo específico o una clase propia.</p>
+<p>Esto facilita la compatibilidad con antiguas copias, pero una lista arbitraria llamada <code>datasets</code> también puede interpretarse como proyecto.</p>
+<h2 id="section-7">7. Diferencia entre dataset y proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<h3 id="section-7-1">7.1. Dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>Un dataset es un único objeto <code>phyloseq</code> que puede contener <code>otu_table</code>, <code>sample_data</code>, <code>tax_table</code>, árbol filogenético y secuencias de referencia.</p>
+<p>Solo la OTU table es obligatoria para la inserción en el registro general.</p>
+<h3 id="section-7-2">7.2. Proyecto <code>.rds</code> de datos<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Un proyecto cargado por Input data contiene principalmente una lista de datasets, el nombre del dataset activo y metadatos opcionales de guardado.</p>
+<pre tabindex="0"><code class="language-r">list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = ...,
+  datasets = ...,
+  active_ds = ...
+)
+</code></pre>
+<h3 id="section-7-3">7.3. Proyecto completo <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>Un <code>.zip</code> completo puede incluir figuras, historiales, archivos de módulos, parámetros y manifiesto. Debe cargarse con <strong>Datasets → Importar un proyecto (.zip)</strong>.</p>
+<h3 id="section-7-4">7.4. El proyecto actual no cambia<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p>Importar un proyecto <code>.rds</code> desde Input data no crea un nuevo proyecto nombrado, no cambia automáticamente el proyecto actual y no restaura figuras, historiales ni navegación completa. Solo añade o reemplaza datasets en memoria.</p>
+<h2 id="section-8">8. Cargar un archivo<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. Selección<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>El selector acepta un archivo por vez. Tras seleccionarlo, BarCodeR lee inmediatamente su contenido para decidir el flujo siguiente.</p>
+<h3 id="section-8-2">8.2. Error de lectura<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>La importación se detiene si el archivo está corrupto, no es una serialización R válida, requiere una clase o paquete ausente, o no puede deserializarse.</p>
+<p>El selector se reinicia para permitir volver a seleccionar el mismo archivo después de corregirlo.</p>
+<h2 id="section-9">9. <code>.RData</code> con varios objetos<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Cuando se detectan varios objetos compatibles aparece <strong>Elegir el objeto que se cargará</strong>.</p>
+<p>Cada opción muestra el nombre R y el tipo detectado.</p>
+<pre tabindex="0"><code class="language-text">ps_coi       (dataset)
+ps_16s       (dataset)
+my_project   (project)
+</code></pre>
+<h3 id="section-9-1">9.1. Utilizar el objeto<a aria-label="Permalink" class="heading-anchor" href="#section-9-1">#</a></h3>
+<p><strong>Utilizar este objeto</strong> continúa con el flujo correspondiente.</p>
+<h3 id="section-9-2">9.2. Cancelar<a aria-label="Permalink" class="heading-anchor" href="#section-9-2">#</a></h3>
+<p><strong>Cancelar</strong> cierra la ventana, vacía el selector y elimina el objeto temporal.</p>
+<h3 id="section-9-3">9.3. Cruz superior<a aria-label="Permalink" class="heading-anchor" href="#section-9-3">#</a></h3>
+<p>La cruz superior cierra la ventana, pero no realiza exactamente la misma limpieza interna que Cancelar. El mismo archivo puede no volver a activar el evento hasta seleccionar otro archivo o refrescar el campo. Es preferible usar <strong>Cancelar</strong>.</p>
+<h2 id="section-10">10. Cargar un dataset phyloseq único<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Cuando se detecta un dataset, BarCodeR abre <strong>Preparar la carga del dataset</strong>.</p>
+<p>La ventana permite elegir el nombre, decidir entre añadir o reemplazar y revisar la limpieza automática.</p>
+<h2 id="section-11">11. Nombre del dataset<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<h3 id="section-11-1">11.1. Nombre propuesto<a aria-label="Permalink" class="heading-anchor" href="#section-11-1">#</a></h3>
+<p>En un <code>.rds</code>, deriva generalmente del archivo. En un <code>.RData</code>, se prioriza el nombre del objeto R.</p>
+<h3 id="section-11-2">11.2. Limpieza<a aria-label="Permalink" class="heading-anchor" href="#section-11-2">#</a></h3>
+<p>Se eliminan espacios externos, se sustituyen caracteres no permitidos por <code>_</code>, se eliminan <code>_</code> en los extremos y se utiliza <code>dataset</code> si el resultado queda vacío.</p>
+<p>Se conservan principalmente caracteres alfanuméricos, <code>_</code> y <code>-</code>. El tratamiento de caracteres no ASCII también depende de la configuración regional de R.</p>
+<h3 id="section-11-3">11.3. Colisión de nombres<a aria-label="Permalink" class="heading-anchor" href="#section-11-3">#</a></h3>
+<p>En modo añadir, BarCodeR protege el dataset existente mediante un sufijo:</p>
+<pre tabindex="0"><code class="language-text">COI
+COI_2
+COI_3
+</code></pre>
+<h2 id="section-12">12. Añadir o reemplazar<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Añadir<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Es el modo predeterminado. Conserva los datasets actuales, añade el nuevo, hace único su nombre y lo establece como activo.</p>
+<h3 id="section-12-2">12.2. Reemplazar<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Elimina de la memoria todos los datasets actuales, conserva solo el nuevo y lo establece como activo.</p>
+<blockquote>
+<p><strong>Atención:</strong> no se eliminan los archivos fuente del disco, pero pueden perderse datasets no guardados. Guardar el proyecto en Datasets antes de reemplazar.</p>
+</blockquote>
+<h3 id="section-12-3">12.3. Sesión vacía<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Si no existe ningún dataset, no se muestra la elección; la carga equivale a reemplazar una lista vacía.</p>
+<h2 id="section-13">13. Limpieza aplicada<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>BarCodeR no reconstruye todo el objeto ni transpone automáticamente las tablas.</p>
+<p>Realiza principalmente:</p>
+<ol>
+<li>identificación del eje de muestras;</li>
+<li>estandarización eventual de nombres;</li>
+<li>sincronización con metadata;</li>
+<li>sustitución de celdas metadata vacías por <code>NA</code>;</li>
+<li>verificación de determinados identificadores.</li>
+</ol>
+<h2 id="section-14">14. Orientación de la OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>BarCodeR conserva la orientación y utiliza <code>taxa_are_rows()</code>.</p>
+<h3 id="section-14-1">14.1. Taxones en filas<a aria-label="Permalink" class="heading-anchor" href="#section-14-1">#</a></h3>
+<p>Con <code>taxa_are_rows(ps) == TRUE</code>, los taxones están en filas y las muestras en columnas. Se limpian los nombres de columnas.</p>
+<h3 id="section-14-2">14.2. Taxones en columnas<a aria-label="Permalink" class="heading-anchor" href="#section-14-2">#</a></h3>
+<p>Con <code>taxa_are_rows(ps) == FALSE</code>, las muestras están en filas. Se limpian los nombres de filas.</p>
+<h3 id="section-14-3">14.3. Sin transposición<a aria-label="Permalink" class="heading-anchor" href="#section-14-3">#</a></h3>
+<p>La aplicación no fuerza ASV en filas, muestras en columnas ni una orientación común. La antigua documentación sobre una ventana de elección de orientación ya no es válida.</p>
+<h2 id="section-15">15. Estandarización de nombres de muestras<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. Transformaciones<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>Se intenta transliterar acentos, se eliminan espacios externos, se sustituyen espacios y caracteres inseguros por <code>_</code>, se fusionan <code>_</code> repetidos, se eliminan los de los extremos, se rellenan nombres vacíos y se añaden sufijos para duplicados.</p>
+<h3 id="section-15-2">15.2. Ejemplos<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Antes</th>
+<th>Resultado posible</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Station 01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Station-01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Échantillon A</code></td>
+<td><code>Echantillon_A</code></td>
+</tr>
+<tr>
+<td><code>sample/1</code></td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td><code>sample</code></td>
+</tr>
+<tr>
+<td>vacío</td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td>dos <code>sample</code></td>
+<td><code>sample</code>, <code>sample_1</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-15-3">15.3. Motivo<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>Los nombres complejos pueden provocar problemas en fórmulas estadísticas, uniones, paquetes R, archivos, gráficos, exportaciones y selectores Shiny.</p>
+<h3 id="section-15-4">15.4. La limpieza puede cancelarse<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>La limpieza de la OTU table solo se conserva si la metadata puede seguir alineada.</p>
+<p>Si BarCodeR no puede establecer una correspondencia segura, puede revertir el renombrado. Se mantienen los nombres originales y se muestra una advertencia. La coherencia prima sobre la limpieza estética.</p>
+<h2 id="section-16">16. Tratamiento de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><code>sample_data</code> es opcional. Un phyloseq sin metadata puede importarse, pero no permite análisis que necesiten variables de muestras.</p>
+<h3 id="section-16-1">16.1. Alineación de rownames<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>Si los rownames de metadata coinciden con los nombres originales de la OTU table, se aplican las mismas transformaciones.</p>
+<p>Si no se demuestra la coincidencia directa, se intenta limpiar metadata por separado y solo se aplica si sigue siendo compatible.</p>
+<p>Si la correspondencia es incierta, se conservan los nombres y se informa mediante una advertencia.</p>
+<h2 id="section-17">17. Celdas vacías de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Las cadenas vacías o compuestas solo por espacios se sustituyen por <code>NA</code> reales.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Original</th>
+<th>Después</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>""</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"   "</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"0"</code></td>
+<td><code>"0"</code></td>
+</tr>
+<tr>
+<td><code>"NA"</code></td>
+<td><code>"NA"</code></td>
+</tr>
+<tr>
+<td><code>NA</code> real</td>
+<td><code>NA</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>La cadena literal <code>"NA"</code> no se convierte automáticamente.</p>
+<h3 id="section-17-1">17.1. Consecuencia sobre los tipos<a aria-label="Permalink" class="heading-anchor" href="#section-17-1">#</a></h3>
+<p>La implementación actual convierte cada columna de metadata a carácter antes de sustituir vacíos.</p>
+<p>Columnas numéricas, enteras, lógicas, factores o fechas pueden volver como texto. Después de importar, hay que verificar los tipos en Description, Data Edition o R.</p>
+<p>Es una transformación real de los datos, no solo visual.</p>
+<h2 id="section-18">18. Componentes no modificados<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Input data no modifica directamente abundancias, orientación, nombres de ASV, taxonomía, rangos, secuencias, árbol, ceros, taxones o muestras vacías, valores negativos/decimales ni <code>NA</code> de la OTU table.</p>
+<p>No realiza una validación científica exhaustiva.</p>
+<h2 id="section-19">19. Control de coherencia de un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. Clase phyloseq<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>El objeto debe heredar de <code>phyloseq</code>.</p>
+<h3 id="section-19-2">19.2. OTU table obligatoria<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>Debe existir una <code>otu_table</code>.</p>
+<h3 id="section-19-3">19.3. Identificadores de muestras<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>Si existe <code>sample_data</code>, sus rownames deben corresponder al conjunto completo de muestras. El orden puede variar, pero no se acepta metadata parcial.</p>
+<h3 id="section-19-4">19.4. Identificadores taxonómicos<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>Si existe <code>tax_table</code>, sus rownames deben corresponder a todos los taxones de la OTU table.</p>
+<h3 id="section-19-5">19.5. Controles no incluidos<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>No se valida directamente la cobertura de <code>refseq</code> o árbol, la validez de secuencias, que los conteos sean enteros/no negativos, la coherencia biológica de taxonomía, duplicados taxonómicos ni profundidad mínima.</p>
+<h2 id="section-20">20. Importación rechazada<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Se rechaza cuando los identificadores no están alineados, falta la OTU table o el objeto no es phyloseq. No se añade ningún dataset y el archivo original no se modifica.</p>
+<h2 id="section-21">21. Informe tras cargar un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>La ventana <strong>Dataset cargado y verificado</strong> presenta:</p>
+<ul>
+<li>nombre final;</li>
+<li>número de muestras;</li>
+<li>número de taxones/ASV;</li>
+<li>número total de acciones;</li>
+<li>archivo y objeto de origen;</li>
+<li>modo añadir/reemplazar;</li>
+<li>total de datasets en memoria;</li>
+<li>tablas Antes → Después para nombres OTU y metadata;</li>
+<li>número de celdas vacías sustituidas;</li>
+<li>advertencias y notas.</li>
+</ul>
+<p>Solo se muestran las diez primeras modificaciones, aunque se conserva el total.</p>
+<h2 id="section-22">22. Cargar un proyecto <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>BarCodeR extrae los datasets <code>phyloseq</code> del proyecto.</p>
+<h3 id="section-22-1">22.1. Sesión vacía<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>Se carga directamente en modo reemplazar y se muestra un informe.</p>
+<h3 id="section-22-2">22.2. Sesión con datasets<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p>La ventana <strong>Cargar un proyecto</strong> muestra datasets actuales, nombres entrantes y la elección añadir/reemplazar.</p>
+<h2 id="section-23">23. Añadir datasets de un proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Conserva los actuales, añade cada phyloseq, resuelve colisiones y adapta el dataset activo.</p>
+<h3 id="section-23-1">23.1. Colisión<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>Un <code>COI</code> entrante puede convertirse en <code>COI_2</code>.</p>
+<h3 id="section-23-2">23.2. Dataset activo<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>Si <code>active_ds</code> es válido, se activa el dataset correspondiente, utilizando su nombre final después de resolver colisiones. Si no, se activa el primer dataset importado.</p>
+<h2 id="section-24">24. Reemplazar por un proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Elimina los datasets en memoria, carga la lista importada y restaura <code>active_ds</code> si es válido; de lo contrario, selecciona el primero.</p>
+<p>No elimina archivos del disco, pero puede perder datos no guardados de la sesión.</p>
+<h2 id="section-25">25. Nombres de datasets del proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Los nombres válidos se conservan, salvo colisiones.</p>
+<p>Si faltan nombres o están vacíos, se generan:</p>
+<pre tabindex="0"><code class="language-text">dataset_1
+dataset_2
+dataset_3
+</code></pre>
+<p>Actualmente, un solo nombre ausente puede provocar la regeneración de todos los nombres.</p>
+<h2 id="section-26">26. Contenido no phyloseq<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>En una estructura con <code>datasets</code> o <code>ps_registry</code>, solo se conservan finalmente los elementos que heredan de <code>phyloseq</code>.</p>
+<p>La lista previa puede incluir nombres que no se cargarán. El informe final es la referencia para conocer el número real.</p>
+<p>Un proyecto reconocido pero sin phyloseq válido puede dejar el registro vacío en modo reemplazar.</p>
+<h2 id="section-27">27. Limpieza de datasets de un proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Cada phyloseq recibe la misma limpieza de nombres y celdas vacías.</p>
+<p>El informe resume, por dataset, muestras, taxones, nombres OTU modificados, nombres metadata modificados y celdas vacías sustituidas.</p>
+<h2 id="section-28">28. Diferencia de validación<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Un dataset único pasa explícitamente por <code>bcr_guard_ps()</code> antes de insertarse.</p>
+<p>Los datasets de un proyecto se limpian, pero no se aplica explícitamente el mismo guard a cada uno antes de insertar la lista completa.</p>
+<p>Al activar un dataset, BarCodeR realiza un control global. Después de importar un proyecto, revisar cada dataset importante en Description.</p>
+<h2 id="section-29">29. Memoria de la sesión<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>Los datasets se guardan en <code>datasets()</code> y el nombre activo en <code>active_ds()</code>.</p>
+<p>Después de importar, el registro cambia, otros módulos ven el nuevo contenido y el proyecto queda marcado como modificado/no guardado.</p>
+<h3 id="section-29-1">29.1. Importar no equivale a guardar<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>Usar <strong>Datasets → Guardar proyecto</strong> antes de cerrar.</p>
+<h2 id="section-30">30. Dataset activo<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>El dataset recién importado se vuelve activo. Un proyecto restaura su <code>active_ds</code> cuando es posible o selecciona el primer dataset.</p>
+<p>La selección puede cambiarse posteriormente desde el control global, Datasets o módulos sincronizados.</p>
+<h2 id="section-31">31. Garantías científicas no proporcionadas<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Una importación correcta solo confirma principalmente que el objeto es legible, es phyloseq, contiene OTU table y supera determinados controles de identificadores.</p>
+<p>No garantiza conteos brutos, ausencia de transformaciones previas, eliminación de taxones/muestras vacíos, taxonomía válida, rangos ordenados, cobertura completa del árbol/secuencias, diseño experimental válido, réplicas suficientes, clases metadata preservadas ni adecuación a todos los análisis.</p>
+<h2 id="section-32">32. Verificaciones recomendadas<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>Abrir <strong>Description</strong> y comprobar:</p>
+<ul>
+<li>muestras, taxones y reads totales;</li>
+<li>componentes disponibles;</li>
+<li>nombres de muestras y ASV;</li>
+<li>tipos de columnas metadata y valores ausentes;</li>
+<li>orientación y valores de OTU table;</li>
+<li>rangos taxonómicos y asignaciones;</li>
+<li>cobertura del árbol y secuencias.</li>
+</ul>
+<h2 id="section-33">33. Gestión posterior<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>Usar <strong>Datasets</strong> para seleccionar, renombrar, duplicar, eliminar, exportar, guardar, restaurar o cambiar de proyecto.</p>
+<h2 id="section-34">34. Resolución de problemas<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<h3 id="section-34-1">34.1. El archivo no aparece<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>Verificar la extensión y que no esté comprimido adicionalmente.</p>
+<h3 id="section-34-2">34.2. Archivo superior a 500 MB<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>Reducir el objeto, eliminar componentes innecesarios, dividir datasets, exportar uno por uno o cambiar el límite en un despliegue controlado.</p>
+<h3 id="section-34-3">34.3. Consumo de memoria elevado<a aria-label="Permalink" class="heading-anchor" href="#section-34-3">#</a></h3>
+<p>El archivo se expande al deserializarse. Liberar memoria.</p>
+<h3 id="section-34-4">34.4. Error al leer <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-34-4">#</a></h3>
+<pre tabindex="0"><code class="language-r">obj &lt;- readRDS("archivo.rds")
+class(obj)
+</code></pre>
+<h3 id="section-34-5">34.5. <code>.RData</code> sin objeto reconocido<a aria-label="Permalink" class="heading-anchor" href="#section-34-5">#</a></h3>
+<pre tabindex="0"><code class="language-r">load("archivo.RData")
+ls()
+class(nombre_objeto)
+</code></pre>
+<h3 id="section-34-6">34.6. Varios objetos<a aria-label="Permalink" class="heading-anchor" href="#section-34-6">#</a></h3>
+<p>Seleccionar el objeto deseado en la ventana.</p>
+<h3 id="section-34-7">34.7. Falso proyecto<a aria-label="Permalink" class="heading-anchor" href="#section-34-7">#</a></h3>
+<p>Guardar directamente el phyloseq:</p>
+<pre tabindex="0"><code class="language-r">saveRDS(mi_phyloseq, "dataset.rds")
+</code></pre>
+<h3 id="section-34-8">34.8. OTU table ausente<a aria-label="Permalink" class="heading-anchor" href="#section-34-8">#</a></h3>
+<pre tabindex="0"><code class="language-r">phyloseq::otu_table(ps)
+</code></pre>
+<h3 id="section-34-9">34.9. IDs de muestras incoherentes<a aria-label="Permalink" class="heading-anchor" href="#section-34-9">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::sample_names(ps),
+  rownames(as.data.frame(phyloseq::sample_data(ps)))
+)
+</code></pre>
+<p>Debe devolver <code>TRUE</code>.</p>
+<h3 id="section-34-10">34.10. IDs taxonómicos incoherentes<a aria-label="Permalink" class="heading-anchor" href="#section-34-10">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::taxa_names(ps),
+  rownames(as(phyloseq::tax_table(ps), "matrix"))
+)
+</code></pre>
+<h3 id="section-34-11">34.11. Metadata parcial<a aria-label="Permalink" class="heading-anchor" href="#section-34-11">#</a></h3>
+<p>Completar muestras, retirar coherentemente las no documentadas o reconstruir el objeto.</p>
+<h3 id="section-34-12">34.12. Nombres cambiados<a aria-label="Permalink" class="heading-anchor" href="#section-34-12">#</a></h3>
+<p>Consultar el informe Antes → Después.</p>
+<h3 id="section-34-13">34.13. Nombres no limpiados<a aria-label="Permalink" class="heading-anchor" href="#section-34-13">#</a></h3>
+<p>La limpieza probablemente se revirtió para preservar la correspondencia con metadata.</p>
+<h3 id="section-34-14">34.14. Variable numérica convertida en texto<a aria-label="Permalink" class="heading-anchor" href="#section-34-14">#</a></h3>
+<pre tabindex="0"><code class="language-r">str(as.data.frame(phyloseq::sample_data(ps)))
+metadata$Depth &lt;- as.numeric(metadata$Depth)
+</code></pre>
+<h3 id="section-34-15">34.15. Cadena <code>"NA"</code><a aria-label="Permalink" class="heading-anchor" href="#section-34-15">#</a></h3>
+<pre tabindex="0"><code class="language-r">metadata[metadata == "NA"] &lt;- NA
+</code></pre>
+<h3 id="section-34-16">34.16. Menos datasets de los esperados<a aria-label="Permalink" class="heading-anchor" href="#section-34-16">#</a></h3>
+<p>Algunos elementos no eran phyloseq o fueron ignorados.</p>
+<h3 id="section-34-17">34.17. Todos los nombres son <code>dataset_1</code>, etc.<a aria-label="Permalink" class="heading-anchor" href="#section-34-17">#</a></h3>
+<pre tabindex="0"><code class="language-r">names(project$datasets) &lt;- c("COI", "16S", "ITS")
+</code></pre>
+<h3 id="section-34-18">34.18. Sufijo <code>_2</code><a aria-label="Permalink" class="heading-anchor" href="#section-34-18">#</a></h3>
+<p>Se protegió un nombre existente en modo añadir.</p>
+<h3 id="section-34-19">34.19. Desaparición de datasets previos<a aria-label="Permalink" class="heading-anchor" href="#section-34-19">#</a></h3>
+<p>Se confirmó el modo reemplazar. Restaurarlos desde una copia.</p>
+<h3 id="section-34-20">34.20. Las figuras no se restauraron<a aria-label="Permalink" class="heading-anchor" href="#section-34-20">#</a></h3>
+<p>Un <code>.rds</code> de Input data contiene datos, no el proyecto completo. Importar el <code>.zip</code> en Datasets.</p>
+<h3 id="section-34-21">34.21. El mismo archivo no activa el evento<a aria-label="Permalink" class="heading-anchor" href="#section-34-21">#</a></h3>
+<p>La ventana anterior pudo cerrarse con la cruz. Seleccionar otro archivo temporalmente, reiniciar el campo o recargar la pestaña.</p>
+<h3 id="section-34-22">34.22. Sin metadata<a aria-label="Permalink" class="heading-anchor" href="#section-34-22">#</a></h3>
+<p>La importación puede funcionar, pero no los análisis basados en variables de muestras.</p>
+<h3 id="section-34-23">34.23. Sin taxonomía<a aria-label="Permalink" class="heading-anchor" href="#section-34-23">#</a></h3>
+<p>Las funciones dependientes de <code>tax_table</code> no estarán disponibles.</p>
+<h3 id="section-34-24">34.24. Sin árbol<a aria-label="Permalink" class="heading-anchor" href="#section-34-24">#</a></h3>
+<p>Las distancias dependientes del árbol, como determinadas UniFrac, no estarán disponibles.</p>
+<h3 id="section-34-25">34.25. Sin secuencias de referencia<a aria-label="Permalink" class="heading-anchor" href="#section-34-25">#</a></h3>
+<p>No estarán disponibles los análisis que utilizan directamente las secuencias.</p>
+<h2 id="section-35">35. Lista de comprobación antes de importar<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<h3 id="archivo">Archivo<a aria-label="Permalink" class="heading-anchor" href="#archivo">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Formato <code>.rds</code>, <code>.RData</code> o <code>.rda</code>.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Tamaño inferior a 500 MB.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Memoria suficiente.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Lectura correcta en R.</li>
+</ul>
+<h3 id="phyloseq">Phyloseq<a aria-label="Permalink" class="heading-anchor" href="#phyloseq">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>OTU table presente.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>IDs de muestras únicos.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>IDs de taxones únicos.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Metadata completa si existe.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Taxonomía completa si existe.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Árbol y secuencias coherentes si existen.</li>
+</ul>
+<h3 id="metadata">Metadata<a aria-label="Permalink" class="heading-anchor" href="#metadata">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Valores ausentes identificados.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Columnas numéricas conocidas.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Factores ordenados y fechas documentados.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Nombres alineados con la OTU table.</li>
+</ul>
+<h3 id="sesi-n">Sesión<a aria-label="Permalink" class="heading-anchor" href="#sesi-n">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Datasets existentes guardados.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Elección añadir/reemplazar comprendida.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Colisiones de nombres previstas.</li>
+</ul>
+<h2 id="section-36">36. Lista después de importar<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leer todo el informe.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verificar renombrados.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verificar muestras y taxones.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verificar tipos metadata.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verificar <code>NA</code> introducidos.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Abrir Description.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Revisar OTU table y taxonomía.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Revisar árbol y secuencias.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Guardar el proyecto.</li>
+</ul>
+<h2 id="section-37">37. Límites actuales<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<ol>
+<li>No hay validación científica exhaustiva.</li>
+<li>Las columnas metadata pueden convertirse a texto.</li>
+<li>No se transpone automáticamente.</li>
+<li>No se corrige la taxonomía.</li>
+<li>La validación de proyectos es menos estricta.</li>
+<li>El reconocimiento de proyectos es estructural.</li>
+<li>Cerrar con la cruz puede dejar estado temporal.</li>
+<li>El límite es 500 MB.</li>
+</ol>
+<h2 id="section-38">38. Flujo recomendado<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<ol>
+<li>Construir y verificar el phyloseq en R.</li>
+<li>Guardarlo con <code>saveRDS()</code>.</li>
+<li>Abrir Input data.</li>
+<li>Elegir el archivo.</li>
+<li>Elegir añadir o reemplazar.</li>
+<li>Verificar el nombre.</li>
+<li>Confirmar.</li>
+<li>Leer el informe.</li>
+<li>Abrir Description.</li>
+<li>Verificar dimensiones y componentes.</li>
+<li>Verificar tipos metadata.</li>
+<li>Guardar el proyecto.</li>
+</ol>
+<h2 id="section-39">39. Preparar un dataset único<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<pre tabindex="0"><code class="language-r">library(phyloseq)
+
+stopifnot(inherits(ps, "phyloseq"))
+stopifnot(!is.null(otu_table(ps)))
+
+if (!is.null(sample_data(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    sample_names(ps),
+    rownames(as.data.frame(sample_data(ps)))
+  ))
+}
+
+if (!is.null(tax_table(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    taxa_names(ps),
+    rownames(as(tax_table(ps), "matrix"))
+  ))
+}
+
+saveRDS(ps, "dataset_phyloseq.rds")
+</code></pre>
+<h2 id="section-40">40. Proyecto de datos compatible<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<pre tabindex="0"><code class="language-r">project &lt;- list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = Sys.time(),
+  datasets = list(
+    COI = ps_coi,
+    `16S` = ps_16s
+  ),
+  active_ds = "COI"
+)
+
+saveRDS(project, "project_data_only.rds")
+</code></pre>
+<p>Este archivo puede cargarse en Input data, pero no contiene necesariamente figuras ni historiales.</p>
+<h2 id="section-41">41. Principios de trazabilidad<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Conservar el archivo original, no sobrescribir exportaciones anteriores, anotar la fecha, conservar el nombre del objeto, revisar el informe, documentar los renombrados, verificar los tipos metadata, guardar el proyecto y distinguir el objeto fuente del objeto limpiado en memoria.</p>
+<p>El objeto en BarCodeR puede diferir del archivo fuente por la limpieza de nombres, sincronización con metadata, sustitución de celdas vacías y conversión de columnas.</p>
+<h2 id="fuentes-internas-verificadas">Fuentes internas verificadas<a aria-label="Permalink" class="heading-anchor" href="#fuentes-internas-verificadas">#</a></h2>
+<ol>
+<li><code>modules/data/mod_data_loader_ui.R</code> — interfaz actual y extensiones aceptadas.</li>
+<li><code>modules/data/mod_data_loader_server.R</code> — estado temporal, detección, limpieza, modales, inserción e informes.</li>
+<li><code>modules/_shared/_dataset_naming.R</code> — nombres seguros y únicos.</li>
+<li><code>modules/_shared/_ps_guard.R</code> — clase phyloseq, OTU table y coherencia de identificadores.</li>
+<li><code>modules/datasets/mod_datasets_server.R</code> y <code>mod_datasets_ui.R</code> — formatos de proyecto.</li>
+<li><code>app.R</code> — límite de 500 MB, registro <code>datasets()</code>, dataset activo y estado no guardado.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Presentación general</a><a class="toc-l2" href="#section-2">2. Lugar de Input data en BarCodeR</a><a class="toc-l3" href="#section-2-1">2.1. Operaciones que ya no se realizan aquí</a><a class="toc-l2" href="#section-3">3. Interfaz actual</a><a class="toc-l2" href="#section-4">4. Límite de tamaño</a><a class="toc-l3" href="#section-4-1">4.1. Tamaño en disco y memoria</a><a class="toc-l3" href="#section-4-2">4.2. Aplicación ejecutada en un servidor</a><a class="toc-l2" href="#section-5">5. Formatos aceptados</a><a class="toc-l3" href="#section-5-1">5.1. .rds</a><a class="toc-l3" href="#section-5-2">5.2. .RData o .rda</a><a class="toc-l3" href="#section-5-3">5.3. Extensiones no compatibles</a><a class="toc-l2" href="#section-6">6. Detección automática del contenido</a><a class="toc-l3" href="#section-6-1">6.1. Dataset único</a><a class="toc-l3" href="#section-6-2">6.2. Proyecto</a><a class="toc-l3" href="#section-6-3">6.3. Detección estructural</a><a class="toc-l2" href="#section-7">7. Diferencia entre dataset y proyecto</a><a class="toc-l3" href="#section-7-1">7.1. Dataset</a><a class="toc-l3" href="#section-7-2">7.2. Proyecto .rds de datos</a><a class="toc-l3" href="#section-7-3">7.3. Proyecto completo .zip</a><a class="toc-l3" href="#section-7-4">7.4. El proyecto actual no cambia</a><a class="toc-l2" href="#section-8">8. Cargar un archivo</a><a class="toc-l3" href="#section-8-1">8.1. Selección</a><a class="toc-l3" href="#section-8-2">8.2. Error de lectura</a><a class="toc-l2" href="#section-9">9. .RData con varios objetos</a><a class="toc-l3" href="#section-9-1">9.1. Utilizar el objeto</a><a class="toc-l3" href="#section-9-2">9.2. Cancelar</a><a class="toc-l3" href="#section-9-3">9.3. Cruz superior</a><a class="toc-l2" href="#section-10">10. Cargar un dataset phyloseq único</a><a class="toc-l2" href="#section-11">11. Nombre del dataset</a><a class="toc-l3" href="#section-11-1">11.1. Nombre propuesto</a><a class="toc-l3" href="#section-11-2">11.2. Limpieza</a><a class="toc-l3" href="#section-11-3">11.3. Colisión de nombres</a><a class="toc-l2" href="#section-12">12. Añadir o reemplazar</a><a class="toc-l3" href="#section-12-1">12.1. Añadir</a><a class="toc-l3" href="#section-12-2">12.2. Reemplazar</a><a class="toc-l3" href="#section-12-3">12.3. Sesión vacía</a><a class="toc-l2" href="#section-13">13. Limpieza aplicada</a><a class="toc-l2" href="#section-14">14. Orientación de la OTU table</a><a class="toc-l3" href="#section-14-1">14.1. Taxones en filas</a><a class="toc-l3" href="#section-14-2">14.2. Taxones en columnas</a><a class="toc-l3" href="#section-14-3">14.3. Sin transposición</a><a class="toc-l2" href="#section-15">15. Estandarización de nombres de muestras</a><a class="toc-l3" href="#section-15-1">15.1. Transformaciones</a><a class="toc-l3" href="#section-15-2">15.2. Ejemplos</a><a class="toc-l3" href="#section-15-3">15.3. Motivo</a><a class="toc-l3" href="#section-15-4">15.4. La limpieza puede cancelarse</a><a class="toc-l2" href="#section-16">16. Tratamiento de metadata</a><a class="toc-l3" href="#section-16-1">16.1. Alineación de rownames</a><a class="toc-l2" href="#section-17">17. Celdas vacías de metadata</a><a class="toc-l3" href="#section-17-1">17.1. Consecuencia sobre los tipos</a><a class="toc-l2" href="#section-18">18. Componentes no modificados</a><a class="toc-l2" href="#section-19">19. Control de coherencia de un dataset</a><a class="toc-l3" href="#section-19-1">19.1. Clase phyloseq</a><a class="toc-l3" href="#section-19-2">19.2. OTU table obligatoria</a><a class="toc-l3" href="#section-19-3">19.3. Identificadores de muestras</a><a class="toc-l3" href="#section-19-4">19.4. Identificadores taxonómicos</a><a class="toc-l3" href="#section-19-5">19.5. Controles no incluidos</a><a class="toc-l2" href="#section-20">20. Importación rechazada</a><a class="toc-l2" href="#section-21">21. Informe tras cargar un dataset</a><a class="toc-l2" href="#section-22">22. Cargar un proyecto .rds</a><a class="toc-l3" href="#section-22-1">22.1. Sesión vacía</a><a class="toc-l3" href="#section-22-2">22.2. Sesión con datasets</a><a class="toc-l2" href="#section-23">23. Añadir datasets de un proyecto</a><a class="toc-l3" href="#section-23-1">23.1. Colisión</a><a class="toc-l3" href="#section-23-2">23.2. Dataset activo</a><a class="toc-l2" href="#section-24">24. Reemplazar por un proyecto</a><a class="toc-l2" href="#section-25">25. Nombres de datasets del proyecto</a><a class="toc-l2" href="#section-26">26. Contenido no phyloseq</a><a class="toc-l2" href="#section-27">27. Limpieza de datasets de un proyecto</a><a class="toc-l2" href="#section-28">28. Diferencia de validación</a><a class="toc-l2" href="#section-29">29. Memoria de la sesión</a><a class="toc-l3" href="#section-29-1">29.1. Importar no equivale a guardar</a><a class="toc-l2" href="#section-30">30. Dataset activo</a><a class="toc-l2" href="#section-31">31. Garantías científicas no proporcionadas</a><a class="toc-l2" href="#section-32">32. Verificaciones recomendadas</a><a class="toc-l2" href="#section-33">33. Gestión posterior</a><a class="toc-l2" href="#section-34">34. Resolución de problemas</a><a class="toc-l3" href="#section-34-1">34.1. El archivo no aparece</a><a class="toc-l3" href="#section-34-2">34.2. Archivo superior a 500 MB</a><a class="toc-l3" href="#section-34-3">34.3. Consumo de memoria elevado</a><a class="toc-l3" href="#section-34-4">34.4. Error al leer .rds</a><a class="toc-l3" href="#section-34-5">34.5. .RData sin objeto reconocido</a><a class="toc-l3" href="#section-34-6">34.6. Varios objetos</a><a class="toc-l3" href="#section-34-7">34.7. Falso proyecto</a><a class="toc-l3" href="#section-34-8">34.8. OTU table ausente</a><a class="toc-l3" href="#section-34-9">34.9. IDs de muestras incoherentes</a><a class="toc-l3" href="#section-34-10">34.10. IDs taxonómicos incoherentes</a><a class="toc-l3" href="#section-34-11">34.11. Metadata parcial</a><a class="toc-l3" href="#section-34-12">34.12. Nombres cambiados</a><a class="toc-l3" href="#section-34-13">34.13. Nombres no limpiados</a><a class="toc-l3" href="#section-34-14">34.14. Variable numérica convertida en texto</a><a class="toc-l3" href="#section-34-15">34.15. Cadena "NA"</a><a class="toc-l3" href="#section-34-16">34.16. Menos datasets de los esperados</a><a class="toc-l3" href="#section-34-17">34.17. Todos los nombres son dataset_1 , etc.</a><a class="toc-l3" href="#section-34-18">34.18. Sufijo _2</a><a class="toc-l3" href="#section-34-19">34.19. Desaparición de datasets previos</a><a class="toc-l3" href="#section-34-20">34.20. Las figuras no se restauraron</a><a class="toc-l3" href="#section-34-21">34.21. El mismo archivo no activa el evento</a><a class="toc-l3" href="#section-34-22">34.22. Sin metadata</a><a class="toc-l3" href="#section-34-23">34.23. Sin taxonomía</a><a class="toc-l3" href="#section-34-24">34.24. Sin árbol</a><a class="toc-l3" href="#section-34-25">34.25. Sin secuencias de referencia</a><a class="toc-l2" href="#section-35">35. Lista de comprobación antes de importar</a><a class="toc-l3" href="#archivo">Archivo</a><a class="toc-l3" href="#phyloseq">Phyloseq</a><a class="toc-l3" href="#metadata">Metadata</a><a class="toc-l3" href="#sesi-n">Sesión</a><a class="toc-l2" href="#section-36">36. Lista después de importar</a><a class="toc-l2" href="#section-37">37. Límites actuales</a><a class="toc-l2" href="#section-38">38. Flujo recomendado</a><a class="toc-l2" href="#section-39">39. Preparar un dataset único</a><a class="toc-l2" href="#section-40">40. Proyecto de datos compatible</a><a class="toc-l2" href="#section-41">41. Principios de trazabilidad</a><a class="toc-l2" href="#fuentes-internas-verificadas">Fuentes internas verificadas</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Datos de entrada</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

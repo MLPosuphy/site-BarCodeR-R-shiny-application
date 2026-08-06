@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>MultiView — Methodological guides — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="en" data-kind="guide" data-module="multiview" data-no-result="No result found on this page.">
+<a class="skip-link" href="#doc-content">Methodological guides</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR documentation</strong><small>Embedded documentation — works offline</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Back to BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="en" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" selected>English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analysis</a>
+      
+    
+      <a class="module-link active" href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Methodological guides</a>
+        <a class="" href="references-techniques.html">Technical reference</a>
+      </nav>
+      
+    
+    <div class="version-block"><span>Documentation version</span><strong>1.8.0</strong><span>Generated on 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">MultiView</a><span>›</span><span>Methodological guides</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Search this page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No result found on this page.</div>
+    <article class="doc-article"><h1 id="top">MultiView — Methodological guide</h1>
+<h2 id="section-1">1. General purpose<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>MultiView gathers figures already saved by BarCodeR scientific modules. It searches, filters, tags and favorites them, opens several PNGs in a movable GridStack layout, exports a composite PNG and saves layout recipes. It performs <strong>no scientific recomputation</strong> and does not restore Plotly interactivity, change analysis parameters, synchronize axes or edit figure colors.</p>
+<h2 id="section-2">2. Figure sources<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>The current project is scanned recursively under <code>save/projects/&lt;project&gt;/</code>; MultiView's own folder is excluded. Any folder containing PNG files can become a type. Only the <strong>100 most recently modified PNGs per folder</strong> are loaded, with no pagination; date filtering cannot recover files excluded by this cap.</p>
+<h2 id="section-3">3. PNG/RDS pairing<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>A PNG is paired only with an RDS sharing the exact basename. PNG+RDS provides dataset, description, parameters and badges. PNG alone remains visible with limited metadata; RDS alone is invisible. The reader looks for datasets, transformation, distance, taxonomic rank, group, permutations and seed, but non-standard snapshots may remain incomplete.</p>
+<h2 id="section-4">4. Loading and refresh<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Scanning starts only when MultiView is opened. <strong>Refresh</strong> rescans manually; auto-refresh does so every 10 seconds while active and may be expensive on network storage or large RDS files. Displayed dates come from PNG modification time, not necessarily analysis time.</p>
+<h2 id="section-5">5. Search, filters and sorting<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Filter by type, exact dataset label, date range, favorites and tags. Multiple tags use OR. Literal case-insensitive search covers key, dataset, description and serialized parameters. Multi-dataset runs may appear as one combined label. KPI counts can include orphan favorites.</p>
+<h2 id="section-6">6. Gallery and table<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Gallery cards show preview, type, filename, date, dataset, badges, tags and favorite. “Comparable” means only same type and same dataset label; it does not validate transformation, distance, filtering, rank, groups, axes or method. Table selection is not connected to the open/replace actions, so use Gallery for multi-selection.</p>
+<h2 id="section-7">7. Selecting figures<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Checkbox/Space selects, click/Enter opens details, double-click or drag-and-drop adds to grid, star toggles favorite and Escape closes details. Select All affects visible cards only, but hidden selections can persist after filtering. Clear the selection before a new comparison. Very large selections can overload the browser.</p>
+<h2 id="section-8">8. Details panel<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Shows enlarged image, type, date, dataset, key, main/technical parameters, tags, favorite, PNG download and grid opening. It cannot download the scientific RDS, reopen the source module, regenerate R code, relaunch the analysis or compare parameter sets automatically.</p>
+<h2 id="section-9">9. Favorites and tags<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Stored immediately in <code>save/projects/&lt;project&gt;/multiview/tags.rds</code>; the older <code>save/multiview/tags.rds</code> message is obsolete. Tags accept commas or semicolons. Deleted figures leave orphan entries. State is shared by every session of the same project and is not user-specific; concurrent writes may overwrite each other.</p>
+<h2 id="section-10">10. Open-analysis grid<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Figures can be added from selection, double-click, drag-and-drop or details; duplicates are prevented. The 12-column default uses two cards per row (width 6, height 6). <code>object-fit: contain</code> preserves the full image but may add blank space. Resizing cannot create detail beyond source PNG resolution. Edit mode controls movement/resizing; closing a card does not delete files.</p>
+<h2 id="section-11">11. Pinning, replacing and closing<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Pinned cards survive <strong>Replace in grid</strong> and <strong>Close all</strong>, but remain movable, resizable and individually closable. Replace keeps pins, removes other cards and adds the current selection.</p>
+<h2 id="section-12">12. Layout presets<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Presets are 1×2, 2×2, 1×3, 3×1 and Hero+2. Extra figures beyond preset slots reuse the last position and may overlap. Move them manually, choose another preset or reduce the set. Reset restores the default layout without closing cards.</p>
+<h2 id="section-13">13. Composite PNG export<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p><code>html-to-image</code> captures the complete grid DOM with white background and pixel ratio 2. Titles, metadata and UI buttons may be included; it is not a clean merge of scientific PNGs only. Output is browser-side raster PNG, not added to history and contains no structured data. No PDF/SVG/TIFF/PowerPoint/interactive HTML export exists. Large grids, huge images, missing CDN or empty grids may fail or produce poor output.</p>
+<h2 id="section-14">14. Saving a composition<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>A composition RDS under <code>multiview/compositions/</code> stores name, description, date, figure keys, layout, dimensions, pins and filter values. It does <strong>not</strong> copy PNGs, scientific RDS, phyloseq objects, tables, tags or favorites. Loading restores only still-existing figures, layout and pins; saved filters are not reapplied. Missing/renamed/moved figures are silently omitted. Deleting a composition does not delete figures.</p>
+<h2 id="section-15">15. Import/export of compositions<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Export downloads the recipe RDS. Import checks mainly for a list containing <code>tabs</code>, copies it into the current project and does not load it automatically. A recipe is not portable by itself: the target project needs identical internal type+filename keys. Share the composite PNG or original PNG/RDS files when portability matters. External PNG import is not provided.</p>
+<h2 id="section-16">16. Comparing figures correctly<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Check dataset, samples, filtering, transformation, normalization, rank, method, distance, groups, axes, limits, units, colors, categories, display thresholds and data version. Different Top N/Other rules can alter barplots; independent ordinations may be rotated/inverted and should use Procrustes for quantitative comparison; volcano plots may use different references and effect units. MultiView organizes and presents evidence but does not perform statistical comparison.</p>
+<h2 id="section-17">17. Projects, sessions and multi-user use<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Library, tags, favorites and compositions follow the current project. The live grid is session-only unless saved. Some UI settings restore, but dataset/tag/date filters, selection and unsaved layout do not. Static Shiny resource prefixes are process-wide; concurrent projects in one R process may briefly point to the wrong resource. State is not isolated per user, so MultiView is not fully safe for concurrent multi-user deployment.</p>
+<h2 id="section-18">18. External dependencies and offline use<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>GridStack, SortableJS and html-to-image load from jsDelivr. Offline, browsing may partly work while movement, resizing, drag-and-drop, presets or composite export fail. GridStack initialization waits roughly six seconds before giving up. Full offline operation requires bundling these libraries under <code>www/</code>.</p>
+<h2 id="section-19">19. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No figures</td>
+<td>No saved PNG in current project</td>
+<td>Save a scientific figure</td>
+</tr>
+<tr>
+<td>New figure missing</td>
+<td>Library not rescanned</td>
+<td>Refresh</td>
+</tr>
+<tr>
+<td>Old figure missing</td>
+<td>100-file cap</td>
+<td>Inspect/archive the folder</td>
+</tr>
+<tr>
+<td>Missing parameters</td>
+<td>RDS absent/mismatched</td>
+<td>Fix PNG/RDS basename</td>
+</tr>
+<tr>
+<td>Table selection ignored</td>
+<td>Not wired to selection state</td>
+<td>Select in Gallery</td>
+</tr>
+<tr>
+<td>Hidden cards remain selected</td>
+<td>Filters changed</td>
+<td>Clear selection</td>
+</tr>
+<tr>
+<td>Grid/drag/export unavailable</td>
+<td>CDN unavailable</td>
+<td>Check network or use buttons</td>
+</tr>
+<tr>
+<td>Overlapping cards</td>
+<td>More figures than preset slots</td>
+<td>Rearrange manually</td>
+</tr>
+<tr>
+<td>Incomplete composition</td>
+<td>Source figures missing</td>
+<td>Restore history files</td>
+</tr>
+<tr>
+<td>Filters not restored</td>
+<td>Current loader behavior</td>
+<td>Reconfigure manually</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-20">20. Checklists<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Before composing: verify project, refresh, confirm PNG/RDS pairs, inspect parameters, clear old selection and limit card count. Before scientific comparison: harmonize data, filters, methods, ranks, axes, units, colors and thresholds. Before export: remove unnecessary cards, check overlap/resolution and inspect the downloaded file. Before saving: verify layout/pins, name and describe it, remember images are not copied, test reload and also export a portable PNG.</p>
+<h2 id="section-21">21. Main limitations<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>PNG-only library, lost interactivity, no recomputation or axis harmonization, 100-file cap, <code>mtime</code> dates, metadata dependent on RDS, table-selection bug, weak comparable badge, orphan/shared tags, overlapping presets, raster export with controls, non-self-contained recipes, filters not restored, limited portability, CDN dependence, concurrent-user fragility and loss of unsaved grid state.</p>
+<h2 id="section-22">22. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Save source figures; open and refresh MultiView; filter and inspect parameters; tag/favorite; select in Gallery; open grid; verify comparability; apply and adjust a preset; pin key panels; export and inspect PNG; save and reload the composition; retain original histories and use statistical tables for conclusions.</p>
+<h2 id="section-23">23. Verified internal sources<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p><code>app.R</code>; <code>modules/multiview/mod_multiview_ui.R</code>; <code>modules/multiview/mod_multiview_server.R</code>; <code>modules/multiview/_shared/mod_multiview_helpers.R</code>; <code>modules/_shared/_project_store.R</code>; <code>.claude/architecture/16-multiview.md</code>.</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <nav><a class="toc-l2" href="#section-1">1. General purpose</a><a class="toc-l2" href="#section-2">2. Figure sources</a><a class="toc-l2" href="#section-3">3. PNG/RDS pairing</a><a class="toc-l2" href="#section-4">4. Loading and refresh</a><a class="toc-l2" href="#section-5">5. Search, filters and sorting</a><a class="toc-l2" href="#section-6">6. Gallery and table</a><a class="toc-l2" href="#section-7">7. Selecting figures</a><a class="toc-l2" href="#section-8">8. Details panel</a><a class="toc-l2" href="#section-9">9. Favorites and tags</a><a class="toc-l2" href="#section-10">10. Open-analysis grid</a><a class="toc-l2" href="#section-11">11. Pinning, replacing and closing</a><a class="toc-l2" href="#section-12">12. Layout presets</a><a class="toc-l2" href="#section-13">13. Composite PNG export</a><a class="toc-l2" href="#section-14">14. Saving a composition</a><a class="toc-l2" href="#section-15">15. Import/export of compositions</a><a class="toc-l2" href="#section-16">16. Comparing figures correctly</a><a class="toc-l2" href="#section-17">17. Projects, sessions and multi-user use</a><a class="toc-l2" href="#section-18">18. External dependencies and offline use</a><a class="toc-l2" href="#section-19">19. Troubleshooting</a><a class="toc-l2" href="#section-20">20. Checklists</a><a class="toc-l2" href="#section-21">21. Main limitations</a><a class="toc-l2" href="#section-22">22. Recommended workflow</a><a class="toc-l2" href="#section-23">23. Verified internal sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · MultiView</span><span>Documentation version 1.8.0</span></footer>
+</body>
+</html>

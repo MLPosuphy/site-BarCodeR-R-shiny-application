@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>数据编辑 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="data-edition" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link active" href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">数据编辑</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">数据编辑 — 方法指南</h1>
+<h2 id="section-1">1. 总体介绍<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Data Edition</strong> 会直接修改已加载 <code>phyloseq</code> 数据集的内部组件：样本 metadata、OTU 丰度、分类表、参考序列和系统发育树。它还支持组件导入、导出、删除、ASV 重命名以及描述性编辑日志。</p>
+<h2 id="section-2">2. 基本原则：修改会立即生效<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Data Edition 不是独立草稿区。大多数操作都会立即替换 <code>datasets()</code> 中的当前对象，包括单元格编辑、列操作、合并、ASV 重命名、分类值替换、完整导入和组件删除。</p>
+<h2 id="section-3">3. “保存”按钮不会应用待处理修改<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>修改在点击之前已经生效。<strong>保存</strong>仅用于按当前名称重新注册、创建新条目或覆盖另一个注册表条目；它不会把项目保存到磁盘。</p>
+<h2 id="section-4">4. 对原始版本的重要影响<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>编辑 <code>COI_raw</code> 后再保存为 <code>COI_edited</code>，并不会保留未修改的 <code>COI_raw</code>，因为源条目早已被修改。编辑前应在 <strong>Datasets</strong> 中复制原始数据集。</p>
+<h2 id="section-5">5. 对源文件的影响<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Data Edition 不会重写原始 RDS、RData、CSV、FASTA、Newick 或远程文件，只会修改内存中的对象。要持久化结果，需要保存项目或导出数据集。</p>
+<h2 id="section-6">6. 选项卡结构<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>包含数据集选择、metadata 编辑、OTU 编辑、分类编辑、完整组件导入/导出/删除、日志以及注册表保存。</p>
+<h2 id="section-7">7. 选择要编辑的数据集<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>选择器列出注册表中的数据集，并与 <code>active_ds()</code> 同步。因此在此切换数据集会改变全局活动数据集。</p>
+<h2 id="section-8">8. 编辑过程中切换数据集<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>切换后会重新加载 metadata、OTU 和 taxonomy 编辑器的本地状态，并重置初始状态、上一步状态和预览。这里的“初始状态”不一定是原始文件状态。</p>
+<h2 id="section-9">9. 切换离开后再返回时的重置<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>若先修改 <code>COI</code>，再打开其他数据集，之后返回 <code>COI</code>，此时重置会回到返回时加载的已修改版本，而不是第一次编辑前的版本。</p>
+<h2 id="section-10">10. 编辑与项目持久化<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>每次操作都会更新 <code>datasets()</code>，并可能将项目标记为未保存。关闭应用前需使用 <strong>Datasets → 保存项目</strong>。</p>
+<h2 id="section-11">11. 两种导入方式的区别<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>表格编辑器中的 <strong>合并</strong> 只根据共同标识符添加缺失列；完整组件导入则在选择文件后立即替换整个组件。</p>
+<h2 id="section-12">12. Data Edition 不适合的操作<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>它不是进行生物学过滤、归一化、丰度转换或阈值删除的首选工具。此类操作应使用 Filtration 或受控外部流程。</p>
+<h2 id="section-13">13. 编辑历史<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>操作可向 <code>attr(ps, "edit_log")</code> 添加记录，包括时间、数据集、表、动作、说明、修改前后维度和警告。</p>
+<h2 id="section-14">14. 日志不是备份<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>日志不保存完整旧表，只是审计记录，不能作为完整版本控制或恢复系统。</p>
+<h2 id="section-15">15. 日志语言<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p><code>edit_log</code> 中的动作和警告保持法语，即使界面使用其他语言。</p>
+<h2 id="section-16">16. 三种日志视图<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><strong>最近全局动作</strong>显示当前模块会话的最后动作，<strong>完整历史</strong>显示已存日志，<strong>摘要</strong>统计动作、表、警告和时间范围。</p>
+<h2 id="section-17">17. 总动作数包括什么<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>可能包括单元格编辑、结构变化、导入、导出、撤销、重置、注册、重命名和自动同步。</p>
+<h2 id="section-18">18. 撤销：仅一步<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>每个编辑器只保存一个上一步状态。撤销不会遍历全部历史，多次点击可能在两个最近状态之间切换。</p>
+<h2 id="section-19">19. 重置<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>重置回到子模块加载数据集时捕获的本地状态。它立即生效、会写日志并可撤销，但不保证回到原始文件。</p>
+<h2 id="section-20">20. Metadata 编辑 — 概述<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>作用于 <code>sample_data(ps)</code>，可编辑值、添加/删除/重命名变量、合并文件、撤销和重置。</p>
+<h2 id="section-21">21. 自动创建缺失的 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>若不存在可用 metadata，打开编辑器会创建最小 <code>sample_data</code>，包含 <code>SampleID</code> 列和每个样本一行。该变化可能没有专门日志记录。</p>
+<h2 id="section-22">22. 样本标识符<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>真正标识符是与 <code>sample_names(ps)</code> 对齐的 rownames。显示的 <code>SampleID</code> 列只是普通变量，编辑它不会重命名 OTU 样本。</p>
+<h2 id="section-23">23. 可编辑 metadata 表<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>单元格可直接编辑，并在确认该单元格后立即应用，没有统一“应用全部”按钮。</p>
+<h2 id="section-24">24. 因子处理<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>因子会在本地转为字符，首次重写后可能丢失 levels 和顺序。</p>
+<h2 id="section-25">25. 列表列处理<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>列表列会被压平为逗号分隔文本，可能无法恢复原结构。</p>
+<h2 id="section-26">26. 编辑数值列<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>有效数字保持数值，空单元格变为 <code>NA_real_</code>，非数值文本可能让整列转为字符，并产生警告。</p>
+<h2 id="section-27">27. 数值转文本的后果<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>连续协变量变为 <code>character</code> 后，可能无法作为定量变量用于统计分析。编辑后必须检查列类型。</p>
+<h2 id="section-28">28. 逻辑、日期和特殊类型<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>显式保留主要针对数值列。<code>logical</code>、<code>Date</code>、<code>POSIXct</code>、有序因子和自定义类可能丢失。</p>
+<h2 id="section-29">29. 添加 metadata 列<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>新列全部初始化为 <code>NA</code>。名称必须以 ASCII 字母开头，只含字母、数字或 <code>_</code>，不能含点且必须唯一。</p>
+<h2 id="section-30">30. 兼容名称建议<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>模块可能给出规范化建议，但不会自动应用。</p>
+<h2 id="section-31">31. 重命名 metadata 列<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>保留值并要求名称有效且唯一，但不会修改 rownames 或样本名称。</p>
+<h2 id="section-32">32. 重命名对分析的影响<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>使用旧变量名保存的公式或参数不会自动更新，需要重新配置。</p>
+<h2 id="section-33">33. 删除 metadata 列<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>必须使用区分大小写的准确名称；可能显示大小写或近似名称建议。</p>
+<h2 id="section-34">34. 删除最后一列<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>没有通用保护保证至少保留一列。若要完全删除 metadata，应使用完整组件删除。</p>
+<h2 id="section-35">35. Metadata 行一致性<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>缺失样本会补 <code>NA</code>，行会按 <code>sample_names(ps)</code> 排序，额外行会被丢弃。</p>
+<h2 id="section-36">36. 将文件合并到 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>支持 CSV、TSV 和 TXT，分隔符可为逗号、分号或制表符。</p>
+<h2 id="section-37">37. 自动检测 metadata 分隔符<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>最多检查三十行非空、非注释行，比较字段数和规则性。若不确定，可手动覆盖。</p>
+<h2 id="section-38">38. 第一列作为标识符<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>启用后第一列成为 rownames。未启用时，数字 rownames 通常无法与样本匹配。</p>
+<h2 id="section-39">39. Metadata 合并的实际行为<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>只为共同 rownames 添加新列；匹配样本写入值，其余当前样本填 <code>NA</code>。</p>
+<h2 id="section-40">40. 已存在的列<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>合并不会更新现有列。若没有新列，则不修改任何内容。</p>
+<h2 id="section-41">41. 合并文件中的额外样本<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>不在 phyloseq 中的标识符会被忽略，不会创建新样本。</p>
+<h2 id="section-42">42. 文件中缺失的当前样本<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>仍保留在数据集中，并在新列中得到 <code>NA</code>。</p>
+<h2 id="section-43">43. OTU 表编辑 — 概述<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>支持单元格编辑、列添加/删除、合并、显示排序、ASV 重命名、方向声明、撤销和重置。</p>
+<h2 id="section-44">44. OTU 表方向<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>保留 <code>taxa_are_rows()</code>。taxa 在行时列是样本；否则列是 taxa。</p>
+<h2 id="section-45">45. “ASV 在列”不是转置操作<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>该开关主要用于自动重命名。单独切换不会转置矩阵，也不会立即修改 <code>taxa_are_rows</code>。</p>
+<h2 id="section-46">46. 选择错误轴的风险<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<p>可能把样本重命名为 ASV、改变声明方向，并使 taxonomy、序列和树不同步。</p>
+<h2 id="section-47">47. 可编辑 OTU 表<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>每个单元格可编辑，之后模块会重建数值矩阵。</p>
+<h2 id="section-48">48. OTU 表数值转换<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>每次动作后整表转为数值。无法转换的值变为 <code>NA</code> 并产生警告。</p>
+<h2 id="section-49">49. OTU 空值<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>空单元格、空格和 <code>NA</code> 会被报告，但不会自动替换为零。</p>
+<h2 id="section-50">50. 非数值 OTU 值<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>如 <code>absent</code>、<code>low</code>、<code>?</code> 通常在数值转换时变为 <code>NA</code>。</p>
+<h2 id="section-51">51. 负数和小数<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>不会阻止。表中可能包含计数、比例、转换值或 CLR，但下游方法可能不接受。</p>
+<h2 id="section-52">52. 向 OTU 表添加列<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p>taxa 在行时添加样本；taxa 在列时添加 taxon。新列初始化为 <code>NA</code>。</p>
+<h2 id="section-53">53. 添加样本的风险<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>不会自动创建对应 <code>sample_data</code> 行，因此对象可能不一致。</p>
+<h2 id="section-54">54. 添加 taxon 的风险<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>不会自动创建 taxonomy、参考序列或树叶。RefSeq 或树可能因覆盖不完整而被删除。</p>
+<h2 id="section-55">55. 结构性添加建议<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>若要加入新样本或 taxa，应在 R 中重建并验证完整 phyloseq，而不是只扩展一张表。</p>
+<h2 id="section-56">56. 删除 OTU 列<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>根据方向删除样本或 taxon。metadata 或 taxonomy 不一定自动同步。</p>
+<h2 id="section-57">57. 生物学删除应使用 Filtration<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>Filtration 用于按明确标准删除样本或 taxa，并产生一致且有记录的子数据集。</p>
+<h2 id="section-58">58. ASV 自然排序<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>显示时按 <code>ASV1</code>、<code>ASV2</code>、<code>ASV10</code> 排序，不改变内部顺序。</p>
+<h2 id="section-59">59. 排序状态下编辑<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>模块会把显示行映射回原始标识符，确保修改正确元素。</p>
+<h2 id="section-60">60. 将文件合并到 OTU 表<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>自动检测分隔符，使用 rownames，寻找共同的行，并只添加新列。</p>
+<h2 id="section-61">61. 导入列的含义<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>取决于当前方向；模块不会判断这些列是样本还是 taxa。</p>
+<h2 id="section-62">62. OTU 合并文件中的额外行<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>会被忽略，不会创建新标识符。</p>
+<h2 id="section-63">63. 文件中缺失的当前行<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<p>这些行在新列中保持 <code>NA</code>。</p>
+<h2 id="section-64">64. 自动重命名 ASV<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>结合前缀、声明的 ASV 轴和当前标识符。</p>
+<h2 id="section-65">65. 保留末尾数字<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>若每个标识符都以唯一数字结尾，则保留数字，例如 <code>ASV128</code> 变为 <code>Feature128</code>。</p>
+<h2 id="section-66">66. 顺序重命名<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>只要有一个标识符没有可用末尾数字，就会按内部顺序对全部标识符顺序重命名。</p>
+<h2 id="section-67">67. 新名称冲突<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>若生成名称不唯一，则使用顺序命名作为后备。</p>
+<h2 id="section-68">68. 前缀验证<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>只去除首尾空格。建议使用简单前缀：<code>ASV</code>、<code>OTU</code>、<code>ZOTU</code> 或 <code>Feature</code>。</p>
+<h2 id="section-69">69. ASV 重命名传播<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>旧标识符唯一时，新名称会传播到 <code>tax_table</code>、<code>refseq</code> 和树叶。</p>
+<h2 id="section-70">70. 重命名前存在重复标识符<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>传播会被禁用，结果可能仍不一致。应先在上游修复重复名称。</p>
+<h2 id="section-71">71. OTU 修改后重新对齐序列<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<p>无名称且数量一致时按顺序命名；完整命名序列会重新排序。若有 taxon 缺少序列，则整个 <code>refseq</code> 被删除。</p>
+<h2 id="section-72">72. OTU 修改后重新对齐树<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>额外叶子会被修剪。若任一 OTU taxon 不在树中，则整个树被删除。</p>
+<h2 id="section-73">73. 缺少 <code>ape</code> 包<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>OTU 修改时若 <code>ape</code> 不可用，树会被删除并记录警告。</p>
+<h2 id="section-74">74. 结构性 OTU 修改后的 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>ASV 重命名时会显式传播，但其他结构修改不保证同步。之后必须检查标识符。</p>
+<h2 id="section-75">75. 分类编辑 — 概述<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>作用于 <code>tax_table(ps)</code>：单元格、rank、文件合并、自动替换、撤销和重置。</p>
+<h2 id="section-76">76. 缺少 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>若没有分类表，应使用完整组件导入添加。</p>
+<h2 id="section-77">77. 第一次分类编辑前确认<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>第一次尝试只显示说明窗口，不执行动作。关闭窗口后需再次执行。</p>
+<h2 id="section-78">78. 切换数据集后再次确认<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>选择数据集变化时确认状态会重置。</p>
+<h2 id="section-79">79. 编辑分类单元格<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>值作为文本保存，不进行命名法或分类学验证。</p>
+<h2 id="section-80">80. 不检查分类层级<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p>不会验证 species、genus、family 之间的一致性或科学名称有效性。</p>
+<h2 id="section-81">81. 添加分类 rank<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>在末尾添加全 <code>NA</code> 新列，名称必须严格、有效且唯一。</p>
+<h2 id="section-82">82. Rank 顺序<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>不强制分类顺序，需要手动保持一致。</p>
+<h2 id="section-83">83. 重命名分类 rank<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>没有直接按钮。可新增 rank、迁移值、删除旧 rank，或在 R 中完成。</p>
+<h2 id="section-84">84. 删除 rank<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>使用准确名称立即删除；可能显示建议。</p>
+<h2 id="section-85">85. 删除所有 rank<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>没有通用保护。若要移除全部 taxonomy，应使用完整组件删除。</p>
+<h2 id="section-86">86. 按 ASV 对 taxonomy 排序<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>自然排序只影响显示，并使用标识符中第一段数字。</p>
+<h2 id="section-87">87. ASV 重命名后的同步<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>当 taxonomy rownames 变化且行数相同，本地状态会更新并添加同步日志。</p>
+<h2 id="section-88">88. 分类同步限制<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>若完整替换但标识符不变，本地显示值可能不刷新。切换数据集后返回。</p>
+<h2 id="section-89">89. 将文件合并到 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>只添加缺失 rank 列，共同 taxa 写入值，其余为 <code>NA</code>。</p>
+<h2 id="section-90">90. 不自动检测 taxonomy 分隔符<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>必须手动选择。</p>
+<h2 id="section-91">91. 已存在的分类列<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>合并不会替换已有 <code>Genus</code> 等 rank。要替换整表，应完整导入。</p>
+<h2 id="section-92">92. 自动替换分类值<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>可将 <code>NA</code>、<code>unidentified</code>、<code>unclassified</code>、<code>unknown</code>、<code>missing</code> 等模式替换为统一文本。</p>
+<h2 id="section-93">93. 不区分大小写的精确匹配<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>模式会去除首尾空格并转小写，然后进行精确比较，不是宽泛子字符串搜索。</p>
+<h2 id="section-94">94. <code>NA</code> 模式<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>同时匹配真实缺失值和文本形式的 <code>NA</code>。</p>
+<h2 id="section-95">95. 空模式<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>匹配空字符串或仅包含空格的字符串。</p>
+<h2 id="section-96">96. 替换范围<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>同时作用于所有 taxonomy rank，不能只选一列。</p>
+<h2 id="section-97">97. 强制预览<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>确认前显示总单元格数、按模式和按列的计数。</p>
+<h2 id="section-98">98. 重叠模式<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>一个单元格可匹配多个模式，因此各模式计数可能重叠。</p>
+<h2 id="section-99">99. 替换值不能为空<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>不允许使用空字符串作为替换值。</p>
+<h2 id="section-100">100. 替换的科学影响<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>把 <code>NA</code> 改为 <code>Unassigned</code> 会把缺失信息变成真实类别，从而改变完整度、聚合和图形。</p>
+<h2 id="section-101">101. 未分配 taxon 的聚合<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<p>具有相同文本的 taxa 可能被 <code>tax_glom()</code> 合并，这与真实缺失值不同。</p>
+<h2 id="section-102">102. 初始 taxonomy 状态与重置<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>本地编辑器加载数据集时重新捕获初始状态，因此切换数据集可能改变重置基准。</p>
+<h2 id="section-103">103. 导入、导出和删除 — 概述<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>此区域管理完整组件：metadata、OTU、taxonomy、RefSeq 和树。</p>
+<h2 id="section-104">104. 自动导入<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>选择文件后立即开始，没有额外确认按钮，也没有统一预览。</p>
+<h2 id="section-105">105. 文件大小限制<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>使用 BarCodeR 全局上传限制，目前约 500 MB。</p>
+<h2 id="section-106">106. 完整导入的分隔符检测<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>主要检查第一行：优先分号，其次制表符，否则逗号。比合并时的检测更简单。</p>
+<h2 id="section-107">107. 完整导入 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>第一列是标识符。未知样本会导致拒绝；缺失的当前样本补 <code>NA</code>。旧 metadata 整体替换。</p>
+<h2 id="section-108">108. 完整导入 OTU 表<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<p>解释为 taxa 在行、样本在列，并强制 <code>taxa_are_rows = TRUE</code>。</p>
+<h2 id="section-109">109. OTU 导入允许的标识符<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<p>文件中的 taxa 和样本必须是现有标识符的子集，不能新增样本或 taxa。</p>
+<h2 id="section-110">110. OTU 导入中缺失的标识符<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<p>当前对象中缺失于文件的样本或 taxa 用零补齐，并按当前对象顺序重排。</p>
+<h2 id="section-111">111. OTU 导入数值转换<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<p>整表转为数值。无效值变为 <code>NA</code>，但导入可能继续并给出警告。</p>
+<h2 id="section-112">112. 完整导入 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<p>第一列是 taxa。未知 taxa 会被拒绝；缺失 taxa 补 <code>NA</code>。旧表和旧 rank 被替换。</p>
+<h2 id="section-113">113. 导入 RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<p>FASTA 标识符必须匹配并完整覆盖所有 taxa。部分覆盖或未知标识符会被拒绝。</p>
+<h2 id="section-114">114. 导入树<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<p>Newick 叶子必须匹配并完整覆盖所有 taxa。未知叶子或缺失 taxon 会导致拒绝。</p>
+<h2 id="section-115">115. 完整替换组件<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<p>旧组件不会作为快照保存；日志只记录维度、文件和警告。</p>
+<h2 id="section-116">116. 完整导入后刷新编辑器<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>数据集名称不变时，本地编辑器可能保留旧副本。继续编辑前应切换到其他数据集再返回。</p>
+<h2 id="section-117">117. 组件导出<a aria-label="Permalink" class="heading-anchor" href="#section-117">#</a></h2>
+<p>Metadata、OTU、taxonomy 导出为 CSV；RefSeq 为 FASTA；树为 Newick。</p>
+<h2 id="section-118">118. CSV 导出分隔符<a aria-label="Permalink" class="heading-anchor" href="#section-118">#</a></h2>
+<p>尽管扩展名为 <code>.csv</code>，实际使用分号 <code>;</code>。</p>
+<h2 id="section-119">119. Metadata 导出<a aria-label="Permalink" class="heading-anchor" href="#section-119">#</a></h2>
+<p>从 rownames 创建 <code>SampleID</code> 列，缺失值导出为空单元格。</p>
+<h2 id="section-120">120. OTU 导出<a aria-label="Permalink" class="heading-anchor" href="#section-120">#</a></h2>
+<p>保留当前存储方向，文件中不明确记录 <code>taxa_are_rows</code>。</p>
+<h2 id="section-121">121. Taxonomy 导出<a aria-label="Permalink" class="heading-anchor" href="#section-121">#</a></h2>
+<p>Taxon 标识符写在第一列，缺失注释写为空单元格。</p>
+<h2 id="section-122">122. RefSeq 导出<a aria-label="Permalink" class="heading-anchor" href="#section-122">#</a></h2>
+<p>按当前名称写出 FASTA；需要 <code>Biostrings</code>。</p>
+<h2 id="section-123">123. 树导出<a aria-label="Permalink" class="heading-anchor" href="#section-123">#</a></h2>
+<p>写出 Newick；需要 <code>ape</code>。</p>
+<h2 id="section-124">124. 导出与日志<a aria-label="Permalink" class="heading-anchor" href="#section-124">#</a></h2>
+<p>每次导出都会向 <code>edit_log</code> 添加记录，因此可能把项目标记为未保存。</p>
+<h2 id="section-125">125. 组件删除<a aria-label="Permalink" class="heading-anchor" href="#section-125">#</a></h2>
+<p>窗口列出当前存在组件，可多选后确认。</p>
+<h2 id="section-126">126. 删除 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-126">#</a></h2>
+<p>移除 <code>sam_data</code>，依赖分组或协变量的分析不可用。</p>
+<h2 id="section-127">127. 删除 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-127">#</a></h2>
+<p>移除 <code>tax_table</code>，分类相关分析不可用。</p>
+<h2 id="section-128">128. 删除 RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-128">#</a></h2>
+<p>长度、GC 和序列分析不再有参考序列。</p>
+<h2 id="section-129">129. 删除树<a aria-label="Permalink" class="heading-anchor" href="#section-129">#</a></h2>
+<p>UniFrac、Faith PD 和系统发育可视化不可用。</p>
+<h2 id="section-130">130. 删除 OTU 表<a aria-label="Permalink" class="heading-anchor" href="#section-130">#</a></h2>
+<p>界面允许该操作，但它移除核心组件，使数据集在大多数模块中无法使用。</p>
+<h2 id="section-131">131. 同时删除多个组件<a aria-label="Permalink" class="heading-anchor" href="#section-131">#</a></h2>
+<p>可以删除多个 slot，即使剩余对象内部不一致。</p>
+<h2 id="section-132">132. 撤销组件删除<a aria-label="Permalink" class="heading-anchor" href="#section-132">#</a></h2>
+<p>此区域没有 Undo。必须重新导入、恢复项目或加载旧导出。</p>
+<h2 id="section-133">133. 删除与磁盘文件<a aria-label="Permalink" class="heading-anchor" href="#section-133">#</a></h2>
+<p>保存项目前，删除只作用于内存。源文件和旧备份不会被删除。</p>
+<h2 id="section-134">134. 在注册表中保存数据集<a aria-label="Permalink" class="heading-anchor" href="#section-134">#</a></h2>
+<p>名称字段可用于同名注册、创建新条目或替换现有条目。</p>
+<h2 id="section-135">135. 名称留空<a aria-label="Permalink" class="heading-anchor" href="#section-135">#</a></h2>
+<p>按当前名称重新注册，保持活动状态并添加日志；项目不会写入磁盘。</p>
+<h2 id="section-136">136. 可用的新名称<a aria-label="Permalink" class="heading-anchor" href="#section-136">#</a></h2>
+<p>创建包含当前编辑状态的新条目并设为活动。源条目仍在，但已被原地修改。</p>
+<h2 id="section-137">137. 名称已被其他数据集使用<a aria-label="Permalink" class="heading-anchor" href="#section-137">#</a></h2>
+<p>确认后，目标被编辑后的源状态完全覆盖，而源条目仍然保留。</p>
+<h2 id="section-138">138. 数据集名称清理<a aria-label="Permalink" class="heading-anchor" href="#section-138">#</a></h2>
+<p>共享 helper 会先清理名称，再检查冲突。</p>
+<h2 id="section-139">139. 覆盖另一个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-139">#</a></h2>
+<p>所有表、序列、树、属性、日志和来源都会被替换，不是合并。</p>
+<h2 id="section-140">140. 保存完整项目<a aria-label="Permalink" class="heading-anchor" href="#section-140">#</a></h2>
+<p>编辑后使用 <strong>Datasets → 保存项目</strong> 将注册表持久化到磁盘。</p>
+<h2 id="section-141">141. 故障排查<a aria-label="Permalink" class="heading-anchor" href="#section-141">#</a></h2>
+<p>以下小节列出常见问题和真实原因。</p>
+<h2 id="section-141-1">141.1. 修改了错误的数据集<a aria-label="Permalink" class="heading-anchor" href="#section-141-1">#</a></h2>
+<p>选择器跟随全局活动数据集。每次动作前确认名称。</p>
+<h2 id="section-141-2">141.2. 想创建新名称但原始条目也变了<a aria-label="Permalink" class="heading-anchor" href="#section-141-2">#</a></h2>
+<p>修改发生在复制之前。恢复备份、导出或原始文件。</p>
+<h2 id="section-141-3">141.3. 保存按钮没有保存项目<a aria-label="Permalink" class="heading-anchor" href="#section-141-3">#</a></h2>
+<p>它只修改内存注册表。请在 Datasets 中保存。</p>
+<h2 id="section-141-4">141.4. Metadata 自动出现<a aria-label="Permalink" class="heading-anchor" href="#section-141-4">#</a></h2>
+<p>原数据集没有 <code>sample_data</code>，模块创建了最小表。</p>
+<h2 id="section-141-5">141.5. 修改 <code>SampleID</code> 没有重命名样本<a aria-label="Permalink" class="heading-anchor" href="#section-141-5">#</a></h2>
+<p>真实标识符是 rownames。</p>
+<h2 id="section-141-6">141.6. 数值变量变成文本<a aria-label="Permalink" class="heading-anchor" href="#section-141-6">#</a></h2>
+<p>输入了非数值。修复整列或重新导入带正确类型的 metadata。</p>
+<h2 id="section-141-7">141.7. 因子变成 character<a aria-label="Permalink" class="heading-anchor" href="#section-141-7">#</a></h2>
+<p>编辑器会压平因子。需要时在 R 中恢复 levels。</p>
+<h2 id="section-141-8">141.8. 新列类型错误<a aria-label="Permalink" class="heading-anchor" href="#section-141-8">#</a></h2>
+<p>列从 <code>NA</code> 开始，其类型由输入值推断。之后需检查和转换。</p>
+<h2 id="section-141-9">141.9. Metadata 合并没有更新已有列<a aria-label="Permalink" class="heading-anchor" href="#section-141-9">#</a></h2>
+<p>合并只添加缺失列。应完整导入或手动编辑。</p>
+<h2 id="section-141-10">141.10. 没有找到共同标识符<a aria-label="Permalink" class="heading-anchor" href="#section-141-10">#</a></h2>
+<p>检查第一列、rownames 选项、大小写、空格和拼写。</p>
+<h2 id="section-141-11">141.11. 分隔符检测错误<a aria-label="Permalink" class="heading-anchor" href="#section-141-11">#</a></h2>
+<p>文件不规则时应手动选择。</p>
+<h2 id="section-141-12">141.12. OTU 值变为 <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-12">#</a></h2>
+<p>数值转换因文本、符号、空格或小数逗号失败。</p>
+<h2 id="section-141-13">141.13. 小数逗号变成 <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-13">#</a></h2>
+<p>预期小数点为句点，应先修正文件。</p>
+<h2 id="section-141-14">141.14. 新 OTU 列使 metadata 不同步<a aria-label="Permalink" class="heading-anchor" href="#section-141-14">#</a></h2>
+<p>样本只加入 OTU。应添加对应 metadata 或重建对象。</p>
+<h2 id="section-141-15">141.15. OTU 修改后 RefSeq 消失<a aria-label="Permalink" class="heading-anchor" href="#section-141-15">#</a></h2>
+<p>它不再覆盖全部 taxa。</p>
+<h2 id="section-141-16">141.16. OTU 修改后树消失<a aria-label="Permalink" class="heading-anchor" href="#section-141-16">#</a></h2>
+<p>缺少 taxon、重命名未传播，或 <code>ape</code> 不可用。</p>
+<h2 id="section-141-17">141.17. 树叶消失<a aria-label="Permalink" class="heading-anchor" href="#section-141-17">#</a></h2>
+<p>OTU 中不存在的额外叶子会自动修剪。</p>
+<h2 id="section-141-18">141.18. 样本被重命名为 ASV<a aria-label="Permalink" class="heading-anchor" href="#section-141-18">#</a></h2>
+<p>声明了错误轴。恢复副本或备份。</p>
+<h2 id="section-141-19">141.19. ASV 前缀产生异常名称<a aria-label="Permalink" class="heading-anchor" href="#section-141-19">#</a></h2>
+<p>前缀不严格验证，应使用简单前缀。</p>
+<h2 id="section-141-20">141.20. Taxonomy 与 OTU 不再匹配<a aria-label="Permalink" class="heading-anchor" href="#section-141-20">#</a></h2>
+<p>检查 rownames、重复标识符并刷新编辑器；在 R 中比较标识符集合。</p>
+<h2 id="section-141-21">141.21. 第一次分类修改没有执行<a aria-label="Permalink" class="heading-anchor" href="#section-141-21">#</a></h2>
+<p>第一次只打开警告窗口，需要再次执行。</p>
+<h2 id="section-141-22">141.22. 分类替换修改了多个 rank<a aria-label="Permalink" class="heading-anchor" href="#section-141-22">#</a></h2>
+<p>替换作用于所有列，应查看按 rank 的预览。</p>
+<h2 id="section-141-23">141.23. <code>NA</code> 现在被当成真实类别<a aria-label="Permalink" class="heading-anchor" href="#section-141-23">#</a></h2>
+<p>缺失值被文本替换，可能在聚合时被视为已注释分类。</p>
+<h2 id="section-141-24">141.24. 分类合并没有替换 <code>Genus</code><a aria-label="Permalink" class="heading-anchor" href="#section-141-24">#</a></h2>
+<p>该 rank 已存在；合并只添加缺失 rank。</p>
+<h2 id="section-141-25">141.25. 未自动检测 taxonomy 分隔符<a aria-label="Permalink" class="heading-anchor" href="#section-141-25">#</a></h2>
+<p>此编辑器要求手动选择。</p>
+<h2 id="section-141-26">141.26. 完整导入删除了列<a aria-label="Permalink" class="heading-anchor" href="#section-141-26">#</a></h2>
+<p>它替换整个组件。恢复备份或使用合并进行增量添加。</p>
+<h2 id="section-141-27">141.27. 完整 OTU 导入改变方向<a aria-label="Permalink" class="heading-anchor" href="#section-141-27">#</a></h2>
+<p>它总是强制 taxa 在行。</p>
+<h2 id="section-141-28">141.28. 完整导入拒绝新样本<a aria-label="Permalink" class="heading-anchor" href="#section-141-28">#</a></h2>
+<p>标识符必须已存在。需要重建完整 phyloseq。</p>
+<h2 id="section-141-29">141.29. 完整导入拒绝新 taxa<a aria-label="Permalink" class="heading-anchor" href="#section-141-29">#</a></h2>
+<p>Rownames 必须属于 <code>taxa_names(ps)</code>。</p>
+<h2 id="section-141-30">141.30. FASTA 导入被拒绝<a aria-label="Permalink" class="heading-anchor" href="#section-141-30">#</a></h2>
+<p>检查格式、标识符唯一性、完整覆盖和 <code>Biostrings</code>。</p>
+<h2 id="section-141-31">141.31. 树导入被拒绝<a aria-label="Permalink" class="heading-anchor" href="#section-141-31">#</a></h2>
+<p>检查 Newick、未知叶子、缺失 taxa 和 <code>ape</code>。</p>
+<h2 id="section-141-32">141.32. 导入后编辑器仍显示旧表<a aria-label="Permalink" class="heading-anchor" href="#section-141-32">#</a></h2>
+<p>切换到其他数据集再返回以刷新本地状态。</p>
+<h2 id="section-141-33">141.33. 删除的旧表在编辑后重新出现<a aria-label="Permalink" class="heading-anchor" href="#section-141-33">#</a></h2>
+<p>过期本地状态可能重新写入旧副本。删除或完整导入后必须刷新。</p>
+<h2 id="section-141-34">141.34. 下载文件后项目变为未保存<a aria-label="Permalink" class="heading-anchor" href="#section-141-34">#</a></h2>
+<p>导出会写入 <code>edit_log</code>。</p>
+<h2 id="section-141-35">141.35. 表删除无法撤销<a aria-label="Permalink" class="heading-anchor" href="#section-141-35">#</a></h2>
+<p>组件删除区域没有 Undo。重新导入或恢复。</p>
+<h2 id="section-141-36">141.36. 删除 OTU 后数据集无法使用<a aria-label="Permalink" class="heading-anchor" href="#section-141-36">#</a></h2>
+<p>应恢复完整版本，OTU 是核心组件。</p>
+<h2 id="section-141-37">141.37. 撤销不能退回多步<a aria-label="Permalink" class="heading-anchor" href="#section-141-37">#</a></h2>
+<p>只保存一个上一步状态。</p>
+<h2 id="section-141-38">141.38. 重置不能回到原始文件<a aria-label="Permalink" class="heading-anchor" href="#section-141-38">#</a></h2>
+<p>它回到本地编辑器加载时捕获的状态。</p>
+<h2 id="section-141-39">141.39. 其他语言界面中日志仍为法语<a aria-label="Permalink" class="heading-anchor" href="#section-141-39">#</a></h2>
+<p>内部审计文本以法语存储。</p>
+<h2 id="section-141-40">141.40. 导出后动作总数增加<a aria-label="Permalink" class="heading-anchor" href="#section-141-40">#</a></h2>
+<p>导出被记录为动作。</p>
+<h2 id="section-142">142. 编辑前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-142">#</a></h2>
+<ul>
+<li>确认当前项目和数据集。</li>
+<li>复制原始数据集。</li>
+<li>保存项目并导出重要数据。</li>
+<li>检查组件和 OTU 方向。</li>
+<li>关闭可能写入同一项目的其他会话。</li>
+</ul>
+<h2 id="section-143">143. Metadata 编辑前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-143">#</a></h2>
+<ul>
+<li>检查 rownames，不要与 <code>SampleID</code> 列混淆。</li>
+<li>记录类型、因子、日期和缺失值。</li>
+<li>使用有效列名。</li>
+<li>编辑后重新检查类型。</li>
+</ul>
+<h2 id="section-144">144. OTU 编辑前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-144">#</a></h2>
+<ul>
+<li>检查 <code>taxa_are_rows</code> 和 ASV 轴。</li>
+<li>确认丰度性质和无文本值。</li>
+<li>结构修改前检查 metadata、taxonomy、RefSeq 和树。</li>
+<li>批量重命名前导出。</li>
+</ul>
+<h2 id="section-145">145. 分类替换前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-145">#</a></h2>
+<ul>
+<li>检查模式、大小写和空格。</li>
+<li>查看每个 rank 的计数。</li>
+<li>理解 <code>NA</code> 与文本类别的区别。</li>
+<li>预估聚合影响。</li>
+<li>保存原 taxonomy。</li>
+</ul>
+<h2 id="section-146">146. 完整导入前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-146">#</a></h2>
+<ul>
+<li>检查数据集、分隔符、第一列、标识符和覆盖度。</li>
+<li>备份旧组件。</li>
+<li>明确它会被替换。</li>
+<li>之后刷新编辑器并在 Description 中验证。</li>
+</ul>
+<h2 id="section-147">147. 删除组件前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-147">#</a></h2>
+<ul>
+<li>导出组件并保存项目。</li>
+<li>检查依赖模块。</li>
+<li>除特殊情况外不要删除 OTU。</li>
+<li>记住没有 Undo。</li>
+</ul>
+<h2 id="section-148">148. Data Edition 后检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-148">#</a></h2>
+<ul>
+<li>打开 Description 检查维度、总和、类型、缺失值、taxonomy、RefSeq 和树。</li>
+<li>检查标识符一致性并阅读日志。</li>
+<li>在 Datasets 中保存项目。</li>
+</ul>
+<h2 id="section-149">149. 编辑后建议的 R 检查<a aria-label="Permalink" class="heading-anchor" href="#section-149">#</a></h2>
+<pre tabindex="0"><code class="language-r">setequal(sample_names(ps), rownames(as.data.frame(sample_data(ps))))
+setequal(taxa_names(ps), rownames(as(tax_table(ps), "matrix")))
+setequal(taxa_names(ps), names(refseq(ps)))
+setequal(taxa_names(ps), phy_tree(ps)$tip.label)
+
+otu &lt;- as(otu_table(ps), "matrix")
+anyNA(otu)
+any(otu &lt; 0, na.rm = TRUE)
+all(otu == round(otu), na.rm = TRUE)
+</code></pre>
+<h2 id="section-150">150. 当前限制<a aria-label="Permalink" class="heading-anchor" href="#section-150">#</a></h2>
+<ul>
+<li>修改立即生效，原始版本不会自动保留。</li>
+<li>保存按钮不会持久化项目。</li>
+<li>撤销只保存一步，重置依赖本地加载。</li>
+<li>Metadata 可能自动创建。</li>
+<li>因子和特殊类可能丢失。</li>
+<li>ASV 开关不是转置命令。</li>
+<li>OTU 编辑可能使组件不同步。</li>
+<li>分类替换作用于所有 rank。</li>
+<li>完整导入没有预览且不能扩展标识符。</li>
+<li>本地编辑器可能显示旧副本。</li>
+<li>导出会修改日志。</li>
+<li>可以删除 OTU 表。</li>
+<li>每次动作后不会运行完整一致性保护。</li>
+</ul>
+<h2 id="section-151">151. 推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-151">#</a></h2>
+<ol>
+<li>保存项目并复制原始数据集。</li>
+<li>编辑副本。</li>
+<li>检查 OTU 方向。</li>
+<li>编辑 metadata 并验证类型。</li>
+<li>仅在必要时编辑 OTU。</li>
+<li>结构修改后检查 taxonomy、RefSeq 和树。</li>
+<li>使用分类预览。</li>
+<li>完整导入或删除后刷新。</li>
+<li>在 Description 中验证。</li>
+<li>保存项目并导出最终数据集。</li>
+</ol>
+<h2 id="section-152">152. 已验证的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-152">#</a></h2>
+<p>本指南根据 Data Edition 主模块、metadata 编辑器、OTU 编辑器、taxonomy 编辑器、组件导入/导出/删除子模块、活动数据集同步、命名 helper、<code>app.R</code> 以及与实际代码核对后的架构说明重建。</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 总体介绍</a><a class="toc-l2" href="#section-2">2. 基本原则：修改会立即生效</a><a class="toc-l2" href="#section-3">3. “保存”按钮不会应用待处理修改</a><a class="toc-l2" href="#section-4">4. 对原始版本的重要影响</a><a class="toc-l2" href="#section-5">5. 对源文件的影响</a><a class="toc-l2" href="#section-6">6. 选项卡结构</a><a class="toc-l2" href="#section-7">7. 选择要编辑的数据集</a><a class="toc-l2" href="#section-8">8. 编辑过程中切换数据集</a><a class="toc-l2" href="#section-9">9. 切换离开后再返回时的重置</a><a class="toc-l2" href="#section-10">10. 编辑与项目持久化</a><a class="toc-l2" href="#section-11">11. 两种导入方式的区别</a><a class="toc-l2" href="#section-12">12. Data Edition 不适合的操作</a><a class="toc-l2" href="#section-13">13. 编辑历史</a><a class="toc-l2" href="#section-14">14. 日志不是备份</a><a class="toc-l2" href="#section-15">15. 日志语言</a><a class="toc-l2" href="#section-16">16. 三种日志视图</a><a class="toc-l2" href="#section-17">17. 总动作数包括什么</a><a class="toc-l2" href="#section-18">18. 撤销：仅一步</a><a class="toc-l2" href="#section-19">19. 重置</a><a class="toc-l2" href="#section-20">20. Metadata 编辑 — 概述</a><a class="toc-l2" href="#section-21">21. 自动创建缺失的 metadata</a><a class="toc-l2" href="#section-22">22. 样本标识符</a><a class="toc-l2" href="#section-23">23. 可编辑 metadata 表</a><a class="toc-l2" href="#section-24">24. 因子处理</a><a class="toc-l2" href="#section-25">25. 列表列处理</a><a class="toc-l2" href="#section-26">26. 编辑数值列</a><a class="toc-l2" href="#section-27">27. 数值转文本的后果</a><a class="toc-l2" href="#section-28">28. 逻辑、日期和特殊类型</a><a class="toc-l2" href="#section-29">29. 添加 metadata 列</a><a class="toc-l2" href="#section-30">30. 兼容名称建议</a><a class="toc-l2" href="#section-31">31. 重命名 metadata 列</a><a class="toc-l2" href="#section-32">32. 重命名对分析的影响</a><a class="toc-l2" href="#section-33">33. 删除 metadata 列</a><a class="toc-l2" href="#section-34">34. 删除最后一列</a><a class="toc-l2" href="#section-35">35. Metadata 行一致性</a><a class="toc-l2" href="#section-36">36. 将文件合并到 metadata</a><a class="toc-l2" href="#section-37">37. 自动检测 metadata 分隔符</a><a class="toc-l2" href="#section-38">38. 第一列作为标识符</a><a class="toc-l2" href="#section-39">39. Metadata 合并的实际行为</a><a class="toc-l2" href="#section-40">40. 已存在的列</a><a class="toc-l2" href="#section-41">41. 合并文件中的额外样本</a><a class="toc-l2" href="#section-42">42. 文件中缺失的当前样本</a><a class="toc-l2" href="#section-43">43. OTU 表编辑 — 概述</a><a class="toc-l2" href="#section-44">44. OTU 表方向</a><a class="toc-l2" href="#section-45">45. “ASV 在列”不是转置操作</a><a class="toc-l2" href="#section-46">46. 选择错误轴的风险</a><a class="toc-l2" href="#section-47">47. 可编辑 OTU 表</a><a class="toc-l2" href="#section-48">48. OTU 表数值转换</a><a class="toc-l2" href="#section-49">49. OTU 空值</a><a class="toc-l2" href="#section-50">50. 非数值 OTU 值</a><a class="toc-l2" href="#section-51">51. 负数和小数</a><a class="toc-l2" href="#section-52">52. 向 OTU 表添加列</a><a class="toc-l2" href="#section-53">53. 添加样本的风险</a><a class="toc-l2" href="#section-54">54. 添加 taxon 的风险</a><a class="toc-l2" href="#section-55">55. 结构性添加建议</a><a class="toc-l2" href="#section-56">56. 删除 OTU 列</a><a class="toc-l2" href="#section-57">57. 生物学删除应使用 Filtration</a><a class="toc-l2" href="#section-58">58. ASV 自然排序</a><a class="toc-l2" href="#section-59">59. 排序状态下编辑</a><a class="toc-l2" href="#section-60">60. 将文件合并到 OTU 表</a><a class="toc-l2" href="#section-61">61. 导入列的含义</a><a class="toc-l2" href="#section-62">62. OTU 合并文件中的额外行</a><a class="toc-l2" href="#section-63">63. 文件中缺失的当前行</a><a class="toc-l2" href="#section-64">64. 自动重命名 ASV</a><a class="toc-l2" href="#section-65">65. 保留末尾数字</a><a class="toc-l2" href="#section-66">66. 顺序重命名</a><a class="toc-l2" href="#section-67">67. 新名称冲突</a><a class="toc-l2" href="#section-68">68. 前缀验证</a><a class="toc-l2" href="#section-69">69. ASV 重命名传播</a><a class="toc-l2" href="#section-70">70. 重命名前存在重复标识符</a><a class="toc-l2" href="#section-71">71. OTU 修改后重新对齐序列</a><a class="toc-l2" href="#section-72">72. OTU 修改后重新对齐树</a><a class="toc-l2" href="#section-73">73. 缺少 ape 包</a><a class="toc-l2" href="#section-74">74. 结构性 OTU 修改后的 taxonomy</a><a class="toc-l2" href="#section-75">75. 分类编辑 — 概述</a><a class="toc-l2" href="#section-76">76. 缺少 taxonomy</a><a class="toc-l2" href="#section-77">77. 第一次分类编辑前确认</a><a class="toc-l2" href="#section-78">78. 切换数据集后再次确认</a><a class="toc-l2" href="#section-79">79. 编辑分类单元格</a><a class="toc-l2" href="#section-80">80. 不检查分类层级</a><a class="toc-l2" href="#section-81">81. 添加分类 rank</a><a class="toc-l2" href="#section-82">82. Rank 顺序</a><a class="toc-l2" href="#section-83">83. 重命名分类 rank</a><a class="toc-l2" href="#section-84">84. 删除 rank</a><a class="toc-l2" href="#section-85">85. 删除所有 rank</a><a class="toc-l2" href="#section-86">86. 按 ASV 对 taxonomy 排序</a><a class="toc-l2" href="#section-87">87. ASV 重命名后的同步</a><a class="toc-l2" href="#section-88">88. 分类同步限制</a><a class="toc-l2" href="#section-89">89. 将文件合并到 taxonomy</a><a class="toc-l2" href="#section-90">90. 不自动检测 taxonomy 分隔符</a><a class="toc-l2" href="#section-91">91. 已存在的分类列</a><a class="toc-l2" href="#section-92">92. 自动替换分类值</a><a class="toc-l2" href="#section-93">93. 不区分大小写的精确匹配</a><a class="toc-l2" href="#section-94">94. NA 模式</a><a class="toc-l2" href="#section-95">95. 空模式</a><a class="toc-l2" href="#section-96">96. 替换范围</a><a class="toc-l2" href="#section-97">97. 强制预览</a><a class="toc-l2" href="#section-98">98. 重叠模式</a><a class="toc-l2" href="#section-99">99. 替换值不能为空</a><a class="toc-l2" href="#section-100">100. 替换的科学影响</a><a class="toc-l2" href="#section-101">101. 未分配 taxon 的聚合</a><a class="toc-l2" href="#section-102">102. 初始 taxonomy 状态与重置</a><a class="toc-l2" href="#section-103">103. 导入、导出和删除 — 概述</a><a class="toc-l2" href="#section-104">104. 自动导入</a><a class="toc-l2" href="#section-105">105. 文件大小限制</a><a class="toc-l2" href="#section-106">106. 完整导入的分隔符检测</a><a class="toc-l2" href="#section-107">107. 完整导入 metadata</a><a class="toc-l2" href="#section-108">108. 完整导入 OTU 表</a><a class="toc-l2" href="#section-109">109. OTU 导入允许的标识符</a><a class="toc-l2" href="#section-110">110. OTU 导入中缺失的标识符</a><a class="toc-l2" href="#section-111">111. OTU 导入数值转换</a><a class="toc-l2" href="#section-112">112. 完整导入 taxonomy</a><a class="toc-l2" href="#section-113">113. 导入 RefSeq</a><a class="toc-l2" href="#section-114">114. 导入树</a><a class="toc-l2" href="#section-115">115. 完整替换组件</a><a class="toc-l2" href="#section-116">116. 完整导入后刷新编辑器</a><a class="toc-l2" href="#section-117">117. 组件导出</a><a class="toc-l2" href="#section-118">118. CSV 导出分隔符</a><a class="toc-l2" href="#section-119">119. Metadata 导出</a><a class="toc-l2" href="#section-120">120. OTU 导出</a><a class="toc-l2" href="#section-121">121. Taxonomy 导出</a><a class="toc-l2" href="#section-122">122. RefSeq 导出</a><a class="toc-l2" href="#section-123">123. 树导出</a><a class="toc-l2" href="#section-124">124. 导出与日志</a><a class="toc-l2" href="#section-125">125. 组件删除</a><a class="toc-l2" href="#section-126">126. 删除 metadata</a><a class="toc-l2" href="#section-127">127. 删除 taxonomy</a><a class="toc-l2" href="#section-128">128. 删除 RefSeq</a><a class="toc-l2" href="#section-129">129. 删除树</a><a class="toc-l2" href="#section-130">130. 删除 OTU 表</a><a class="toc-l2" href="#section-131">131. 同时删除多个组件</a><a class="toc-l2" href="#section-132">132. 撤销组件删除</a><a class="toc-l2" href="#section-133">133. 删除与磁盘文件</a><a class="toc-l2" href="#section-134">134. 在注册表中保存数据集</a><a class="toc-l2" href="#section-135">135. 名称留空</a><a class="toc-l2" href="#section-136">136. 可用的新名称</a><a class="toc-l2" href="#section-137">137. 名称已被其他数据集使用</a><a class="toc-l2" href="#section-138">138. 数据集名称清理</a><a class="toc-l2" href="#section-139">139. 覆盖另一个数据集</a><a class="toc-l2" href="#section-140">140. 保存完整项目</a><a class="toc-l2" href="#section-141">141. 故障排查</a><a class="toc-l2" href="#section-141-1">141.1. 修改了错误的数据集</a><a class="toc-l2" href="#section-141-2">141.2. 想创建新名称但原始条目也变了</a><a class="toc-l2" href="#section-141-3">141.3. 保存按钮没有保存项目</a><a class="toc-l2" href="#section-141-4">141.4. Metadata 自动出现</a><a class="toc-l2" href="#section-141-5">141.5. 修改 SampleID 没有重命名样本</a><a class="toc-l2" href="#section-141-6">141.6. 数值变量变成文本</a><a class="toc-l2" href="#section-141-7">141.7. 因子变成 character</a><a class="toc-l2" href="#section-141-8">141.8. 新列类型错误</a><a class="toc-l2" href="#section-141-9">141.9. Metadata 合并没有更新已有列</a><a class="toc-l2" href="#section-141-10">141.10. 没有找到共同标识符</a><a class="toc-l2" href="#section-141-11">141.11. 分隔符检测错误</a><a class="toc-l2" href="#section-141-12">141.12. OTU 值变为 NA</a><a class="toc-l2" href="#section-141-13">141.13. 小数逗号变成 NA</a><a class="toc-l2" href="#section-141-14">141.14. 新 OTU 列使 metadata 不同步</a><a class="toc-l2" href="#section-141-15">141.15. OTU 修改后 RefSeq 消失</a><a class="toc-l2" href="#section-141-16">141.16. OTU 修改后树消失</a><a class="toc-l2" href="#section-141-17">141.17. 树叶消失</a><a class="toc-l2" href="#section-141-18">141.18. 样本被重命名为 ASV</a><a class="toc-l2" href="#section-141-19">141.19. ASV 前缀产生异常名称</a><a class="toc-l2" href="#section-141-20">141.20. Taxonomy 与 OTU 不再匹配</a><a class="toc-l2" href="#section-141-21">141.21. 第一次分类修改没有执行</a><a class="toc-l2" href="#section-141-22">141.22. 分类替换修改了多个 rank</a><a class="toc-l2" href="#section-141-23">141.23. NA 现在被当成真实类别</a><a class="toc-l2" href="#section-141-24">141.24. 分类合并没有替换 Genus</a><a class="toc-l2" href="#section-141-25">141.25. 未自动检测 taxonomy 分隔符</a><a class="toc-l2" href="#section-141-26">141.26. 完整导入删除了列</a><a class="toc-l2" href="#section-141-27">141.27. 完整 OTU 导入改变方向</a><a class="toc-l2" href="#section-141-28">141.28. 完整导入拒绝新样本</a><a class="toc-l2" href="#section-141-29">141.29. 完整导入拒绝新 taxa</a><a class="toc-l2" href="#section-141-30">141.30. FASTA 导入被拒绝</a><a class="toc-l2" href="#section-141-31">141.31. 树导入被拒绝</a><a class="toc-l2" href="#section-141-32">141.32. 导入后编辑器仍显示旧表</a><a class="toc-l2" href="#section-141-33">141.33. 删除的旧表在编辑后重新出现</a><a class="toc-l2" href="#section-141-34">141.34. 下载文件后项目变为未保存</a><a class="toc-l2" href="#section-141-35">141.35. 表删除无法撤销</a><a class="toc-l2" href="#section-141-36">141.36. 删除 OTU 后数据集无法使用</a><a class="toc-l2" href="#section-141-37">141.37. 撤销不能退回多步</a><a class="toc-l2" href="#section-141-38">141.38. 重置不能回到原始文件</a><a class="toc-l2" href="#section-141-39">141.39. 其他语言界面中日志仍为法语</a><a class="toc-l2" href="#section-141-40">141.40. 导出后动作总数增加</a><a class="toc-l2" href="#section-142">142. 编辑前检查清单</a><a class="toc-l2" href="#section-143">143. Metadata 编辑前检查清单</a><a class="toc-l2" href="#section-144">144. OTU 编辑前检查清单</a><a class="toc-l2" href="#section-145">145. 分类替换前检查清单</a><a class="toc-l2" href="#section-146">146. 完整导入前检查清单</a><a class="toc-l2" href="#section-147">147. 删除组件前检查清单</a><a class="toc-l2" href="#section-148">148. Data Edition 后检查清单</a><a class="toc-l2" href="#section-149">149. 编辑后建议的 R 检查</a><a class="toc-l2" href="#section-150">150. 当前限制</a><a class="toc-l2" href="#section-151">151. 推荐流程</a><a class="toc-l2" href="#section-152">152. 已验证的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 数据编辑</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

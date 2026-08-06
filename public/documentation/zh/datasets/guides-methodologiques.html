@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>数据集 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="datasets" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link active" href="../datasets/guides-methodologiques.html">数据集</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">数据集</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">数据集 — 方法指南</h1>
+<h2 id="section-1">1. 总览<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Datasets</strong> 选项卡管理 BarCodeR 中两个不同层级的内容：</p>
+<ol>
+<li><strong>内存中的数据集</strong>：当前会话中可用的命名 <code>phyloseq</code> 对象。</li>
+<li><strong>持久化项目</strong>：保存在磁盘上的工作目录，可包含数据集、活动数据集、界面状态、图形历史和各模块文件。</li>
+</ol>
+<p>数据集操作包括设置活动对象、重命名、添加备注和标签、复制、调整顺序、导出以及从内存中删除。项目操作包括保存、恢复、新建、打开、重命名、复制、导出、导入和删除工作空间。</p>
+<h2 id="section-2">2. 必要定义<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. 数据集<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>数据集是反应式命名列表中的一个条目：</p>
+<pre tabindex="0"><code class="language-r">datasets()
+</code></pre>
+<p>每个条目通常都是一个 <code>phyloseq</code> 对象。列表名称在整个应用中作为该数据集的标识。</p>
+<h3 id="section-2-2">2.2. 活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>活动数据集单独保存在：</p>
+<pre tabindex="0"><code class="language-r">active_ds()
+</code></pre>
+<p>它只是被选作全局默认对象的名称，并不是对象的额外副本。</p>
+<h3 id="section-2-3">2.3. 数据集注册表<a aria-label="Permalink" class="heading-anchor" href="#section-2-3">#</a></h3>
+<p>注册表是当前内存中的数据集列表，包括名称、顺序、属性和活动名称。它不会自动与磁盘上最后一次保存的版本保持一致。</p>
+<h3 id="section-2-4">2.4. 会话<a aria-label="Permalink" class="heading-anchor" href="#section-2-4">#</a></h3>
+<p>会话指浏览器中应用的当前状态。注册表修改首先发生在内存中。关闭应用或恢复旧保存时，未保存的修改可能丢失。</p>
+<h3 id="section-2-5">2.5. 项目<a aria-label="Permalink" class="heading-anchor" href="#section-2-5">#</a></h3>
+<p>项目保存在：</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;项目内部标识&gt;/
+</code></pre>
+<p>其中可能包含 <code>registry.rds</code>、<code>manifest.rds</code>、<code>ui_state.rds</code>，以及 <code>barplot/</code>、<code>alpha_div/</code>、<code>Ordination/</code>、<code>DAA/</code>、<code>Analyse/</code>、<code>multiview/</code> 等模块目录。</p>
+<h2 id="section-3">3. 数据集与项目的区别<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>属性</th>
+<th style="text-align:right">数据集</th>
+<th style="text-align:right">项目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>包含 phyloseq 对象</td>
+<td style="text-align:right">是</td>
+<td style="text-align:right">一个或多个</td>
+</tr>
+<tr>
+<td>可以处于活动状态</td>
+<td style="text-align:right">是</td>
+<td style="text-align:right">是，作为当前项目</td>
+</tr>
+<tr>
+<td>包含图形历史</td>
+<td style="text-align:right">否</td>
+<td style="text-align:right">是</td>
+</tr>
+<tr>
+<td>可以只从内存删除</td>
+<td style="text-align:right">是</td>
+<td style="text-align:right">否</td>
+</tr>
+<tr>
+<td>可以从磁盘物理删除</td>
+<td style="text-align:right">数据集删除操作不会</td>
+<td style="text-align:right">是</td>
+</tr>
+</tbody>
+</table></div>
+<p>因此，删除数据集和删除项目是完全不同的操作。</p>
+<h2 id="section-4">4. 选项卡结构<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>该选项卡包含三个主要区域：</p>
+<ol>
+<li>全局活动数据集；</li>
+<li>数据集注册表；</li>
+<li>项目管理。</li>
+</ol>
+<h2 id="section-5">5. 全局活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. 选择器的作用<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>所选数据集会成为 Description、Data Edition、Filtration、Exploration 和 Analysis 等模块的默认工作对象。</p>
+<h3 id="section-5-2">5.2. 同步<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>该选择器与 <code>active_ds()</code> 及其他全局数据集选择器同步。</p>
+<h3 id="section-5-3">5.3. 模块内的局部选择<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>部分模块可以临时使用另一个数据集。执行操作前，应同时检查全局选择器和模块自己的选择器。</p>
+<h3 id="section-5-4">5.4. 更改活动数据集的影响<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>更改活动数据集不会编辑、过滤、复制或删除数据，只会改变应用的全局引用。但由于活动名称会保存到项目中，该操作仍会把项目标记为存在未保存修改。</p>
+<h2 id="section-6">6. 内存中没有数据集<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>当注册表为空时，可通过 Input data 加载对象、从 OpenMetaBar 导入 phyloseq、打开已保存项目、导入项目归档或恢复已有注册表。</p>
+<h2 id="section-7">7. 数据集注册表<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>表格为 <code>datasets()</code> 当前内存中的每个条目显示一行。它不会直接扫描磁盘文件。</p>
+<h2 id="section-8">8. 注册表列<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. 活动状态<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>星号表示活动数据集，圆点表示非活动数据集。该图标不表示数据质量、过滤程度或保存状态。</p>
+<h3 id="section-8-2">8.2. 名称<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>名称是选择器、报告、导出、历史、谱系属性、图例和部分文件名所使用的键。</p>
+<h3 id="section-8-3">8.3. ASV<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>显示值来自：</p>
+<pre tabindex="0"><code class="language-r">phyloseq::ntaxa()
+</code></pre>
+<p>它实际上是分类单元数量。根据上游流程，这些单元可能是 ASV、OTU、ZOTU 或其他类型。</p>
+<h3 id="section-8-4">8.4. 样本<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>显示值来自：</p>
+<pre tabindex="0"><code class="language-r">phyloseq::nsamples()
+</code></pre>
+<h3 id="section-8-5">8.5. 来源<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<ul>
+<li><strong>已加载</strong>：没有识别到过滤或 OpenMetaBar 来源属性。</li>
+<li><strong>OpenMetaBar</strong>：对象具有 <code>openmetabar_run</code>。</li>
+<li><strong>已过滤</strong>：<code>filtration_log</code> 中存在有名称的父数据集。</li>
+</ul>
+<p>“已过滤”的优先级高于 “OpenMetaBar”。</p>
+<h3 id="section-8-6">8.6. 父数据集<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>父名称来自：</p>
+<pre tabindex="0"><code class="language-r">filtration_log$parent_dataset
+</code></pre>
+<p>它是存储的字符串，而不是对象之间的动态链接。父数据集重命名或删除时，BarCodeR 会更新可识别后代中的该字段。</p>
+<h3 id="section-8-7">8.7. 备注和标签<a aria-label="Permalink" class="heading-anchor" href="#section-8-7">#</a></h3>
+<p>它们保存在属性：</p>
+<pre tabindex="0"><code class="language-r">list(note = "...", tags = c("tag1", "tag2"))
+</code></pre>
+<p>这些信息会随单个数据集导出、项目保存和复制一起保留。</p>
+<h3 id="section-8-8">8.8. 修改日期<a aria-label="Permalink" class="heading-anchor" href="#section-8-8">#</a></h3>
+<p>显示日期首先取自 <code>edit_log</code> 的最后一条记录，其次取自 <code>filtration_log</code>。重命名、备注、标签、顺序和活动选择不一定更新该日期。</p>
+<h3 id="section-8-9">8.9. 操作<a aria-label="Permalink" class="heading-anchor" href="#section-8-9">#</a></h3>
+<p>每一行都可以设为活动、编辑、复制、导出、上移、下移或从内存删除。</p>
+<h2 id="section-9">9. 刷新注册表<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><strong>刷新</strong> 只会根据当前反应式对象重新构建可见表格。它不会读取 <code>registry.rds</code>、扫描项目或恢复数据。</p>
+<h2 id="section-10">10. 设为活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>激活某行会更新 <code>active_ds()</code>、同步全局选择器并将项目标记为已修改。要在重启后保留该选择，需要保存项目。</p>
+<h2 id="section-11">11. 编辑数据集<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>编辑窗口包含数据集名称、自由文本备注和逗号分隔的标签。</p>
+<h2 id="section-12">12. 重命名数据集<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. 名称清理<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p><code>bcr_clean_label()</code> 会去除首尾空格，把不安全字符替换为 <code>_</code>，删除首尾下划线，并在结果为空时使用 <code>dataset</code>。</p>
+<h3 id="section-12-2">12.2. 非 ASCII 字符<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>清理结果部分依赖 R 的区域设置。为获得最大的跨系统兼容性，建议使用 ASCII 字母、数字、<code>_</code> 和 <code>-</code>。</p>
+<h3 id="section-12-3">12.3. 名称冲突<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>如果名称已存在，会添加 <code>_2</code>、<code>_3</code> 等后缀，不会静默覆盖现有对象。</p>
+<h3 id="section-12-4">12.4. 更新活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>如果被重命名的数据集处于活动状态，<code>active_ds()</code> 会更新为最终名称。</p>
+<h3 id="section-12-5">12.5. 已过滤后代<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>可识别后代中的 <code>parent_dataset</code> 会更新为新的父名称。</p>
+<h3 id="section-12-6">12.6. 不会重命名的内容<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>以前导出的文件、源 RDS 文件、旧图形、旧报告、项目名称和项目 slug 不会随之重命名。</p>
+<h2 id="section-13">13. 添加备注<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>备注可用于记录处理步骤、限制、数据库版本、验证状态或预期用途。它保存在 phyloseq 对象内部。修改备注不一定更新注册表的修改日期。</p>
+<h2 id="section-14">14. 添加标签<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>标签按逗号拆分并去除首尾空格。空标签会被删除，但重复项和大小写差异会保留。建议使用一致的命名规则。</p>
+<h2 id="section-15">15. <code>dataset_meta</code> 属性<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>保存编辑时，<code>dataset_meta</code> 会被替换为仅包含 <code>note</code> 和 <code>tags</code> 的列表。此前存放在该属性中的其他自定义字段可能丢失。</p>
+<h2 id="section-16">16. 复制数据集<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="section-16-1">16.1. 建议名称<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>默认名称为 <code>&lt;名称&gt;_副本</code>，如有冲突会添加数字后缀。</p>
+<h3 id="section-16-2">16.2. 复制内容<a aria-label="Permalink" class="heading-anchor" href="#section-16-2">#</a></h3>
+<p>整个对象都会复制：丰度表、metadata、分类表、序列、树、日志、来源、备注、标签和其他属性。</p>
+<h3 id="section-16-3">16.3. 活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-16-3">#</a></h3>
+<p>新副本会自动成为活动数据集。</p>
+<h3 id="section-16-4">16.4. 后续独立性<a aria-label="Permalink" class="heading-anchor" href="#section-16-4">#</a></h3>
+<p>之后两个注册表条目可独立修改。</p>
+<h3 id="section-16-5">16.5. 来源<a aria-label="Permalink" class="heading-anchor" href="#section-16-5">#</a></h3>
+<p>复制不会创建专门的“副本”来源。副本保留源对象的来源属性和父信息。</p>
+<h2 id="section-17">17. 调整数据集顺序<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>上下箭头改变列表顺序。该顺序可能影响选择器、多数据集操作和默认回退选择。只有保存项目后才会持久化。</p>
+<h2 id="section-18">18. 导出单个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>行导出会把当前 phyloseq 对象写入类似以下文件：</p>
+<pre tabindex="0"><code class="language-text">dataset_&lt;名称&gt;_&lt;时间戳&gt;.rds
+</code></pre>
+<p>其中包含对象组件和属性，但不包含其他数据集、项目图形、模块历史、原始 FASTQ、OpenMetaBar 远程运行目录或原始分类数据库。可通过 Input data 重新导入。</p>
+<h2 id="section-19">19. 从会话中删除数据集<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. 立即影响<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>对象会从 <code>datasets()</code> 中移除，从选择器中消失，并在当前会话中不可再用。项目会被标记为未保存。</p>
+<h3 id="section-19-2">19.2. 删除活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>第一个剩余数据集会成为活动数据集；如果没有剩余对象，<code>active_ds()</code> 变为空。</p>
+<h3 id="section-19-3">19.3. 已过滤后代<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>如果被删除对象是父数据集，后代中的 <code>parent_dataset</code> 会被清空。由于“已过滤”徽标目前依赖非空父名称，可见来源可能改变。</p>
+<h3 id="section-19-4">19.4. 仅影响内存<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>磁盘上的最后一次保存不会立即改变。重新从磁盘加载可能使数据集重新出现。</p>
+<h3 id="section-19-5">19.5. 让删除持久化<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>删除行、检查注册表，然后点击 <strong>保存项目</strong>。</p>
+<h3 id="section-19-6">19.6. 删除最后一个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-19-6">#</a></h3>
+<p>快速保存会拒绝空注册表，因此磁盘上可能仍保留旧的非空 <code>registry.rds</code>。若需要真正持久的空工作区，建议新建项目。</p>
+<h2 id="section-20">20. 未保存修改状态<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p><code>datasets()</code> 或 <code>active_ds()</code> 变化时，项目会被标记为已修改。该指示器主要跟踪注册表和活动名称，并不是所有模块文件的完整审计。</p>
+<h2 id="section-21">21. 项目区域<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>项目管理器控制当前持久化工作空间、保存、恢复、创建、导出、导入和项目列表。</p>
+<h2 id="section-22">22. 当前项目<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>当前 slug 保存在：</p>
+<pre tabindex="0"><code class="language-text">save/projects/.current
+</code></pre>
+<p>BarCodeR 启动时会尝试重新打开它。如果不可用，则回退到 <code>sans-titre</code>。</p>
+<h2 id="section-23">23. 显示名称与内部 slug<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>项目具有显示名称、ASCII 安全的内部 slug 和磁盘目录。重命名只改变显示名称，slug 和路径保持不变。</p>
+<h2 id="section-24">24. 项目磁盘结构<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<h3 id="section-24-1">24.1. <code>registry.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>保存数据集、顺序、活动数据集和格式元数据。</p>
+<h3 id="section-24-2">24.2. <code>manifest.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>保存显示名称、创建/修改时间和已保存数据集数量。</p>
+<h3 id="section-24-3">24.3. <code>ui_state.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>可保存主选项卡、子选项卡和可恢复界面参数。</p>
+<h3 id="section-24-4">24.4. 模块目录<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>各模块可在自己的目录中保存图形、R 对象、参数和历史元数据。</p>
+<h2 id="section-25">25. 项目不会自动包含的内容<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>项目不是所有科研输入的完整副本。原始 FASTQ/BAM、参考 FASTA、分类数据库、OpenMetaBar design、远程结果、外部脚本和工具数据库必须单独归档。</p>
+<h2 id="section-26">26. 保存项目<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<h3 id="section-26-1">26.1. 保存内容<a aria-label="Permalink" class="heading-anchor" href="#section-26-1">#</a></h3>
+<p>保存操作会写入数据集列表、顺序、完整对象及属性、活动数据集、清单中的数量和可用界面状态。</p>
+<h3 id="section-26-2">26.2. 图形历史<a aria-label="Permalink" class="heading-anchor" href="#section-26-2">#</a></h3>
+<p>图形历史通常由模块直接写入。保存操作主要同步数据集注册表。</p>
+<h3 id="section-26-3">26.3. 空项目<a aria-label="Permalink" class="heading-anchor" href="#section-26-3">#</a></h3>
+<p>没有数据集时会拒绝保存。</p>
+<h3 id="section-26-4">26.4. 防止空内存覆盖<a aria-label="Permalink" class="heading-anchor" href="#section-26-4">#</a></h3>
+<p>非空已保存注册表会受到保护，避免在加载失败等情况下被空内存覆盖。</p>
+<h3 id="section-26-5">26.5. 成功保存<a aria-label="Permalink" class="heading-anchor" href="#section-26-5">#</a></h3>
+<p>成功后会清除未保存标记并更新项目元数据。</p>
+<h2 id="section-27">27. 可用保存状态<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>显示时间是 <code>registry.rds</code> 的修改时间，不一定是最后一张图、最后一次分析或最后一个历史文件的时间。</p>
+<h2 id="section-28">28. 从磁盘重新加载<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>重新加载会用 <code>registry.rds</code> 的内容替换当前内存中的所有数据集，不会合并。未保存的导入、编辑、删除、过滤、备注、标签、顺序和活动选择都可能丢失。</p>
+<h2 id="section-29">29. 找不到保存<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>没有 <code>registry.rds</code> 可能表示新项目、仅有图形的项目、从未保存的项目、文件被手动删除或导入不完整。</p>
+<h2 id="section-30">30. 保存无法读取<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>如果 <code>registry.rds</code> 无法读取，项目可能以空内存打开并显示警告。BarCodeR 会防止用空注册表静默覆盖该文件。尝试恢复前应先复制整个项目目录。</p>
+<h2 id="section-31">31. 仅导出数据为 <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>该导出包含版本化的 <code>datasets()</code> 和 <code>active_ds()</code> 列表，不包含图形、历史、清单、项目显示名称、界面状态和外部文件。可从 Input data 重新导入。</p>
+<h2 id="section-32">32. 导出完整项目为 <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>ZIP 包含当前项目目录。BarCodeR 会先尝试保存内存注册表。如果保存失败，归档仍可能包含磁盘上最后一个有效版本，而不是当前内存状态。必须检查通知。</p>
+<h2 id="section-33">33. 大小警告<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>项目超过 200 MB 时显示警告。大小包含全部项目文件，并可能短暂缓存。应用上传限制为 500 MB，因此更大的 ZIP 可能可以导出，但无法通过界面重新导入。</p>
+<h2 id="section-34">34. 导入项目 <code>.zip</code><a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>归档总是解压为<strong>新项目</strong>，不会与当前项目合并。导入后需从项目列表中打开。BarCodeR 会识别 <code>registry.rds</code>、<code>manifest.rds</code> 或已知历史目录；因此仅包含图形的项目可能以零数据集导入。</p>
+<h2 id="section-35">35. 新建项目<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>系统会创建目录和清单，当前项目进入正常的保存/切换流程，新项目成为当前项目，应用重新加载。空名称或重复名称会被拒绝。</p>
+<h2 id="section-36">36. 打开另一个项目<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>BarCodeR 会尝试保存当前项目，把新 slug 写入 <code>.current</code>，重新加载会话，并使用新项目路径初始化模块。保存错误并不总能阻止切换，因此不能忽略红色通知。</p>
+<h2 id="section-37">37. 多个 BarCodeR 浏览器标签页<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>当前项目在 R 进程层面共享。其他标签页可能仍使用旧项目路径，并把文件写入错误位置。切换项目之前应保存并关闭其他 BarCodeR 标签页。</p>
+<h2 id="section-38">38. 重命名当前项目<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>只改变显示名称。slug、目录、历史、数据集和活动数据集都不会移动。其他项目已使用的名称会被拒绝。</p>
+<h2 id="section-39">39. 项目列表<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>项目按清单最近修改时间排序。数据集数量反映磁盘上已保存的注册表，不一定等于内存中未保存的状态。</p>
+<h2 id="section-40">40. 复制项目<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>整个项目目录都会复制，包括注册表、清单、界面状态、数据集、图形和历史。复制当前项目之前建议手动保存，因为内部预保存结果不是严格阻断条件。</p>
+<h2 id="section-41">41. 删除项目<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>只能删除已关闭项目。整个 <code>save/projects/&lt;slug&gt;/</code> 目录会被永久删除，没有内部回收站。删除前应先导出 ZIP。</p>
+<h2 id="section-42">42. 三种导出的区别<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>导出</th>
+<th>内容</th>
+<th style="text-align:right">图形</th>
+<th>重新导入位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单个数据集 <code>.rds</code></td>
+<td>一个 phyloseq</td>
+<td style="text-align:right">否</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>项目数据 <code>.rds</code></td>
+<td>数据集列表 + 活动名称</td>
+<td style="text-align:right">否</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>完整项目 <code>.zip</code></td>
+<td>项目目录</td>
+<td style="text-align:right">是</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-43">43. 项目与 OpenMetaBar 数据<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>导入 phyloseq 不会复制远程 OpenMetaBar 运行目录。原始 reads、Nextflow 日志、<code>work/</code>、容器、参考数据库和集群输出需要单独归档。</p>
+<h2 id="section-44">44. 项目与图形历史<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>只有实际保存在模块历史中的图形才能保证位于项目内。仅在屏幕显示的图形可能没有归档。</p>
+<h2 id="section-45">45. 项目物理位置<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>项目位于 <code>&lt;BarCodeR工作目录&gt;/save/projects/</code>。在 Docker 或服务器部署中，该目录必须使用持久存储。在共享实例上，隐私取决于权限、认证和部署配置。</p>
+<h2 id="section-46">46. 推荐的日常流程<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<ol>
+<li>打开或创建正确项目。</li>
+<li>加载数据。</li>
+<li>检查注册表和活动数据集。</li>
+<li>添加有用的备注和标签。</li>
+<li>大规模编辑前先复制。</li>
+<li>定期保存。</li>
+<li>导出关键数据集。</li>
+<li>定期把完整 ZIP 保存到 BarCodeR 之外。</li>
+</ol>
+<h2 id="section-47">47. 高风险操作之前<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>在过滤、大规模编辑、删除、恢复、切换项目或升级应用之前，应保存项目、确认成功、导出重要数据集、必要时导出完整项目，并验证下载文件。</p>
+<h2 id="section-48">48. 故障排除<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<h3 id="section-48-1">48.1. 注册表中缺少数据集<a aria-label="Permalink" class="heading-anchor" href="#section-48-1">#</a></h3>
+<p>检查导入是否完成、当前项目是否正确、对象是否已删除以及是否恢复了旧注册表。</p>
+<h3 id="section-48-2">48.2. 模块使用了错误数据集<a aria-label="Permalink" class="heading-anchor" href="#section-48-2">#</a></h3>
+<p>同时检查全局和模块局部选择器。</p>
+<h3 id="section-48-3">48.3. 活动选择未保留<a aria-label="Permalink" class="heading-anchor" href="#section-48-3">#</a></h3>
+<p>更改后保存项目。</p>
+<h3 id="section-48-4">48.4. 输入名称被修改<a aria-label="Permalink" class="heading-anchor" href="#section-48-4">#</a></h3>
+<p>不安全字符被规范化。</p>
+<h3 id="section-48-5">48.5. 添加了 <code>_2</code><a aria-label="Permalink" class="heading-anchor" href="#section-48-5">#</a></h3>
+<p>已有相同最终名称。</p>
+<h3 id="section-48-6">48.6. 修改日期没有变化<a aria-label="Permalink" class="heading-anchor" href="#section-48-6">#</a></h3>
+<p>备注、标签和重命名不使用该日期来源。</p>
+<h3 id="section-48-7">48.7. 副本保留原始来源<a aria-label="Permalink" class="heading-anchor" href="#section-48-7">#</a></h3>
+<p>复制会复制属性。</p>
+<h3 id="section-48-8">48.8. 已过滤数据集不再显示为已过滤<a aria-label="Permalink" class="heading-anchor" href="#section-48-8">#</a></h3>
+<p>父数据集可能已删除。检查 <code>attr(ps, "filtration_log")</code>。</p>
+<h3 id="section-48-9">48.9. 已删除数据集重新出现<a aria-label="Permalink" class="heading-anchor" href="#section-48-9">#</a></h3>
+<p>删除未保存，之后恢复了旧注册表。</p>
+<h3 id="section-48-10">48.10. 无法保存空项目<a aria-label="Permalink" class="heading-anchor" href="#section-48-10">#</a></h3>
+<p>快速保存至少需要一个数据集。需要空工作区时新建项目。</p>
+<h3 id="section-48-11">48.11. 重新加载删除了修改<a aria-label="Permalink" class="heading-anchor" href="#section-48-11">#</a></h3>
+<p>重新加载会用保存的注册表替换内存。</p>
+<h3 id="section-48-12">48.12. 没有保存文件<a aria-label="Permalink" class="heading-anchor" href="#section-48-12">#</a></h3>
+<p>项目尚未写入 <code>registry.rds</code>。</p>
+<h3 id="section-48-13">48.13. 项目以空状态打开并提示注册表错误<a aria-label="Permalink" class="heading-anchor" href="#section-48-13">#</a></h3>
+<p>不要覆盖。先复制目录，并在外部测试 <code>readRDS()</code>。</p>
+<h3 id="section-48-14">48.14. 新项目名称被拒绝<a aria-label="Permalink" class="heading-anchor" href="#section-48-14">#</a></h3>
+<p>名称为空或已存在（忽略大小写和首尾空格）。</p>
+<h3 id="section-48-15">48.15. 重命名后目录仍为旧名称<a aria-label="Permalink" class="heading-anchor" href="#section-48-15">#</a></h3>
+<p>设计上只改变显示名称。</p>
+<h3 id="section-48-16">48.16. 打开项目会重新加载应用<a aria-label="Permalink" class="heading-anchor" href="#section-48-16">#</a></h3>
+<p>这是重新初始化模块路径所必需的。</p>
+<h3 id="section-48-17">48.17. 打开另一个项目时出现保存错误<a aria-label="Permalink" class="heading-anchor" href="#section-48-17">#</a></h3>
+<p>切换仍可能继续。应重新打开并检查前一个项目。</p>
+<h3 id="section-48-18">48.18. 多标签页警告<a aria-label="Permalink" class="heading-anchor" href="#section-48-18">#</a></h3>
+<p>切换项目之前关闭其他标签页。</p>
+<h3 id="section-48-19">48.19. 项目副本缺少最新修改<a aria-label="Permalink" class="heading-anchor" href="#section-48-19">#</a></h3>
+<p>复制前显式保存。</p>
+<h3 id="section-48-20">48.20. 无法删除当前项目<a aria-label="Permalink" class="heading-anchor" href="#section-48-20">#</a></h3>
+<p>先打开另一个项目。</p>
+<h3 id="section-48-21">48.21. 删除项目失败<a aria-label="Permalink" class="heading-anchor" href="#section-48-21">#</a></h3>
+<p>检查权限、文件锁、磁盘错误和目标目录。</p>
+<h3 id="section-48-22">48.22. ZIP 很大<a aria-label="Permalink" class="heading-anchor" href="#section-48-22">#</a></h3>
+<p>删除不必要的历史或仅导出数据。</p>
+<h3 id="section-48-23">48.23. ZIP 超过 500 MB<a aria-label="Permalink" class="heading-anchor" href="#section-48-23">#</a></h3>
+<p>提高 <code>shiny.maxRequestSize</code>、缩小归档、直接复制项目目录或使用外部存储。</p>
+<h3 id="section-48-24">48.24. 导入项目未自动打开<a aria-label="Permalink" class="heading-anchor" href="#section-48-24">#</a></h3>
+<p>在列表中选择并点击 <strong>打开</strong>。</p>
+<h3 id="section-48-25">48.25. 归档无效<a aria-label="Permalink" class="heading-anchor" href="#section-48-25">#</a></h3>
+<p>检查 ZIP 完整性和可识别的项目标记。</p>
+<h3 id="section-48-26">48.26. 导入项目有零个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-48-26">#</a></h3>
+<p>它可能只有历史，或注册表缺失/无法读取。</p>
+<h3 id="section-48-27">48.27. ZIP 不包含最新数据<a aria-label="Permalink" class="heading-anchor" href="#section-48-27">#</a></h3>
+<p>导出前保存可能失败；检查通知。</p>
+<h3 id="section-48-28">48.28. 项目列表中的数据集数量不正确<a aria-label="Permalink" class="heading-anchor" href="#section-48-28">#</a></h3>
+<p>保存并刷新；列表反映持久化元数据。</p>
+<h3 id="section-48-29">48.29. 项目大小延迟更新<a aria-label="Permalink" class="heading-anchor" href="#section-48-29">#</a></h3>
+<p>大小计算会短暂缓存。</p>
+<h3 id="section-48-30">48.30. 重新部署后项目消失<a aria-label="Permalink" class="heading-anchor" href="#section-48-30">#</a></h3>
+<p>把 <code>save/projects/</code> 挂载到持久存储。</p>
+<h2 id="section-49">49. 保存前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>当前项目正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>预期数据集均存在。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>活动数据集正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>名称、备注和标签正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>删除和复制均为有意操作。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>没有重要操作仍在等待。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>没有错误通知。</li>
+</ul>
+<h2 id="section-50">50. 切换项目前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>保存当前项目。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认成功通知。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>导出关键数据集。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>关闭对话框并结束计算。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>关闭其他 BarCodeR 标签页。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>核对目标项目名称。</li>
+</ul>
+<h2 id="section-51">51. 删除数据集前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>核对准确名称和活动状态。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查已过滤后代。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>必要时导出。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>归档项目。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>删除并检查新的活动数据集。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>保存项目。</li>
+</ul>
+<h2 id="section-52">52. 删除项目前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认它不是当前项目。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>导出并验证 ZIP。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>单独导出关键数据集。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>确认原始数据和 OpenMetaBar 输出已在其他位置归档。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>完成以上检查后再删除。</li>
+</ul>
+<h2 id="section-53">53. 推荐备份策略<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>至少使用三层备份：</p>
+<ol>
+<li>定期点击 <strong>保存项目</strong>；</li>
+<li>对关键数据集进行单独 RDS 导出；</li>
+<li>定期生成完整 ZIP 并存放在 BarCodeR 安装目录之外。</li>
+</ol>
+<p>仅使用内部存储无法防止磁盘丢失、部署替换或服务器故障。</p>
+<h2 id="section-54">54. 可追溯性原则<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>使用明确的项目和数据集名称、一致的标签、有意义的备注、保留的来源信息、大规模编辑前的副本、频繁保存、参考导出、记录的 BarCodeR 版本，以及独立的原始数据归档。</p>
+<h2 id="section-55">55. 当前限制<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<ul>
+<li>数据集操作首先发生在内存中，保存后才持久化。</li>
+<li>空项目无法快速保存。</li>
+<li>修改日期并不完整。</li>
+<li>“已过滤”来源依赖有名称的父数据集。</li>
+<li>复制会保留来源属性。</li>
+<li>数据集名称不保证全部为 ASCII。</li>
+<li>项目切换对整个 R 实例生效。</li>
+<li>保存错误不一定阻止项目切换或复制。</li>
+<li>保存指示器主要跟踪注册表和活动数据集。</li>
+<li>ZIP 不包含外部科研文件。</li>
+<li>超过 500 MB 的归档可能无法通过界面导入。</li>
+<li><code>save/projects/</code> 必须使用持久存储。</li>
+</ul>
+<h2 id="section">已核验的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h2>
+<ol>
+<li><code>modules/datasets/mod_datasets_ui.R</code></li>
+<li><code>modules/datasets/mod_datasets_server.R</code></li>
+<li><code>modules/_shared/_dataset_naming.R</code></li>
+<li><code>modules/_shared/_project_store.R</code></li>
+<li><code>modules/_shared/_ui_state.R</code></li>
+<li><code>app.R</code></li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 总览</a><a class="toc-l2" href="#section-2">2. 必要定义</a><a class="toc-l3" href="#section-2-1">2.1. 数据集</a><a class="toc-l3" href="#section-2-2">2.2. 活动数据集</a><a class="toc-l3" href="#section-2-3">2.3. 数据集注册表</a><a class="toc-l3" href="#section-2-4">2.4. 会话</a><a class="toc-l3" href="#section-2-5">2.5. 项目</a><a class="toc-l2" href="#section-3">3. 数据集与项目的区别</a><a class="toc-l2" href="#section-4">4. 选项卡结构</a><a class="toc-l2" href="#section-5">5. 全局活动数据集</a><a class="toc-l3" href="#section-5-1">5.1. 选择器的作用</a><a class="toc-l3" href="#section-5-2">5.2. 同步</a><a class="toc-l3" href="#section-5-3">5.3. 模块内的局部选择</a><a class="toc-l3" href="#section-5-4">5.4. 更改活动数据集的影响</a><a class="toc-l2" href="#section-6">6. 内存中没有数据集</a><a class="toc-l2" href="#section-7">7. 数据集注册表</a><a class="toc-l2" href="#section-8">8. 注册表列</a><a class="toc-l3" href="#section-8-1">8.1. 活动状态</a><a class="toc-l3" href="#section-8-2">8.2. 名称</a><a class="toc-l3" href="#section-8-3">8.3. ASV</a><a class="toc-l3" href="#section-8-4">8.4. 样本</a><a class="toc-l3" href="#section-8-5">8.5. 来源</a><a class="toc-l3" href="#section-8-6">8.6. 父数据集</a><a class="toc-l3" href="#section-8-7">8.7. 备注和标签</a><a class="toc-l3" href="#section-8-8">8.8. 修改日期</a><a class="toc-l3" href="#section-8-9">8.9. 操作</a><a class="toc-l2" href="#section-9">9. 刷新注册表</a><a class="toc-l2" href="#section-10">10. 设为活动数据集</a><a class="toc-l2" href="#section-11">11. 编辑数据集</a><a class="toc-l2" href="#section-12">12. 重命名数据集</a><a class="toc-l3" href="#section-12-1">12.1. 名称清理</a><a class="toc-l3" href="#section-12-2">12.2. 非 ASCII 字符</a><a class="toc-l3" href="#section-12-3">12.3. 名称冲突</a><a class="toc-l3" href="#section-12-4">12.4. 更新活动数据集</a><a class="toc-l3" href="#section-12-5">12.5. 已过滤后代</a><a class="toc-l3" href="#section-12-6">12.6. 不会重命名的内容</a><a class="toc-l2" href="#section-13">13. 添加备注</a><a class="toc-l2" href="#section-14">14. 添加标签</a><a class="toc-l2" href="#section-15">15. dataset_meta 属性</a><a class="toc-l2" href="#section-16">16. 复制数据集</a><a class="toc-l3" href="#section-16-1">16.1. 建议名称</a><a class="toc-l3" href="#section-16-2">16.2. 复制内容</a><a class="toc-l3" href="#section-16-3">16.3. 活动数据集</a><a class="toc-l3" href="#section-16-4">16.4. 后续独立性</a><a class="toc-l3" href="#section-16-5">16.5. 来源</a><a class="toc-l2" href="#section-17">17. 调整数据集顺序</a><a class="toc-l2" href="#section-18">18. 导出单个数据集</a><a class="toc-l2" href="#section-19">19. 从会话中删除数据集</a><a class="toc-l3" href="#section-19-1">19.1. 立即影响</a><a class="toc-l3" href="#section-19-2">19.2. 删除活动数据集</a><a class="toc-l3" href="#section-19-3">19.3. 已过滤后代</a><a class="toc-l3" href="#section-19-4">19.4. 仅影响内存</a><a class="toc-l3" href="#section-19-5">19.5. 让删除持久化</a><a class="toc-l3" href="#section-19-6">19.6. 删除最后一个数据集</a><a class="toc-l2" href="#section-20">20. 未保存修改状态</a><a class="toc-l2" href="#section-21">21. 项目区域</a><a class="toc-l2" href="#section-22">22. 当前项目</a><a class="toc-l2" href="#section-23">23. 显示名称与内部 slug</a><a class="toc-l2" href="#section-24">24. 项目磁盘结构</a><a class="toc-l3" href="#section-24-1">24.1. registry.rds</a><a class="toc-l3" href="#section-24-2">24.2. manifest.rds</a><a class="toc-l3" href="#section-24-3">24.3. ui_state.rds</a><a class="toc-l3" href="#section-24-4">24.4. 模块目录</a><a class="toc-l2" href="#section-25">25. 项目不会自动包含的内容</a><a class="toc-l2" href="#section-26">26. 保存项目</a><a class="toc-l3" href="#section-26-1">26.1. 保存内容</a><a class="toc-l3" href="#section-26-2">26.2. 图形历史</a><a class="toc-l3" href="#section-26-3">26.3. 空项目</a><a class="toc-l3" href="#section-26-4">26.4. 防止空内存覆盖</a><a class="toc-l3" href="#section-26-5">26.5. 成功保存</a><a class="toc-l2" href="#section-27">27. 可用保存状态</a><a class="toc-l2" href="#section-28">28. 从磁盘重新加载</a><a class="toc-l2" href="#section-29">29. 找不到保存</a><a class="toc-l2" href="#section-30">30. 保存无法读取</a><a class="toc-l2" href="#section-31">31. 仅导出数据为 .rds</a><a class="toc-l2" href="#section-32">32. 导出完整项目为 .zip</a><a class="toc-l2" href="#section-33">33. 大小警告</a><a class="toc-l2" href="#section-34">34. 导入项目 .zip</a><a class="toc-l2" href="#section-35">35. 新建项目</a><a class="toc-l2" href="#section-36">36. 打开另一个项目</a><a class="toc-l2" href="#section-37">37. 多个 BarCodeR 浏览器标签页</a><a class="toc-l2" href="#section-38">38. 重命名当前项目</a><a class="toc-l2" href="#section-39">39. 项目列表</a><a class="toc-l2" href="#section-40">40. 复制项目</a><a class="toc-l2" href="#section-41">41. 删除项目</a><a class="toc-l2" href="#section-42">42. 三种导出的区别</a><a class="toc-l2" href="#section-43">43. 项目与 OpenMetaBar 数据</a><a class="toc-l2" href="#section-44">44. 项目与图形历史</a><a class="toc-l2" href="#section-45">45. 项目物理位置</a><a class="toc-l2" href="#section-46">46. 推荐的日常流程</a><a class="toc-l2" href="#section-47">47. 高风险操作之前</a><a class="toc-l2" href="#section-48">48. 故障排除</a><a class="toc-l3" href="#section-48-1">48.1. 注册表中缺少数据集</a><a class="toc-l3" href="#section-48-2">48.2. 模块使用了错误数据集</a><a class="toc-l3" href="#section-48-3">48.3. 活动选择未保留</a><a class="toc-l3" href="#section-48-4">48.4. 输入名称被修改</a><a class="toc-l3" href="#section-48-5">48.5. 添加了 _2</a><a class="toc-l3" href="#section-48-6">48.6. 修改日期没有变化</a><a class="toc-l3" href="#section-48-7">48.7. 副本保留原始来源</a><a class="toc-l3" href="#section-48-8">48.8. 已过滤数据集不再显示为已过滤</a><a class="toc-l3" href="#section-48-9">48.9. 已删除数据集重新出现</a><a class="toc-l3" href="#section-48-10">48.10. 无法保存空项目</a><a class="toc-l3" href="#section-48-11">48.11. 重新加载删除了修改</a><a class="toc-l3" href="#section-48-12">48.12. 没有保存文件</a><a class="toc-l3" href="#section-48-13">48.13. 项目以空状态打开并提示注册表错误</a><a class="toc-l3" href="#section-48-14">48.14. 新项目名称被拒绝</a><a class="toc-l3" href="#section-48-15">48.15. 重命名后目录仍为旧名称</a><a class="toc-l3" href="#section-48-16">48.16. 打开项目会重新加载应用</a><a class="toc-l3" href="#section-48-17">48.17. 打开另一个项目时出现保存错误</a><a class="toc-l3" href="#section-48-18">48.18. 多标签页警告</a><a class="toc-l3" href="#section-48-19">48.19. 项目副本缺少最新修改</a><a class="toc-l3" href="#section-48-20">48.20. 无法删除当前项目</a><a class="toc-l3" href="#section-48-21">48.21. 删除项目失败</a><a class="toc-l3" href="#section-48-22">48.22. ZIP 很大</a><a class="toc-l3" href="#section-48-23">48.23. ZIP 超过 500 MB</a><a class="toc-l3" href="#section-48-24">48.24. 导入项目未自动打开</a><a class="toc-l3" href="#section-48-25">48.25. 归档无效</a><a class="toc-l3" href="#section-48-26">48.26. 导入项目有零个数据集</a><a class="toc-l3" href="#section-48-27">48.27. ZIP 不包含最新数据</a><a class="toc-l3" href="#section-48-28">48.28. 项目列表中的数据集数量不正确</a><a class="toc-l3" href="#section-48-29">48.29. 项目大小延迟更新</a><a class="toc-l3" href="#section-48-30">48.30. 重新部署后项目消失</a><a class="toc-l2" href="#section-49">49. 保存前检查清单</a><a class="toc-l2" href="#section-50">50. 切换项目前检查清单</a><a class="toc-l2" href="#section-51">51. 删除数据集前检查清单</a><a class="toc-l2" href="#section-52">52. 删除项目前检查清单</a><a class="toc-l2" href="#section-53">53. 推荐备份策略</a><a class="toc-l2" href="#section-54">54. 可追溯性原则</a><a class="toc-l2" href="#section-55">55. 当前限制</a><a class="toc-l2" href="#section">已核验的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 数据集</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

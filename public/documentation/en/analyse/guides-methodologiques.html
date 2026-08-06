@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Analysis — Methodological guides — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="en" data-kind="guide" data-module="analyse" data-no-result="No result found on this page.">
+<a class="skip-link" href="#doc-content">Methodological guides</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR documentation</strong><small>Embedded documentation — works offline</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Back to BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="en" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" selected>English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link active" href="../analyse/guides-methodologiques.html">Analysis</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Methodological guides</a>
+        <a class="" href="references-techniques.html">Technical reference</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Documentation version</span><strong>1.8.0</strong><span>Generated on 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Analysis</a><span>›</span><span>Methodological guides</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Search this page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No result found on this page.</div>
+    <article class="doc-article"><h1 id="top">Analysis — Methodological guide</h1>
+<h2 id="section-1">1. Purpose and module structure<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>The <strong>Analysis</strong> tab contains six statistical families: differential abundance, ordination, matrix comparison, association networks, PERMANOVA/dispersion, and clustering. They answer different questions and are not interchangeable. Every result depends on the dataset, taxonomic level, filtering, transformation, distance, model, covariates and experimental design.</p>
+<h2 id="section-2">2. Shared operating model<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Scientific parameters require a new run; visual settings normally reuse the last result. An old figure may remain visible after a scientific parameter changes, so always check the “recalculation required” state. Differential analysis, ordination, matrix comparison, networks and clustering use independent local staged filters. These filters do not alter <code>datasets()</code> and must be reproduced in the Filtration tab to become persistent. A method can fail because of insufficient samples, replicates or taxa, missing metadata/tree, invalid data type, a non-estimable model or a missing package.</p>
+<h2 id="section-3">3. Differential abundance analysis<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Available engines are ANCOM-BC2, LinDA, ALDEx2, corncob and MaAsLin 3. They estimate related but non-identical quantities: natural-log fold changes, log2 fold changes, CLR differences or logit coefficients. Models may include a main factor, a reference level, covariates and, where supported, random effects. Changing the reference changes the sign. Complete confounding cannot be corrected by adding a covariate. ALDEx2 and corncob do not support random effects and are excluded when they are requested. These methods primarily expect count data; transformed, negative or proportional data can be invalid.</p>
+<h2 id="section-4">4. Multi-engine consensus<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Comparison mode applies a shared prevalence filter so all engines test the same taxa. Consensus compares adjusted significance and effect direction, never effect magnitude because scales are incompatible. corncob dispersion and MaAsLin 3 prevalence are separate biological questions and do not enter the abundance vote. Use a consistent multiple-testing correction, usually Benjamini-Hochberg, and interpret q-value, effect, prevalence, abundance and agreement together.</p>
+<h2 id="section-5">5. Ordination methods<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>PCA summarizes a transformed Euclidean matrix; PCoA represents a distance matrix; NMDS preserves distance ranks; CCA, RDA and dbRDA constrain community structure by metadata. Raw-count PCA is often driven by library size and dominant taxa. PCoA may have negative eigenvalues for non-Euclidean distances. NMDS requires stress, convergence, goodness and Shepard diagnostics. CCA is generally suited to long unimodal gradients, whereas RDA is suited to shorter linear gradients; DCA length can guide the choice.</p>
+<h2 id="section-6">6. Ordination settings and diagnostics<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Transformations include relative abundance, Hellinger, log1p, CLR and VST. CLR requires a positive pseudo-count; VST requires DESeq2. Not all transformation-distance combinations are coherent: CLR plus Bray-Curtis is problematic, Aitchison already uses log-ratio geometry, Jaccard fits presence/absence, and UniFrac requires a matched phylogenetic tree. Rarefaction requires integer counts, discards reads and may remove samples. Overlays such as ellipses or <code>envfit</code> vectors aid interpretation but are not causal tests. Saved ordinations can be compared with Procrustes.</p>
+<h2 id="section-7">7. Matrix comparison<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>This module compares datasets measured on the same biological units. Sample matching is mandatory and may use cleaned names or metadata keys. Duplicated or ambiguous keys invalidate the analysis. Mantel tests distance-matrix correlation; Procrustes/PROTEST aligns ordinations and identifies samples with large residuals; co-inertia finds shared axes; MCOA builds a multi-dataset consensus from the intersection of common samples. Additional views include overlap, A/B PCoA, alpha diversity, PERMANOVA, dispersion and taxonomic intersections.</p>
+<h2 id="section-8">8. Association networks<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Nodes are taxa and edges are statistical associations, not proven ecological interactions. Preparation can aggregate taxa, filter prevalence/abundance, remove unassigned taxa, normalize and transform. Methods include CLR correlations, proportionality, SPIEC-EASI, SparCC, gCoda, CCLasso and mixOmics sPLS. Composition-aware methods apply their own processing, so external transformations may be disabled to prevent double correction. Edge robustness can be assessed with q-values and bootstrap stability. Hubs and modules remain hypotheses.</p>
+<h2 id="section-9">9. Network comparison and multi-domain networks<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Networks may be inferred separately by metadata group and compared through shared/specific edges, signs, hubs, modules and Jaccard similarity. Unequal group sizes can create apparent differences through unequal power. Multi-domain mode combines matched marker datasets and uses common samples only. Outputs include interactive graphs, domain interaction matrices, Sankey/Chord views, edge tables and GraphML. Cross-domain edges do not demonstrate direct biological interaction.</p>
+<h2 id="section-10">10. PERMANOVA and dispersion<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>PERMANOVA (<code>adonis2</code>) tests group-centroid differences in a distance space. PERMDISP (<code>betadisper</code>) tests differences in within-group dispersion. A significant PERMANOVA with significant PERMDISP is potentially confounded by dispersion. Models may include covariates, free formulas, permutation blocks, sequential or marginal tests and pairwise contrasts. Sequential results depend on term order; marginal R² values are not necessarily additive. Permutation strata are essential for paired or repeated designs.</p>
+<h2 id="section-11">11. Clustering<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Clustering is unsupervised and can group samples, taxa or both. Transformations and distances define similarity. Hierarchical linkage methods are compared using cophenetic correlation; Ward methods are excluded for incompatible distances. Candidate cluster numbers are assessed with silhouette, Dunn index, height jumps and cluster sizes. The statistically preferred <code>k</code> is not automatically biologically meaningful. Heatmap scaling by taxa highlights patterns but removes absolute abundance differences.</p>
+<h2 id="section-12">12. Transformations, distances and data type<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Raw counts plus Bray emphasize absolute abundance; relative abundance plus Bray emphasizes composition; presence/absence plus Jaccard emphasizes shared taxa; CLR/Euclidean or Aitchison emphasizes log-ratios; UniFrac emphasizes phylogeny. Metabarcoding data are compositional. Rarefaction, ALDEx2, ANCOM-BC and several network methods expect counts. Never treat CLR values as reads. A pseudo-count enables logarithms but does not determine the biological meaning of zeros.</p>
+<h2 id="section-13">13. Experimental design and interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Statistics cannot replace biological replication. Too many covariates for too few samples produce unstable models. Complete confounding prevents separation of effects. Interactions require observations in all relevant combinations. Thousands of taxon-level tests require adjusted p-values. Permutation resolution is limited: 999 permutations give a minimum p-value near 0.001. Biological importance requires effect size, R², stability, prevalence, abundance and ecological plausibility, not significance alone.</p>
+<h2 id="section-14">14. Histories, exports and reproducibility<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Each submodule stores snapshots in the current project only after explicit saving. Snapshots may include parameters, results, PNG, RDS, XLSX/TSV, logs and package versions. “R code” exports attempt to reproduce the saved result and may depend on the snapshot RDS, package versions and random seeds. Supported figures can be reused in MultiView. Network GraphML exports can be opened in Cytoscape or Gephi.</p>
+<h2 id="section-15">15. Performance and dependencies<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Expensive cases include multiple differential engines at ASV level, NMDS and many permutations, MCOA, bootstrapped SPIEC-EASI networks, pairwise PERMANOVA and large clustering matrices. Start at an aggregated rank, filter rare taxa, limit engines/contrasts/permutations and reduce network size. Optional packages include ANCOMBC, MicrobiomeStat, ALDEx2, corncob, maaslin3, vegan, ade4, SpiecEasi, propr, gCoda, CCLasso, mixOmics, DESeq2 and openxlsx. Cancellation may only occur between non-interruptible units.</p>
+<h2 id="section-16">16. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely reason</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Old figure</td>
+<td>Run not restarted</td>
+<td>Check dirty state and rerun</td>
+</tr>
+<tr>
+<td>Engine skipped</td>
+<td>Missing package or incompatible data/model</td>
+<td>Read log and change engine/settings</td>
+</tr>
+<tr>
+<td>CLR + Bray warning</td>
+<td>Incoherent geometry</td>
+<td>Use Aitchison/Euclidean or another transform</td>
+</tr>
+<tr>
+<td>UniFrac unavailable</td>
+<td>Missing or unmatched tree</td>
+<td>Check tips and rooting</td>
+</tr>
+<tr>
+<td>Few common samples</td>
+<td>Bad matching key</td>
+<td>Review duplicates and name cleaning</td>
+</tr>
+<tr>
+<td>Dense/empty network</td>
+<td>Edge threshold or low power</td>
+<td>Adjust filtering and robustness thresholds</td>
+</tr>
+<tr>
+<td>PERMANOVA and PERMDISP significant</td>
+<td>Dispersion confounding</td>
+<td>Interpret cautiously</td>
+</tr>
+<tr>
+<td>Ward unavailable</td>
+<td>Incompatible distance</td>
+<td>Use a compatible distance or linkage</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-17">17. Checklists and recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Validate counts, groups, reference, replicates, missing values, covariates and random effects before differential analysis. For ordination/PERMANOVA, choose transformation and distance together, define permutation blocks and inspect stress/eigenvalues/dispersion. For matrix comparison, validate matching keys and common samples. For networks, limit rare taxa and assess stability. Recommended sequence: Description → persistent filtering → descriptive ordination → dispersion/PERMANOVA → differential abundance → matrix comparison for multi-marker studies → networks/clustering for hypothesis generation → save figures/tables/code → save project.</p>
+<h2 id="section-18">18. Main limitations and verified sources<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Submodules have independent states and filters; a visible figure may be stale; engine effects use incompatible scales; not all engines support random effects; PERMANOVA can be dispersion-sensitive; matrix comparison depends entirely on matching; networks are associations, not causality; clustering is highly preparation-dependent; heavy methods consume substantial memory/time; histories require manual saving. Sources were verified in <code>modules/analyse/</code> (main, <code>daa_ancombc</code>, <code>ordination</code>, <code>comparaison_matrices</code>, <code>reseaux_d_association</code>, <code>_shared/fct_permanova.R</code>, <code>permanova_dispersion</code>, <code>clustering</code>) and the corresponding architecture files.</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Purpose and module structure</a><a class="toc-l2" href="#section-2">2. Shared operating model</a><a class="toc-l2" href="#section-3">3. Differential abundance analysis</a><a class="toc-l2" href="#section-4">4. Multi-engine consensus</a><a class="toc-l2" href="#section-5">5. Ordination methods</a><a class="toc-l2" href="#section-6">6. Ordination settings and diagnostics</a><a class="toc-l2" href="#section-7">7. Matrix comparison</a><a class="toc-l2" href="#section-8">8. Association networks</a><a class="toc-l2" href="#section-9">9. Network comparison and multi-domain networks</a><a class="toc-l2" href="#section-10">10. PERMANOVA and dispersion</a><a class="toc-l2" href="#section-11">11. Clustering</a><a class="toc-l2" href="#section-12">12. Transformations, distances and data type</a><a class="toc-l2" href="#section-13">13. Experimental design and interpretation</a><a class="toc-l2" href="#section-14">14. Histories, exports and reproducibility</a><a class="toc-l2" href="#section-15">15. Performance and dependencies</a><a class="toc-l2" href="#section-16">16. Troubleshooting</a><a class="toc-l2" href="#section-17">17. Checklists and recommended workflow</a><a class="toc-l2" href="#section-18">18. Main limitations and verified sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Analysis</span><span>Documentation version 1.8.0</span></footer>
+</body>
+</html>

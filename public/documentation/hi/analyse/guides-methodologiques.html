@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>विश्लेषण — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="analyse" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link active" href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">विश्लेषण</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">विश्लेषण — पद्धति मार्गदर्शिका</h1>
+<h2 id="section-1">1. उद्देश्य और संरचना<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>विश्लेषण</strong> tab में छह families हैं: differential abundance, ordination, matrix comparison, association networks, PERMANOVA/dispersion और clustering। ये अलग questions के लिए हैं और interchangeable नहीं हैं। Result dataset, taxonomic rank, filtering, transformation, distance, model, covariates और experimental design पर निर्भर करता है।</p>
+<h2 id="section-2">2. Common workflow<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Scientific parameters बदलने पर analysis दोबारा run करना पड़ता है; visual settings सामान्यतः last result को redraw करते हैं। पुरानी figure visible रह सकती है। DAA, ordination, matrix comparison, networks और clustering के independent local staged filters हैं जो <code>datasets()</code> को नहीं बदलते। PERMANOVA अपने rank/prevalence controls उपयोग करता है। Samples, replicates या taxa कम होने, metadata/tree missing होने, data type गलत होने, model non-estimable होने या package missing होने पर run fail हो सकता है।</p>
+<h2 id="section-3">3. Differential abundance<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Engines: ANCOM-BC2, LinDA, ALDEx2, corncob और MaAsLin 3। Effect scales अलग हैं: natural log, log2, CLR difference या logit coefficient। Model में main group, reference, covariates और supported engines में random effects हो सकते हैं। Reference बदलने से sign बदलता है। Complete confounding covariate जोड़कर solve नहीं होता। ALDEx2 और corncob random effects support नहीं करते। Methods मुख्यतः count data अपेक्षित करते हैं; proportions, CLR या negative values invalid हो सकते हैं।</p>
+<h2 id="section-4">4. Multi-engine consensus<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Comparison mode shared prevalence filter लागू करता है ताकि सभी engines same taxa test करें। Consensus adjusted significance और direction compare करता है, magnitude नहीं। corncob dispersion और MaAsLin 3 prevalence अलग outputs हैं और abundance vote में शामिल नहीं होते। Benjamini-Hochberg जैसी consistent correction उपयोग करें और q-value, effect, prevalence, abundance और agreement साथ पढ़ें।</p>
+<h2 id="section-5">5. Ordinations<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>PCA transformed Euclidean matrix summarize करता है; PCoA distance matrix; NMDS distance ranks; CCA/RDA/dbRDA metadata-constrained structure। Raw-count PCA depth और abundant taxa से dominate हो सकता है। PCoA में negative eigenvalues आ सकते हैं। NMDS के लिए stress, convergence, goodness और Shepard diagnostics देखें। DCA gradient length linear बनाम unimodal method चुनने में सहायता कर सकती है।</p>
+<h2 id="section-6">6. Ordination settings and diagnostics<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Transformations: relative abundance, Hellinger, log1p, CLR, VST। CLR को positive pseudo-count और VST को DESeq2 चाहिए। CLR + Bray problematic है; Aitchison पहले से log-ratio geometry है; Jaccard presence/absence के लिए; UniFrac को matched tree चाहिए। Rarefaction reads हटाती और samples drop कर सकती है। Ellipses और <code>envfit</code> causal tests नहीं हैं। Saved ordinations Procrustes से compare हो सकती हैं।</p>
+<h2 id="section-7">7. Matrix comparison<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Same biological units पर measured datasets compare करता है। Names या metadata से reliable matching key अनिवार्य है; duplicates analysis invalidate करते हैं। Mantel distance correlation, Procrustes/PROTEST configuration alignment, co-inertia shared axes, और MCOA common-sample intersection से multi-dataset consensus देता है। Overlap, A/B PCoA, alpha, PERMANOVA और Venn/UpSet भी उपलब्ध हैं।</p>
+<h2 id="section-8">8. Association networks<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Nodes taxa और edges statistical associations हैं, proven interactions नहीं। Preparation aggregation, filtering, normalization और transformation कर सकती है। Methods में CLR correlations, proportionality, SPIEC-EASI, SparCC, gCoda, CCLasso और mixOmics sPLS हैं। Edges weight, q-value और bootstrap stability से filter हो सकती हैं। Hubs/modules hypotheses हैं और abundance या compositional artifacts दर्शा सकते हैं।</p>
+<h2 id="section-9">9. Network comparison and multi-domain<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Metadata groups के लिए अलग networks बनाकर shared/specific edges, signs, hubs और modules compare किए जा सकते हैं। Unequal group sizes power differences पैदा करते हैं। Multi-domain mode matched 16S/ITS/18S datasets जोड़ता है और केवल common samples रखता है। Outputs interactive graph, domain matrix, Sankey, Chord, edge tables और GraphML हैं। Cross-domain edge direct interaction prove नहीं करती।</p>
+<h2 id="section-10">10. PERMANOVA and dispersion<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>PERMANOVA (<code>adonis2</code>) group centroids और PERMDISP (<code>betadisper</code>) within-group dispersion test करता है। दोनों significant हों तो location effect dispersion से confounded हो सकता है। Model covariates, free formula, permutation blocks, sequential/marginal tests और pairwise शामिल कर सकता है। Sequential result term order पर निर्भर है; marginal R² additive होना जरूरी नहीं। Paired/repeated designs में <code>strata</code> आवश्यक है।</p>
+<h2 id="section-11">11. Clustering<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Clustering unsupervised है। Transformation और distance similarity define करते हैं। Linkage methods cophenetic correlation से compare होते हैं; incompatible distances पर Ward हटता है। Candidate <code>k</code> silhouette, Dunn, height jumps और cluster sizes से evaluate होता है। Statistically best <code>k</code> biological truth नहीं है। Taxon-wise heatmap scaling absolute abundance differences छिपाती है।</p>
+<h2 id="section-12">12. Transformations, distances and data type<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Raw counts + Bray absolute abundance, relative + Bray composition, presence/absence + Jaccard shared taxa, CLR/Euclidean या Aitchison log-ratios, UniFrac phylogeny emphasize करते हैं। Metabarcoding data compositional है। Rarefaction, ALDEx2, ANCOM-BC और कई network methods counts अपेक्षित करते हैं। CLR को reads की तरह उपयोग न करें। Pseudo-count log सक्षम करता है, zero का biological meaning तय नहीं करता।</p>
+<h2 id="section-13">13. Experimental design and interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Statistics biological replication का substitute नहीं है। Few samples के साथ many covariates unstable model बनाते हैं। Complete confounding effects अलग नहीं होने देता। Interactions को सभी combinations में observations चाहिए। Many taxa tests के लिए q-values आवश्यक हैं। 999 permutations में minimum p लगभग 0.001 है। Effect size, R², stability, prevalence, abundance और ecological plausibility देखें।</p>
+<h2 id="section-14">14. Histories, exports and reproducibility<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>हर submodule explicit save के बाद current project में snapshot लिखता है। Snapshots parameters, results, PNG, RDS, XLSX/TSV, logs और package versions रख सकते हैं। R code export snapshot RDS, versions और seed पर निर्भर हो सकता है। Compatible figures MultiView में जा सकती हैं। GraphML Cytoscape/Gephi में network analysis के लिए उपयोगी है।</p>
+<h2 id="section-15">15. Performance and dependencies<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Heavy cases: ASV level पर multiple differential engines, NMDS/many permutations, MCOA, bootstrap networks, pairwise PERMANOVA और large clustering matrices। Aggregated ranks से शुरू करें, rare taxa filter करें और engines/contrasts/permutations/network size सीमित रखें। Optional packages में ANCOMBC, ALDEx2, corncob, maaslin3, vegan, ade4, SpiecEasi, propr, gCoda, CCLasso, mixOmics, DESeq2 और openxlsx शामिल हैं। Cancellation non-interruptible unit के बीच ही हो सकती है।</p>
+<h2 id="section-16">16. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>समस्या</th>
+<th>कारण</th>
+<th>कार्रवाई</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>पुरानी figure</td>
+<td>Run restart नहीं हुआ</td>
+<td>Analysis rerun करें</td>
+</tr>
+<tr>
+<td>Engine skipped</td>
+<td>Package/data/model incompatible</td>
+<td>Log पढ़ें</td>
+</tr>
+<tr>
+<td>CLR + Bray warning</td>
+<td>Geometry incoherent</td>
+<td>Aitchison/Euclidean उपयोग करें</td>
+</tr>
+<tr>
+<td>UniFrac unavailable</td>
+<td>Tree missing/mismatched</td>
+<td>Tips जाँचें</td>
+</tr>
+<tr>
+<td>Common samples कम</td>
+<td>Matching key गलत</td>
+<td>Duplicates जाँचें</td>
+</tr>
+<tr>
+<td>Network dense/empty</td>
+<td>Threshold या power</td>
+<td>Filters adjust करें</td>
+</tr>
+<tr>
+<td>PERMANOVA और PERMDISP significant</td>
+<td>Dispersion confounding</td>
+<td>सावधानी से interpret करें</td>
+</tr>
+<tr>
+<td>Ward unavailable</td>
+<td>Distance incompatible</td>
+<td>Distance/linkage बदलें</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-17">17. Checklists and recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>DAA से पहले counts, group, reference, replicates, NA, covariates और random effects verify करें। Ordination/PERMANOVA से पहले transformation-distance साथ चुनें, permutation blocks और diagnostics देखें। Matrix comparison में matching keys/common samples validate करें। Networks में rare taxa limit और stability assess करें। Recommended flow: Description → persistent filtration → descriptive ordination → PERMDISP/PERMANOVA → differential abundance → multi-marker matrix comparison → networks/clustering for hypotheses → tables/figures/code/project save करें।</p>
+<h2 id="section-18">18. Main limitations and verified sources<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Submodule states independent हैं, figures stale हो सकती हैं, engine effect scales directly comparable नहीं, PERMANOVA dispersion-sensitive है, matrix comparison matching पर निर्भर है, networks causality prove नहीं करते और clustering preparation-sensitive है। Sources <code>modules/analyse/</code> के main, <code>daa_ancombc</code>, <code>ordination</code>, <code>comparaison_matrices</code>, <code>reseaux_d_association</code>, <code>permanova_dispersion</code>, <code>clustering</code> और <code>_shared/fct_permanova.R</code> में verify किए गए हैं।</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. उद्देश्य और संरचना</a><a class="toc-l2" href="#section-2">2. Common workflow</a><a class="toc-l2" href="#section-3">3. Differential abundance</a><a class="toc-l2" href="#section-4">4. Multi-engine consensus</a><a class="toc-l2" href="#section-5">5. Ordinations</a><a class="toc-l2" href="#section-6">6. Ordination settings and diagnostics</a><a class="toc-l2" href="#section-7">7. Matrix comparison</a><a class="toc-l2" href="#section-8">8. Association networks</a><a class="toc-l2" href="#section-9">9. Network comparison and multi-domain</a><a class="toc-l2" href="#section-10">10. PERMANOVA and dispersion</a><a class="toc-l2" href="#section-11">11. Clustering</a><a class="toc-l2" href="#section-12">12. Transformations, distances and data type</a><a class="toc-l2" href="#section-13">13. Experimental design and interpretation</a><a class="toc-l2" href="#section-14">14. Histories, exports and reproducibility</a><a class="toc-l2" href="#section-15">15. Performance and dependencies</a><a class="toc-l2" href="#section-16">16. Troubleshooting</a><a class="toc-l2" href="#section-17">17. Checklists and recommended workflow</a><a class="toc-l2" href="#section-18">18. Main limitations and verified sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · विश्लेषण</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

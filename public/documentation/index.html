@@ -1,0 +1,17 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BarCodeR documentation</title></head><body><noscript><p><a href="fr/openmetabar/guides-methodologiques.html">OpenMetaBar</a> · <a href="fr/input-data/guides-methodologiques.html">Input data</a> · <a href="fr/datasets/guides-methodologiques.html">Datasets</a> · <a href="fr/exploration/guides-methodologiques.html">Exploration</a> · <a href="fr/analyse/guides-methodologiques.html">Analyse</a> · <a href="fr/multiview/guides-methodologiques.html">MultiView</a></p></noscript><script>
+(function(){
+ const allowedLang=['fr','en','es','zh','hi'];
+ const allowedModules=['openmetabar','input-data','datasets','description','data-edition','filtration','exploration','analyse','multiview'];
+ const aliases={'input_data':'input-data','inputdata':'input-data','dataset':'datasets'};
+ const q=new URLSearchParams(location.search);
+ let lang=q.get('lang')||localStorage.getItem('barcoder-doc-lang')||((navigator.language||'fr').toLowerCase().split('-')[0]);
+ if(!allowedLang.includes(lang)) lang='fr';
+ let moduleName=(q.get('module')||'openmetabar').toLowerCase();
+ moduleName=aliases[moduleName]||moduleName;
+ if(!allowedModules.includes(moduleName)) moduleName='openmetabar';
+ const section=q.get('section')==='reference'?'references-techniques.html':'guides-methodologiques.html';
+ const anchor=(q.get('anchor')||'').replace(/[^a-zA-Z0-9_-]/g,'');
+ localStorage.setItem('barcoder-doc-lang',lang);
+ location.replace(lang+'/'+moduleName+'/'+section+(anchor?'#'+anchor:''));
+})();
+</script></body></html>

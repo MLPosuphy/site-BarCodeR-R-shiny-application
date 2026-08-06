@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>विवरण — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="description" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">विवरण</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">विवरण</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">विवरण — कार्यपद्धति मार्गदर्शिका</h1>
+<h2 id="section-1">1. सामान्य परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Description</strong> टैब BarCodeR में मौजूद <code>phyloseq</code> objects की संरचना और सामग्री को Data Edition, Filtration या statistical analysis से पहले जाँचने के लिए है।</p>
+<p>यह दो complementary views में बाँटा गया है।</p>
+<h3 id="dataset-view">Dataset view<a aria-label="Permalink" class="heading-anchor" href="#dataset-view">#</a></h3>
+<p>एक समय में एक <code>phyloseq</code> object की जाँच करता है और आपको:</p>
+<ul>
+<li>dimensions और उपलब्ध components देखने;</li>
+<li>descriptive metrics पढ़ने;</li>
+<li>abundance और observed richness visualize करने;</li>
+<li>reference sequences जाँचने;</li>
+<li>rarefaction curves calculate करने;</li>
+<li>atypical samples पहचानने;</li>
+<li>tables और logs देखने/निर्यात करने;</li>
+<li>OpenMetaBar provenance पढ़ने देता है।</li>
+</ul>
+<h3 id="project-view">Project view<a aria-label="Permalink" class="heading-anchor" href="#project-view">#</a></h3>
+<p>Memory में मौजूद कई datasets की summary और comparison करता है: dimensions, depth, richness, sparsity, reference dataset से differences और filtration logs में recorded removals।</p>
+<h2 id="section-2">2. टैब का उद्देश्य<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Description का मुख्य उद्देश्य data समझना, import verify करना, स्पष्ट anomalies पहचानना, आगे के methodological choices तैयार करना और datasets की सामान्य संरचना compare करना है।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>आवश्यकता</th>
+<th>उचित टैब</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tables बदलना</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>Samples या taxa हटाना</td>
+<td>Filtration</td>
+</tr>
+<tr>
+<td>Dataset rename/delete करना</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Statistical analysis करना</td>
+<td>Analysis</td>
+</tr>
+<tr>
+<td>FASTQ से pipeline चलाना</td>
+<td>OpenMetaBar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. Data पर प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Description OTU table, taxonomy, metadata, sequences, tree, abundance, identifiers या logs को नहीं बदलता। Plots और tables memory में मौजूद object से बनते हैं।</p>
+<h3 id="section-3-1">3.1. अपवाद: active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-3-1">#</a></h3>
+<p>Dataset-view selector global active dataset से synchronized है। यहाँ dataset बदलने पर:</p>
+<ul>
+<li><code>active_ds()</code> बदलता है;</li>
+<li>BarCodeR के दूसरे tabs का default dataset बदलता है;</li>
+<li>project unsaved mark हो सकता है।</li>
+</ul>
+<p>Phyloseq content नहीं बदलता, लेकिन global working context बदलता है।</p>
+<h2 id="section-4">4. आवश्यक components<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>अधिकांश functions के लिए कम से कम <code>otu_table</code> आवश्यक है।</p>
+<p>Optional components:</p>
+<ul>
+<li><code>sample_data</code>;</li>
+<li><code>tax_table</code>;</li>
+<li><code>refseq</code>;</li>
+<li>phylogenetic tree;</li>
+<li>provenance attributes;</li>
+<li>filtration logs।</li>
+</ul>
+<p>किसी component की अनुपस्थिति उपलब्ध information घटाती है, पर टैब खुलना आवश्यक रूप से नहीं रोकती।</p>
+<h2 id="section-5">5. Abundance values के बारे में महत्वपूर्ण धारणा<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Module OTU-table values को <strong>reads</strong> कहता है, लेकिन यह verify नहीं करता कि वे raw, integer, untransformed और non-negative counts हैं।</p>
+<p>Relative abundance, CLR/log transformation, normalization, decimal या negative values होने पर “reads” raw sequencing depth नहीं दर्शाते।</p>
+<p>यह totals, richness, dominance, rarefaction और dataset comparisons की interpretation के लिए महत्वपूर्ण है।</p>
+<h2 id="section-6">6. Interface organization<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>मुख्य controls:</p>
+<pre tabindex="0"><code class="language-text">Dataset
+Project
+</code></pre>
+<h3 id="dataset-view-2">Dataset view<a aria-label="Permalink" class="heading-anchor" href="#dataset-view-2">#</a></h3>
+<ol>
+<li>Dataset control.</li>
+<li>OpenMetaBar provenance.</li>
+<li>Quick reading.</li>
+<li>Interactive visualizations.</li>
+<li>Tables and logs.</li>
+</ol>
+<h3 id="project-view-2">Project view<a aria-label="Permalink" class="heading-anchor" href="#project-view-2">#</a></h3>
+<ol>
+<li>Global project overview.</li>
+<li>Interactive comparisons.</li>
+</ol>
+<h2 id="section-7">7. Dataset चुनना<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p><strong>Select a dataset</strong> field session में मौजूद सभी datasets दिखाता है।</p>
+<h3 id="section-7-1">7.1. Global synchronization<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>यह global active dataset को follow करता है। Datasets, sidebar या किसी global selector में बदलाव Description में आता है; Description में बदलाव application के active dataset को बदलता है।</p>
+<h3 id="section-7-2">7.2. Fallback value<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Valid active dataset न होने पर पहले पिछला selected dataset, अन्यथा list का पहला dataset उपयोग होता है।</p>
+<h3 id="section-7-3">7.3. Dataset बदलना<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>Metrics, plots, tables, grouping choices, provenance और outliers फिर से calculate होते हैं।</p>
+<blockquote>
+<p><strong>Rarefaction warning:</strong> dataset बदलने पर rarefaction automatically recalculate नहीं होता। <strong>Calculate curves</strong> फिर क्लिक करें।</p>
+</blockquote>
+<h2 id="section-8">8. Grouping variable<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p><strong>Grouping variable — samples</strong> <code>sample_data</code> की किसी column से samples को रंग या समूह देता है।</p>
+<h3 id="section-8-1">8.1. उपलब्ध variables<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>2 से 15 distinct non-missing values वाली columns प्रस्तावित होती हैं। <code>Date</code>, <code>POSIXct</code>, <code>POSIXt</code> excluded हैं।</p>
+<h3 id="section-8-2">8.2. Numeric columns<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>2–15 distinct values वाली numeric column categorical group की तरह प्रस्तावित हो सकती है।</p>
+<pre tabindex="0"><code class="language-text">Temperature = 10, 15, 20
+</code></pre>
+<p>तीन groups माना जाएगा, continuous variable नहीं।</p>
+<h3 id="section-8-3">8.3. Missing values<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>Missing values <code>NA</code> label में रखे जाते हैं। Literal <code>"NA"</code> और true missing visually समान लग सकते हैं।</p>
+<h3 id="section-8-4">8.4. No grouping<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>No grouping पर सभी samples एक <code>All</code> group में जाते हैं।</p>
+<h3 id="section-8-5">8.5. Grouping के प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>Grouping colors, violin plots, cumulative curves, rarefaction, outlier context और group concentration बदलता है; data नहीं बदलता।</p>
+<h2 id="section-9">9. Grouping outlier detection नहीं बदलता<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Outlier thresholds पूरे dataset पर calculate होते हैं, हर group के भीतर नहीं। Grouping केवल context और color देता है।</p>
+<p>एक sample अपने group में normal होकर भी पूरे dataset के विरुद्ध outlier हो सकता है।</p>
+<h2 id="section-10">10. “View logs” button<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>यह Tables and logs में <strong>Filtration logs</strong> sub-tab select करता है।</p>
+<p>Current implementation automatic scroll या collapsed box खोलना सुनिश्चित नहीं करता। नीचे जाकर box manually खोलना पड़ सकता है।</p>
+<h2 id="section-11">11. Dataset header<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>नाम, samples, taxa, total abundance और available components दिखाता है।</p>
+<pre tabindex="0"><code class="language-text">130 samples • 2,450 ASVs/OTUs • 7,779,736 reads
+</code></pre>
+<h2 id="section-12">12. Component badges<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>OTU table, taxonomy, metadata, reference sequences और filtration logs की presence दिखाते हैं।</p>
+<h3 id="section-12-1">12.1. OTU<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p><code>otu_table</code> detected है।</p>
+<h3 id="section-12-2">12.2. Taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p><code>tax_table</code> मौजूद है, पर सभी ASV annotated, ranks complete या taxonomy correct होने की गारंटी नहीं।</p>
+<h3 id="section-12-3">12.3. Metadata<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p><code>sample_data</code> मौजूद है, पर variables usable, types सही या missing values absent होने की गारंटी नहीं।</p>
+<h3 id="section-12-4">12.4. RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Sequences मौजूद और <code>Biostrings</code> readable हैं। <code>Biostrings</code> unavailable होने पर <code>refseq</code> होते हुए भी absent दिख सकता है।</p>
+<h3 id="section-12-5">12.5. Logs<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p><code>filtration_log</code> attribute की presence दिखाता है, पर actual removed rows होना सुनिश्चित नहीं।</p>
+<h3 id="section-12-6">12.6. Phylogenetic tree<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>Tree के लिए badge नहीं है; badge absence से <code>phy_tree</code> की absence सिद्ध नहीं होती।</p>
+<h2 id="section-13">13. OTU-table orientation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Description calculations के लिए matrix को अस्थायी रूप से taxa in rows और samples in columns बनाता है। Original phyloseq transpose या modify नहीं होता।</p>
+<h2 id="section-14">14. Metric: taxa count<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p><code>phyloseq::ntaxa(ps)</code> के बराबर। UI ASV कहती है, लेकिन units OTU, ZOTU या अन्य हो सकती हैं।</p>
+<h2 id="section-15">15. Metric: sample count<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p><code>phyloseq::nsamples(ps)</code> के बराबर।</p>
+<h2 id="section-16">16. Metric: total reads<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>OTU table की सभी cells का sum, missing values छोड़कर। Raw counts होने पर ही इसे total reads माना जा सकता है।</p>
+<h2 id="section-17">17. Metric: reads per sample<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<pre tabindex="0"><code class="language-text">Reads = sample के सभी taxa abundance का sum
+</code></pre>
+<p>Minimum, maximum, mean, median और standard deviation calculate होते हैं; main cards में median दिखता है।</p>
+<h2 id="section-18">18. Metric: observed richness<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<pre tabindex="0"><code class="language-text">Richness = abundance &gt; 0 वाले taxa की संख्या
+</code></pre>
+<p>यह raw observed richness है, Chao1, ACE, Shannon, Simpson या depth-corrected richness नहीं।</p>
+<h2 id="section-19">19. Metric: dominant taxon percentage<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<pre tabindex="0"><code class="language-text">Dominance (%) =
+maximum taxon abundance
+÷ total sample abundance
+× 100
+</code></pre>
+<p>High dominance वास्तविक biology, preferential amplification, contaminant, compositional imbalance या low depth से आ सकती है; अकेले poor quality साबित नहीं करती।</p>
+<h2 id="section-20">20. Metric: zero proportion per sample<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<pre tabindex="0"><code class="language-text">Zeros (%) =
+zero abundance taxa
+÷ total taxa
+× 100
+</code></pre>
+<p>Current outlier detection में इसका उपयोग नहीं होता।</p>
+<h2 id="section-21">21. Metric: global sparsity<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<pre tabindex="0"><code class="language-text">zero cells
+÷ total OTU-table cells
+× 100
+</code></pre>
+<h3 id="section-21-1">21.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-21-1">#</a></h3>
+<p>Metabarcoding में diversity, specialization, spatial variation, detection limits, depth और processing के कारण high sparsity सामान्य है।</p>
+<h3 id="section-21-2">21.2. Display thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-21-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Sparsity</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 97%</td>
+<td>Very high</td>
+</tr>
+<tr>
+<td style="text-align:right">90–&lt;97%</td>
+<td>High</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;90%</td>
+<td>Controlled</td>
+</tr>
+</tbody>
+</table></div>
+<p>ये internal display rules हैं, universal scientific standards नहीं।</p>
+<h3 id="section-21-3">21.3. <code>NA</code> का प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-21-3">#</a></h3>
+<p><code>NA</code> zero नहीं गिने जाते, पर denominator में रहते हैं; sparsity थोड़ा underestimate हो सकती है।</p>
+<h2 id="section-22">22. Depth variability<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<pre tabindex="0"><code class="language-text">CV (%) =
+SD of reads per sample
+÷ mean reads per sample
+× 100
+</code></pre>
+<p><code>CV ≥ 100%</code> पर बहुत heterogeneous depth message दिखता है। यह internal descriptive threshold है।</p>
+<h2 id="section-23">23. Taxonomic completeness<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<pre tabindex="0"><code class="language-text">Completeness (%) =
+non-missing, non-empty values
+÷ total ASVs
+× 100
+</code></pre>
+<p>Displayed mean सभी ranks का unweighted average है।</p>
+<h3 id="section-23-1">23.1. Consequence<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>Average कुछ complete और कुछ बहुत incomplete ranks के अंतर छिपा सकता है; detailed table देखें।</p>
+<h3 id="section-23-2">23.2. Space-only strings<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>Cleaning न होने पर केवल spaces वाली string filled मानी जा सकती है।</p>
+<h2 id="section-24">24. Missing metadata values<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<pre tabindex="0"><code class="language-text">Missing (%) =
+NA या empty strings
+÷ samples
+× 100
+</code></pre>
+<p>Displayed mean variables का unweighted average है।</p>
+<h3 id="section-24-1">24.1. <code>"NA"</code> value<a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Literal <code>"NA"</code> true missing नहीं और level के रूप में count हो सकता है।</p>
+<h3 id="section-24-2">24.2. Spaces<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Space-only string non-missing मानी जा सकती है।</p>
+<h3 id="section-24-3">24.3. Displayed type<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Table column की first R class दिखाती है: <code>character</code>, <code>numeric</code>, <code>factor</code>, <code>Date</code>, आदि।</p>
+<h2 id="section-25">25. Sequence length<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p><code>refseq</code> और <code>Biostrings</code> उपलब्ध होने पर minimum, maximum, mean, median और SD bp में calculate होते हैं।</p>
+<h3 id="section-25-1">25.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-25-1">#</a></h3>
+<p>Multimodal या wide distribution multiple regions, markers, truncated sequences, indels, nonspecific products, insufficient filtering या real variation दिखा सकती है।</p>
+<h2 id="section-26">26. GC percentage<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<pre tabindex="0"><code class="language-text">GC (%) =
+G + C
+÷ A + C + G + T
+× 100
+</code></pre>
+<p>Ambiguous bases denominator में नहीं आते; GC केवल unambiguous भाग पर आधारित हो सकता है।</p>
+<h2 id="section-27">27. Sequence names<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p><code>refseq</code> names उपयोग होते हैं। Invalid/absent names पर:</p>
+<pre tabindex="0"><code class="language-text">ASV_1
+ASV_2
+ASV_3
+</code></pre>
+<p>बनते हैं। OTU taxa से correspondence exhaustive रूप से verify नहीं होती।</p>
+<h2 id="section-28">28. Automatic interpretation message<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Median reads, median richness, sparsity और components से summary text बनता है। यह descriptive help है, scientific validation या filtering recommendation नहीं।</p>
+<h2 id="section-29">29. Quick dataset reading<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<h3 id="section-29-1">29.1. Structure<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>Median reads, median richness और sparsity।</p>
+<h3 id="section-29-2">29.2. Available content<a aria-label="Permalink" class="heading-anchor" href="#section-29-2">#</a></h3>
+<p>OTU, taxonomy, metadata और sequences की presence।</p>
+<h3 id="section-29-3">29.3. Sequences<a aria-label="Permalink" class="heading-anchor" href="#section-29-3">#</a></h3>
+<p>Available होने पर median length और GC।</p>
+<h3 id="section-29-4">29.4. Filtration<a aria-label="Permalink" class="heading-anchor" href="#section-29-4">#</a></h3>
+<p><code>filtration_log</code> होने पर removed ASV और samples की संख्या।</p>
+<h2 id="section-30">30. Automatic diagnostics<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>High sparsity, heterogeneous depth, missing metadata/taxonomy/sequences और filtration history संकेत कर सकता है। यह data modify नहीं करता और अकेले exclusion decision नहीं होना चाहिए।</p>
+<h2 id="section-31">31. OpenMetaBar provenance<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Box <code>attr(ps, "openmetabar_run")</code> पढ़ता है और cluster contact नहीं करता। यह import के समय stored snapshot है।</p>
+<h3 id="section-31-1">31.1. Run summary<a aria-label="Permalink" class="heading-anchor" href="#section-31-1">#</a></h3>
+<p>ID, label, date, technology, marker, engine, database, design, samples और FASTQ count हो सकते हैं।</p>
+<h3 id="section-31-2">31.2. Demultiplexing<a aria-label="Permalink" class="heading-anchor" href="#section-31-2">#</a></h3>
+<p>MiniBar activation, method और tolerances हो सकते हैं।</p>
+<h3 id="section-31-3">31.3. Filters<a aria-label="Permalink" class="heading-anchor" href="#section-31-3">#</a></h3>
+<p>Orientation, quality, length, coding filter और genetic code।</p>
+<h3 id="section-31-4">31.4. LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-31-4">#</a></h3>
+<p>Platform, amplicon type, clustering और assignment।</p>
+<h3 id="section-31-5">31.5. LCA<a aria-label="Permalink" class="heading-anchor" href="#section-31-5">#</a></h3>
+<p>Coverage, identity thresholds, agreement और mode।</p>
+<h3 id="section-31-6">31.6. IDMABIO<a aria-label="Permalink" class="heading-anchor" href="#section-31-6">#</a></h3>
+<p>केवल संबंधित route पर।</p>
+<h3 id="section-31-7">31.7. NextITS<a aria-label="Permalink" class="heading-anchor" href="#section-31-7">#</a></h3>
+<p>केवल संबंधित route पर।</p>
+<h3 id="section-31-8">31.8. Cluster environment<a aria-label="Permalink" class="heading-anchor" href="#section-31-8">#</a></h3>
+<p>Partition, memory, CPUs, modules और paths।</p>
+<h3 id="section-31-9">31.9. FASTQ files<a aria-label="Permalink" class="heading-anchor" href="#section-31-9">#</a></h3>
+<p>Recorded provenance paths हैं; files अभी accessible हों यह आवश्यक नहीं।</p>
+<h3 id="section-31-10">31.10. Sample renaming<a aria-label="Permalink" class="heading-anchor" href="#section-31-10">#</a></h3>
+<p>Original/corrected name, date और reason हो सकते हैं।</p>
+<h3 id="section-31-11">31.11. Missing provenance<a aria-label="Permalink" class="heading-anchor" href="#section-31-11">#</a></h3>
+<p>यह सिद्ध नहीं करता कि dataset OpenMetaBar से नहीं आया; attribute conversion, old version या export में खो सकता है।</p>
+<h2 id="section-32">32. Interactive visualizations — Overview<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>Reads vs richness, sample card, Top 15 samples/taxa और cumulative contributions शामिल हैं।</p>
+<h2 id="section-33">33. Reads versus richness<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = total abundance
+Y = observed richness
+</code></pre>
+<p>Color group और shape standard/outlier status दिखाते हैं।</p>
+<h3 id="section-33-1">33.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>Depth-richness relation, shallow samples और दूर के points देखने में मदद करता है।</p>
+<h3 id="section-33-2">33.2. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>Positive relation depth को biological differences का एकमात्र कारण सिद्ध नहीं करती।</p>
+<h3 id="section-33-3">33.3. Interaction<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>Point click sample card update करता है।</p>
+<h2 id="section-34">34. Sample detail card<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>SampleID, reads, richness, dominance, zeros, status और अधिकतम छह metadata values दिखाता है।</p>
+<h3 id="section-34-1">34.1. Initial sample<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>पहला outlier, अन्यथा पहला sample दिखता है।</p>
+<h3 id="section-34-2">34.2. Displayed metadata<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>पूरी तरह missing columns हटती हैं और केवल पहली छह usable columns दिखती हैं।</p>
+<h2 id="section-35">35. Top 15 samples<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Total abundance के अनुसार अधिकतम 15 samples। Bar click sample card update करता है।</p>
+<h3 id="section-35-1">35.1. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-35-1">#</a></h3>
+<p>Deepest samples आवश्यक रूप से best, richest या representative नहीं।</p>
+<h2 id="section-36">36. Top 15 taxa<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>Total abundance के आधार पर rank और tooltip में prevalence।</p>
+<h3 id="section-36-1">36.1. Prevalence<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">Prevalence = abundance &gt; 0 वाले samples
+</code></pre>
+<h3 id="section-36-2">36.2. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>Taxon ID उपयोग होता है, annotation नहीं। एक sample में बहुत abundant ASV ऊपर आ सकती है।</p>
+<h2 id="section-37">37. Cumulative sample contribution<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Samples abundance से rank होकर cumulative proportion दिखाते हैं। शुरुआती तेज वृद्धि depth concentration दर्शाती है।</p>
+<h2 id="section-38">38. Cumulative taxon contribution<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Dominant taxa की cumulative abundance दिखती है; taxonomy, prevalence, group या rarity शामिल नहीं।</p>
+<h2 id="section-39">39. Abundance tab<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Reads histogram, reads by group violin और cumulative reads by group।</p>
+<h2 id="section-40">40. Reads histogram<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Per-sample total abundance distribution, skewness और depth populations दिखाता है। Plotly bins automatically चुनता है।</p>
+<h2 id="section-41">41. Reads by group<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Multiple groups होने पर violin plot distribution, boxplot, mean और individual points दिखाता है।</p>
+<h3 id="section-41-1">41.1. No grouping<a aria-label="Permalink" class="heading-anchor" href="#section-41-1">#</a></h3>
+<p>Qualitative grouping variable unavailable होने पर message दिखता है।</p>
+<h3 id="section-41-2">41.2. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-41-2">#</a></h3>
+<p>यह descriptive है; statistical test, normalization, group-size adjustment या covariate correction नहीं करता।</p>
+<h2 id="section-42">42. Cumulative reads by group<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>हर group के भीतर samples abundance से sort होते हैं और cumulative percentage group के अंदर calculate होती है। हर curve 100% तक पहुँचती है।</p>
+<h3 id="section-42-1">42.1. Consequence<a aria-label="Permalink" class="heading-anchor" href="#section-42-1">#</a></h3>
+<p>यह group के अंदर depth concentration दिखाता है, project reads में group का share नहीं। छोटे और बड़े group दोनों 100% पहुँचते हैं।</p>
+<h2 id="section-43">43. Richness tab<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Richness histogram, richness by group और richness versus dominance शामिल हैं।</p>
+<h2 id="section-44">44. Richness histogram<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Per-sample observed taxa distribution दिखाता है। Depth correction नहीं है, इसलिए deeper sample में अधिक taxa दिख सकते हैं।</p>
+<h2 id="section-45">45. Richness by group<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Violin plot groups के observed richness की descriptive comparison करता है; कोई statistical test नहीं।</p>
+<h2 id="section-46">46. Richness versus dominance<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = observed richness
+Y = dominant taxon percentage
+</code></pre>
+<p>Rich/even, rich/dominated, poor/dominated और atypical profiles पहचानने में मदद करता है।</p>
+<h3 id="section-46-1">46.1. यह evenness index नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-46-1">#</a></h3>
+<p>Maximum dominance Pielou, Shannon या Simpson के बराबर नहीं। समान maximum dominance वाली communities के बाकी taxa बहुत अलग हो सकते हैं।</p>
+<h2 id="section-47">47. Sequences tab<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Length histogram, GC histogram और length versus GC। <code>refseq</code> और <code>Biostrings</code> आवश्यक हैं।</p>
+<h2 id="section-48">48. Length versus GC<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>हर point एक sequence है। अलग length/composition groups, extreme sequences या multiple markers दिख सकते हैं, लेकिन contamination अकेले सिद्ध नहीं होती।</p>
+<h2 id="section-49">49. Rarefaction curves<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>Calculation अलग से चलती है और tab खुलने पर automatic नहीं। <strong>Calculate curves</strong> क्लिक करें।</p>
+<h2 id="section-50">50. Rarefaction method<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>Module उपयोग करता है:</p>
+<pre tabindex="0"><code class="language-r">vegan::rarefy()
+</code></pre>
+<p>यह दिए गए depth पर expected observed taxa analytically calculate करता है। यह repeated random subsampling नहीं, नया phyloseq नहीं बनाता, <code>rarefy_even_depth()</code> नहीं चलाता और data normalize/save नहीं करता।</p>
+<h2 id="section-51">51. Calculation requirements<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p><code>vegan</code>, OTU table, कम से कम दो positive samples और कम से कम दो samples with ≥50 reads आवश्यक हैं। 50 से कम reads वाले samples exclude होते हैं।</p>
+<h3 id="section-51-1">51.1. 50-read threshold<a aria-label="Permalink" class="heading-anchor" href="#section-51-1">#</a></h3>
+<p>Code में fixed है, UI से बदल नहीं सकता और universal standard नहीं।</p>
+<h2 id="section-52">52. Expected data type<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p><code>vegan::rarefy()</code> counts के लिए है। Relative abundance, CLR, negative, continuous transformed या non-integer values उचित नहीं। Module सभी गलत cases block नहीं करता।</p>
+<h2 id="section-53">53. Calculated depths<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>लगभग 80 depths, 1 से observed maximum तक। हर sample के लिए उसके total से अधिक depths हटते हैं; values round और deduplicate होती हैं।</p>
+<h2 id="section-54">54. Individual curves<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>हर sample की एक line, group के अनुसार color। Tooltip में SampleID, group, total reads, rarefied depth, expected/observed richness और outlier status।</p>
+<h2 id="section-55">55. Individual-curve subset<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>Options: All samples, Top reads, Bottom reads, Outliers।</p>
+<h3 id="section-55-1">55.1. All samples<a aria-label="Permalink" class="heading-anchor" href="#section-55-1">#</a></h3>
+<p>सभी eligible curves। Current implementation में maximum curve limit लागू नहीं, इसलिए plot भारी हो सकता है।</p>
+<h3 id="section-55-2">55.2. Top reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-2">#</a></h3>
+<p>Selected limit तक deepest samples।</p>
+<h3 id="section-55-3">55.3. Bottom reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-3">#</a></h3>
+<p>≥50 reads वाले samples में shallowest।</p>
+<h3 id="section-55-4">55.4. Outliers<a aria-label="Permalink" class="heading-anchor" href="#section-55-4">#</a></h3>
+<p>IQR outliers। कोई outlier न होने पर plot empty हो सकता है।</p>
+<h2 id="section-56">56. Maximum number of curves<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>2 से 200। Top, Bottom और Outliers पर लागू; All पर नहीं।</p>
+<h2 id="section-57">57. Curves aggregated by group<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>Group के सभी samples का abundance sum करके pooled community की curve बनती है।</p>
+<h3 id="section-57-1">57.1. Curve क्या दर्शाती है<a aria-label="Permalink" class="heading-anchor" href="#section-57-1">#</a></h3>
+<p>Group के pooled reads में expected richness। यह individual curves का mean, per-sample mean या confidence interval नहीं।</p>
+<h3 id="section-57-2">57.2. Group size effect<a aria-label="Permalink" class="heading-anchor" href="#section-57-2">#</a></h3>
+<p>More samples/reads वाला group larger pool और higher richness पा सकता है। Sample count और total reads साथ देखें।</p>
+<h3 id="section-57-3">57.3. Without grouping<a aria-label="Permalink" class="heading-anchor" href="#section-57-3">#</a></h3>
+<p>सभी samples एक <code>All</code> curve में pool होते हैं।</p>
+<h2 id="section-58">58. Legend दिखाना<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>Default off। Many groups पर readability घट सकती है। Individual mode में हर group की एक legend entry होती है।</p>
+<h2 id="section-59">59. Recalculation आवश्यक<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>Result उस dataset से जुड़ा है जो button click पर active था। Dataset बदलना automatic recalculate नहीं करता।</p>
+<h3 id="section-59-1">59.1. Grouping बदलना<a aria-label="Permalink" class="heading-anchor" href="#section-59-1">#</a></h3>
+<p>Existing result से colors या aggregation update हो सकते हैं।</p>
+<h3 id="section-59-2">59.2. Stale-result risk<a aria-label="Permalink" class="heading-anchor" href="#section-59-2">#</a></h3>
+<p>Dataset change के बाद हमेशा calculation दोहराएँ।</p>
+<h2 id="section-60">60. Rarefaction interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>Flattening curve में नए reads से कम नए taxa जुड़ते हैं। Strongly increasing curve अधिक depth से और taxa मिलने की संभावना दिखाती है।</p>
+<p>Plateau absence poor quality आवश्यक रूप से नहीं; high diversity, rare taxa, noise, errors या biological heterogeneity कारण हो सकते हैं।</p>
+<h2 id="section-61">61. Rarefaction limitations<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>Confidence interval, repeated random mean, extrapolation, Good's coverage, Chao1, statistical comparison या automatic saturation threshold नहीं।</p>
+<h2 id="section-62">62. Outlier detection<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>Depth, richness और dominance उपयोग होते हैं। Zero proportion उपयोग नहीं।</p>
+<h2 id="section-63">63. IQR rule<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<pre tabindex="0"><code class="language-text">Q1 = first quartile
+Q3 = third quartile
+IQR = Q3 - Q1
+Lower = Q1 - 1.5 × IQR
+Upper = Q3 + 1.5 × IQR
+</code></pre>
+<p>Limits के बाहर Tukey outlier mark होता है।</p>
+<h2 id="section-64">64. High और low outliers<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>Depth, richness और dominance के दोनों extremes detect होते हैं, जिसमें unusually low dominance भी शामिल है।</p>
+<h2 id="section-65">65. Minimum conditions<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>चार से कम values, all missing या IQR zero होने पर उस metric का outlier नहीं मिलता।</p>
+<h2 id="section-66">66. Sample status<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>कम से कम एक atypical metric पर <code>Outlier</code>, अन्यथा <code>Standard</code>। Automatic deletion नहीं।</p>
+<h2 id="section-67">67. Signal count<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>Depth, richness, dominance में atypical metrics की संख्या 0–3। More signals higher review priority।</p>
+<h2 id="section-68">68. Outlier score<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>Limits से बाहर distance IQR units में और तीन metrics पर sum।</p>
+<h3 id="section-68-1">68.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-68-1">#</a></h3>
+<p>Higher score farther exceedance दिखाता है; probability, p-value, universal quality या deletion threshold नहीं।</p>
+<h2 id="section-69">69. Priority order<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>Signal count, global score और reads से sort। पहला spotlight sample।</p>
+<h2 id="section-70">70. Outlier summary<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>Total, percentage, metric-specific counts, most frequent signal और most affected group।</p>
+<h2 id="section-71">71. Group concentration<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<pre tabindex="0"><code class="language-text">Outlier % = group outliers ÷ group samples × 100
+</code></pre>
+<p>Top four groups दिखते हैं।</p>
+<h3 id="section-71-1">71.1. Color thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-71-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Percentage</th>
+<th>Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥30%</td>
+<td>Danger</td>
+</tr>
+<tr>
+<td style="text-align:right">15–&lt;30%</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;15%</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table></div>
+<p>Visual conventions हैं, statistical thresholds नहीं।</p>
+<h2 id="section-72">72. Global detection और group reading<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>Thresholds पूरे dataset पर calculate होते हैं, फिर group percentages। Naturally different group technical problem के बिना many outliers दिखा सकता है।</p>
+<h2 id="section-73">73. Samples-to-watch table<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>SampleID, group, signals, count, score, reads, richness और dominance। केवल outliers; search, filters और export उपलब्ध।</p>
+<h2 id="section-74">74. Complete sample table<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>SampleID, group, signals, reads, richness, dominance, zeros और status। Outliers पहले।</p>
+<h2 id="section-75">75. Outlier का अर्थ क्या नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>यह automatic error, contaminant, remove करने योग्य sample, sequencing failure या bad control नहीं। Biology, group difference, low biomass या rare event हो सकता है। Metadata, protocol, controls, logs और plots के साथ interpret करें।</p>
+<h2 id="section-76">76. Tables and logs<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>Initially collapsed। OTU table, Taxonomy, Metadata, Completeness और Filtration logs शामिल।</p>
+<h2 id="section-77">77. Table summary<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>OTU, taxonomy, metadata dimensions और exportable log rows। Display identifier column dimensions में शामिल नहीं।</p>
+<h2 id="section-78">78. Displayed OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>Taxa rows और samples columns; <code>ASV</code> column जोड़ता है, भले units OTU/ZOTU हों।</p>
+<h3 id="section-78-1">78.1. Original orientation<a aria-label="Permalink" class="heading-anchor" href="#section-78-1">#</a></h3>
+<p>Export standardized orientation उपयोग करता है, original आवश्यक नहीं।</p>
+<h3 id="section-78-2">78.2. Content<a aria-label="Permalink" class="heading-anchor" href="#section-78-2">#</a></h3>
+<p>Values unchanged; integer, decimal, negative, transformed या missing हो सकते हैं।</p>
+<h2 id="section-79">79. Displayed taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>ASV column और ranks।</p>
+<h3 id="section-79-1">79.1. Rank names<a aria-label="Permalink" class="heading-anchor" href="#section-79-1">#</a></h3>
+<p>Empty/duplicate names display/export के लिए unique होते हैं; original <code>tax_table</code> नहीं बदलता।</p>
+<h2 id="section-80">80. Displayed metadata<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p><code>sample_data</code> rownames <code>SampleID</code> column बनते हैं। Existing SampleID column <code>SampleID_meta</code> आदि बनती है। Original object नहीं बदलता।</p>
+<h2 id="section-81">81. Interactive table functions<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>Column filters, search, vertical/horizontal scroll, fixed first column, pagination, Copy और CSV उपलब्ध। Large matrix पूरी तरह R memory में तैयार होती है।</p>
+<h2 id="section-82">82. Dedicated CSV export<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<pre tabindex="0"><code class="language-text">&lt;dataset&gt;_otu_table.csv
+&lt;dataset&gt;_tax_table.csv
+&lt;dataset&gt;_metadata.csv
+&lt;dataset&gt;_filtration_logs.csv
+</code></pre>
+<h3 id="section-82-1">82.1. Format<a aria-label="Permalink" class="heading-anchor" href="#section-82-1">#</a></h3>
+<p><code>write.csv()</code> उपयोग: comma separator, rownames excluded, identifiers explicit column और standard R missing values।</p>
+<h3 id="section-82-2">82.2. Visual filters<a aria-label="Permalink" class="heading-anchor" href="#section-82-2">#</a></h3>
+<p>Dedicated button complete calculated table export करता है, केवल visible/filtered rows नहीं।</p>
+<h3 id="section-82-3">82.3. Missing component<a aria-label="Permalink" class="heading-anchor" href="#section-82-3">#</a></h3>
+<p>Component absent होने पर empty CSV बन सकता है।</p>
+<h2 id="section-83">83. Taxonomic completeness<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>हर rank का filled और missing percentage दिखता है, जिससे complete या empty ranks पहचानते हैं।</p>
+<h2 id="section-84">84. Metadata completeness<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>हर variable का R type, missing percentage और unique values दिखते हैं। Empty, constant, grouping candidates और text बनी numeric columns पहचानने में मदद।</p>
+<h2 id="section-85">85. Groupable variables<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>2–15 levels वाली non-temporal columns। Biological relevance की गारंटी नहीं।</p>
+<h2 id="section-86">86. Filtration logs<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>पढ़ता है:</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>विशेष रूप से <code>removed_taxa</code> और <code>removed_samples</code>।</p>
+<h3 id="section-86-1">86.1. Removed ASVs<a aria-label="Permalink" class="heading-anchor" href="#section-86-1">#</a></h3>
+<p>ID, abundance, prevalence, reason, parameters आदि हो सकते हैं।</p>
+<h3 id="section-86-2">86.2. Removed samples<a aria-label="Permalink" class="heading-anchor" href="#section-86-2">#</a></h3>
+<p>SampleID, depth, reason और अन्य information हो सकती है।</p>
+<h3 id="section-86-3">86.3. No explicit identifier<a aria-label="Permalink" class="heading-anchor" href="#section-86-3">#</a></h3>
+<p>Rownames से <code>ASV</code> या <code>SampleID</code> column जोड़ी जाती है।</p>
+<h2 id="section-87">87. Log export<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>Taxon और sample logs एक CSV में combine होते हैं और <code>log_type</code> (<code>removed_taxa</code>/<code>removed_samples</code>) जोड़ा जाता है। Missing columns NA से भरती हैं।</p>
+<h2 id="section-88">88. Log scope<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>Log current object से attached information है; सभी historical versions, external steps या manual changes का complete history आवश्यक नहीं।</p>
+<h2 id="section-89">89. Project view<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>Memory के <code>datasets()</code> objects पर काम करता है, disk पर saved सभी projects पर नहीं।</p>
+<h2 id="section-90">90. Global project summary<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>Loaded datasets, selected datasets, summed samples, summed abundance और mean sparsity।</p>
+<h2 id="section-91">91. Cumulative samples<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>हर dataset के sample count का sum, unique sample count नहीं। Same samples multiple datasets में repeated count होते हैं।</p>
+<h2 id="section-92">92. Cumulative reads<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>सभी datasets के abundance का sum। केवल comparable values पर meaningful; raw counts, proportions और CLR को साथ जोड़ना अर्थपूर्ण नहीं।</p>
+<h2 id="section-93">93. Mean project sparsity<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>Datasets की simple mean sparsity। हर dataset बराबर weight रखता है, size की परवाह नहीं।</p>
+<h2 id="section-94">94. Project summary table<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>Dataset, ASV, samples, total reads, mean/median, mean richness, sparsity, completeness, metadata missingness, components, logs और removals।</p>
+<h2 id="section-95">95. Datasets to compare<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>Multiple selector comparison plots को control करता है। Default सभी या restored UI state। Registry, active dataset या objects नहीं बदलते।</p>
+<h2 id="section-96">96. Reference dataset<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>केवल <strong>Difference versus reference</strong> plot में उपयोग; heatmap, dotplot, barplots या filtration comparison में नहीं।</p>
+<h3 id="section-96-1">96.1. Reference selection से बाहर<a aria-label="Permalink" class="heading-anchor" href="#section-96-1">#</a></h3>
+<p>Reference selected datasets में न हो तो first selected dataset fallback बनता है। Reference को selection में शामिल रखें।</p>
+<h2 id="section-97">97. Key metric<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>ASV, samples, reads, mean richness और sparsity। Summary text और difference plot को प्रभावित करता है।</p>
+<h2 id="section-98">98. Synthetic project reading<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>Highest value वाला dataset बताता है। Higher आवश्यक रूप से better नहीं: more reads imbalance, more ASV noise, और more sparsity अधिक zeros हो सकते हैं।</p>
+<h2 id="section-99">99. Synthetic heatmap<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>ASV, samples, reads, mean richness और sparsity compare करती है।</p>
+<h3 id="section-99-1">99.1. Normalization<a aria-label="Permalink" class="heading-anchor" href="#section-99-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">Normalized = (value - minimum) ÷ (maximum - minimum)
+</code></pre>
+<h3 id="section-99-2">99.2. Identical values<a aria-label="Permalink" class="heading-anchor" href="#section-99-2">#</a></h3>
+<p>सब समान हों तो 0.5।</p>
+<h3 id="section-99-3">99.3. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-99-3">#</a></h3>
+<p>Color metric के भीतर relative position है; अलग units सीधे compare नहीं होते। Raw values tooltip में हैं।</p>
+<h2 id="section-100">100. Comparative dotplot<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>Same 0–1 normalization। यह global score, multivariate analysis या quality ranking नहीं।</p>
+<h2 id="section-101">101. Difference versus reference<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<pre tabindex="0"><code class="language-text">Difference (%) =
+(dataset value - reference value)
+÷ reference value
+× 100
+</code></pre>
+<p>Reference bar नहीं दिखता।</p>
+<h3 id="section-101-1">101.1. Zero reference<a aria-label="Permalink" class="heading-anchor" href="#section-101-1">#</a></h3>
+<p>Zero या missing reference पर plot नहीं।</p>
+<h3 id="section-101-2">101.2. One dataset only<a aria-label="Permalink" class="heading-anchor" href="#section-101-2">#</a></h3>
+<p>Reference के अलावा कम से कम एक dataset आवश्यक।</p>
+<h3 id="section-101-3">101.3. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-101-3">#</a></h3>
+<p>Positive difference selected metric में अधिक value है, improvement आवश्यक नहीं।</p>
+<h2 id="section-102">102. Filtration comparison<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p><code>filtration_log</code> से removed ASVs और samples दिखते हैं।</p>
+<h3 id="section-102-1">102.1. Important limitation<a aria-label="Permalink" class="heading-anchor" href="#section-102-1">#</a></h3>
+<p>Absolute numbers हैं; initial size के अनुसार percentage नहीं।</p>
+<h3 id="section-102-2">102.2. Missing log<a aria-label="Permalink" class="heading-anchor" href="#section-102-2">#</a></h3>
+<p>Missing दिखता है; no filtration सिद्ध नहीं।</p>
+<h2 id="section-103">103. Comparative barplots<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>Samples, ASV, reads, mean richness और sparsity के absolute values; normalization/test नहीं।</p>
+<h2 id="section-104">104. Dataset comparability<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>Technology, marker, region, pipeline, filters, database, samples, abundance type, transformation और unit definition verify करें।</p>
+<h2 id="section-105">105. Different markers comparison<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>COI, 16S, ITS descriptive रूप से compare हो सकते हैं, पर ASV count, richness, reads और sparsity equivalent biological measures नहीं।</p>
+<h2 id="section-106">106. Before/after filtration<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>True parentage, same samples, untransformed abundance, log presence और renamed/deleted parent verify करें।</p>
+<h2 id="section-107">107. Performance<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>Large matrix sums, all-dataset metrics, full table conversion, sequence calculations, rarefaction, Plotly और many-dataset comparison memory-intensive हैं।</p>
+<h3 id="section-107-1">107.1. Lazy initialization<a aria-label="Permalink" class="heading-anchor" href="#section-107-1">#</a></h3>
+<p>Description tab खोलने पर module initialize होता है; first display धीमा हो सकता है।</p>
+<h3 id="section-107-2">107.2. Large tables<a aria-label="Permalink" class="heading-anchor" href="#section-107-2">#</a></h3>
+<p>Deferred rendering मदद करता है, पर full table R memory में तैयार होती है।</p>
+<h3 id="section-107-3">107.3. Rarefaction<a aria-label="Permalink" class="heading-anchor" href="#section-107-3">#</a></h3>
+<p>Hundreds of curves browser धीमा कर सकती हैं; Top, Bottom या Outliers चुनें।</p>
+<h2 id="section-108">108. समस्या समाधान<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<h3 id="section-108-1">108.1. कोई dataset नहीं दिखता<a aria-label="Permalink" class="heading-anchor" href="#section-108-1">#</a></h3>
+<p>No dataset, wrong project, failed import या missing registry। Input data, OpenMetaBar या Datasets उपयोग करें।</p>
+<h3 id="section-108-2">108.2. Dataset अन्य tabs में भी बदलता है<a aria-label="Permalink" class="heading-anchor" href="#section-108-2">#</a></h3>
+<p>Selector global active dataset से synchronized है; यह expected है।</p>
+<h3 id="section-108-3">108.3. केवल देखने के बाद project unsaved<a aria-label="Permalink" class="heading-anchor" href="#section-108-3">#</a></h3>
+<p>Active dataset बदला होगा। Persist करना हो तो save करें।</p>
+<h3 id="section-108-4">108.4. Reads decimal हैं<a aria-label="Permalink" class="heading-anchor" href="#section-108-4">#</a></h3>
+<p>OTU table transformed/normalized हो सकती है। Depth और rarefaction को raw counts न मानें।</p>
+<h3 id="section-108-5">108.5. Richness inconsistent<a aria-label="Permalink" class="heading-anchor" href="#section-108-5">#</a></h3>
+<p>Transformation, negative values, unpruned taxa, depth, structural zeros या orientation कारण हो सकते हैं। केवल &gt;0 values count होती हैं।</p>
+<h3 id="section-108-6">108.6. Sparsity बहुत कम<a aria-label="Permalink" class="heading-anchor" href="#section-108-6">#</a></h3>
+<p><code>NA</code> denominator में हैं लेकिन zero नहीं गिने जाते।</p>
+<h3 id="section-108-7">108.7. Group variable नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-7">#</a></h3>
+<p>Metadata absent, one/&gt;15 levels, date variable या all missing।</p>
+<h3 id="section-108-8">108.8. Numeric variable group बनती है<a aria-label="Permalink" class="heading-anchor" href="#section-108-8">#</a></h3>
+<p>2–15 distinct values हैं। Categorical interpretation गलत हो तो select न करें।</p>
+<h3 id="section-108-9">108.9. Missing values <code>NA</code> group बनती हैं<a aria-label="Permalink" class="heading-anchor" href="#section-108-9">#</a></h3>
+<p>Description missing को label बनाता है; जरूरत हो तो metadata साफ़ करें।</p>
+<h3 id="section-108-10">108.10. View logs कुछ नहीं करता<a aria-label="Permalink" class="heading-anchor" href="#section-108-10">#</a></h3>
+<p>केवल sub-tab select करता है; box manually खोलें।</p>
+<h3 id="section-108-11">108.11. Sequences absent<a aria-label="Permalink" class="heading-anchor" href="#section-108-11">#</a></h3>
+<p>No <code>refseq</code>, <code>Biostrings</code> unavailable या invalid object।</p>
+<h3 id="section-108-12">108.12. GC unusual<a aria-label="Permalink" class="heading-anchor" href="#section-108-12">#</a></h3>
+<p>Ambiguous bases, short sequences, multiple markers या non-ACGT characters।</p>
+<h3 id="section-108-13">108.13. Rank names बदल गए<a aria-label="Permalink" class="heading-anchor" href="#section-108-13">#</a></h3>
+<p>Display/export के लिए unique किए गए; original unchanged।</p>
+<h3 id="section-108-14">108.14. <code>SampleID_meta</code> दिखता है<a aria-label="Permalink" class="heading-anchor" href="#section-108-14">#</a></h3>
+<p>Metadata में पहले SampleID था; rownames के लिए SampleID reserved है।</p>
+<h3 id="section-108-15">108.15. Rarefaction calculate नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-15">#</a></h3>
+<p>Missing <code>vegan</code>, OTU, enough samples/reads या incompatible data।</p>
+<h3 id="section-108-16">108.16. Curves पुराने dataset की हैं<a aria-label="Permalink" class="heading-anchor" href="#section-108-16">#</a></h3>
+<p>Dataset change के बाद recalculate नहीं किया। फिर Calculate करें।</p>
+<h3 id="section-108-17">108.17. Maximum curves respected नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-17">#</a></h3>
+<p>All mode limit ignore करता है।</p>
+<h3 id="section-108-18">108.18. Large group pooled curve बहुत ऊँची<a aria-label="Permalink" class="heading-anchor" href="#section-108-18">#</a></h3>
+<p>Group reads sum हुए हैं; per-sample mean नहीं।</p>
+<h3 id="section-108-19">108.19. कोई outlier नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-19">#</a></h3>
+<p>True homogeneity, few samples, zero IQR या missing values।</p>
+<h3 id="section-108-20">108.20. Biologically normal sample flagged<a aria-label="Permalink" class="heading-anchor" href="#section-108-20">#</a></h3>
+<p>Rule global है, within-group नहीं। Context से interpret करें।</p>
+<h3 id="section-108-21">108.21. Very atypical sample flagged नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-21">#</a></h3>
+<p>Metric unused, zero IQR, few samples, only zero-proportion issue या transformed data।</p>
+<h3 id="section-108-22">108.22. 30% outlier group red<a aria-label="Permalink" class="heading-anchor" href="#section-108-22">#</a></h3>
+<p>Internal visual threshold है, p-value नहीं।</p>
+<h3 id="section-108-23">108.23. OTU export orientation अलग<a aria-label="Permalink" class="heading-anchor" href="#section-108-23">#</a></h3>
+<p>Taxa हमेशा rows में export होते हैं।</p>
+<h3 id="section-108-24">108.24. CSV visual filter से अलग<a aria-label="Permalink" class="heading-anchor" href="#section-108-24">#</a></h3>
+<p>Dedicated button full table export करता है; current DataTables state के लिए built-in CSV उपयोग करें।</p>
+<h3 id="section-108-25">108.25. CSV empty<a aria-label="Permalink" class="heading-anchor" href="#section-108-25">#</a></h3>
+<p>Corresponding component absent हो सकता है।</p>
+<h3 id="section-108-26">108.26. Logs absent<a aria-label="Permalink" class="heading-anchor" href="#section-108-26">#</a></h3>
+<p>BarCodeR filtration नहीं, attribute lost, other tool या old version।</p>
+<h3 id="section-108-27">108.27. Project view samples double-count करता है<a aria-label="Permalink" class="heading-anchor" href="#section-108-27">#</a></h3>
+<p>Cross-dataset sums deduplicate नहीं करते।</p>
+<h3 id="section-108-28">108.28. Heatmap similar लगती है<a aria-label="Permalink" class="heading-anchor" href="#section-108-28">#</a></h3>
+<p>हर metric अलग 0–1 normalize होती है।</p>
+<h3 id="section-108-29">108.29. Column 0.5 है<a aria-label="Permalink" class="heading-anchor" href="#section-108-29">#</a></h3>
+<p>सभी datasets का value समान है।</p>
+<h3 id="section-108-30">108.30. Chosen reference उपयोग नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-30">#</a></h3>
+<p>Selection में शामिल नहीं; जोड़ें।</p>
+<h3 id="section-108-31">108.31. Difference plot नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-108-31">#</a></h3>
+<p>Zero/missing reference, one dataset या missing metric।</p>
+<h3 id="section-108-32">108.32. Filtration comparison unfair<a aria-label="Permalink" class="heading-anchor" href="#section-108-32">#</a></h3>
+<p>Absolute counts हैं; initial dimensions के अनुसार interpret करें।</p>
+<h3 id="section-108-33">108.33. Project view धीमी<a aria-label="Permalink" class="heading-anchor" href="#section-108-33">#</a></h3>
+<p>Datasets/selection घटाएँ और large tables न खोलें।</p>
+<h2 id="section-109">109. Dataset खोलने की checklist<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Dataset name, samples और taxa verify करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Total abundance और raw/transformed nature जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Taxonomy, metadata, sequences और logs देखें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sparsity/depth alerts पढ़ें।</li>
+</ul>
+<h2 id="section-110">110. Group analysis से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Biologically relevant variable चुनें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Levels, missing values और group sizes जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Numeric variable को गलती से category न मानें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Depth, richness और outliers देखें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Description को statistical test न समझें।</li>
+</ul>
+<h2 id="section-111">111. Rarefaction से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Raw, integer, non-negative counts verify करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>कम से कम दो samples with 50 reads।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही dataset/group चुनें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Calculate करें और dataset change के बाद फिर करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Individual curves और pooled groups अलग समझें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Plateau को definitive validation न मानें।</li>
+</ul>
+<h2 id="section-112">112. Outlier हटाने से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Metrics, metadata, group, controls और logs जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Depth और dominance देखें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Biological expectation तय करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Description से delete न करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Justification के साथ Filtration उपयोग करें।</li>
+</ul>
+<h2 id="section-113">113. Dataset comparison से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same abundance type और units।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same marker या explicit objective।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Comparable technology, filters और samples।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Reference selection में।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Non-deduplicated sums और 0–1 normalization समझें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>“Higher” को “better” न मानें।</li>
+</ul>
+<h2 id="section-114">114. वर्तमान सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<h3 id="section-114-1">114.1. Raw counts validate नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-114-1">#</a></h3>
+<p>Transformed data misleading metrics दे सकती है।</p>
+<h3 id="section-114-2">114.2. ASV generic label है<a aria-label="Permalink" class="heading-anchor" href="#section-114-2">#</a></h3>
+<p>Unit generation method अज्ञात।</p>
+<h3 id="section-114-3">114.3. Tree summary नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-114-3">#</a></h3>
+<p><code>phy_tree</code> presence/consistency नहीं दिखती।</p>
+<h3 id="section-114-4">114.4. Sequences और taxa का exhaustive alignment check नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-114-4">#</a></h3>
+<p>केवल present sequences describe होती हैं।</p>
+<h3 id="section-114-5">114.5. Sparsity/completeness simple summaries हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-5">#</a></h3>
+<p>Heterogeneity छिप सकती है।</p>
+<h3 id="section-114-6">114.6. Diagnostics internal thresholds उपयोग करते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-6">#</a></h3>
+<p>Universal standards नहीं।</p>
+<h3 id="section-114-7">114.7. Outliers globally detect होते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-7">#</a></h3>
+<p>Within-group नहीं।</p>
+<h3 id="section-114-8">114.8. Zero proportion status में नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-114-8">#</a></h3>
+<p>केवल display होता है।</p>
+<h3 id="section-114-9">114.9. Rarefaction manually rerun करनी होती है<a aria-label="Permalink" class="heading-anchor" href="#section-114-9">#</a></h3>
+<p>Dataset change result reset नहीं करता।</p>
+<h3 id="section-114-10">114.10. All mode curve limit ignore करता है<a aria-label="Permalink" class="heading-anchor" href="#section-114-10">#</a></h3>
+<p>Heavy plot बन सकता है।</p>
+<h3 id="section-114-11">114.11. Aggregated curves pooled हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-11">#</a></h3>
+<p>Sample means नहीं।</p>
+<h3 id="section-114-12">114.12. Full tables memory में<a aria-label="Permalink" class="heading-anchor" href="#section-114-12">#</a></h3>
+<p>Large objects costly हो सकते हैं।</p>
+<h3 id="section-114-13">114.13. Exports table orientation बदलते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-13">#</a></h3>
+<p>OTU taxa rows में।</p>
+<h3 id="section-114-14">114.14. Column names display के लिए बदल सकते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-114-14">#</a></h3>
+<p>Original phyloseq unchanged।</p>
+<h3 id="section-114-15">114.15. Project view dimensions sum करती है<a aria-label="Permalink" class="heading-anchor" href="#section-114-15">#</a></h3>
+<p>Samples/taxa deduplicate नहीं।</p>
+<h3 id="section-114-16">114.16. Heatmap relative positions compare करती है<a aria-label="Permalink" class="heading-anchor" href="#section-114-16">#</a></h3>
+<p>Common units नहीं।</p>
+<h3 id="section-114-17">114.17. Filtration absolute numbers उपयोग करती है<a aria-label="Permalink" class="heading-anchor" href="#section-114-17">#</a></h3>
+<p>Initial size correction नहीं।</p>
+<h3 id="section-114-18">114.18. Statistical test नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-114-18">#</a></h3>
+<p>Differences descriptive हैं।</p>
+<h2 id="section-115">115. अनुशंसित workflow<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<ol>
+<li>Import के बाद Description खोलें।</li>
+<li>Active dataset, dimensions और components verify करें।</li>
+<li>Alerts और abundance nature जाँचें।</li>
+<li>Reads-richness, distributions और sequences देखें।</li>
+<li>Relevant grouping चुनें, outliers जाँचें, counts पर rarefaction करें।</li>
+<li>Tables, completeness और logs देखें।</li>
+<li>Project view में datasets compare करें।</li>
+<li>बदलाव के लिए Data Edition या Filtration जाएँ।</li>
+</ol>
+<h2 id="section-116">116. सत्यापित आंतरिक स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>यह documentation current code से reconstructed है:</p>
+<ol>
+<li><code>modules/description/mod_description_ui.R</code>: views, controls, plots, tables और exports।</li>
+<li><code>modules/description/mod_description_server.R</code>: metrics, orientation, rarefaction, outliers, tables और comparisons।</li>
+<li><code>modules/_shared/_active_dataset_sync.R</code>: active-dataset synchronization।</li>
+<li><code>modules/_shared/_ui_state.R</code>: UI settings restoration।</li>
+<li><code>app.R</code>: module initialization।</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य परिचय</a><a class="toc-l3" href="#dataset-view">Dataset view</a><a class="toc-l3" href="#project-view">Project view</a><a class="toc-l2" href="#section-2">2. टैब का उद्देश्य</a><a class="toc-l2" href="#section-3">3. Data पर प्रभाव</a><a class="toc-l3" href="#section-3-1">3.1. अपवाद: active dataset</a><a class="toc-l2" href="#section-4">4. आवश्यक components</a><a class="toc-l2" href="#section-5">5. Abundance values के बारे में महत्वपूर्ण धारणा</a><a class="toc-l2" href="#section-6">6. Interface organization</a><a class="toc-l3" href="#dataset-view-2">Dataset view</a><a class="toc-l3" href="#project-view-2">Project view</a><a class="toc-l2" href="#section-7">7. Dataset चुनना</a><a class="toc-l3" href="#section-7-1">7.1. Global synchronization</a><a class="toc-l3" href="#section-7-2">7.2. Fallback value</a><a class="toc-l3" href="#section-7-3">7.3. Dataset बदलना</a><a class="toc-l2" href="#section-8">8. Grouping variable</a><a class="toc-l3" href="#section-8-1">8.1. उपलब्ध variables</a><a class="toc-l3" href="#section-8-2">8.2. Numeric columns</a><a class="toc-l3" href="#section-8-3">8.3. Missing values</a><a class="toc-l3" href="#section-8-4">8.4. No grouping</a><a class="toc-l3" href="#section-8-5">8.5. Grouping के प्रभाव</a><a class="toc-l2" href="#section-9">9. Grouping outlier detection नहीं बदलता</a><a class="toc-l2" href="#section-10">10. “View logs” button</a><a class="toc-l2" href="#section-11">11. Dataset header</a><a class="toc-l2" href="#section-12">12. Component badges</a><a class="toc-l3" href="#section-12-1">12.1. OTU</a><a class="toc-l3" href="#section-12-2">12.2. Taxonomy</a><a class="toc-l3" href="#section-12-3">12.3. Metadata</a><a class="toc-l3" href="#section-12-4">12.4. RefSeq</a><a class="toc-l3" href="#section-12-5">12.5. Logs</a><a class="toc-l3" href="#section-12-6">12.6. Phylogenetic tree</a><a class="toc-l2" href="#section-13">13. OTU-table orientation</a><a class="toc-l2" href="#section-14">14. Metric: taxa count</a><a class="toc-l2" href="#section-15">15. Metric: sample count</a><a class="toc-l2" href="#section-16">16. Metric: total reads</a><a class="toc-l2" href="#section-17">17. Metric: reads per sample</a><a class="toc-l2" href="#section-18">18. Metric: observed richness</a><a class="toc-l2" href="#section-19">19. Metric: dominant taxon percentage</a><a class="toc-l2" href="#section-20">20. Metric: zero proportion per sample</a><a class="toc-l2" href="#section-21">21. Metric: global sparsity</a><a class="toc-l3" href="#section-21-1">21.1. Interpretation</a><a class="toc-l3" href="#section-21-2">21.2. Display thresholds</a><a class="toc-l3" href="#section-21-3">21.3. NA का प्रभाव</a><a class="toc-l2" href="#section-22">22. Depth variability</a><a class="toc-l2" href="#section-23">23. Taxonomic completeness</a><a class="toc-l3" href="#section-23-1">23.1. Consequence</a><a class="toc-l3" href="#section-23-2">23.2. Space-only strings</a><a class="toc-l2" href="#section-24">24. Missing metadata values</a><a class="toc-l3" href="#section-24-1">24.1. "NA" value</a><a class="toc-l3" href="#section-24-2">24.2. Spaces</a><a class="toc-l3" href="#section-24-3">24.3. Displayed type</a><a class="toc-l2" href="#section-25">25. Sequence length</a><a class="toc-l3" href="#section-25-1">25.1. Interpretation</a><a class="toc-l2" href="#section-26">26. GC percentage</a><a class="toc-l2" href="#section-27">27. Sequence names</a><a class="toc-l2" href="#section-28">28. Automatic interpretation message</a><a class="toc-l2" href="#section-29">29. Quick dataset reading</a><a class="toc-l3" href="#section-29-1">29.1. Structure</a><a class="toc-l3" href="#section-29-2">29.2. Available content</a><a class="toc-l3" href="#section-29-3">29.3. Sequences</a><a class="toc-l3" href="#section-29-4">29.4. Filtration</a><a class="toc-l2" href="#section-30">30. Automatic diagnostics</a><a class="toc-l2" href="#section-31">31. OpenMetaBar provenance</a><a class="toc-l3" href="#section-31-1">31.1. Run summary</a><a class="toc-l3" href="#section-31-2">31.2. Demultiplexing</a><a class="toc-l3" href="#section-31-3">31.3. Filters</a><a class="toc-l3" href="#section-31-4">31.4. LotuS3</a><a class="toc-l3" href="#section-31-5">31.5. LCA</a><a class="toc-l3" href="#section-31-6">31.6. IDMABIO</a><a class="toc-l3" href="#section-31-7">31.7. NextITS</a><a class="toc-l3" href="#section-31-8">31.8. Cluster environment</a><a class="toc-l3" href="#section-31-9">31.9. FASTQ files</a><a class="toc-l3" href="#section-31-10">31.10. Sample renaming</a><a class="toc-l3" href="#section-31-11">31.11. Missing provenance</a><a class="toc-l2" href="#section-32">32. Interactive visualizations — Overview</a><a class="toc-l2" href="#section-33">33. Reads versus richness</a><a class="toc-l3" href="#section-33-1">33.1. Interpretation</a><a class="toc-l3" href="#section-33-2">33.2. Limitation</a><a class="toc-l3" href="#section-33-3">33.3. Interaction</a><a class="toc-l2" href="#section-34">34. Sample detail card</a><a class="toc-l3" href="#section-34-1">34.1. Initial sample</a><a class="toc-l3" href="#section-34-2">34.2. Displayed metadata</a><a class="toc-l2" href="#section-35">35. Top 15 samples</a><a class="toc-l3" href="#section-35-1">35.1. Limitation</a><a class="toc-l2" href="#section-36">36. Top 15 taxa</a><a class="toc-l3" href="#section-36-1">36.1. Prevalence</a><a class="toc-l3" href="#section-36-2">36.2. Limitation</a><a class="toc-l2" href="#section-37">37. Cumulative sample contribution</a><a class="toc-l2" href="#section-38">38. Cumulative taxon contribution</a><a class="toc-l2" href="#section-39">39. Abundance tab</a><a class="toc-l2" href="#section-40">40. Reads histogram</a><a class="toc-l2" href="#section-41">41. Reads by group</a><a class="toc-l3" href="#section-41-1">41.1. No grouping</a><a class="toc-l3" href="#section-41-2">41.2. Interpretation</a><a class="toc-l2" href="#section-42">42. Cumulative reads by group</a><a class="toc-l3" href="#section-42-1">42.1. Consequence</a><a class="toc-l2" href="#section-43">43. Richness tab</a><a class="toc-l2" href="#section-44">44. Richness histogram</a><a class="toc-l2" href="#section-45">45. Richness by group</a><a class="toc-l2" href="#section-46">46. Richness versus dominance</a><a class="toc-l3" href="#section-46-1">46.1. यह evenness index नहीं है</a><a class="toc-l2" href="#section-47">47. Sequences tab</a><a class="toc-l2" href="#section-48">48. Length versus GC</a><a class="toc-l2" href="#section-49">49. Rarefaction curves</a><a class="toc-l2" href="#section-50">50. Rarefaction method</a><a class="toc-l2" href="#section-51">51. Calculation requirements</a><a class="toc-l3" href="#section-51-1">51.1. 50-read threshold</a><a class="toc-l2" href="#section-52">52. Expected data type</a><a class="toc-l2" href="#section-53">53. Calculated depths</a><a class="toc-l2" href="#section-54">54. Individual curves</a><a class="toc-l2" href="#section-55">55. Individual-curve subset</a><a class="toc-l3" href="#section-55-1">55.1. All samples</a><a class="toc-l3" href="#section-55-2">55.2. Top reads</a><a class="toc-l3" href="#section-55-3">55.3. Bottom reads</a><a class="toc-l3" href="#section-55-4">55.4. Outliers</a><a class="toc-l2" href="#section-56">56. Maximum number of curves</a><a class="toc-l2" href="#section-57">57. Curves aggregated by group</a><a class="toc-l3" href="#section-57-1">57.1. Curve क्या दर्शाती है</a><a class="toc-l3" href="#section-57-2">57.2. Group size effect</a><a class="toc-l3" href="#section-57-3">57.3. Without grouping</a><a class="toc-l2" href="#section-58">58. Legend दिखाना</a><a class="toc-l2" href="#section-59">59. Recalculation आवश्यक</a><a class="toc-l3" href="#section-59-1">59.1. Grouping बदलना</a><a class="toc-l3" href="#section-59-2">59.2. Stale-result risk</a><a class="toc-l2" href="#section-60">60. Rarefaction interpretation</a><a class="toc-l2" href="#section-61">61. Rarefaction limitations</a><a class="toc-l2" href="#section-62">62. Outlier detection</a><a class="toc-l2" href="#section-63">63. IQR rule</a><a class="toc-l2" href="#section-64">64. High और low outliers</a><a class="toc-l2" href="#section-65">65. Minimum conditions</a><a class="toc-l2" href="#section-66">66. Sample status</a><a class="toc-l2" href="#section-67">67. Signal count</a><a class="toc-l2" href="#section-68">68. Outlier score</a><a class="toc-l3" href="#section-68-1">68.1. Interpretation</a><a class="toc-l2" href="#section-69">69. Priority order</a><a class="toc-l2" href="#section-70">70. Outlier summary</a><a class="toc-l2" href="#section-71">71. Group concentration</a><a class="toc-l3" href="#section-71-1">71.1. Color thresholds</a><a class="toc-l2" href="#section-72">72. Global detection और group reading</a><a class="toc-l2" href="#section-73">73. Samples-to-watch table</a><a class="toc-l2" href="#section-74">74. Complete sample table</a><a class="toc-l2" href="#section-75">75. Outlier का अर्थ क्या नहीं है</a><a class="toc-l2" href="#section-76">76. Tables and logs</a><a class="toc-l2" href="#section-77">77. Table summary</a><a class="toc-l2" href="#section-78">78. Displayed OTU table</a><a class="toc-l3" href="#section-78-1">78.1. Original orientation</a><a class="toc-l3" href="#section-78-2">78.2. Content</a><a class="toc-l2" href="#section-79">79. Displayed taxonomy</a><a class="toc-l3" href="#section-79-1">79.1. Rank names</a><a class="toc-l2" href="#section-80">80. Displayed metadata</a><a class="toc-l2" href="#section-81">81. Interactive table functions</a><a class="toc-l2" href="#section-82">82. Dedicated CSV export</a><a class="toc-l3" href="#section-82-1">82.1. Format</a><a class="toc-l3" href="#section-82-2">82.2. Visual filters</a><a class="toc-l3" href="#section-82-3">82.3. Missing component</a><a class="toc-l2" href="#section-83">83. Taxonomic completeness</a><a class="toc-l2" href="#section-84">84. Metadata completeness</a><a class="toc-l2" href="#section-85">85. Groupable variables</a><a class="toc-l2" href="#section-86">86. Filtration logs</a><a class="toc-l3" href="#section-86-1">86.1. Removed ASVs</a><a class="toc-l3" href="#section-86-2">86.2. Removed samples</a><a class="toc-l3" href="#section-86-3">86.3. No explicit identifier</a><a class="toc-l2" href="#section-87">87. Log export</a><a class="toc-l2" href="#section-88">88. Log scope</a><a class="toc-l2" href="#section-89">89. Project view</a><a class="toc-l2" href="#section-90">90. Global project summary</a><a class="toc-l2" href="#section-91">91. Cumulative samples</a><a class="toc-l2" href="#section-92">92. Cumulative reads</a><a class="toc-l2" href="#section-93">93. Mean project sparsity</a><a class="toc-l2" href="#section-94">94. Project summary table</a><a class="toc-l2" href="#section-95">95. Datasets to compare</a><a class="toc-l2" href="#section-96">96. Reference dataset</a><a class="toc-l3" href="#section-96-1">96.1. Reference selection से बाहर</a><a class="toc-l2" href="#section-97">97. Key metric</a><a class="toc-l2" href="#section-98">98. Synthetic project reading</a><a class="toc-l2" href="#section-99">99. Synthetic heatmap</a><a class="toc-l3" href="#section-99-1">99.1. Normalization</a><a class="toc-l3" href="#section-99-2">99.2. Identical values</a><a class="toc-l3" href="#section-99-3">99.3. Interpretation</a><a class="toc-l2" href="#section-100">100. Comparative dotplot</a><a class="toc-l2" href="#section-101">101. Difference versus reference</a><a class="toc-l3" href="#section-101-1">101.1. Zero reference</a><a class="toc-l3" href="#section-101-2">101.2. One dataset only</a><a class="toc-l3" href="#section-101-3">101.3. Interpretation</a><a class="toc-l2" href="#section-102">102. Filtration comparison</a><a class="toc-l3" href="#section-102-1">102.1. Important limitation</a><a class="toc-l3" href="#section-102-2">102.2. Missing log</a><a class="toc-l2" href="#section-103">103. Comparative barplots</a><a class="toc-l2" href="#section-104">104. Dataset comparability</a><a class="toc-l2" href="#section-105">105. Different markers comparison</a><a class="toc-l2" href="#section-106">106. Before/after filtration</a><a class="toc-l2" href="#section-107">107. Performance</a><a class="toc-l3" href="#section-107-1">107.1. Lazy initialization</a><a class="toc-l3" href="#section-107-2">107.2. Large tables</a><a class="toc-l3" href="#section-107-3">107.3. Rarefaction</a><a class="toc-l2" href="#section-108">108. समस्या समाधान</a><a class="toc-l3" href="#section-108-1">108.1. कोई dataset नहीं दिखता</a><a class="toc-l3" href="#section-108-2">108.2. Dataset अन्य tabs में भी बदलता है</a><a class="toc-l3" href="#section-108-3">108.3. केवल देखने के बाद project unsaved</a><a class="toc-l3" href="#section-108-4">108.4. Reads decimal हैं</a><a class="toc-l3" href="#section-108-5">108.5. Richness inconsistent</a><a class="toc-l3" href="#section-108-6">108.6. Sparsity बहुत कम</a><a class="toc-l3" href="#section-108-7">108.7. Group variable नहीं</a><a class="toc-l3" href="#section-108-8">108.8. Numeric variable group बनती है</a><a class="toc-l3" href="#section-108-9">108.9. Missing values NA group बनती हैं</a><a class="toc-l3" href="#section-108-10">108.10. View logs कुछ नहीं करता</a><a class="toc-l3" href="#section-108-11">108.11. Sequences absent</a><a class="toc-l3" href="#section-108-12">108.12. GC unusual</a><a class="toc-l3" href="#section-108-13">108.13. Rank names बदल गए</a><a class="toc-l3" href="#section-108-14">108.14. SampleID_meta दिखता है</a><a class="toc-l3" href="#section-108-15">108.15. Rarefaction calculate नहीं</a><a class="toc-l3" href="#section-108-16">108.16. Curves पुराने dataset की हैं</a><a class="toc-l3" href="#section-108-17">108.17. Maximum curves respected नहीं</a><a class="toc-l3" href="#section-108-18">108.18. Large group pooled curve बहुत ऊँची</a><a class="toc-l3" href="#section-108-19">108.19. कोई outlier नहीं</a><a class="toc-l3" href="#section-108-20">108.20. Biologically normal sample flagged</a><a class="toc-l3" href="#section-108-21">108.21. Very atypical sample flagged नहीं</a><a class="toc-l3" href="#section-108-22">108.22. 30% outlier group red</a><a class="toc-l3" href="#section-108-23">108.23. OTU export orientation अलग</a><a class="toc-l3" href="#section-108-24">108.24. CSV visual filter से अलग</a><a class="toc-l3" href="#section-108-25">108.25. CSV empty</a><a class="toc-l3" href="#section-108-26">108.26. Logs absent</a><a class="toc-l3" href="#section-108-27">108.27. Project view samples double-count करता है</a><a class="toc-l3" href="#section-108-28">108.28. Heatmap similar लगती है</a><a class="toc-l3" href="#section-108-29">108.29. Column 0.5 है</a><a class="toc-l3" href="#section-108-30">108.30. Chosen reference उपयोग नहीं</a><a class="toc-l3" href="#section-108-31">108.31. Difference plot नहीं</a><a class="toc-l3" href="#section-108-32">108.32. Filtration comparison unfair</a><a class="toc-l3" href="#section-108-33">108.33. Project view धीमी</a><a class="toc-l2" href="#section-109">109. Dataset खोलने की checklist</a><a class="toc-l2" href="#section-110">110. Group analysis से पहले checklist</a><a class="toc-l2" href="#section-111">111. Rarefaction से पहले checklist</a><a class="toc-l2" href="#section-112">112. Outlier हटाने से पहले checklist</a><a class="toc-l2" href="#section-113">113. Dataset comparison से पहले checklist</a><a class="toc-l2" href="#section-114">114. वर्तमान सीमाएँ</a><a class="toc-l3" href="#section-114-1">114.1. Raw counts validate नहीं</a><a class="toc-l3" href="#section-114-2">114.2. ASV generic label है</a><a class="toc-l3" href="#section-114-3">114.3. Tree summary नहीं</a><a class="toc-l3" href="#section-114-4">114.4. Sequences और taxa का exhaustive alignment check नहीं</a><a class="toc-l3" href="#section-114-5">114.5. Sparsity/completeness simple summaries हैं</a><a class="toc-l3" href="#section-114-6">114.6. Diagnostics internal thresholds उपयोग करते हैं</a><a class="toc-l3" href="#section-114-7">114.7. Outliers globally detect होते हैं</a><a class="toc-l3" href="#section-114-8">114.8. Zero proportion status में नहीं</a><a class="toc-l3" href="#section-114-9">114.9. Rarefaction manually rerun करनी होती है</a><a class="toc-l3" href="#section-114-10">114.10. All mode curve limit ignore करता है</a><a class="toc-l3" href="#section-114-11">114.11. Aggregated curves pooled हैं</a><a class="toc-l3" href="#section-114-12">114.12. Full tables memory में</a><a class="toc-l3" href="#section-114-13">114.13. Exports table orientation बदलते हैं</a><a class="toc-l3" href="#section-114-14">114.14. Column names display के लिए बदल सकते हैं</a><a class="toc-l3" href="#section-114-15">114.15. Project view dimensions sum करती है</a><a class="toc-l3" href="#section-114-16">114.16. Heatmap relative positions compare करती है</a><a class="toc-l3" href="#section-114-17">114.17. Filtration absolute numbers उपयोग करती है</a><a class="toc-l3" href="#section-114-18">114.18. Statistical test नहीं</a><a class="toc-l2" href="#section-115">115. अनुशंसित workflow</a><a class="toc-l2" href="#section-116">116. सत्यापित आंतरिक स्रोत</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · विवरण</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

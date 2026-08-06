@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>OpenMetaBar — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="openmetabar" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link active" href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">OpenMetaBar</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">OpenMetaBar — 方法指南</h1>
+<h2 id="section-1">1. 总体介绍<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>OpenMetaBar</strong> 选项卡用于从 FASTQ 文件启动并监控完整的宏条形码（metabarcoding）数据处理流程。</p>
+<p>分析并不是直接在 Shiny 应用中执行。BarCodeR 负责准备、提交和监控：</p>
+<ol>
+<li>用户选择分析的生物学和技术背景；</li>
+<li>选择 FASTQ 文件、实验设计文件和参考数据库；</li>
+<li>BarCodeR 检查文件并准备传输；</li>
+<li>用户配置集群资源和流程参数；</li>
+<li>BarCodeR 为本次运行创建隔离目录；</li>
+<li>应用内置的 OpenMetaBar 流程被复制到集群；</li>
+<li>检查或安装所需的 Singularity 镜像；</li>
+<li>提交 Slurm 作业；</li>
+<li>应用持续监控执行状态并检测生成的文件；</li>
+<li>最后可将 phyloseq 对象导入 BarCodeR。</li>
+</ol>
+<p>OpenMetaBar 支持多种技术和分析路线：</p>
+<ul>
+<li>Oxford Nanopore Technologies（ONT）；</li>
+<li>PacBio；</li>
+<li>Illumina；</li>
+<li>LotuS3；</li>
+<li>NextITS；</li>
+<li>IDMABIO 报告路线。</li>
+</ul>
+<h2 id="section-2">2. OpenMetaBar 会做什么，不会做什么<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. 自动完成的工作<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>OpenMetaBar 可自动完成：</p>
+<ul>
+<li>工作目录准备；</li>
+<li>文件初步验证；</li>
+<li>本地文件传输；</li>
+<li>在 design file 中重写 FASTQ 路径；</li>
+<li>生成 Nextflow 配置；</li>
+<li>准备 Slurm 资源；</li>
+<li>部署流程；</li>
+<li>管理 Singularity 镜像；</li>
+<li>提交作业；</li>
+<li>监控 Slurm 状态；</li>
+<li>检测结果；</li>
+<li>导入 phyloseq 对象。</li>
+</ul>
+<h3 id="section-2-2">2.2. 仍由用户负责的内容<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>应用无法自动判断：</p>
+<ul>
+<li>所选 marker 是否真正对应实验使用的引物；</li>
+<li>输入的预期长度是否具有生物学合理性；</li>
+<li>参考数据库是否适合该 marker 和研究对象；</li>
+<li>质量阈值是否适合所用测序技术；</li>
+<li>编码序列过滤是否适用；</li>
+<li>聚类或去噪方法是否符合研究目标；</li>
+<li>分类学参数能否提供足够可靠的鉴定；</li>
+<li>请求的 Slurm 资源是否适合数据规模。</li>
+</ul>
+<blockquote>
+<p><strong>重要原则 —</strong> 应用提供的默认值不等于通用推荐值。</p>
+</blockquote>
+<h2 id="section-3">3. 推荐操作流程<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>建议按以下顺序操作：</p>
+<ol>
+<li><strong>检查或建立集群连接。</strong></li>
+<li><strong>定义分析背景。</strong></li>
+<li><strong>验证背景。</strong></li>
+<li><strong>选择 FASTQ、design file 和参考数据库。</strong></li>
+<li><strong>必要时创建或修正 design file。</strong></li>
+<li><strong>验证文件并准备传输。</strong></li>
+<li><strong>配置运行和 Slurm 资源。</strong></li>
+<li><strong>验证通用配置。</strong></li>
+<li><strong>配置所选路线专用参数。</strong></li>
+<li><strong>检查可选预览。</strong></li>
+<li><strong>启动分析。</strong></li>
+<li><strong>查看步骤和执行日志。</strong></li>
+<li><strong>检查结果。</strong></li>
+<li><strong>将 phyloseq 导入 BarCodeR。</strong></li>
+<li><strong>从历史记录管理运行。</strong></li>
+</ol>
+<p>验证分析背景不要求连接集群。但浏览远程文件、传输文件、检查远程目录、检测 Slurm 分区、准备容器、提交和监控运行以及查看历史记录都需要有效连接。</p>
+<h2 id="section-4">4. 选择分析路线<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>组合 <strong>测序技术 + marker + 分析引擎</strong> 决定执行哪个子流程。</p>
+<h3 id="section-4-1">4.1. 可用路线<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>技术</th>
+<th>Marker</th>
+<th>可用引擎</th>
+<th>主路线</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ONT</td>
+<td>COI</td>
+<td>LotuS3</td>
+<td>标准 ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>标准 ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S</td>
+<td>LotuS3</td>
+<td>标准 ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>COI-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>PacBio 16S</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>ITS</td>
+<td>LotuS3 或 NextITS</td>
+<td>PacBio ITS</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>LSU</td>
+<td>LotuS3 或 NextITS</td>
+<td>PacBio LSU</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>ITS</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>LSU</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+</tbody>
+</table></div>
+<p>只有应用识别到兼容的 biglogin 集群连接时，才会显示 <code>-idmabio</code> 变体。</p>
+<h3 id="section-4-2">4.2. 路线选择的影响<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>背景会决定：</p>
+<ul>
+<li>是否显示 MiniBar；</li>
+<li>是否允许 NextITS；</li>
+<li>显示哪些参数；</li>
+<li>哪些 Singularity 镜像为必需；</li>
+<li>执行哪些流程步骤；</li>
+<li>可生成哪些输出。</li>
+</ul>
+<p>验证后如果修改技术、marker 或引擎，背景会失效，相关步骤必须重新检查。</p>
+<h2 id="section-5">5. 连接集群<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. 打开连接窗口<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>选项卡顶部按钮显示连接状态：</p>
+<ul>
+<li><strong>集群未连接</strong>：没有活动 SSH 连接；</li>
+<li><strong>连接已建立但需检查</strong>：SSH 已连接，但部分集群前置条件尚未确认；</li>
+<li><strong>集群已连接</strong>：连接和主要必需命令均已检测到。</li>
+</ul>
+<p>点击按钮可打开连接窗口。</p>
+<h3 id="section-5-2">5.2. 需要提供的信息<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>连接需要服务器地址、SSH 端口、用户名以及必要时的密码。如果已配置并可使用 SSH 密钥认证，密码可以留空。</p>
+<h3 id="section-5-3">5.3. 自动检查<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>连接后，BarCodeR 会检查 Bash、<code>find</code>、<code>tar</code>、<code>sbatch</code>、<code>squeue</code>、<code>sacct</code>、<code>scancel</code>、<code>sinfo</code>、Rscript、可用 Slurm 分区以及时间、内存和 CPU 限制。</p>
+<p>因此，SSH 连接成功并不一定意味着集群已经满足运行 OpenMetaBar 的条件。</p>
+<h3 id="section-5-4">5.4. biglogin 情况<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>在支持的基础设施上，应用可以直接连接，也可以在直接连接不可用时通过 bigm9 中继。该过程由应用自动管理。</p>
+<h3 id="section-5-5">5.5. 运行期间断开连接<a aria-label="Permalink" class="heading-anchor" href="#section-5-5">#</a></h3>
+<p>断开应用不会取消 Slurm 作业。作业提交后会继续在集群运行。重新连接到同一集群、使用兼容的根目录并具备相应权限后，可从历史记录恢复该运行。</p>
+<h2 id="section-6">6. 定义分析背景<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>第一个配置卡决定流程路线。</p>
+<h3 id="section-6-1">6.1. 测序技术<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<h4>Oxford Nanopore Technologies</h4>
+<p>选择 <strong>ONT</strong> 会显示 COI、16S 和 18S，可在兼容环境中显示 IDMABIO 变体，显示 MiniBar，并使用 ONT + LotuS3 路线。</p>
+<h4>PacBio</h4>
+<p>选择 <strong>PacBio</strong> 会显示 16S、ITS 和 LSU。ITS/LSU 可选择 LotuS3 或 NextITS；MiniBar 隐藏；使用 PacBio 专用路线。</p>
+<h4>Illumina</h4>
+<p>选择 <strong>Illumina</strong> 会显示 16S、ITS 和 LSU，使用 LotuS3，隐藏 MiniBar，并根据 design file 支持单端或双端文件。</p>
+<h3 id="section-6-2">6.2. Marker 或目标区域<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>Marker 用于选择路线、建议数据库类型、建议 NextITS 区域、识别 IDMABIO 变体并调整可见参数。它不会验证 design file 中的引物是否真正扩增该 marker。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>建议数据库类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COI</td>
+<td>BOLD</td>
+</tr>
+<tr>
+<td>16S</td>
+<td>SILVA</td>
+</tr>
+<tr>
+<td>18S</td>
+<td>PR2</td>
+</tr>
+<tr>
+<td>ITS</td>
+<td>UNITE</td>
+</tr>
+<tr>
+<td>LSU</td>
+<td>SILVA</td>
+</tr>
+</tbody>
+</table></div>
+<p>建议只会更改<strong>声明的数据库类型</strong>，不会自动选择新的 FASTA 文件。</p>
+<h3 id="section-6-3">6.3. 参考数据库类型<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>可选 BOLD、SILVA、PR2、UNITE、NCBI nt 和自定义。声明类型主要用于告诉流程如何解析 FASTA 头并构建分类学映射。</p>
+<p>声明类型与实际选中的 FASTA 是两个独立信息，必须一致。把个人 FASTA 声明为 BOLD 并不会使它成为 BOLD 数据库。</p>
+<h3 id="section-6-4">6.4. 分析引擎<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<p>仅在 PacBio + ITS 或 PacBio + LSU 时显示。可选 <strong>LotuS3</strong> 和 <strong>NextITS</strong>。其他情况下该选择器隐藏且不影响路线。</p>
+<h3 id="section-6-5">6.5. 验证背景<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<p>点击 <strong>验证背景</strong> 后才能选择文件。随后修改技术、marker 或引擎会再次锁定该步骤。</p>
+<h2 id="section-7">7. 选择运行文件<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>验证背景后，<strong>选择运行文件</strong> 按钮可用。必须定义 FASTQ、design file 和参考数据库；NextITS 还需要嵌合体数据库。</p>
+<h3 id="section-7-1">7.1. 选择 FASTQ<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<h4>本地来源</h4>
+<p>本地 FASTQ 通过应用文件浏览器选择。它们不是普通的网页上传：BarCodeR 使用真实路径，然后传输到集群。</p>
+<p>因此不受常规 Shiny 上传大小限制，但在传输完成前文件必须保持可访问。</p>
+<h4>集群来源</h4>
+<p>文件也可以已经存在于集群上，可通过输入路径或远程浏览器选择。需要活动 SSH 连接。</p>
+<h4>一个或多个 FASTQ</h4>
+<p>应用可接受多个文件，并保持独立，不自动拼接。会保留文件名，因此不同目录下同名文件会冲突。</p>
+<p>有问题的示例：</p>
+<pre tabindex="0"><code class="language-text">/run1/sample.fastq.gz
+/run2/sample.fastq.gz
+</code></pre>
+<p>预期扩展名：<code>.fastq</code>、<code>.fastq.gz</code>、<code>.fq</code> 或 <code>.fq.gz</code>。</p>
+<h4>已拆分样本的 FASTQ</h4>
+<p>如果每个文件已经对应一个样本，ONT 应关闭 MiniBar，design 每行一个样本，并映射到正确文件。</p>
+<h4>未拆分的 FASTQ</h4>
+<p>如果一个文件包含多个带 barcode 的样本，启用 MiniBar，并为每个样本填写 barcode 和引物。多行 design 可以指向同一个 FASTQ。</p>
+<h3 id="section-7-2">7.2. 选择 design file<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Design file 可以来自本地、集群，或通过内置编辑器创建/修改。支持 TSV 和 CSV。</p>
+<h4>流程要求的列</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>列</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sample_ID</code></td>
+<td>唯一样本标识符</td>
+</tr>
+<tr>
+<td><code>fastq_path</code></td>
+<td>一个或多个 FASTQ 路径</td>
+</tr>
+<tr>
+<td><code>barcodeF</code></td>
+<td>Forward barcode</td>
+</tr>
+<tr>
+<td><code>barcodeR</code></td>
+<td>Reverse barcode</td>
+</tr>
+<tr>
+<td><code>primerF</code></td>
+<td>Forward primer</td>
+</tr>
+<tr>
+<td><code>primerR</code></td>
+<td>Reverse primer</td>
+</tr>
+</tbody>
+</table></div>
+<p>即使不使用 barcode，这些列也必须存在。根据流程要求，可以用明确的 <code>NA</code> 而不是空单元格。</p>
+<blockquote>
+<p><strong>注意 —</strong> 编辑器可能认为两列表格“可编辑”，但完整流程验证要求上述六列。编辑器显示“结构一致”并不保证启动时通过验证。</p>
+</blockquote>
+<h4>样本标识符</h4>
+<p>必须非空、唯一，建议只使用 <code>A-Z</code>、<code>a-z</code>、<code>0-9</code>、<code>.</code>、<code>-</code> 和 <code>_</code>。</p>
+<p>自动修正会转写重音字符、替换无效字符、清理首尾分隔符并为重复名称添加后缀。大小写会保留。</p>
+<h4>路径列</h4>
+<p>第二列必须被识别为路径列。支持 <code>path</code>、<code>fastq_path</code>、<code>filepath</code>、<code>file_path</code>、<code>input_dir</code>、<code>directory</code>、<code>dir</code>、<code>folder</code>。为避免歧义，建议直接使用 <code>fastq_path</code>。</p>
+<p>启动前该列会被统一命名为 <code>fastq_path</code>，并重写为远程运行目录中的路径。</p>
+<h4>双端文件</h4>
+<p>Illumina 双端数据可在 <code>fastq_path</code> 中用逗号分隔两个文件：</p>
+<pre tabindex="0"><code class="language-text">sample_R1.fastq.gz,sample_R2.fastq.gz
+</code></pre>
+<p>两个文件都必须已选择，名称必须完全一致。</p>
+<h4>Design 与 FASTQ 的一致性</h4>
+<p>Design 中引用的每个文件必须匹配已选择文件名。扩展名、大小写、后缀或拼写差异都会导致错误。</p>
+<h4>单一 FASTQ 情况</h4>
+<p>如果所有行都指向同一个原始文件，应用可以重写路径，使所有样本使用同一个远程 FASTQ，常用于 MiniBar 前。</p>
+<h3 id="section-7-3">7.3. Design 中的引物<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p><code>primerF</code> 和 <code>primerR</code> 用于方向校正。必须按 5′→3′ 输入，使用有效 IUPAC 核苷酸字符且不含空格。支持简并碱基。</p>
+<p>启用方向校正时，每个 FASTQ 必须对应唯一一对引物。找不到引物、多对不同引物对应同一 FASTQ，或包含非法字符都会报错。</p>
+<h3 id="section-7-4">7.4. Design 中的 barcode<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p>MiniBar 使用 <code>barcodeF</code> 和 <code>barcodeR</code>。如果 barcode 彼此过近且允许较多错误，样本误分配风险会增加。</p>
+<h3 id="section-7-5">7.5. 选择参考数据库<a aria-label="Permalink" class="heading-anchor" href="#section-7-5">#</a></h3>
+<p>数据库可以是本地或远程的兼容 FASTA（<code>.fa</code>、<code>.fna</code>、<code>.fasta</code>、<code>.fas</code>，也可 gzip 压缩）。</p>
+<p>它用于生成清理后的 FASTA、从头信息提取分类学表并执行分类学注释。</p>
+<p>应检查：marker 匹配、字母表正确、标识符唯一、头信息含可用分类学信息、声明类型匹配，并且集群可读取。</p>
+<h2 id="section-8">8. 使用 design 编辑器<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. 编辑单元格<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>可直接编辑。每次修改后，应用会重新检查最小结构、路径列、样本名和 FASTQ 对应关系。</p>
+<h3 id="section-8-2">8.2. 添加或删除行<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>可以添加行或批量删除。完全空白的行在保存时被忽略，但会产生警告。</p>
+<h3 id="section-8-3">8.3. 添加、重命名或删除列<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>支持三种操作，至少保留两列。完整 design 必须包含 <code>Sample_ID</code>、<code>fastq_path</code>、<code>barcodeF</code>、<code>barcodeR</code>、<code>primerF</code>、<code>primerR</code>。</p>
+<h3 id="section-8-4">8.4. 修正样本名称<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>按钮会清理字符、防止空名称并保证唯一。必须复核，因为这些名称会进入结果和 phyloseq。</p>
+<h3 id="section-8-5">8.5. 从 FASTQ 生成 design<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>仅在 MiniBar 关闭时可用。应用初始生成 <code>SampleID</code> 和 <code>path</code>。</p>
+<p>这还不是完整 design。需要重命名为 <code>Sample_ID</code> 和 <code>fastq_path</code>，添加另外四列并填写所需值。</p>
+<h3 id="section-8-6">8.6. 保存 design<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>检测到结构错误时不能保存。保存后会用临时本地文件 <code>design_edite.tsv</code> 替换当前选择。完整流程验证在启动时进行。</p>
+<h2 id="section-9">9. 验证并准备文件<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><strong>验证并传输</strong> 需要活动连接。该步骤检查文件选择、存在性、FASTQ 开头、design 的部分问题、样本名和远程磁盘空间；将本地文件传到暂存区，并保留远程文件路径。</p>
+<p>磁盘空间检查是预防性的，在某些系统上可能只是估算。完成后主按钮显示 <strong>文件已准备好</strong>。</p>
+<h2 id="section-10">10. 配置运行和集群<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<h3 id="section-10-1">10.1. 运行根目录<a aria-label="Permalink" class="heading-anchor" href="#section-10-1">#</a></h3>
+<p>每次运行都会在该根目录下创建唯一子目录。用户需要创建、写入、执行、读取和清理权限。内置流程被复制到运行目录，并按清理逻辑删除。</p>
+<h3 id="section-10-2">10.2. Slurm 分区<a aria-label="Permalink" class="heading-anchor" href="#section-10-2">#</a></h3>
+<p>如果 <code>sinfo</code> 可用，应用会显示检测到的分区。分区影响资源、最长时间、优先级和账户限制。可见不代表有权使用。</p>
+<h3 id="section-10-3">10.3. LotuS3 内存<a aria-label="Permalink" class="heading-anchor" href="#section-10-3">#</a></h3>
+<p>内存必须带单位，例如 <code>16G</code>、<code>70G</code>、<code>120G</code>。不要只输入 <code>70</code>，Slurm 可能把它解释为约 70 MB。</p>
+<p>过小可能导致 <code>OUT_OF_MEMORY</code>，过大可能增加排队时间。</p>
+<h3 id="section-10-4">10.4. LotuS3 CPU 核数<a aria-label="Permalink" class="heading-anchor" href="#section-10-4">#</a></h3>
+<p>该值控制 Slurm CPU、LotuS3 线程和部分子进程资源。更多 CPU 不保证线性加速，也可能更难调度。</p>
+<h3 id="section-10-5">10.5. 容器模块<a aria-label="Permalink" class="heading-anchor" href="#section-10-5">#</a></h3>
+<p>必须与提供 Singularity 或 Singularity-CE 的模块名完全一致，例如 <code>singularity-ce/4.1.0</code>。</p>
+<h3 id="section-10-6">10.6. Nextflow 模块<a aria-label="Permalink" class="heading-anchor" href="#section-10-6">#</a></h3>
+<p>指定 Nextflow 版本，例如 <code>nextflow/25.10.4</code>。不存在或不兼容的模块会阻止启动。</p>
+<h3 id="section-10-7">10.7. 运行名称<a aria-label="Permalink" class="heading-anchor" href="#section-10-7">#</a></h3>
+<p>用于识别目录、Slurm 作业和历史记录。应用会自动添加日期、会话标识和随机后缀。避免过长、特殊字符和敏感信息。</p>
+<h3 id="section-10-8">10.8. 保留中间文件<a aria-label="Permalink" class="heading-anchor" href="#section-10-8">#</a></h3>
+<p>调试选项会在成功后保留 <code>work/</code>。它有助于检查命令和诊断，但可能非常大。失败后中间文件本就会保留。之后可从历史记录清理。</p>
+<h2 id="section-11">11. 理解初始值<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>应用初始值主要针对 <strong>ONT + COI</strong>：方向校正开启、长度过滤开启、长度 658、最低质量 20、编码过滤开启、翻译表 5。</p>
+<p>这些值不自动适合 16S、18S、ITS 或 LSU。至少应重新检查编码过滤、长度、遗传密码、扩增子类型和分类群。</p>
+<p>首次修改某些参数时会提示初始值已优化。这只表示存在受控初值，不表示适用于所有实验方案。</p>
+<h2 id="section-12">12. MiniBar 拆分 — ONT 路线<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. 启用或关闭 MiniBar<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>一个 FASTQ 中含多个 barcode 样本且 design 信息完整时启用。MiniBar 会生成每样本 FASTQ 和拆分/保留 reads 指标。未知或歧义 reads 不会作为已分配样本发布。</p>
+<p>文件已按样本拆分或上游已完成拆分时关闭。</p>
+<h3 id="section-12-2">12.2. 识别方法 — <code>M</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>方法 1、2、3 直接作为 <code>-M</code> 传给 MiniBar，改变基于 barcode 和引物的内部分配策略。</p>
+<p>应用没有说明算法差异。应保持已验证的方法；比较的批次之间不要无理由改变；修改后检查指标。</p>
+<h3 id="section-12-3">12.3. Barcode 最大错误数 — <code>e</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>低值提高特异性但可能丢失有测序错误的 reads；高值可恢复更多错误 barcode，但更容易混淆相似 barcode。<code>0</code> 要求完全匹配。</p>
+<h3 id="section-12-4">12.4. 引物最大错误数 — <code>E</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>较高容差可恢复更多噪声 reads，但可能增加非特异匹配；较低容差更严格，但可能删除有效 reads。</p>
+<h3 id="section-12-5">12.5. MiniBar 参数 — <code>l</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>界面将其描述为<strong>搜索窗口</strong>，而流程 schema 描述为<strong>最小 read 长度</strong>。该值直接传给 <code>-l</code>。</p>
+<p>由于定义不一致，在没有验证过的值时建议留空，不要随意解释，并比较修改前后的拆分指标。</p>
+<h2 id="section-13">13. 扩增子方向校正<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<h3 id="section-13-1">13.1. 单端 reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-1">#</a></h3>
+<p>流程寻找引物、检测两个方向、将序列转为 <code>primerF → primerR</code>、去除引物并保留内部区域。缺少完整引物对的 reads 被删除。</p>
+<h3 id="section-13-2">13.2. 非简并和简并引物<a aria-label="Permalink" class="heading-anchor" href="#section-13-2">#</a></h3>
+<p>引物只含 A/C/G/T 时，目前最多允许一个差异。含简并 IUPAC 字符时使用简并模式匹配，不启用额外差异模式。</p>
+<h3 id="section-13-3">13.3. 双端 reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-3">#</a></h3>
+<p>FASTQ 对会跳过方向校正，并报告 <code>SKIPPED_PAIRED_END</code>。因此该步骤不会对双端 reads 重定向或去除引物。</p>
+<h3 id="section-13-4">13.4. NextITS 路线<a aria-label="Permalink" class="heading-anchor" href="#section-13-4">#</a></h3>
+<p>NextITS 有自己的 ITS 区域和引物处理，因此通用方向步骤并非以相同方式应用。</p>
+<h3 id="section-13-5">13.5. 何时关闭方向校正<a aria-label="Permalink" class="heading-anchor" href="#section-13-5">#</a></h3>
+<p>如果引物已经去除、所有序列方向一致，或上游流程保证了方向，则可关闭。</p>
+<h2 id="section-14">14. 过滤顺序<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>过滤是累积的，顺序为：质量、长度、编码。每一步只接收前一步保留的 reads。多个中等严格条件叠加后可能极其严格。没有 reads 时流程停止。</p>
+<h2 id="section-15">15. 长度过滤<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. 启用和输入<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>关闭时输入长度不生效。启用时输入一个或多个逗号分隔整数，例如 <code>480</code> 或 <code>450,550</code>。</p>
+<h3 id="section-15-2">15.2. 实际区间<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<p>流程对每个长度使用 <strong>±100 nt</strong> 容差。</p>
+<p><code>658</code> 对应 <code>558–758</code>；<code>500,800</code> 对应 <code>400–600</code> 和 <code>700–900</code>。</p>
+<h3 id="section-15-3">15.3. 如何选择长度<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>应根据引物之间的区域、过滤时是否仍含引物、生物学变异、技术和目标类群决定。<code>658</code> 仅属于初始 COI 背景，不应自动保留。</p>
+<h3 id="section-15-4">15.4. 空值或无效值<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>当前实现可能把空值或无法解析的值静默替换为 <code>658</code>。启用过滤时不要留空，除非确实需要 658。</p>
+<h3 id="section-15-5">15.5. 双端 reads<a aria-label="Permalink" class="heading-anchor" href="#section-15-5">#</a></h3>
+<p>R1 和 R2 在重新配对前分别过滤。评估的是单个 read 长度，不是合并后的扩增子。250 nt reads 使用 658 会删除两端。</p>
+<h3 id="section-15-6">15.6. 重新同步<a aria-label="Permalink" class="heading-anchor" href="#section-15-6">#</a></h3>
+<p>过滤后按标识符重新配对。没有保留配对端的 read 成为 orphan。只有完整配对继续。</p>
+<h2 id="section-16">16. 质量过滤<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>最低阈值传给 SeqKit。高值更严格、reads 更少；低值保留更多深度，也保留更多噪声。应根据技术、测序代次和上游预处理选择。</p>
+<p>双端数据对 R1、R2 分别过滤，再同步。只删除一端时，另一端成为 orphan。</p>
+<h2 id="section-17">17. 编码序列过滤<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>该过滤保留至少一个阅读框可按所选遗传密码翻译且无内部终止密码子的 reads，并测试当前方向的三个阅读框。</p>
+<p>主要适用于 COI 等编码区，通常不适合 16S、18S、ITS、LSU。若方向校正关闭，反向的编码序列可能被拒绝。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>值</th>
+<th>遗传密码表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>标准密码表</td>
+</tr>
+<tr>
+<td>2</td>
+<td>脊椎动物线粒体</td>
+</tr>
+<tr>
+<td>5</td>
+<td>无脊椎动物线粒体</td>
+</tr>
+<tr>
+<td>11</td>
+<td>细菌、古菌和质体</td>
+</tr>
+</tbody>
+</table></div>
+<p>表 5 是针对无脊椎动物线粒体 COI 的初始建议，但并不适用于所有 COI 或其他 marker。</p>
+<p>双端数据在同步前分别过滤两端。如果每个 read 只覆盖编码区的一部分，需要谨慎解释。</p>
+<h2 id="section-18">18. LotuS3 — 聚类与分类注释<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>除 PacBio ITS/LSU 使用 NextITS 作为主引擎外，其他路线均显示 LotuS3 参数。</p>
+<h3 id="section-18-1">18.1. 平台<a aria-label="Permalink" class="heading-anchor" href="#section-18-1">#</a></h3>
+<p>可选 auto、PacBio、454、miSeq、hiSeq。auto 时 BarCodeR 不强制赋值。显式值会改变内部策略，必须与技术和预处理一致。</p>
+<h3 id="section-18-2">18.2. 扩增子类型<a aria-label="Permalink" class="heading-anchor" href="#section-18-2">#</a></h3>
+<p>可选 SSU、LSU、ITS、ITS1、ITS2、custom。应对应实际扩增区域，而不是仅对应项目的宽泛 marker 名称。</p>
+<h3 id="section-18-3">18.3. 分类群<a aria-label="Permalink" class="heading-anchor" href="#section-18-3">#</a></h3>
+<p>可选 auto、bacteria、fungi、eukarya。显式值会指导部分分类决策。异质样本或未验证情形宜使用 auto。</p>
+<h3 id="section-18-4">18.4. 聚类或去噪<a aria-label="Permalink" class="heading-anchor" href="#section-18-4">#</a></h3>
+<p>可选 UPARSE、Swarm、CD-HIT、UNOISE、DADA2、VSEARCH。不同方法不一定产生相同生物学单位，可能改变单位数量、丰度、稀有序列敏感度和错误处理。不同方法的结果不能直接视为等价。</p>
+<h3 id="section-18-5">18.5. 分类学工具<a aria-label="Permalink" class="heading-anchor" href="#section-18-5">#</a></h3>
+<p>可选 RDP classifier、BLAST、Lambda、UTAX、SINTAX、VSEARCH、USEARCH。选择会影响算法、速度、灵敏度、远缘序列处理和可用得分。</p>
+<h3 id="section-18-6">18.6. RDP 置信阈值<a aria-label="Permalink" class="heading-anchor" href="#section-18-6">#</a></h3>
+<p>仅在 <code>RDP_classifier</code> 时显示。高值更严格但未分类更多；低值分类更多但稳健性可能下降。</p>
+<h3 id="section-18-7">18.7. 保留未分类单位<a aria-label="Permalink" class="heading-anchor" href="#section-18-7">#</a></h3>
+<p><code>0</code> 删除，<code>1</code> 保留。保留有助于研究未知多样性和后续重新注释，但后续分析需要明确处理。</p>
+<h3 id="section-18-8">18.8. 分类排除<a aria-label="Permalink" class="heading-anchor" href="#section-18-8">#</a></h3>
+<p>输入模式用于排除分类群。过宽表达式可能删除大量结果。应检查数据库用词、测试模式并记录排除规则。</p>
+<h2 id="section-19">19. 保存拆分后的 reads<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>不发布专门的拆分 FASTQ</td>
+</tr>
+<tr>
+<td>1</td>
+<td>保留所有未过滤的拆分 reads</td>
+</tr>
+<tr>
+<td>2</td>
+<td>保留拆分 reads 后停止流程</td>
+</tr>
+<tr>
+<td>3</td>
+<td>保留质量过滤后的拆分 reads</td>
+</tr>
+</tbody>
+</table></div>
+<p>如果期望 phyloseq 或完整分析，不要使用模式 2。模式 1 和 3 会增加磁盘占用，但便于检查和复用。</p>
+<h2 id="section-20">20. LCA 与高级分类<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<h3 id="section-20-1">20.1. 分类模式<a aria-label="Permalink" class="heading-anchor" href="#section-20-1">#</a></h3>
+<p>反直觉约定：<code>0</code> 启用 LCA；<code>1</code> 使用最佳 BLAST hit。</p>
+<p>LCA 寻找多个兼容 hit 的共同祖先，通常更保守。最佳 hit 表面上更精确，但更易受错误参考、不平衡数据库或近似等价 hit 影响。</p>
+<h3 id="section-20-2">20.2. 最低覆盖度<a aria-label="Permalink" class="heading-anchor" href="#section-20-2">#</a></h3>
+<p>范围 0–1。高值要求序列大部分对齐；低值接受部分匹配。短片段高 identity 不等同于整个扩增子高 identity。</p>
+<h3 id="section-20-3">20.3. 各分类等级 identity 阈值<a aria-label="Permalink" class="heading-anchor" href="#section-20-3">#</a></h3>
+<p>初始示例 <code>97,95,93,91,88,78</code>。它们不是 identity 与分类等级之间的通用映射。差异取决于 marker、类群、数据库和区域长度。修改会直接改变可接受的分类深度。</p>
+<h3 id="section-20-4">20.4. 一致比例<a aria-label="Permalink" class="heading-anchor" href="#section-20-4">#</a></h3>
+<p>高值要求更强共识，可能返回更高分类等级；低值允许较少一致，冲突可能增加。</p>
+<h3 id="section-20-5">20.5. 系统发育树<a aria-label="Permalink" class="heading-anchor" href="#section-20-5">#</a></h3>
+<p><code>0</code> 不建树；<code>1</code> FastTree；<code>2</code> IQ-TREE 2。建树增加计算量并要求可用比对，IQ-TREE 2 通常更耗资源。</p>
+<h3 id="section-20-6">20.6. 最大 read 重叠<a aria-label="Permalink" class="heading-anchor" href="#section-20-6">#</a></h3>
+<p>主要用于短双端 reads。应与 read 长度、扩增子长度和 R1/R2 理论重叠一致。</p>
+<h2 id="section-21">21. 标准 ONT 路线<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>适用于 ONT + COI、16S 或 18S。</p>
+<p>根据设置可执行 design 验证、MiniBar、每样本 FASTQ、方向校正、过滤、映射准备、LotuS3、分类和报告。</p>
+<p>COI 应检查真实长度、引物、目标生物、遗传密码、编码过滤和数据库。16S/18S 通常应关闭编码过滤，替换或关闭 658，并选择正确扩增子类型、类群和数据库。</p>
+<h2 id="section-22">22. ONT IDMABIO 路线<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>适用于 <code>COI-idmabio</code>、<code>16S-idmabio</code>、<code>18S-idmabio</code>。仅在识别到兼容集群时出现。由 marker 后缀触发，而不是分析引擎选择器。</p>
+<p>它在 ONT 步骤基础上增加 ZOTU hit 验证、IDMABIO 输出、MAFFT 比对和 Word 报告。</p>
+<h3 id="section-22-1">22.1. 基因类型<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>可选 auto、coding、non-coding。auto 时 COI 视为编码，其他视为非编码。显式选择会覆盖推断。</p>
+<h3 id="section-22-2">22.2. 保留的 BLAST hits<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p>定义最多保留多少 hits。高值增加信息、文件大小和可能的处理时间；低值可能隐藏有用次级 hits。</p>
+<h3 id="section-22-3">22.3. 每样本比对数<a aria-label="Permalink" class="heading-anchor" href="#section-22-3">#</a></h3>
+<p>控制输出中显示多少比对，不等于总保留 hit 数。</p>
+<h3 id="section-22-4">22.4. 报告语言<a aria-label="Permalink" class="heading-anchor" href="#section-22-4">#</a></h3>
+<p>可选法语或英语，控制生成的 Word 报告。</p>
+<h2 id="section-23">23. PacBio + LotuS3 路线<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>适用于 PacBio + 16S，或 PacBio + ITS/LSU 且选择 LotuS3。MiniBar 不使用。</p>
+<p>如果启用方向校正，应确认 reads 仍含引物；长度应匹配实际 reads；16S/ITS/LSU 应关闭编码过滤；质量阈值应适合校正后的 PacBio reads。</p>
+<p>随后配置平台、扩增子类型、类群、聚类方法、分类工具和 LCA。</p>
+<h2 id="section-24">24. PacBio + NextITS 路线<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>仅适用于 PacBio + ITS 或 LSU 且选择 NextITS。</p>
+<p>该路线执行验证、启用的预过滤、NextITS、ITSx、校正与聚类、嵌合体检测、专用 LotuS3 分类、phyloseq 生成和汇总。</p>
+<h3 id="section-24-1">24.1. ITS 区域<a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>可选 ITS1、ITS2、LSU、SSU、ALL。LSU 会建议 LSU，ITS 初始建议 ITS1，但不代表真实扩增区域已验证。</p>
+<h3 id="section-24-2">24.2. ITSx 类群<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>可选 all、fungi、tracheophyta、metazoa。过窄的类群可能不适合异质环境样本。</p>
+<h3 id="section-24-3">24.3. NextITS 聚类<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>可选 UNOISE、VSEARCH、Swarm。会改变聚类或去噪；不同方法输出不应视为完全相同。</p>
+<h3 id="section-24-4">24.4. UNOISE 选项<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>启用单独的 UNOISE 去噪步骤，与通用方法选择器不同。</p>
+<h3 id="section-24-5">24.5. 同聚物校正<a aria-label="Permalink" class="heading-anchor" href="#section-24-5">#</a></h3>
+<p>启用 homopolymer polishing。它会改变序列；用于比较的运行应保持一致。</p>
+<h3 id="section-24-6">24.6. 嵌合体数据库<a aria-label="Permalink" class="heading-anchor" href="#section-24-6">#</a></h3>
+<p>可本地或远程，必须存在、可读、格式正确并匹配类群和区域。初始建议路径可能只适用于开发环境，应明确重新选择。</p>
+<h3 id="section-24-7">24.7. 引物一致性<a aria-label="Permalink" class="heading-anchor" href="#section-24-7">#</a></h3>
+<p>路线期望一致的引物对。同一运行中使用不同引物对可能报错或产生非预期行为。</p>
+<h2 id="section-25">25. Illumina + LotuS3 路线<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>适用于 Illumina + 16S、ITS 或 LSU。</p>
+<p>Design 中单端使用一个文件，双端使用逗号分隔两个文件。双端会跳过方向步骤，因此该步骤不去除引物。</p>
+<p>质量、长度、编码过滤分别作用于 R1/R2，再同步。长度过滤不是针对合并扩增子。配对端被删除时，另一端成为 orphan。</p>
+<p>16S/ITS/LSU 通常应关闭编码过滤，替换或关闭 658，并检查扩增子类型、类群和数据库。</p>
+<h2 id="section-26">26. Design 与目标路径预览<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>预览为可选，初始关闭。会显示运行名、示例 Run ID、design、未来目录、FASTQ 目标、重写后的 design 路径、配置、技术、marker、数据库类型和路径、分区、资源和 Singularity 缓存。</p>
+<p>预览显示初始 design；路径只在启动时重写。</p>
+<h2 id="section-27">27. 生成配置预览<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>显示根据表单构建的 Nextflow overlay：路径、启用参数、数值、LotuS3、IDMABIO、NextITS 参数和 Singularity 目录。</p>
+<p>文件可能包含其他路线的参数，并不表示都会使用。但 <code>nf-schema</code> 会验证发出的值，因此无效值可能在任何进程启动前阻止运行。</p>
+<h2 id="section-28">28. 启动前检查<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<h3 id="section">背景<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h3>
+<ul>
+<li>技术正确；</li>
+<li>marker 与引物一致；</li>
+<li>引擎正确；</li>
+<li>数据库类型与 FASTA 一致。</li>
+</ul>
+<h3 id="fastq">FASTQ<a aria-label="Permalink" class="heading-anchor" href="#fastq">#</a></h3>
+<ul>
+<li>所有文件已选择；</li>
+<li>没有重复文件名；</li>
+<li>扩展名正确；</li>
+<li>R1/R2 顺序正确。</li>
+</ul>
+<h3 id="design">Design<a aria-label="Permalink" class="heading-anchor" href="#design">#</a></h3>
+<ul>
+<li>六列齐全；</li>
+<li>标识符唯一；</li>
+<li>路径完全一致；</li>
+<li>引物为 5′→3′；</li>
+<li>MiniBar 开启时 barcode 完整；</li>
+<li>引物对一致。</li>
+</ul>
+<h3 id="section-29">过滤<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h3>
+<ul>
+<li>长度适当；</li>
+<li>编码过滤适用；</li>
+<li>遗传密码正确；</li>
+<li>质量阈值适合；</li>
+<li>方向设置兼容。</li>
+</ul>
+<h3 id="section-30">集群<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h3>
+<ul>
+<li>连接为绿色；</li>
+<li>目录可访问；</li>
+<li>分区可用；</li>
+<li>内存带单位；</li>
+<li>模块存在；</li>
+<li>磁盘空间足够。</li>
+</ul>
+<h3 id="nextits">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits">#</a></h3>
+<ul>
+<li>嵌合体数据库存在；</li>
+<li>区域正确；</li>
+<li>ITSx 类群适合；</li>
+<li>引物一致。</li>
+</ul>
+<h2 id="section-29-2">29. 启动时发生什么<a aria-label="Permalink" class="heading-anchor" href="#section-29-2">#</a></h2>
+<p>BarCodeR 重新读取背景，检查 FASTQ，阻止同名文件，重新检查 design、样本名和数据库，创建 Run ID，建立 <code>results/</code>、<code>work/</code>、<code>meta/</code>，重写 design，整理 FASTQ，传输文件，准备镜像，解压流程，生成配置和 Slurm 脚本，写入元数据，使用 <code>sbatch</code> 提交，获取 Job ID 并启动监控。</p>
+<p>如果当前会话已监控另一个运行，会要求确认。新提交不会自动取消旧运行。</p>
+<h2 id="section-30-2">30. Singularity 镜像<a aria-label="Permalink" class="heading-anchor" href="#section-30-2">#</a></h2>
+<p>根据路线，OpenMetaBar 使用 SeqKit、LotuS3、报告、MiniBar、MAFFT、phyloseq 和 NextITS 镜像，保存在 <code>&lt;remote_root&gt;/_barcoder_singularity</code>。</p>
+<p>应用尝试使用或复制共享镜像、准备或下载缺失镜像，并检查存在性和大小。不是所有路线都需要全部镜像：ONT 需要 MiniBar，IDMABIO 需要 MAFFT，NextITS 需要 NextITS 和 phyloseq 环境。缺失必需镜像会阻止启动。</p>
+<h2 id="section-31">31. 阅读运行时间线<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>显示步骤：FASTQ 已选择、连接、design 就绪、远程目录、传输、Singularity 镜像、流程部署、<code>sbatch</code> 提交、Slurm 监控。</p>
+<p>时间线结合本地操作、SSH、提交状态、Slurm 状态和文件检测。等待、运行、成功、警告和错误都应在具体步骤背景下解释。</p>
+<h2 id="section-32">32. 理解 Slurm 状态<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<h3 id="pending">PENDING<a aria-label="Permalink" class="heading-anchor" href="#pending">#</a></h3>
+<p>等待资源。原因可能为资源不足、优先级、分区繁忙、内存/CPU 请求过高、账户限制或依赖。修改配置前先阅读 Slurm 原因。</p>
+<h3 id="running">RUNNING<a aria-label="Permalink" class="heading-anchor" href="#running">#</a></h3>
+<p>正在执行。暂时没有新文件不一定表示卡住。</p>
+<h3 id="completed">COMPLETED<a aria-label="Permalink" class="heading-anchor" href="#completed">#</a></h3>
+<p>Slurm 脚本成功结束。仍需检查 Nextflow 退出码、结果、phyloseq 和报告。</p>
+<h3 id="failed">FAILED<a aria-label="Permalink" class="heading-anchor" href="#failed">#</a></h3>
+<p>查看错误日志、Slurm 输出、<code>.nextflow.log</code>、报告和历史记录。</p>
+<h3 id="out-of-memory">OUT_OF_MEMORY<a aria-label="Permalink" class="heading-anchor" href="#out-of-memory">#</a></h3>
+<p>内存超限。增加数值前先判断是全局内存、特定进程、LotuS3、报告还是 NextITS。</p>
+<h3 id="timeout">TIMEOUT<a aria-label="Permalink" class="heading-anchor" href="#timeout">#</a></h3>
+<p>达到最长时间。选择更合适分区、降低复杂度或申请更高限制。</p>
+<h3 id="cancelled">CANCELLED<a aria-label="Permalink" class="heading-anchor" href="#cancelled">#</a></h3>
+<p>被用户、管理员、规则或依赖取消。</p>
+<h3 id="section-33">未知或作业消失<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h3>
+<p>不再出现在 <code>squeue</code> 的作业可能在 <code>sacct</code> 中有最终状态。BarCodeR 在可能时查询两者。</p>
+<h2 id="section-33-2">33. 执行日志<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h2>
+<h3 id="section-33-1">33.1. 本地操作<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>包括 BarCodeR 的选择、验证、连接、建目录、传输、准备、启动和文件检测。</p>
+<h3 id="section-33-2-2">33.2. Monitoring<a aria-label="Permalink" class="heading-anchor" href="#section-33-2-2">#</a></h3>
+<p>包括 Job ID、Slurm 状态、检测到的进度、新输出、结束状态和 phyloseq 检测。</p>
+<h3 id="section-33-3">33.3. Standard output 与 standard error<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>它们不是当前日志的两个主标签页，但可在历史详情、运行文件、错误预览和下载中查看。</p>
+<h3 id="section-33-4">33.4. <code>.nextflow.log</code><a aria-label="Permalink" class="heading-anchor" href="#section-33-4">#</a></h3>
+<p>详细记录进程、命令、错误、恢复、工作文件和验证，是主要诊断来源。</p>
+<h2 id="section-34">34. 生成的结果<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>根据路线可能位于：</p>
+<ul>
+<li><code>Steps/files</code>：准备文件和发布输入；</li>
+<li><code>Steps/demultiplexing_files</code>：拆分结果和指标；</li>
+<li><code>Steps/filters</code>：方向、质量、长度、编码和 orphan；</li>
+<li><code>Steps/lotus3</code>：LotuS3 输出；</li>
+<li><code>Steps/nextITS</code>：NextITS 输出；</li>
+<li><code>Steps/lotus3_taxo</code>：NextITS 相关分类；</li>
+<li><code>Steps/phyloseq</code>：NextITS phyloseq 生成/存储；</li>
+<li><code>Steps/tax_db</code>：清理数据库和提取分类；</li>
+<li><code>OMB_logs</code>：汇总、报告、timeline、trace、流程图、版本和参数；</li>
+<li><code>final_table/idmabio_outputs</code>：IDMABIO 表、比对和报告。</li>
+</ul>
+<p>具体结构取决于路线和选项。</p>
+<h2 id="section-35">35. 导入 phyloseq 对象<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>BarCodeR 搜索可能含 phyloseq 的 <code>.rds</code>、<code>.rda</code> 或 <code>.RData</code> 文件。文件名看起来像 phyloseq 不代表内容有效。</p>
+<p>导入时，应用临时下载文件、打开、查找 phyloseq 对象、检查兼容性、必要时让用户选择，并添加所选对象。</p>
+<p>名称根据运行、文件和对象生成并保证唯一。运行参数可以附加到对象以保留来源。</p>
+<p>失败运行中也可能检测到 phyloseq。它可能不完整或在失败步骤之前生成。使用前应检查日志和内容。</p>
+<h2 id="section-36">36. 提交后的操作<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<h3 id="section-36-1">36.1. 调整后重新运行<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<p>保留文件和参数，允许修改并准备新提交。不会取消旧运行。</p>
+<h3 id="section-36-2">36.2. 新分析 — 从头开始<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>重置文件、背景、分析参数和时间线，保留连接和部分集群设置。已提交的作业继续运行并保留在历史记录。</p>
+<h3 id="section-36-3">36.3. 不重新运行<a aria-label="Permalink" class="heading-anchor" href="#section-36-3">#</a></h3>
+<p>只关闭选择面板，不取消或改变监控，可稍后重新打开。</p>
+<h2 id="section-37">37. 分析历史<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>扫描会在配置的根目录下查找运行。结果取决于路径、权限、元数据、文件和 Slurm。</p>
+<p>可显示 Run ID、目录、Job ID、状态、日期、时长、FASTQ 和样本数、大小、内存、CPU、phyloseq 和清理状态。</p>
+<h3 id="section-37-1">37.1. 详情与恢复监控<a aria-label="Permalink" class="heading-anchor" href="#section-37-1">#</a></h3>
+<p>详情显示参数、路径、退出码、Slurm 信息、文件和错误。恢复监控只重新连接界面，不会重新计算。</p>
+<h3 id="section-37-2">37.2. 浏览文件<a aria-label="Permalink" class="heading-anchor" href="#section-37-2">#</a></h3>
+<p>支持搜索、展开分组、预览文本最后 200 行、下载和导入 phyloseq。</p>
+<h3 id="section-37-3">37.3. 取消作业<a aria-label="Permalink" class="heading-anchor" href="#section-37-3">#</a></h3>
+<p>通过 Slurm 取消主作业和可识别的子作业。目录和已生成文件仍保留。</p>
+<h3 id="section-37-4">37.4. 清理运行<a aria-label="Permalink" class="heading-anchor" href="#section-37-4">#</a></h3>
+<p>删除中间文件，通常保留 <code>results/</code> 和 <code>meta/</code>。该操作不可逆，能释放空间，但会删除恢复缓存和诊断材料。</p>
+<h3 id="section-37-5">37.5. 删除运行<a aria-label="Permalink" class="heading-anchor" href="#section-37-5">#</a></h3>
+<p>删除整个远程目录，包括结果、元数据、日志、中间文件和 phyloseq。操作前先备份需要的文件。</p>
+<h2 id="section-38">38. 故障排查<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+<th>检查 / 修正</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件按钮仍锁定</td>
+<td>背景未验证或已修改</td>
+<td>重新验证技术、marker 和引擎</td>
+</tr>
+<tr>
+<td>连接为黄色</td>
+<td>SSH 已开但前置条件不完整</td>
+<td>检查 Slurm、<code>tar</code>、模块、权限和根目录</td>
+</tr>
+<tr>
+<td>SSH 被拒绝</td>
+<td>主机、端口、用户、密钥或中继错误</td>
+<td>在 BarCodeR 外测试相同设置</td>
+</tr>
+<tr>
+<td>找不到本地文件</td>
+<td>文件移动或挂载断开</td>
+<td>重新选择并传输</td>
+</tr>
+<tr>
+<td>两个 FASTQ 同名</td>
+<td>文件名冲突</td>
+<td>选择前重命名</td>
+</tr>
+<tr>
+<td>Design 先接受后拒绝</td>
+<td>编辑器只验证了两列</td>
+<td>提供完整六列</td>
+</tr>
+<tr>
+<td>Design 中 FASTQ 缺失</td>
+<td>名称、扩展名、大小写或路径不同</td>
+<td>精确比较文件名</td>
+</tr>
+<tr>
+<td>样本名被拒绝</td>
+<td>空格、重音、特殊字符或重复</td>
+<td>自动修正后复核</td>
+</tr>
+<tr>
+<td>方向步骤找不到引物</td>
+<td>引物缺失、反向、已去除或错误</td>
+<td>检查 FASTQ 和 5′→3′ 序列</td>
+</tr>
+<tr>
+<td>没有保留 reads</td>
+<td>过滤过严或不一致</td>
+<td>找到第一个降为零的指标</td>
+</tr>
+<tr>
+<td>长度过滤删除 Illumina</td>
+<td>扩增子长度用于 R1/R2</td>
+<td>使用单 read 长度或关闭</td>
+</tr>
+<tr>
+<td><code>nf-schema</code> 错误</td>
+<td>值或文件无效</td>
+<td>查看日志和 <code>.nextflow.log</code></td>
+</tr>
+<tr>
+<td>缺少 Singularity 镜像</td>
+<td>缓存、下载、模块、空间或权限</td>
+<td>检查 <code>_barcoder_singularity</code> 和资源</td>
+</tr>
+<tr>
+<td>长时间 PENDING</td>
+<td>资源、优先级、分区或账户</td>
+<td>修改请求前查看 Slurm 原因</td>
+</tr>
+<tr>
+<td>OUT_OF_MEMORY</td>
+<td>全局或进程内存不足</td>
+<td>在 trace 和日志中定位进程</td>
+</tr>
+<tr>
+<td>COMPLETED 但无 phyloseq</td>
+<td>步骤未运行、文件在别处或不完整</td>
+<td>检查 <code>results/</code>、<code>Steps/</code> 和 Nextflow 退出码</td>
+</tr>
+<tr>
+<td>失败后仍有 phyloseq</td>
+<td>对象在错误前已生成</td>
+<td>检查维度、reads、分类和完成步骤</td>
+</tr>
+<tr>
+<td>历史为空</td>
+<td>根目录、集群或权限错误</td>
+<td>修正根目录并重新扫描</td>
+</tr>
+<tr>
+<td>清理后无法恢复</td>
+<td><code>work/</code> 缓存已删除</td>
+<td>使用最终结果或重新提交</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-39">39. 最终检查表<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<h3 id="section-40">背景<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>技术、marker 和路线正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>数据库类型与文件一致。</li>
+</ul>
+<h3 id="design-2">Design<a aria-label="Permalink" class="heading-anchor" href="#design-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>六列齐全。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>标识符唯一且安全。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>FASTQ 引用正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Barcode 和引物正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>引物对一致。</li>
+</ul>
+<h3 id="section-41">参数<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>MiniBar 只在需要时启用。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>错误容差有依据。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>方向设置兼容。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>长度适当，启用时不留空。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>质量阈值适合。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>编码过滤和遗传密码适用。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>扩增子类型和类群正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>已记录聚类和分类模式。</li>
+</ul>
+<h3 id="nextits-2">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>区域、ITSx 类群和嵌合体数据库正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>引物一致。</li>
+</ul>
+<h3 id="section-42">集群<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>连接绿色。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>根目录可访问。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>分区正确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>内存带单位、CPU 合理。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>模块有效、空间足够。</li>
+</ul>
+<h3 id="section-43">可追溯性<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>运行名称清晰。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>已检查 design 预览。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>已检查生成配置。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>参数与项目一起保存。</li>
+</ul>
+<h2 id="section-40-2">40. 解释与可重复性原则<a aria-label="Permalink" class="heading-anchor" href="#section-40-2">#</a></h2>
+<p>结果同时受原始文件、拆分、引物、过滤、聚类方法、数据库、分类算法和阈值影响。参数不同的运行不能在忽略这些差异的情况下直接比较。</p>
+<p>为保证可重复性：</p>
+<ul>
+<li>保留 design file；</li>
+<li>保留数据库或其版本；</li>
+<li>保留运行参数；</li>
+<li>保留 Nextflow 报告；</li>
+<li>记录所有相对初始值的修改；</li>
+<li>保留软件版本；</li>
+<li>保留每一步的指标；</li>
+<li>不要只解释最终 phyloseq 对象。</li>
+</ul>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 总体介绍</a><a class="toc-l2" href="#section-2">2. OpenMetaBar 会做什么，不会做什么</a><a class="toc-l3" href="#section-2-1">2.1. 自动完成的工作</a><a class="toc-l3" href="#section-2-2">2.2. 仍由用户负责的内容</a><a class="toc-l2" href="#section-3">3. 推荐操作流程</a><a class="toc-l2" href="#section-4">4. 选择分析路线</a><a class="toc-l3" href="#section-4-1">4.1. 可用路线</a><a class="toc-l3" href="#section-4-2">4.2. 路线选择的影响</a><a class="toc-l2" href="#section-5">5. 连接集群</a><a class="toc-l3" href="#section-5-1">5.1. 打开连接窗口</a><a class="toc-l3" href="#section-5-2">5.2. 需要提供的信息</a><a class="toc-l3" href="#section-5-3">5.3. 自动检查</a><a class="toc-l3" href="#section-5-4">5.4. biglogin 情况</a><a class="toc-l3" href="#section-5-5">5.5. 运行期间断开连接</a><a class="toc-l2" href="#section-6">6. 定义分析背景</a><a class="toc-l3" href="#section-6-1">6.1. 测序技术</a><a class="toc-l3" href="#section-6-2">6.2. Marker 或目标区域</a><a class="toc-l3" href="#section-6-3">6.3. 参考数据库类型</a><a class="toc-l3" href="#section-6-4">6.4. 分析引擎</a><a class="toc-l3" href="#section-6-5">6.5. 验证背景</a><a class="toc-l2" href="#section-7">7. 选择运行文件</a><a class="toc-l3" href="#section-7-1">7.1. 选择 FASTQ</a><a class="toc-l3" href="#section-7-2">7.2. 选择 design file</a><a class="toc-l3" href="#section-7-3">7.3. Design 中的引物</a><a class="toc-l3" href="#section-7-4">7.4. Design 中的 barcode</a><a class="toc-l3" href="#section-7-5">7.5. 选择参考数据库</a><a class="toc-l2" href="#section-8">8. 使用 design 编辑器</a><a class="toc-l3" href="#section-8-1">8.1. 编辑单元格</a><a class="toc-l3" href="#section-8-2">8.2. 添加或删除行</a><a class="toc-l3" href="#section-8-3">8.3. 添加、重命名或删除列</a><a class="toc-l3" href="#section-8-4">8.4. 修正样本名称</a><a class="toc-l3" href="#section-8-5">8.5. 从 FASTQ 生成 design</a><a class="toc-l3" href="#section-8-6">8.6. 保存 design</a><a class="toc-l2" href="#section-9">9. 验证并准备文件</a><a class="toc-l2" href="#section-10">10. 配置运行和集群</a><a class="toc-l3" href="#section-10-1">10.1. 运行根目录</a><a class="toc-l3" href="#section-10-2">10.2. Slurm 分区</a><a class="toc-l3" href="#section-10-3">10.3. LotuS3 内存</a><a class="toc-l3" href="#section-10-4">10.4. LotuS3 CPU 核数</a><a class="toc-l3" href="#section-10-5">10.5. 容器模块</a><a class="toc-l3" href="#section-10-6">10.6. Nextflow 模块</a><a class="toc-l3" href="#section-10-7">10.7. 运行名称</a><a class="toc-l3" href="#section-10-8">10.8. 保留中间文件</a><a class="toc-l2" href="#section-11">11. 理解初始值</a><a class="toc-l2" href="#section-12">12. MiniBar 拆分 — ONT 路线</a><a class="toc-l3" href="#section-12-1">12.1. 启用或关闭 MiniBar</a><a class="toc-l3" href="#section-12-2">12.2. 识别方法 — M</a><a class="toc-l3" href="#section-12-3">12.3. Barcode 最大错误数 — e</a><a class="toc-l3" href="#section-12-4">12.4. 引物最大错误数 — E</a><a class="toc-l3" href="#section-12-5">12.5. MiniBar 参数 — l</a><a class="toc-l2" href="#section-13">13. 扩增子方向校正</a><a class="toc-l3" href="#section-13-1">13.1. 单端 reads</a><a class="toc-l3" href="#section-13-2">13.2. 非简并和简并引物</a><a class="toc-l3" href="#section-13-3">13.3. 双端 reads</a><a class="toc-l3" href="#section-13-4">13.4. NextITS 路线</a><a class="toc-l3" href="#section-13-5">13.5. 何时关闭方向校正</a><a class="toc-l2" href="#section-14">14. 过滤顺序</a><a class="toc-l2" href="#section-15">15. 长度过滤</a><a class="toc-l3" href="#section-15-1">15.1. 启用和输入</a><a class="toc-l3" href="#section-15-2">15.2. 实际区间</a><a class="toc-l3" href="#section-15-3">15.3. 如何选择长度</a><a class="toc-l3" href="#section-15-4">15.4. 空值或无效值</a><a class="toc-l3" href="#section-15-5">15.5. 双端 reads</a><a class="toc-l3" href="#section-15-6">15.6. 重新同步</a><a class="toc-l2" href="#section-16">16. 质量过滤</a><a class="toc-l2" href="#section-17">17. 编码序列过滤</a><a class="toc-l2" href="#section-18">18. LotuS3 — 聚类与分类注释</a><a class="toc-l3" href="#section-18-1">18.1. 平台</a><a class="toc-l3" href="#section-18-2">18.2. 扩增子类型</a><a class="toc-l3" href="#section-18-3">18.3. 分类群</a><a class="toc-l3" href="#section-18-4">18.4. 聚类或去噪</a><a class="toc-l3" href="#section-18-5">18.5. 分类学工具</a><a class="toc-l3" href="#section-18-6">18.6. RDP 置信阈值</a><a class="toc-l3" href="#section-18-7">18.7. 保留未分类单位</a><a class="toc-l3" href="#section-18-8">18.8. 分类排除</a><a class="toc-l2" href="#section-19">19. 保存拆分后的 reads</a><a class="toc-l2" href="#section-20">20. LCA 与高级分类</a><a class="toc-l3" href="#section-20-1">20.1. 分类模式</a><a class="toc-l3" href="#section-20-2">20.2. 最低覆盖度</a><a class="toc-l3" href="#section-20-3">20.3. 各分类等级 identity 阈值</a><a class="toc-l3" href="#section-20-4">20.4. 一致比例</a><a class="toc-l3" href="#section-20-5">20.5. 系统发育树</a><a class="toc-l3" href="#section-20-6">20.6. 最大 read 重叠</a><a class="toc-l2" href="#section-21">21. 标准 ONT 路线</a><a class="toc-l2" href="#section-22">22. ONT IDMABIO 路线</a><a class="toc-l3" href="#section-22-1">22.1. 基因类型</a><a class="toc-l3" href="#section-22-2">22.2. 保留的 BLAST hits</a><a class="toc-l3" href="#section-22-3">22.3. 每样本比对数</a><a class="toc-l3" href="#section-22-4">22.4. 报告语言</a><a class="toc-l2" href="#section-23">23. PacBio + LotuS3 路线</a><a class="toc-l2" href="#section-24">24. PacBio + NextITS 路线</a><a class="toc-l3" href="#section-24-1">24.1. ITS 区域</a><a class="toc-l3" href="#section-24-2">24.2. ITSx 类群</a><a class="toc-l3" href="#section-24-3">24.3. NextITS 聚类</a><a class="toc-l3" href="#section-24-4">24.4. UNOISE 选项</a><a class="toc-l3" href="#section-24-5">24.5. 同聚物校正</a><a class="toc-l3" href="#section-24-6">24.6. 嵌合体数据库</a><a class="toc-l3" href="#section-24-7">24.7. 引物一致性</a><a class="toc-l2" href="#section-25">25. Illumina + LotuS3 路线</a><a class="toc-l2" href="#section-26">26. Design 与目标路径预览</a><a class="toc-l2" href="#section-27">27. 生成配置预览</a><a class="toc-l2" href="#section-28">28. 启动前检查</a><a class="toc-l3" href="#section">背景</a><a class="toc-l3" href="#fastq">FASTQ</a><a class="toc-l3" href="#design">Design</a><a class="toc-l3" href="#section-29">过滤</a><a class="toc-l3" href="#section-30">集群</a><a class="toc-l3" href="#nextits">NextITS</a><a class="toc-l2" href="#section-29-2">29. 启动时发生什么</a><a class="toc-l2" href="#section-30-2">30. Singularity 镜像</a><a class="toc-l2" href="#section-31">31. 阅读运行时间线</a><a class="toc-l2" href="#section-32">32. 理解 Slurm 状态</a><a class="toc-l3" href="#pending">PENDING</a><a class="toc-l3" href="#running">RUNNING</a><a class="toc-l3" href="#completed">COMPLETED</a><a class="toc-l3" href="#failed">FAILED</a><a class="toc-l3" href="#out-of-memory">OUT_OF_MEMORY</a><a class="toc-l3" href="#timeout">TIMEOUT</a><a class="toc-l3" href="#cancelled">CANCELLED</a><a class="toc-l3" href="#section-33">未知或作业消失</a><a class="toc-l2" href="#section-33-2">33. 执行日志</a><a class="toc-l3" href="#section-33-1">33.1. 本地操作</a><a class="toc-l3" href="#section-33-2-2">33.2. Monitoring</a><a class="toc-l3" href="#section-33-3">33.3. Standard output 与 standard error</a><a class="toc-l3" href="#section-33-4">33.4. .nextflow.log</a><a class="toc-l2" href="#section-34">34. 生成的结果</a><a class="toc-l2" href="#section-35">35. 导入 phyloseq 对象</a><a class="toc-l2" href="#section-36">36. 提交后的操作</a><a class="toc-l3" href="#section-36-1">36.1. 调整后重新运行</a><a class="toc-l3" href="#section-36-2">36.2. 新分析 — 从头开始</a><a class="toc-l3" href="#section-36-3">36.3. 不重新运行</a><a class="toc-l2" href="#section-37">37. 分析历史</a><a class="toc-l3" href="#section-37-1">37.1. 详情与恢复监控</a><a class="toc-l3" href="#section-37-2">37.2. 浏览文件</a><a class="toc-l3" href="#section-37-3">37.3. 取消作业</a><a class="toc-l3" href="#section-37-4">37.4. 清理运行</a><a class="toc-l3" href="#section-37-5">37.5. 删除运行</a><a class="toc-l2" href="#section-38">38. 故障排查</a><a class="toc-l2" href="#section-39">39. 最终检查表</a><a class="toc-l3" href="#section-40">背景</a><a class="toc-l3" href="#design-2">Design</a><a class="toc-l3" href="#section-41">参数</a><a class="toc-l3" href="#nextits-2">NextITS</a><a class="toc-l3" href="#section-42">集群</a><a class="toc-l3" href="#section-43">可追溯性</a><a class="toc-l2" href="#section-40-2">40. 解释与可重复性原则</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · OpenMetaBar</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

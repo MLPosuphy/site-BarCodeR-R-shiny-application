@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Description — Guides méthodologiques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="guide" data-module="description" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Guides méthodologiques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">Description</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Description</a><span>›</span><span>Guides méthodologiques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Description — Guides méthodologiques</h1>
+<h2 id="section-1">1. Présentation générale<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>L’onglet <strong>Description</strong> sert à examiner la structure et le contenu des objets <code>phyloseq</code> présents dans BarCodeR avant de poursuivre vers l’édition, la filtration ou les analyses statistiques.</p>
+<p>Il est organisé en deux vues complémentaires.</p>
+<h3 id="vue-dataset">Vue Dataset<a aria-label="Permalink" class="heading-anchor" href="#vue-dataset">#</a></h3>
+<p>Elle inspecte un objet <code>phyloseq</code> à la fois et permet de :</p>
+<ul>
+<li>vérifier ses dimensions ;</li>
+<li>vérifier les composants disponibles ;</li>
+<li>consulter ses métriques descriptives ;</li>
+<li>visualiser les abondances et la richesse ;</li>
+<li>inspecter les séquences de référence ;</li>
+<li>calculer des courbes de raréfaction ;</li>
+<li>repérer des échantillons atypiques ;</li>
+<li>consulter et exporter les tables ;</li>
+<li>consulter les logs de filtration ;</li>
+<li>relire la provenance OpenMetaBar.</li>
+</ul>
+<h3 id="vue-projet">Vue Projet<a aria-label="Permalink" class="heading-anchor" href="#vue-projet">#</a></h3>
+<p>Elle compare plusieurs datasets présents en mémoire et permet de :</p>
+<ul>
+<li>obtenir une synthèse de tous les objets chargés ;</li>
+<li>sélectionner les datasets à comparer ;</li>
+<li>comparer leurs dimensions ;</li>
+<li>comparer leurs profondeurs et leur richesse ;</li>
+<li>comparer leur sparsité ;</li>
+<li>examiner les différences par rapport à un dataset de référence ;</li>
+<li>comparer les suppressions documentées dans leurs logs de filtration.</li>
+</ul>
+<h2 id="section-2">2. Rôle de l’onglet<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Description est principalement destiné à comprendre les données, contrôler un import, repérer les anomalies évidentes, préparer les choix méthodologiques ultérieurs et comparer la structure générale de plusieurs datasets.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Besoin</th>
+<th>Onglet approprié</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modifier les tables</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>Retirer des échantillons ou des taxons</td>
+<td>Filtration</td>
+</tr>
+<tr>
+<td>Renommer ou supprimer un dataset</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Réaliser une analyse statistique</td>
+<td>Analyse</td>
+</tr>
+<tr>
+<td>Produire un pipeline depuis des FASTQ</td>
+<td>OpenMetaBar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. Effet de l’onglet sur les données<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Description ne modifie pas l’OTU table, la taxonomie, les métadonnées, les séquences, l’arbre, les abondances, les identifiants ni les logs. Les graphiques et tableaux sont construits à partir de l’objet présent en mémoire.</p>
+<h3 id="section-3-1">3.1. Exception : dataset actif<a aria-label="Permalink" class="heading-anchor" href="#section-3-1">#</a></h3>
+<p>Le sélecteur principal de la vue Dataset est synchronisé avec le dataset actif global. Changer le dataset dans Description :</p>
+<ul>
+<li>modifie <code>active_ds()</code> ;</li>
+<li>change le dataset actif dans le reste de BarCodeR ;</li>
+<li>peut marquer le projet comme comportant une modification non sauvegardée.</li>
+</ul>
+<p>Le contenu du phyloseq n’est pas modifié, mais le contexte de travail global change.</p>
+<h2 id="section-4">4. Conditions nécessaires<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Pour utiliser la majorité des fonctions de Description, le dataset doit contenir au minimum une <code>otu_table</code>.</p>
+<p>Les composants suivants sont facultatifs :</p>
+<ul>
+<li><code>sample_data</code> ;</li>
+<li><code>tax_table</code> ;</li>
+<li><code>refseq</code> ;</li>
+<li>arbre phylogénétique ;</li>
+<li>attributs de provenance ;</li>
+<li>logs de filtration.</li>
+</ul>
+<p>L’absence d’un composant réduit les informations disponibles, mais n’empêche pas nécessairement l’ouverture de l’onglet.</p>
+<h2 id="section-5">5. Hypothèse importante sur les abondances<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Le module présente les valeurs de l’OTU table sous le terme <strong>reads</strong>, mais ne vérifie pas qu’elles sont des comptes bruts, entiers, non transformés et non négatifs.</p>
+<p>Si le phyloseq contient des abondances relatives, une transformation CLR ou logarithmique, une normalisation, des valeurs décimales ou des valeurs négatives, les métriques affichées comme « reads » ne correspondent plus à une profondeur de séquençage brute.</p>
+<p>Cette distinction est essentielle pour interpréter les sommes, la richesse, la dominance, les courbes de raréfaction et les comparaisons entre datasets.</p>
+<h2 id="section-6">6. Organisation de l’interface<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>L’onglet comporte deux boutons principaux :</p>
+<pre tabindex="0"><code class="language-text">Dataset
+Projet
+</code></pre>
+<h3 id="vue-dataset-2">Vue Dataset<a aria-label="Permalink" class="heading-anchor" href="#vue-dataset-2">#</a></h3>
+<p>Elle contient :</p>
+<ol>
+<li>Pilotage du dataset.</li>
+<li>Provenance OpenMetaBar.</li>
+<li>Lecture rapide du dataset.</li>
+<li>Visualisations interactives.</li>
+<li>Tables et logs.</li>
+</ol>
+<h3 id="vue-projet-2">Vue Projet<a aria-label="Permalink" class="heading-anchor" href="#vue-projet-2">#</a></h3>
+<p>Elle contient :</p>
+<ol>
+<li>Vue globale du projet.</li>
+<li>Comparaisons interactives.</li>
+</ol>
+<h2 id="section-7">7. Sélectionner le dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Le champ <strong>Sélectionner un dataset</strong> contient tous les datasets présents dans la session.</p>
+<h3 id="section-7-1">7.1. Synchronisation globale<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>La sélection suit le dataset actif global. Si le dataset actif est changé dans Datasets, dans la barre latérale ou dans un autre sélecteur global, Description se synchronise avec cette nouvelle valeur. Inversement, changer la sélection dans Description change le dataset actif de l’application.</p>
+<h3 id="section-7-2">7.2. Valeur de repli<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Si aucun dataset actif valide n’est défini, Description utilise :</p>
+<ol>
+<li>le dataset sélectionné précédemment s’il existe toujours ;</li>
+<li>sinon le premier dataset de la liste.</li>
+</ol>
+<h3 id="section-7-3">7.3. Changement de dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>Lors d’un changement, les métriques, graphiques, tables, paramètres de groupement, provenance et outliers sont recalculés.</p>
+<blockquote>
+<p><strong>Attention — raréfaction :</strong> le calcul de raréfaction n’est pas automatiquement relancé lors du changement de dataset. Il faut cliquer de nouveau sur <strong>Calculer les courbes</strong>.</p>
+</blockquote>
+<h2 id="section-8">8. Variable de groupement<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Le champ <strong>Variable de groupement — échantillons</strong> permet de colorer ou séparer les échantillons selon une colonne de <code>sample_data</code>.</p>
+<h3 id="section-8-1">8.1. Variables proposées<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>Une colonne est proposée lorsqu’elle contient au moins deux et au maximum quinze valeurs distinctes non manquantes. Les colonnes <code>Date</code>, <code>POSIXct</code> et <code>POSIXt</code> sont exclues.</p>
+<h3 id="section-8-2">8.2. Colonnes numériques<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>Une colonne numérique peut être proposée si elle contient entre deux et quinze valeurs distinctes. Elle est alors interprétée comme une variable catégorielle.</p>
+<p>Exemple :</p>
+<pre tabindex="0"><code class="language-text">Temperature = 10, 15, 20
+</code></pre>
+<p>sera traitée comme trois groupes et non comme une variable quantitative continue.</p>
+<h3 id="section-8-3">8.3. Valeurs manquantes<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>Les valeurs manquantes sont regroupées sous l’étiquette <code>NA</code>. Une chaîne de caractères littérale <code>"NA"</code> et une vraie valeur manquante peuvent donc devenir visuellement difficiles à distinguer.</p>
+<h3 id="section-8-4">8.4. Aucun groupement<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>Lorsque <strong>Aucun groupement</strong> est sélectionné, tous les échantillons sont placés dans un groupe unique nommé <code>Tous</code>.</p>
+<h3 id="section-8-5">8.5. Effets du groupement<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>Le groupement agit sur :</p>
+<ul>
+<li>la couleur du nuage reads/richesse ;</li>
+<li>les violons par groupe ;</li>
+<li>les courbes cumulées par groupe ;</li>
+<li>les couleurs de raréfaction ;</li>
+<li>la raréfaction agrégée ;</li>
+<li>la contextualisation des outliers ;</li>
+<li>la concentration des outliers par groupe.</li>
+</ul>
+<p>Il ne modifie pas les données.</p>
+<h2 id="section-9">9. Le groupement ne change pas la détection des outliers<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Les outliers sont calculés sur l’ensemble des échantillons du dataset. Ils ne sont pas recalculés séparément à l’intérieur de chaque groupe.</p>
+<p>La variable de groupement sert uniquement à contextualiser les outliers, voir dans quels groupes ils se concentrent et colorer les représentations.</p>
+<p>Un échantillon peut donc être normal au sein de son propre groupe, mais être détecté comme outlier par rapport à l’ensemble du dataset.</p>
+<h2 id="section-10">10. Bouton « Voir les logs »<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Le bouton <strong>Voir les logs</strong> sélectionne le sous-onglet <strong>Logs de filtrage</strong> dans la section Tables et logs.</p>
+<p>Dans le fonctionnement actuel, il ne fait pas défiler automatiquement la page et n’ouvre pas forcément la box si elle est repliée. Après le clic, il peut être nécessaire de descendre jusqu’à Tables et logs, déplier la box puis consulter le sous-onglet déjà sélectionné.</p>
+<h2 id="section-11">11. En-tête du dataset<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>L’en-tête affiche :</p>
+<ul>
+<li>le nom du dataset ;</li>
+<li>le nombre d’échantillons ;</li>
+<li>le nombre de taxons ;</li>
+<li>le total des abondances ;</li>
+<li>les composants disponibles.</li>
+</ul>
+<p>Exemple :</p>
+<pre tabindex="0"><code class="language-text">130 échantillons • 2 450 ASVs/OTUs • 7 779 736 reads
+</code></pre>
+<h2 id="section-12">12. Badges de composants<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Les badges indiquent la présence de l’OTU table, de la taxonomie, des métadonnées, des séquences de référence et des logs de filtration.</p>
+<h3 id="section-12-1">12.1. OTU<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Indique qu’une <code>otu_table</code> a été détectée.</p>
+<h3 id="section-12-2">12.2. Taxonomie<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Indique qu’une <code>tax_table</code> a été détectée. Cela ne garantit ni que toutes les ASV sont annotées, ni que tous les rangs sont complets, ni que la taxonomie est biologiquement correcte.</p>
+<h3 id="section-12-3">12.3. Métadonnées<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Indique qu’une <code>sample_data</code> a été détectée. Cela ne garantit pas que toutes les variables sont exploitables, que les types sont corrects ou qu’il n’y a pas de valeurs manquantes.</p>
+<h3 id="section-12-4">12.4. RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Indique que les séquences de référence sont disponibles et que le package <code>Biostrings</code> permet de les lire. Si <code>Biostrings</code> n’est pas disponible, les séquences peuvent être considérées comme absentes par Description même si l’objet contient une <code>refseq</code>.</p>
+<h3 id="section-12-5">12.5. Logs<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Indique la présence de l’attribut <code>filtration_log</code>. Cela ne garantit pas que le log contient effectivement des lignes d’ASV ou d’échantillons supprimés.</p>
+<h3 id="section-12-6">12.6. Arbre phylogénétique<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>Le module actuel n’affiche pas de badge dédié à l’arbre phylogénétique. L’absence de badge ne permet donc pas de savoir si un <code>phy_tree</code> est présent.</p>
+<h2 id="section-13">13. Orientation de l’OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Description réoriente temporairement la matrice pour ses calculs afin d’obtenir les taxons en lignes et les échantillons en colonnes.</p>
+<p>Si l’objet possède les taxons en colonnes, la matrice est transposée en mémoire pour les calculs descriptifs. L’objet phyloseq original n’est pas transposé ni modifié.</p>
+<h2 id="section-14">14. Métrique : nombre de taxons<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Le nombre affiché correspond au nombre de lignes de la matrice réorientée, équivalent à <code>phyloseq::ntaxa(ps)</code>.</p>
+<p>Le terme <strong>ASV</strong> est utilisé dans l’interface, mais les unités peuvent être des ASV, OTU, ZOTU, espèces regroupées ou autres unités. Description ne vérifie pas la méthode utilisée pour construire les taxons.</p>
+<h2 id="section-15">15. Métrique : nombre d’échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Le nombre correspond au nombre de colonnes de la matrice réorientée, équivalent à <code>phyloseq::nsamples(ps)</code>.</p>
+<h2 id="section-16">16. Métrique : total des reads<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Le total est la somme de toutes les cellules de l’OTU table, avec exclusion des valeurs manquantes.</p>
+<p>Cette somme n’est interprétable comme un total de reads que si la matrice contient des comptes bruts.</p>
+<h2 id="section-17">17. Métrique : reads par échantillon<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Pour chaque échantillon :</p>
+<pre tabindex="0"><code class="language-text">Reads = somme des abondances de tous les taxons
+</code></pre>
+<p>Le module calcule ensuite minimum, maximum, moyenne, médiane et écart-type. La médiane est affichée dans les cartes principales.</p>
+<h2 id="section-18">18. Métrique : richesse observée<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Pour chaque échantillon :</p>
+<pre tabindex="0"><code class="language-text">Richesse = nombre de taxons dont l’abondance est strictement supérieure à zéro
+</code></pre>
+<p>Il s’agit d’une richesse observée brute. Elle ne correspond pas à Chao1, ACE, Shannon, Simpson ou à une richesse corrigée pour la profondeur.</p>
+<p>Deux échantillons ayant des profondeurs différentes peuvent donc avoir des richesses non directement comparables.</p>
+<h2 id="section-19">19. Métrique : dominance du taxon majoritaire<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>Pour chaque échantillon :</p>
+<pre tabindex="0"><code class="language-text">Dominance (%) =
+abondance maximale d’un taxon
+÷ abondance totale de l’échantillon
+× 100
+</code></pre>
+<p>Une dominance élevée peut refléter une communauté réellement dominée, une amplification préférentielle, un contaminant, un problème de composition, une faible profondeur ou un échantillon particulier. Elle ne permet pas seule de conclure à une mauvaise qualité.</p>
+<h2 id="section-20">20. Métrique : part de zéros par échantillon<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Pour chaque échantillon :</p>
+<pre tabindex="0"><code class="language-text">Zéros (%) =
+nombre de taxons avec une abondance égale à zéro
+÷ nombre total de taxons
+× 100
+</code></pre>
+<p>Cette valeur décrit la proportion de taxons absents de l’échantillon. Elle n’est pas utilisée dans la détection actuelle des outliers.</p>
+<h2 id="section-21">21. Métrique : sparsité globale<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>La sparsité correspond à :</p>
+<pre tabindex="0"><code class="language-text">nombre de cellules égales à zéro
+÷ nombre total de cellules de l’OTU table
+× 100
+</code></pre>
+<h3 id="section-21-1">21.1. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-21-1">#</a></h3>
+<p>Une sparsité élevée signifie qu’une grande partie des couples taxon-échantillon possède une abondance nulle. C’est fréquent en métabarcoding en raison de la diversité, de la spécialisation des taxons, de la variabilité spatiale, des limites de détection, de la profondeur et des traitements bioinformatiques.</p>
+<h3 id="section-21-2">21.2. Seuils d’affichage utilisés<a aria-label="Permalink" class="heading-anchor" href="#section-21-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Sparsité</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 97 %</td>
+<td>Sparsité très élevée</td>
+</tr>
+<tr>
+<td style="text-align:right">90 à &lt; 97 %</td>
+<td>Sparsité élevée</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt; 90 %</td>
+<td>Sparsité maîtrisée</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ces seuils sont des règles d’affichage internes et non des normes scientifiques universelles.</p>
+<h3 id="section-21-3">21.3. Présence de <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-21-3">#</a></h3>
+<p>Le dénominateur utilise la taille totale de la matrice. Les valeurs <code>NA</code> ne sont pas comptées comme des zéros, mais restent comprises dans le nombre total de cellules. Une matrice contenant des <code>NA</code> peut donc produire une estimation de sparsité légèrement sous-évaluée.</p>
+<h2 id="section-22">22. Variabilité de la profondeur<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Description calcule un coefficient de variation :</p>
+<pre tabindex="0"><code class="language-text">CV (%) =
+écart-type des reads par échantillon
+÷ moyenne des reads par échantillon
+× 100
+</code></pre>
+<p>Un message de profondeur très hétérogène est affiché lorsque <code>CV ≥ 100 %</code>.</p>
+<p>Ce seuil est une règle descriptive interne et non une limite universelle. Un CV inférieur à 100 % ne garantit pas que les profondeurs sont suffisamment homogènes pour toutes les analyses.</p>
+<h2 id="section-23">23. Complétude taxonomique<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Pour chaque rang taxonomique :</p>
+<pre tabindex="0"><code class="language-text">Complétude (%) =
+nombre de valeurs non manquantes et non vides
+÷ nombre total d’ASV
+× 100
+</code></pre>
+<p>La complétude moyenne affichée est la moyenne non pondérée des pourcentages de complétude de tous les rangs.</p>
+<h3 id="section-23-1">23.1. Conséquence<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>Un dataset comportant plusieurs rangs très incomplets et quelques rangs très complets peut avoir une moyenne intermédiaire qui masque les différences. Il faut consulter le tableau détaillé.</p>
+<h3 id="section-23-2">23.2. Chaînes contenant des espaces<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>Une chaîne contenant uniquement des espaces peut être considérée comme renseignée si elle n’a pas été nettoyée avant l’import.</p>
+<h2 id="section-24">24. Valeurs manquantes des métadonnées<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Pour chaque variable :</p>
+<pre tabindex="0"><code class="language-text">% manquant =
+nombre de NA ou de chaînes vides
+÷ nombre d’échantillons
+× 100
+</code></pre>
+<p>La moyenne affichée correspond à la moyenne non pondérée des taux de valeurs manquantes de toutes les variables.</p>
+<h3 id="section-24-1">24.1. Valeur <code>"NA"</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>La chaîne de caractères <code>"NA"</code> n’est pas une vraie valeur manquante et peut être comptée comme une modalité.</p>
+<h3 id="section-24-2">24.2. Espaces<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Une chaîne contenant uniquement des espaces peut être considérée comme renseignée.</p>
+<h3 id="section-24-3">24.3. Type affiché<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Le tableau de complétude affiche la première classe R de la colonne : <code>character</code>, <code>numeric</code>, <code>factor</code>, <code>Date</code>, etc. Cela permet notamment de repérer les colonnes devenues <code>character</code> après un import.</p>
+<h2 id="section-25">25. Longueur des séquences<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Lorsque <code>refseq</code> et <code>Biostrings</code> sont disponibles, Description calcule longueur minimale, maximale, moyenne, médiane et écart-type, en paires de bases.</p>
+<h3 id="section-25-1">25.1. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-25-1">#</a></h3>
+<p>Une distribution multimodale ou très étendue peut indiquer plusieurs régions amplifiées, plusieurs marqueurs, des séquences tronquées, des indels, des produits non spécifiques, des séquences mal filtrées ou une variabilité biologique réelle.</p>
+<p>La longueur attendue doit être interprétée selon le marqueur, les amorces, la présence ou non des amorces et le pipeline utilisé.</p>
+<h2 id="section-26">26. Pourcentage de GC<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Le pourcentage de GC est calculé à partir des bases A, C, G et T :</p>
+<pre tabindex="0"><code class="language-text">GC (%) =
+nombre de G + nombre de C
+÷ nombre total de A, C, G et T
+× 100
+</code></pre>
+<p>Les bases ambiguës ne sont pas incluses dans le dénominateur ACGT. Une séquence contenant beaucoup de caractères ambigus peut donc produire une valeur de GC basée uniquement sur sa portion non ambiguë.</p>
+<h2 id="section-27">27. Noms des séquences<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Description utilise les noms contenus dans <code>refseq</code>. Si les séquences n’ont pas de noms valides, des identifiants génériques sont produits pour l’affichage :</p>
+<pre tabindex="0"><code class="language-text">ASV_1
+ASV_2
+ASV_3
+</code></pre>
+<p>Le module ne vérifie pas explicitement que chaque nom de séquence correspond à un taxon de l’OTU table.</p>
+<h2 id="section-28">28. Message d’interprétation automatique<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>La carte de synthèse construit un texte à partir de quelques métriques : reads médians, richesse médiane, sparsité et présence des composants.</p>
+<p>Ce texte est une aide descriptive. Il ne constitue pas une validation scientifique, un contrôle qualité définitif, une décision de filtration ou une recommandation statistique automatique.</p>
+<h2 id="section-29">29. Lecture rapide du dataset<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>La section présente quatre domaines.</p>
+<h3 id="section-29-1">29.1. Structure<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>Résumé des reads médians, de la richesse médiane et de la sparsité.</p>
+<h3 id="section-29-2">29.2. Contenu disponible<a aria-label="Permalink" class="heading-anchor" href="#section-29-2">#</a></h3>
+<p>Présence ou absence de l’OTU table, de la taxonomie, des métadonnées et des séquences.</p>
+<h3 id="section-29-3">29.3. Séquences<a aria-label="Permalink" class="heading-anchor" href="#section-29-3">#</a></h3>
+<p>Lorsque disponibles : longueur médiane et GC médian.</p>
+<h3 id="section-29-4">29.4. Filtration<a aria-label="Permalink" class="heading-anchor" href="#section-29-4">#</a></h3>
+<p>Lorsque l’attribut <code>filtration_log</code> existe : nombre d’ASV supprimées et nombre d’échantillons supprimés.</p>
+<h2 id="section-30">30. Diagnostics automatiques<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>La grille diagnostique peut signaler :</p>
+<ul>
+<li>sparsité élevée ;</li>
+<li>profondeur hétérogène ;</li>
+<li>absence de métadonnées ;</li>
+<li>absence de taxonomie ;</li>
+<li>absence de séquences ;</li>
+<li>présence d’un historique de filtration.</li>
+</ul>
+<p>Ces alertes ne modifient rien et ne doivent pas être utilisées seules pour exclure des données.</p>
+<h2 id="section-31">31. Provenance OpenMetaBar<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>La box <strong>Provenance OpenMetaBar</strong> lit l’attribut <code>attr(ps, "openmetabar_run")</code>. Elle ne contacte pas le cluster. Il s’agit d’un instantané enregistré dans l’objet phyloseq au moment de l’import.</p>
+<h3 id="section-31-1">31.1. Résumé du run<a aria-label="Permalink" class="heading-anchor" href="#section-31-1">#</a></h3>
+<p>Peut contenir l’identifiant du run, le libellé, la date de lancement, la technologie, le marqueur, le moteur, le type et le chemin de la base, le design file, le nombre d’échantillons et le nombre de FASTQ.</p>
+<h3 id="section-31-2">31.2. Démultiplexage<a aria-label="Permalink" class="heading-anchor" href="#section-31-2">#</a></h3>
+<p>Peut contenir les paramètres MiniBar : activation, méthode, tolérances et autres options enregistrées.</p>
+<h3 id="section-31-3">31.3. Filtres<a aria-label="Permalink" class="heading-anchor" href="#section-31-3">#</a></h3>
+<p>Peut contenir orientation, qualité, longueur, filtre codant et table génétique.</p>
+<h3 id="section-31-4">31.4. LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-31-4">#</a></h3>
+<p>Peut contenir plateforme, type d’amplicon, clustering, assignation et autres paramètres enregistrés.</p>
+<h3 id="section-31-5">31.5. LCA<a aria-label="Permalink" class="heading-anchor" href="#section-31-5">#</a></h3>
+<p>Peut contenir couverture, seuils d’identité, fraction d’accord et mode d’assignation.</p>
+<h3 id="section-31-6">31.6. IDMABIO<a aria-label="Permalink" class="heading-anchor" href="#section-31-6">#</a></h3>
+<p>Présent uniquement si la route correspondante a été utilisée.</p>
+<h3 id="section-31-7">31.7. NextITS<a aria-label="Permalink" class="heading-anchor" href="#section-31-7">#</a></h3>
+<p>Présent uniquement si la route correspondante a été utilisée.</p>
+<h3 id="section-31-8">31.8. Environnement cluster<a aria-label="Permalink" class="heading-anchor" href="#section-31-8">#</a></h3>
+<p>Peut contenir partition, mémoire, processeurs, modules et chemins distants.</p>
+<h3 id="section-31-9">31.9. Fichiers FASTQ<a aria-label="Permalink" class="heading-anchor" href="#section-31-9">#</a></h3>
+<p>La liste des fichiers peut être affichée. Les chemins représentent la provenance enregistrée, pas nécessairement des fichiers encore accessibles.</p>
+<h3 id="section-31-10">31.10. Renommage des échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-31-10">#</a></h3>
+<p>La provenance peut conserver le nom d’origine, le nom corrigé, la date et la raison.</p>
+<h3 id="section-31-11">31.11. Absence de provenance<a aria-label="Permalink" class="heading-anchor" href="#section-31-11">#</a></h3>
+<p>Une absence de provenance ne signifie pas nécessairement que le dataset n’a jamais été produit par OpenMetaBar. L’attribut peut avoir été supprimé, perdu lors d’une conversion, remplacé, absent dans une ancienne version ou non conservé lors d’un export externe.</p>
+<h2 id="section-32">32. Visualisations interactives — Vue d’ensemble<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>La vue d’ensemble comporte :</p>
+<ol>
+<li>Reads versus richesse.</li>
+<li>Fiche d’échantillon.</li>
+<li>Top 15 des échantillons.</li>
+<li>Top 15 des taxons.</li>
+<li>Contribution cumulée des échantillons.</li>
+<li>Contribution cumulée des taxons.</li>
+</ol>
+<h2 id="section-33">33. Reads versus richesse<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>Chaque point représente un échantillon.</p>
+<pre tabindex="0"><code class="language-text">X = abondance totale
+Y = richesse observée
+</code></pre>
+<p>La couleur représente le groupe sélectionné et le symbole représente le statut : cercle pour standard, losange pour outlier.</p>
+<h3 id="section-33-1">33.1. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>Le graphique permet de repérer une relation entre profondeur et richesse, des échantillons peu profonds, des échantillons riches mais peu profonds, des points éloignés du nuage et des différences entre groupes.</p>
+<h3 id="section-33-2">33.2. Limite<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>Une relation positive entre reads et richesse ne prouve pas que la profondeur est la seule cause des différences biologiques.</p>
+<h3 id="section-33-3">33.3. Interaction<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>Cliquer sur un point met à jour la fiche d’échantillon.</p>
+<h2 id="section-34">34. Fiche d’échantillon<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>La fiche affiche SampleID, reads, richesse, dominance, part de zéros, statut et jusqu’à six valeurs de métadonnées disponibles.</p>
+<h3 id="section-34-1">34.1. Échantillon initial<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>Avant tout clic, la fiche affiche le premier outlier détecté s’il en existe un, sinon le premier échantillon du dataset.</p>
+<h3 id="section-34-2">34.2. Métadonnées affichées<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>Les colonnes entièrement manquantes pour l’échantillon sont exclues. Seules les six premières colonnes exploitables sont affichées : la fiche n’est donc pas exhaustive.</p>
+<h2 id="section-35">35. Top 15 des échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Le graphique classe les échantillons par abondance totale décroissante et en affiche au maximum quinze. Cliquer sur une barre met à jour la fiche d’échantillon.</p>
+<h3 id="section-35-1">35.1. Limite<a aria-label="Permalink" class="heading-anchor" href="#section-35-1">#</a></h3>
+<p>Les échantillons les plus profonds ne sont pas nécessairement les meilleurs, les plus riches, les plus représentatifs ou les plus fiables.</p>
+<h2 id="section-36">36. Top 15 des taxons<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>Le graphique classe les taxons selon la somme de leurs abondances sur tous les échantillons. L’infobulle affiche aussi le nombre et le pourcentage d’échantillons dans lesquels le taxon est présent.</p>
+<h3 id="section-36-1">36.1. Prévalence<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">Prévalence = nombre d’échantillons où l’abondance est &gt; 0
+</code></pre>
+<pre tabindex="0"><code class="language-text">Prévalence (%) =
+prévalence
+÷ nombre total d’échantillons
+× 100
+</code></pre>
+<h3 id="section-36-2">36.2. Limite<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>Le graphique utilise l’identifiant du taxon et non son annotation taxonomique. Un ASV très abondant dans un seul échantillon peut apparaître en tête malgré une faible prévalence.</p>
+<h2 id="section-37">37. Contribution cumulée des échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Les échantillons sont classés par abondance décroissante. La courbe montre la proportion cumulée des abondances expliquée par les premiers échantillons.</p>
+<p>Une forte montée initiale indique que la profondeur est concentrée dans un petit nombre d’échantillons.</p>
+<h2 id="section-38">38. Contribution cumulée des taxons<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Les taxons sont classés par abondance totale décroissante. La courbe montre la proportion cumulée des abondances expliquée par les taxons dominants.</p>
+<p>Elle ne tient pas compte de la taxonomie, de la prévalence, des groupes ou de la rareté biologique.</p>
+<h2 id="section-39">39. Onglet Abondance<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Il comprend :</p>
+<ul>
+<li>histogramme des reads ;</li>
+<li>violon des reads par groupe ;</li>
+<li>contribution cumulée des reads par groupe.</li>
+</ul>
+<h2 id="section-40">40. Histogramme des reads<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>L’histogramme décrit la distribution des abondances totales par échantillon. Il permet de repérer asymétrie, échantillons peu ou très profonds et plusieurs populations de profondeur.</p>
+<p>Le nombre de classes est déterminé automatiquement par Plotly.</p>
+<h2 id="section-41">41. Reads par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Le graphique en violon est disponible lorsqu’une variable de groupement contient plusieurs groupes. Il affiche distribution, boîte à moustaches, moyenne et points individuels.</p>
+<h3 id="section-41-1">41.1. Absence de groupement<a aria-label="Permalink" class="heading-anchor" href="#section-41-1">#</a></h3>
+<p>Si aucun groupement n’est sélectionné, un message indique qu’aucune variable qualitative n’est disponible.</p>
+<h3 id="section-41-2">41.2. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-41-2">#</a></h3>
+<p>Le graphique est descriptif. Il ne réalise aucun test statistique, aucune normalisation, aucune correction pour les tailles de groupe ni pour les covariables.</p>
+<h2 id="section-42">42. Contribution cumulée des reads par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>Pour chaque groupe, les échantillons sont triés par abondance décroissante puis le cumul est calculé à l’intérieur du groupe. Chaque courbe atteint donc 100 % pour son propre groupe.</p>
+<h3 id="section-42-1">42.1. Conséquence<a aria-label="Permalink" class="heading-anchor" href="#section-42-1">#</a></h3>
+<p>Les courbes montrent la concentration interne de la profondeur dans chaque groupe. Elles ne montrent pas la proportion de reads du projet attribuable à chaque groupe.</p>
+<p>Un groupe très petit et un groupe très grand atteignent tous deux 100 %.</p>
+<h2 id="section-43">43. Onglet Richesse<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Il comprend :</p>
+<ul>
+<li>histogramme de richesse ;</li>
+<li>richesse par groupe ;</li>
+<li>richesse versus dominance.</li>
+</ul>
+<h2 id="section-44">44. Histogramme de richesse<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Il affiche la distribution du nombre de taxons présents par échantillon.</p>
+<p>Cette richesse n’est pas corrigée pour la profondeur. Un échantillon plus profond peut mécaniquement contenir davantage de taxons observés.</p>
+<h2 id="section-45">45. Richesse par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Le graphique en violon compare la richesse observée entre les groupes. Comme pour les reads, il est descriptif et ne réalise aucun test statistique.</p>
+<h2 id="section-46">46. Richesse versus dominance<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = richesse observée
+Y = dominance du taxon majoritaire
+</code></pre>
+<p>Ce graphique peut distinguer des communautés riches et équilibrées, riches mais dominées, pauvres et dominées ou des profils atypiques.</p>
+<h3 id="section-46-1">46.1. Ce graphique n’est pas un indice d’équitabilité<a aria-label="Permalink" class="heading-anchor" href="#section-46-1">#</a></h3>
+<p>La dominance du taxon majoritaire peut servir de proxy simple, mais elle ne correspond pas à Pielou, Shannon, Simpson ou à une mesure complète d’équitabilité.</p>
+<p>Deux communautés ayant la même dominance maximale peuvent avoir des distributions très différentes pour les taxons restants.</p>
+<h2 id="section-47">47. Onglet Séquences<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Il comprend :</p>
+<ul>
+<li>histogramme des longueurs ;</li>
+<li>histogramme du GC ;</li>
+<li>relation longueur versus GC.</li>
+</ul>
+<p>Ces graphiques exigent une <code>refseq</code> et le package <code>Biostrings</code>.</p>
+<h2 id="section-48">48. Relation longueur versus GC<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>Chaque point correspond à une séquence. Le graphique peut révéler des groupes de tailles ou de composition distincts, des séquences très courtes ou longues, des valeurs GC atypiques ou une combinaison de plusieurs marqueurs.</p>
+<p>Il ne permet pas à lui seul de déterminer si une séquence est contaminante ou incorrecte.</p>
+<h2 id="section-49">49. Courbes de raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>Le sous-onglet Raréfaction lance un calcul séparé. Le calcul n’est pas effectué automatiquement à l’ouverture.</p>
+<p>Il faut cliquer sur <strong>Calculer les courbes</strong>.</p>
+<h2 id="section-50">50. Méthode de raréfaction utilisée<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>Le module utilise :</p>
+<pre tabindex="0"><code class="language-r">vegan::rarefy()
+</code></pre>
+<p>Cette fonction calcule l’espérance analytique du nombre de taxons observés à une profondeur donnée.</p>
+<p>Il ne s’agit pas d’une raréfaction aléatoire répétée, d’une création d’un nouveau phyloseq, d’un appel à <code>rarefy_even_depth()</code>, d’un remplacement des abondances ou d’une normalisation enregistrée.</p>
+<p>Les données originales restent inchangées.</p>
+<h2 id="section-51">51. Conditions du calcul de raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>Le calcul exige :</p>
+<ul>
+<li>le package <code>vegan</code> ;</li>
+<li>une OTU table ;</li>
+<li>au moins deux échantillons avec une abondance positive ;</li>
+<li>au moins deux échantillons comportant au minimum 50 reads.</li>
+</ul>
+<p>Les échantillons contenant moins de 50 reads sont exclus du calcul.</p>
+<h3 id="section-51-1">51.1. Seuil de 50 reads<a aria-label="Permalink" class="heading-anchor" href="#section-51-1">#</a></h3>
+<p>Le seuil est fixé dans le code et ne peut pas actuellement être modifié dans l’interface.</p>
+<p>Il s’agit d’une règle pratique interne, pas d’une norme universelle.</p>
+<h2 id="section-52">52. Nature attendue des données pour la raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p><code>vegan::rarefy()</code> est conçu pour des comptes.</p>
+<p>La raréfaction n’est pas appropriée pour :</p>
+<ul>
+<li>des abondances relatives ;</li>
+<li>des données CLR ;</li>
+<li>des données négatives ;</li>
+<li>des transformations continues ;</li>
+<li>des valeurs non entières.</li>
+</ul>
+<p>Le module ne bloque pas explicitement toutes ces situations. Il faut vérifier la nature de l’OTU table avant de lancer le calcul.</p>
+<h2 id="section-53">53. Profondeurs calculées<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>Le module génère jusqu’à environ 80 profondeurs réparties entre 1 et la profondeur maximale observée.</p>
+<p>Pour chaque échantillon, seules les profondeurs inférieures ou égales à son total sont conservées. Les profondeurs sont arrondies et dédupliquées.</p>
+<h2 id="section-54">54. Courbes individuelles<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>Le mode <strong>Courbes individuelles colorées par groupe</strong> affiche une ligne par échantillon. La couleur correspond au groupe.</p>
+<p>L’infobulle contient notamment :</p>
+<ul>
+<li>SampleID ;</li>
+<li>groupe ;</li>
+<li>reads totaux ;</li>
+<li>profondeur raréfiée ;</li>
+<li>richesse attendue ;</li>
+<li>richesse observée ;</li>
+<li>statut outlier.</li>
+</ul>
+<h2 id="section-55">55. Sous-sélection des courbes individuelles<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>Les options sont :</p>
+<ul>
+<li>Tous les échantillons ;</li>
+<li>Top reads ;</li>
+<li>Bottom reads ;</li>
+<li>Outliers.</li>
+</ul>
+<h3 id="section-55-1">55.1. Tous les échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-55-1">#</a></h3>
+<p>Toutes les courbes admissibles sont affichées.</p>
+<p>Le champ <strong>Nombre max de courbes</strong> n’est pas appliqué dans ce mode dans l’implémentation actuelle. Un dataset comportant beaucoup d’échantillons peut donc produire un graphique lourd.</p>
+<h3 id="section-55-2">55.2. Top reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-2">#</a></h3>
+<p>Conserve les échantillons les plus profonds, dans la limite choisie.</p>
+<h3 id="section-55-3">55.3. Bottom reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-3">#</a></h3>
+<p>Conserve les échantillons les moins profonds parmi ceux ayant au moins 50 reads.</p>
+<h3 id="section-55-4">55.4. Outliers<a aria-label="Permalink" class="heading-anchor" href="#section-55-4">#</a></h3>
+<p>Conserve les échantillons marqués comme outliers par la règle IQR.</p>
+<p>Si aucun outlier n’est disponible, le graphique peut rester vide après le calcul.</p>
+<h2 id="section-56">56. Nombre maximal de courbes<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>Le nombre est limité entre 2 et 200.</p>
+<p>Il agit sur Top reads, Bottom reads et Outliers, mais pas actuellement sur Tous les échantillons.</p>
+<h2 id="section-57">57. Courbes agrégées par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>Le mode <strong>Courbes agrégées par groupe</strong> additionne les abondances de tous les échantillons d’un groupe. Une courbe est ensuite calculée sur cette communauté poolée.</p>
+<h3 id="section-57-1">57.1. Ce que représente la courbe<a aria-label="Permalink" class="heading-anchor" href="#section-57-1">#</a></h3>
+<p>Elle représente la richesse attendue dans le pool de reads du groupe.</p>
+<p>Elle ne représente pas :</p>
+<ul>
+<li>la moyenne des courbes individuelles ;</li>
+<li>la richesse moyenne par échantillon ;</li>
+<li>une moyenne accompagnée d’un intervalle de confiance ;</li>
+<li>une comparaison corrigée pour le nombre d’échantillons.</li>
+</ul>
+<h3 id="section-57-2">57.2. Effet de la taille des groupes<a aria-label="Permalink" class="heading-anchor" href="#section-57-2">#</a></h3>
+<p>Un groupe contenant davantage d’échantillons ou davantage de reads possède un pool plus grand et peut atteindre une richesse plus élevée.</p>
+<p>Les courbes agrégées doivent être interprétées en tenant compte du nombre d’échantillons et du nombre total de reads du groupe. Ces informations sont affichées dans les infobulles.</p>
+<h3 id="section-57-3">57.3. Sans groupement<a aria-label="Permalink" class="heading-anchor" href="#section-57-3">#</a></h3>
+<p>Si aucun groupement n’est sélectionné, tous les échantillons sont poolés dans une seule courbe nommée <code>Tous</code>.</p>
+<h2 id="section-58">58. Afficher la légende<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>La légende est désactivée par défaut. Sur un grand nombre de groupes, l’activer peut réduire la lisibilité du graphique.</p>
+<p>Pour les courbes individuelles, une seule entrée de légende est affichée par groupe, même si plusieurs échantillons partagent cette couleur.</p>
+<h2 id="section-59">59. Recalcul nécessaire<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>Le résultat de raréfaction est lié au dataset utilisé au moment du clic.</p>
+<p>Changer ensuite le dataset ne relance pas automatiquement le calcul. Il faut cliquer de nouveau sur <strong>Calculer les courbes</strong>.</p>
+<h3 id="section-59-1">59.1. Changement de groupement<a aria-label="Permalink" class="heading-anchor" href="#section-59-1">#</a></h3>
+<p>Changer la variable de groupement après le calcul peut mettre à jour les couleurs ou les agrégations à partir du résultat déjà calculé.</p>
+<h3 id="section-59-2">59.2. Risque de résultat ancien<a aria-label="Permalink" class="heading-anchor" href="#section-59-2">#</a></h3>
+<p>Après un changement de dataset sans nouveau clic, le résultat mémorisé peut encore correspondre au dataset précédent.</p>
+<p>Toujours relancer la raréfaction après un changement de dataset.</p>
+<h2 id="section-60">60. Interprétation des courbes de raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>Une courbe qui s’aplatit suggère que l’ajout de reads apporte progressivement moins de nouveaux taxons.</p>
+<p>Une courbe encore fortement croissante suggère que davantage de profondeur pourrait révéler davantage de taxons.</p>
+<p>L’absence de plateau ne prouve cependant pas nécessairement une mauvaise qualité, un séquençage insuffisant ou un échec expérimental. Elle peut aussi refléter une communauté extrêmement diverse, de nombreux taxons rares, du bruit résiduel, des erreurs de séquençage ou une grande hétérogénéité biologique.</p>
+<h2 id="section-61">61. Limites de la raréfaction affichée<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>Le graphique ne fournit pas :</p>
+<ul>
+<li>d’intervalle de confiance ;</li>
+<li>de moyenne de répétitions aléatoires ;</li>
+<li>d’extrapolation ;</li>
+<li>de couverture de Good ;</li>
+<li>de Chao1 ;</li>
+<li>de comparaison statistique entre courbes ;</li>
+<li>de seuil automatique de saturation.</li>
+</ul>
+<p>Il s’agit d’un outil descriptif.</p>
+<h2 id="section-62">62. Détection des outliers<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>La détection repose sur trois métriques :</p>
+<ol>
+<li>profondeur ;</li>
+<li>richesse ;</li>
+<li>dominance.</li>
+</ol>
+<p>La part de zéros n’est pas utilisée pour le marquage.</p>
+<h2 id="section-63">63. Règle IQR<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<p>Pour chaque métrique, Description calcule :</p>
+<pre tabindex="0"><code class="language-text">Q1 = premier quartile
+Q3 = troisième quartile
+IQR = Q3 - Q1
+</code></pre>
+<p>Limites :</p>
+<pre tabindex="0"><code class="language-text">Limite basse = Q1 - 1,5 × IQR
+Limite haute = Q3 + 1,5 × IQR
+</code></pre>
+<p>Une valeur située en dehors de ces limites est marquée comme outlier. Cette règle correspond à la convention des moustaches d’un boxplot de Tukey.</p>
+<h2 id="section-64">64. Outliers hauts et bas<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>La règle s’applique aux deux extrémités.</p>
+<p>Un échantillon peut être marqué pour une profondeur très faible ou très élevée, une richesse très faible ou très élevée, ou une dominance très faible ou très élevée.</p>
+<p>Même si certains textes de l’interface insistent sur une dominance excessive, le calcul réel détecte aussi une dominance exceptionnellement basse.</p>
+<h2 id="section-65">65. Conditions minimales de la règle IQR<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>Aucun outlier n’est détecté pour une métrique lorsque :</p>
+<ul>
+<li>il y a moins de quatre valeurs ;</li>
+<li>toutes les valeurs sont manquantes ;</li>
+<li>l’IQR est nul.</li>
+</ul>
+<p>Une absence d’outlier peut donc signifier une réelle homogénéité, un effectif trop faible, une absence de variabilité ou un signal non exploitable.</p>
+<h2 id="section-66">66. Statut d’un échantillon<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>Un échantillon est marqué <code>Outlier</code> s’il est atypique sur au moins une des trois métriques. Sinon, il est marqué <code>Standard</code>.</p>
+<p>Le statut est descriptif. Aucun échantillon n’est automatiquement supprimé.</p>
+<h2 id="section-67">67. Nombre de signaux<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>Le nombre de signaux correspond au nombre de métriques atypiques parmi profondeur, richesse et dominance.</p>
+<p>Valeurs possibles :</p>
+<pre tabindex="0"><code class="language-text">0, 1, 2 ou 3
+</code></pre>
+<p>Un échantillon marqué sur trois signaux est priorisé avant un échantillon marqué sur un seul signal.</p>
+<h2 id="section-68">68. Score d’outlier<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>Pour chaque métrique, le dépassement au-delà de la limite est exprimé en unité d’IQR.</p>
+<p>Exemple conceptuel :</p>
+<pre tabindex="0"><code class="language-text">Score profondeur =
+distance au-delà de la limite
+÷ IQR
+</code></pre>
+<p>Le score global est la somme des scores profondeur, richesse et dominance. Les échantillons standards reçoivent un score nul.</p>
+<h3 id="section-68-1">68.1. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-68-1">#</a></h3>
+<p>Un score plus élevé indique un dépassement plus éloigné des limites IQR.</p>
+<p>Il ne représente pas une probabilité, une p-value, une mesure de qualité universelle ou un seuil de suppression.</p>
+<h2 id="section-69">69. Ordre de priorité des outliers<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>Les outliers sont triés selon :</p>
+<ol>
+<li>nombre de signaux ;</li>
+<li>score global ;</li>
+<li>nombre de reads.</li>
+</ol>
+<p>Le premier devient l’échantillon « spotlight ».</p>
+<h2 id="section-70">70. Résumé des outliers<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>La section affiche :</p>
+<ul>
+<li>nombre total d’outliers ;</li>
+<li>pourcentage d’échantillons concernés ;</li>
+<li>nombre d’outliers de profondeur ;</li>
+<li>nombre d’outliers de richesse ;</li>
+<li>nombre d’outliers de dominance ;</li>
+<li>signal le plus fréquent ;</li>
+<li>groupe le plus exposé, si un groupement est actif.</li>
+</ul>
+<h2 id="section-71">71. Concentration des outliers par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<p>Pour chaque groupe :</p>
+<pre tabindex="0"><code class="language-text">Pourcentage d’outliers =
+nombre d’outliers du groupe
+÷ nombre total d’échantillons du groupe
+× 100
+</code></pre>
+<p>Les quatre groupes les plus concernés sont affichés.</p>
+<h3 id="section-71-1">71.1. Seuils de couleur<a aria-label="Permalink" class="heading-anchor" href="#section-71-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Pourcentage</th>
+<th>Niveau visuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 30 %</td>
+<td>Danger</td>
+</tr>
+<tr>
+<td style="text-align:right">15 à &lt; 30 %</td>
+<td>Avertissement</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt; 15 %</td>
+<td>Faible</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ces seuils sont uniquement des conventions visuelles et non des seuils statistiques validés.</p>
+<h2 id="section-72">72. Détection globale et lecture par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>La concentration par groupe doit être interprétée avec prudence : les seuils d’outlier ont été calculés globalement, puis le pourcentage est calculé dans chaque groupe.</p>
+<p>Un groupe naturellement différent du reste du dataset peut donc concentrer de nombreux outliers sans contenir d’échantillons techniquement défectueux.</p>
+<h2 id="section-73">73. Tableau des échantillons à surveiller<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>Le tableau contient : SampleID, groupe, signaux, nombre de signaux, score, reads, richesse et dominance.</p>
+<p>Il ne contient que les échantillons détectés par au moins une règle IQR. Il dispose d’une recherche, de filtres de colonnes, d’un défilement et d’un export DataTables.</p>
+<h2 id="section-74">74. Tableau complet des échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>Le tableau complet affiche SampleID, groupe, signaux, nombre de signaux, reads, richesse, dominance, part de zéros et statut.</p>
+<p>Les outliers apparaissent en premier.</p>
+<h2 id="section-75">75. Ce qu’un outlier ne signifie pas<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>Un outlier n’est pas automatiquement une erreur, un contaminant, un échantillon à supprimer, un échec de séquençage ou un mauvais contrôle.</p>
+<p>Il peut correspondre à une réalité biologique, une matrice très hétérogène, un groupe expérimental différent, une forte dominance réelle, une faible biomasse ou un événement rare.</p>
+<p>Toute décision doit être contextualisée avec les métadonnées, le protocole, les contrôles, les résultats de filtration et les visualisations.</p>
+<h2 id="section-76">76. Tables et logs<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>La box est repliée initialement. Elle contient :</p>
+<ul>
+<li>OTU table ;</li>
+<li>Taxonomie ;</li>
+<li>Métadonnées ;</li>
+<li>Complétude ;</li>
+<li>Logs de filtrage.</li>
+</ul>
+<h2 id="section-77">77. Résumé des tables<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>Les cartes indiquent :</p>
+<ul>
+<li>dimensions de l’OTU table ;</li>
+<li>dimensions de la taxonomie ;</li>
+<li>dimensions de la metadata ;</li>
+<li>nombre de lignes exportables du log.</li>
+</ul>
+<p>Les dimensions excluent la colonne d’identifiant ajoutée pour l’affichage.</p>
+<h2 id="section-78">78. OTU table affichée<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>Description convertit la table dans une orientation standard : taxons en lignes et échantillons en colonnes.</p>
+<p>Une colonne explicite <code>ASV</code> est ajoutée. Même si les unités sont des OTU ou ZOTU, la colonne reste nommée ASV.</p>
+<h3 id="section-78-1">78.1. Orientation originale<a aria-label="Permalink" class="heading-anchor" href="#section-78-1">#</a></h3>
+<p>L’export de Description ne conserve pas nécessairement l’orientation originale du phyloseq. Il exporte la version réorientée utilisée pour l’affichage.</p>
+<h3 id="section-78-2">78.2. Contenu<a aria-label="Permalink" class="heading-anchor" href="#section-78-2">#</a></h3>
+<p>Les valeurs ne sont pas modifiées. Elles peuvent rester entières, décimales, négatives, transformées ou manquantes.</p>
+<h2 id="section-79">79. Taxonomie affichée<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>La taxonomie contient une colonne ASV et les rangs taxonomiques.</p>
+<h3 id="section-79-1">79.1. Noms de rangs<a aria-label="Permalink" class="heading-anchor" href="#section-79-1">#</a></h3>
+<p>Les noms de colonnes vides ou dupliqués sont remplacés pour l’affichage par des noms uniques.</p>
+<p>Exemples :</p>
+<pre tabindex="0"><code class="language-text">Rang_sans_nom_1
+Genus
+Genus_1
+</code></pre>
+<p>Cette correction concerne la table affichée et exportée depuis Description. Elle ne renomme pas la <code>tax_table</code> dans le phyloseq.</p>
+<h2 id="section-80">80. Métadonnées affichées<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p>Les rownames de <code>sample_data</code> deviennent une colonne <code>SampleID</code>.</p>
+<p>Si une colonne <code>SampleID</code> existe déjà dans la metadata, elle est renommée pour éviter la collision :</p>
+<pre tabindex="0"><code class="language-text">SampleID_meta
+SampleID_meta_2
+</code></pre>
+<p>Le phyloseq original n’est pas modifié.</p>
+<h2 id="section-81">81. Fonctions des tableaux interactifs<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>Les tables offrent :</p>
+<ul>
+<li>filtres en haut des colonnes ;</li>
+<li>recherche ;</li>
+<li>défilement vertical ;</li>
+<li>défilement horizontal ;</li>
+<li>première colonne fixe ;</li>
+<li>pagination ;</li>
+<li>bouton Copier ;</li>
+<li>bouton CSV.</li>
+</ul>
+<p>Pour les grandes matrices, les données sont néanmoins préparées en mémoire avant leur affichage.</p>
+<h2 id="section-82">82. Export CSV dédié<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>Chaque table possède un bouton d’export dédié.</p>
+<p>Fichiers :</p>
+<pre tabindex="0"><code class="language-text">&lt;dataset&gt;_otu_table.csv
+&lt;dataset&gt;_tax_table.csv
+&lt;dataset&gt;_metadata.csv
+&lt;dataset&gt;_filtration_logs.csv
+</code></pre>
+<h3 id="section-82-1">82.1. Format<a aria-label="Permalink" class="heading-anchor" href="#section-82-1">#</a></h3>
+<p>Les fichiers sont produits avec <code>write.csv()</code> : séparateur virgule, noms de lignes exclus, identifiants inclus comme colonne explicite et représentation standard R des valeurs manquantes.</p>
+<h3 id="section-82-2">82.2. Filtres visuels<a aria-label="Permalink" class="heading-anchor" href="#section-82-2">#</a></h3>
+<p>L’export dédié contient la table complète calculée. Il n’est pas limité aux lignes actuellement visibles ou filtrées dans le tableau interactif.</p>
+<h3 id="section-82-3">82.3. Composant absent<a aria-label="Permalink" class="heading-anchor" href="#section-82-3">#</a></h3>
+<p>Si un composant est absent, le bouton peut produire un fichier CSV vide.</p>
+<h2 id="section-83">83. Complétude taxonomique<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>Le tableau affiche pour chaque rang le pourcentage renseigné et le pourcentage manquant.</p>
+<p>Il permet de distinguer les rangs presque complets, partiellement renseignés ou largement vides. Le rang le plus rempli est également affiché dans le résumé.</p>
+<h2 id="section-84">84. Complétude des métadonnées<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>Le tableau affiche pour chaque variable :</p>
+<ul>
+<li>type R ;</li>
+<li>pourcentage manquant ;</li>
+<li>nombre de valeurs uniques.</li>
+</ul>
+<p>Cela permet de repérer les colonnes totalement vides, les variables presque constantes, les variables de groupe potentielles, les colonnes numériques devenues texte et les identifiants presque uniques.</p>
+<h2 id="section-85">85. Variables groupables<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>Le nombre de variables groupables correspond aux colonnes qui répondent aux critères :</p>
+<ul>
+<li>2 à 15 modalités ;</li>
+<li>non temporelles.</li>
+</ul>
+<p>Cela ne garantit pas leur pertinence biologique. Une variable telle que <code>Replicate_number = 1, 2, 3</code> peut être proposée alors qu’elle n’est pas forcément un groupe expérimental approprié.</p>
+<h2 id="section-86">86. Logs de filtration<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>Description lit l’attribut :</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>Il recherche notamment <code>removed_taxa</code> et <code>removed_samples</code>.</p>
+<h3 id="section-86-1">86.1. ASV supprimées<a aria-label="Permalink" class="heading-anchor" href="#section-86-1">#</a></h3>
+<p>Le tableau peut contenir identifiant, abondance, prévalence, raison, paramètres et autres colonnes enregistrées par Filtration. Le contenu dépend de la version et de l’étape ayant créé le log.</p>
+<h3 id="section-86-2">86.2. Échantillons supprimés<a aria-label="Permalink" class="heading-anchor" href="#section-86-2">#</a></h3>
+<p>Le tableau peut contenir SampleID, profondeur, raison et autres informations enregistrées.</p>
+<h3 id="section-86-3">86.3. Absence d’identifiant explicite<a aria-label="Permalink" class="heading-anchor" href="#section-86-3">#</a></h3>
+<p>Si le tableau utilise ses rownames comme identifiants, Description ajoute une colonne <code>ASV</code> ou <code>SampleID</code>.</p>
+<h2 id="section-87">87. Export des logs<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>Les logs des taxons et des échantillons sont combinés dans un même CSV.</p>
+<p>Une colonne <code>log_type</code> est ajoutée, avec les valeurs <code>removed_taxa</code> ou <code>removed_samples</code>.</p>
+<p>Les colonnes présentes dans un seul type de log sont ajoutées à l’autre avec des valeurs manquantes.</p>
+<h2 id="section-88">88. Portée des logs de filtration<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>Le log représente l’information attachée à l’objet actuel.</p>
+<p>Il ne garantit pas un historique exhaustif de toutes les anciennes versions, que le parent existe encore, que toutes les étapes externes sont documentées, que les modifications manuelles ont été enregistrées ou que les logs n’ont pas été écrasés.</p>
+<h2 id="section-89">89. Vue Projet<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>La vue Projet travaille sur tous les datasets présents dans <code>datasets()</code>.</p>
+<p>Elle ne lit pas directement tous les projets enregistrés sur le disque. Elle compare uniquement les objets actuellement chargés en mémoire dans le projet ouvert.</p>
+<h2 id="section-90">90. Résumé global du projet<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>Le résumé contient :</p>
+<ul>
+<li>nombre de datasets chargés ;</li>
+<li>nombre de datasets sélectionnés pour la comparaison ;</li>
+<li>somme des échantillons ;</li>
+<li>somme des abondances ;</li>
+<li>sparsité moyenne.</li>
+</ul>
+<h2 id="section-91">91. Échantillons cumulés<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>La valeur correspond à la somme du nombre d’échantillons de chaque dataset.</p>
+<p>Elle ne correspond pas au nombre d’échantillons uniques. Si les mêmes échantillons existent dans plusieurs datasets, ils sont comptés plusieurs fois.</p>
+<p>Exemple :</p>
+<pre tabindex="0"><code class="language-text">COI : 100 échantillons
+16S : 100 mêmes échantillons
+Total affiché : 200
+</code></pre>
+<h2 id="section-92">92. Reads cumulés<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>La valeur correspond à la somme des abondances de tous les datasets.</p>
+<p>Elle n’est pertinente que si les datasets contiennent des valeurs comparables. Additionner des comptes bruts, des proportions et des données CLR n’a pas de sens commun.</p>
+<h2 id="section-93">93. Sparsité moyenne du projet<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>La sparsité moyenne est la moyenne simple des sparsités des datasets.</p>
+<p>Chaque dataset possède le même poids, quelle que soit sa taille. Un petit dataset de 10 × 10 et un grand dataset de 50 000 × 500 ont le même poids dans cette moyenne.</p>
+<h2 id="section-94">94. Tableau récapitulatif du projet<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>Le tableau contient notamment :</p>
+<ul>
+<li>Dataset ;</li>
+<li>ASV ;</li>
+<li>échantillons ;</li>
+<li>reads totaux ;</li>
+<li>moyenne et médiane des reads ;</li>
+<li>richesse moyenne ;</li>
+<li>sparsité ;</li>
+<li>complétude taxonomique ;</li>
+<li>valeurs manquantes des métadonnées ;</li>
+<li>présence des composants ;</li>
+<li>présence de logs ;</li>
+<li>nombre d’ASV supprimées ;</li>
+<li>nombre d’échantillons supprimés ;</li>
+<li>statut de sélection pour les graphiques.</li>
+</ul>
+<h2 id="section-95">95. Datasets à comparer<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>Le sélecteur multiple définit les datasets inclus dans les graphiques comparatifs.</p>
+<p>Par défaut, tous les datasets sont sélectionnés, sauf si une sélection précédente a été restaurée depuis l’état d’interface du projet.</p>
+<p>La sélection ne modifie pas le registre, ne change pas le dataset actif et ne filtre pas les objets. Elle agit uniquement sur les graphiques de comparaison.</p>
+<h2 id="section-96">96. Dataset de référence<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>Le dataset de référence est utilisé uniquement dans le graphique <strong>Écart vs référence</strong>.</p>
+<p>Il n’est pas utilisé dans la heatmap, le dotplot, les barplots absolus ou la comparaison de filtration.</p>
+<h3 id="section-96-1">96.1. Référence hors sélection<a aria-label="Permalink" class="heading-anchor" href="#section-96-1">#</a></h3>
+<p>Le sélecteur peut proposer un dataset qui n’est pas inclus dans les datasets comparés.</p>
+<p>Dans ce cas, le graphique utilise silencieusement le premier dataset de la sélection comme référence de repli.</p>
+<p>Pour éviter toute ambiguïté, inclure toujours le dataset de référence dans la sélection.</p>
+<h2 id="section-97">97. Métrique clé<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>Les métriques disponibles sont :</p>
+<ul>
+<li>ASV ;</li>
+<li>échantillons ;</li>
+<li>reads ;</li>
+<li>richesse moyenne ;</li>
+<li>sparsité.</li>
+</ul>
+<p>Elle influence le texte de lecture synthétique et le graphique Écart vs référence.</p>
+<h2 id="section-98">98. Lecture synthétique du projet<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>Le texte identifie le dataset possédant la valeur la plus élevée pour la métrique choisie.</p>
+<p>Une valeur plus élevée ne signifie pas nécessairement une meilleure qualité.</p>
+<ul>
+<li><strong>Plus de reads</strong> peut refléter une meilleure profondeur ou un déséquilibre de séquençage.</li>
+<li><strong>Plus d’ASV</strong> peut refléter une diversité supérieure, du bruit ou une méthode différente.</li>
+<li><strong>Plus de sparsité</strong> signifie davantage de zéros, ce qui n’est pas nécessairement souhaitable.</li>
+</ul>
+<h2 id="section-99">99. Heatmap synthétique<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>La heatmap compare :</p>
+<ul>
+<li>ASV ;</li>
+<li>échantillons ;</li>
+<li>reads ;</li>
+<li>richesse moyenne ;</li>
+<li>sparsité.</li>
+</ul>
+<h3 id="section-99-1">99.1. Normalisation<a aria-label="Permalink" class="heading-anchor" href="#section-99-1">#</a></h3>
+<p>Chaque métrique est mise séparément à l’échelle entre 0 et 1 :</p>
+<pre tabindex="0"><code class="language-text">Valeur normalisée =
+valeur - minimum
+÷ maximum - minimum
+</code></pre>
+<h3 id="section-99-2">99.2. Valeurs identiques<a aria-label="Permalink" class="heading-anchor" href="#section-99-2">#</a></h3>
+<p>Si tous les datasets ont la même valeur pour une métrique, la valeur normalisée est fixée à 0,5.</p>
+<h3 id="section-99-3">99.3. Interprétation<a aria-label="Permalink" class="heading-anchor" href="#section-99-3">#</a></h3>
+<p>La couleur indique la position relative d’un dataset pour une métrique.</p>
+<p>Elle ne permet pas de comparer directement une valeur de reads, une valeur de sparsité et un nombre d’échantillons. Les unités sont différentes et ont été normalisées indépendamment.</p>
+<p>Les valeurs brutes restent disponibles dans l’infobulle.</p>
+<h2 id="section-100">100. Dotplot comparatif<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>Le dotplot utilise la même normalisation 0–1.</p>
+<p>Chaque point représente un dataset, une métrique et sa position relative.</p>
+<p>Il est utile pour voir rapidement le profil général de chaque objet. Il ne constitue pas un score global, une analyse multivariée ou un classement de qualité.</p>
+<h2 id="section-101">101. Écart versus référence<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<p>Pour la métrique sélectionnée :</p>
+<pre tabindex="0"><code class="language-text">Écart (%) =
+valeur du dataset - valeur de référence
+÷ valeur de référence
+× 100
+</code></pre>
+<p>Le dataset de référence n’est pas affiché comme barre, puisqu’il possède par définition un écart nul.</p>
+<h3 id="section-101-1">101.1. Référence nulle<a aria-label="Permalink" class="heading-anchor" href="#section-101-1">#</a></h3>
+<p>Le graphique n’est pas produit si la valeur de référence est nulle ou manquante.</p>
+<h3 id="section-101-2">101.2. Un seul dataset<a aria-label="Permalink" class="heading-anchor" href="#section-101-2">#</a></h3>
+<p>Il faut au moins un dataset supplémentaire en plus de la référence.</p>
+<h3 id="section-101-3">101.3. Interprétation selon la métrique<a aria-label="Permalink" class="heading-anchor" href="#section-101-3">#</a></h3>
+<p>Un écart positif signifie plus d’ASV, d’échantillons, de reads, de richesse ou de sparsité selon la métrique choisie.</p>
+<p>Il ne signifie pas toujours une amélioration.</p>
+<h2 id="section-102">102. Comparaison de filtration<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>Le graphique affiche le nombre d’ASV supprimées et le nombre d’échantillons supprimés, à partir de <code>filtration_log</code>.</p>
+<h3 id="section-102-1">102.1. Limite importante<a aria-label="Permalink" class="heading-anchor" href="#section-102-1">#</a></h3>
+<p>Les nombres sont absolus. Ils ne sont pas divisés par le nombre initial d’ASV, le nombre initial d’échantillons, le volume de reads ou la taille du dataset.</p>
+<p>Supprimer 1 000 ASV dans un dataset de 100 000 ASV n’est pas équivalent à supprimer 1 000 ASV dans un dataset de 2 000 ASV.</p>
+<h3 id="section-102-2">102.2. Absence de log<a aria-label="Permalink" class="heading-anchor" href="#section-102-2">#</a></h3>
+<p>Un dataset sans log apparaît comme valeur manquante. L’absence de log ne signifie pas qu’aucune filtration n’a été réalisée.</p>
+<h2 id="section-103">103. Barplots comparatifs<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>La vue Projet contient des barplots absolus pour :</p>
+<ul>
+<li>nombre d’échantillons ;</li>
+<li>nombre d’ASV ;</li>
+<li>reads totaux ;</li>
+<li>richesse moyenne ;</li>
+<li>sparsité.</li>
+</ul>
+<p>Ces graphiques ne réalisent aucune normalisation ni aucun test.</p>
+<h2 id="section-104">104. Comparabilité des datasets<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>Deux datasets ne sont pas nécessairement comparables simplement parce qu’ils sont chargés dans le même projet.</p>
+<p>Avant d’interpréter les graphiques, vérifier :</p>
+<ul>
+<li>même technologie ;</li>
+<li>même marqueur ;</li>
+<li>même région ;</li>
+<li>même pipeline ;</li>
+<li>mêmes filtres ;</li>
+<li>même base taxonomique ;</li>
+<li>mêmes échantillons ;</li>
+<li>même nature des abondances ;</li>
+<li>même niveau de transformation ;</li>
+<li>même définition des unités taxonomiques.</li>
+</ul>
+<h2 id="section-105">105. Comparaison de marqueurs différents<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>Comparer COI, 16S et ITS peut être utile pour décrire leurs tailles respectives.</p>
+<p>En revanche, il ne faut pas interpréter directement le nombre d’ASV, la richesse, le nombre de reads ou la sparsité comme des mesures biologiques équivalentes entre marqueurs.</p>
+<p>Chaque marqueur possède une résolution, des amorces, des bases, des biais et des groupes biologiques différents.</p>
+<h2 id="section-106">106. Comparaison avant et après filtration<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>La vue Projet est utile pour comparer un dataset brut à un dataset filtré.</p>
+<p>Il faut néanmoins vérifier que le dataset filtré provient réellement du brut, que les mêmes échantillons sont comparés, que les abondances n’ont pas été transformées, que le log est présent et que le parent n’a pas été renommé ou supprimé.</p>
+<h2 id="section-107">107. Performance<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>Description réalise plusieurs calculs en mémoire.</p>
+<p>Les opérations potentiellement coûteuses sont :</p>
+<ul>
+<li>somme de grandes matrices ;</li>
+<li>calcul des métriques pour tous les datasets ;</li>
+<li>conversion complète des tables ;</li>
+<li>affichage d’une OTU table très large ;</li>
+<li>calcul des séquences ;</li>
+<li>raréfaction ;</li>
+<li>création des graphiques Plotly ;</li>
+<li>comparaison d’un grand nombre de datasets.</li>
+</ul>
+<h3 id="section-107-1">107.1. Initialisation paresseuse<a aria-label="Permalink" class="heading-anchor" href="#section-107-1">#</a></h3>
+<p>Le module est initialisé lorsque l’onglet Description est ouvert. Le premier affichage peut donc être plus lent.</p>
+<h3 id="section-107-2">107.2. Tables volumineuses<a aria-label="Permalink" class="heading-anchor" href="#section-107-2">#</a></h3>
+<p>Le défilement différé améliore l’affichage, mais la table complète est préparée en mémoire côté R.</p>
+<h3 id="section-107-3">107.3. Raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-107-3">#</a></h3>
+<p>Afficher toutes les courbes de centaines d’échantillons peut rendre le navigateur lent. Utiliser Top reads, Bottom reads ou Outliers pour limiter l’affichage.</p>
+<h2 id="section-108">108. Résolution des problèmes<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<h3 id="section-108-1">108.1. Aucun dataset n’apparaît<a aria-label="Permalink" class="heading-anchor" href="#section-108-1">#</a></h3>
+<p>Causes possibles : aucun dataset chargé, mauvais projet ouvert, import échoué ou session restaurée sans registre.</p>
+<p>Correction : utiliser Input data, OpenMetaBar ou Datasets.</p>
+<h3 id="section-108-2">108.2. Le dataset affiché change dans les autres onglets<a aria-label="Permalink" class="heading-anchor" href="#section-108-2">#</a></h3>
+<p>Cause : le sélecteur Description est synchronisé avec le dataset actif global.</p>
+<p>Correction : ce comportement est normal. Utiliser une sélection locale dans les modules qui le permettent.</p>
+<h3 id="section-108-3">108.3. Le projet est indiqué comme non sauvegardé après une simple consultation<a aria-label="Permalink" class="heading-anchor" href="#section-108-3">#</a></h3>
+<p>Cause possible : le dataset actif a été changé dans Description.</p>
+<p>Correction : sauvegarder le projet si ce choix doit être conservé.</p>
+<h3 id="section-108-4">108.4. Les valeurs affichées comme reads sont décimales<a aria-label="Permalink" class="heading-anchor" href="#section-108-4">#</a></h3>
+<p>Cause : l’OTU table contient probablement des valeurs transformées ou normalisées.</p>
+<p>Conséquence : les métriques de profondeur et la raréfaction ne doivent pas être interprétées comme des comptes bruts.</p>
+<h3 id="section-108-5">108.5. La richesse semble incohérente<a aria-label="Permalink" class="heading-anchor" href="#section-108-5">#</a></h3>
+<p>Causes possibles : abondances transformées, valeurs négatives, taxons non supprimés, différence de profondeur, zéros structuraux ou mauvaise orientation de l’objet.</p>
+<p>La richesse compte uniquement les valeurs strictement supérieures à zéro.</p>
+<h3 id="section-108-6">108.6. La sparsité semble trop faible<a aria-label="Permalink" class="heading-anchor" href="#section-108-6">#</a></h3>
+<p>Cause possible : la matrice contient des <code>NA</code>, qui ne sont pas comptés comme zéros mais restent dans le dénominateur.</p>
+<h3 id="section-108-7">108.7. Aucune variable de groupement n’est proposée<a aria-label="Permalink" class="heading-anchor" href="#section-108-7">#</a></h3>
+<p>Causes possibles : absence de metadata, une seule modalité, plus de quinze modalités, variable de date ou valeurs uniquement manquantes.</p>
+<p>Correction : vérifier la metadata dans Data Edition.</p>
+<h3 id="section-108-8">108.8. Une variable numérique apparaît comme groupe<a aria-label="Permalink" class="heading-anchor" href="#section-108-8">#</a></h3>
+<p>Cause : elle contient entre deux et quinze valeurs distinctes.</p>
+<p>Correction : ne pas la sélectionner si une interprétation catégorielle n’est pas pertinente.</p>
+<h3 id="section-108-9">108.9. Les valeurs manquantes apparaissent comme un groupe <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-108-9">#</a></h3>
+<p>Cause : Description convertit les valeurs manquantes en étiquette de groupe.</p>
+<p>Correction : nettoyer ou compléter la metadata si nécessaire.</p>
+<h3 id="section-108-10">108.10. Le bouton Voir les logs ne semble rien faire<a aria-label="Permalink" class="heading-anchor" href="#section-108-10">#</a></h3>
+<p>Cause : il sélectionne le sous-onglet Logs mais ne déplie pas automatiquement la box.</p>
+<p>Correction : descendre vers Tables et logs et ouvrir la section.</p>
+<h3 id="section-108-11">108.11. Les séquences sont indiquées absentes<a aria-label="Permalink" class="heading-anchor" href="#section-108-11">#</a></h3>
+<p>Causes possibles : aucune <code>refseq</code>, package <code>Biostrings</code> indisponible ou objet de séquences invalide.</p>
+<h3 id="section-108-12">108.12. Le GC semble étrange<a aria-label="Permalink" class="heading-anchor" href="#section-108-12">#</a></h3>
+<p>Causes possibles : bases ambiguës, séquences très courtes, plusieurs marqueurs, séquences non nucléotidiques ou nombreuses bases non ACGT.</p>
+<h3 id="section-108-13">108.13. Les noms de rang taxonomique ont changé<a aria-label="Permalink" class="heading-anchor" href="#section-108-13">#</a></h3>
+<p>Cause : Description rend les noms vides ou dupliqués uniques pour l’affichage. L’objet original n’est pas modifié.</p>
+<h3 id="section-108-14">108.14. Une colonne <code>SampleID_meta</code> apparaît<a aria-label="Permalink" class="heading-anchor" href="#section-108-14">#</a></h3>
+<p>Cause : la metadata contenait déjà une colonne nommée <code>SampleID</code>. Description réserve <code>SampleID</code> aux rownames.</p>
+<h3 id="section-108-15">108.15. Les courbes de raréfaction ne se calculent pas<a aria-label="Permalink" class="heading-anchor" href="#section-108-15">#</a></h3>
+<p>Causes possibles : <code>vegan</code> absent, OTU table absente, moins de deux échantillons positifs, moins de deux échantillons avec 50 reads, données non adaptées ou erreur dans les comptes.</p>
+<h3 id="section-108-16">108.16. Les courbes de raréfaction correspondent à l’ancien dataset<a aria-label="Permalink" class="heading-anchor" href="#section-108-16">#</a></h3>
+<p>Cause : le calcul n’a pas été relancé après un changement de dataset.</p>
+<p>Correction : cliquer de nouveau sur <strong>Calculer les courbes</strong>.</p>
+<h3 id="section-108-17">108.17. Le nombre maximal de courbes n’est pas respecté<a aria-label="Permalink" class="heading-anchor" href="#section-108-17">#</a></h3>
+<p>Cause : le mode Tous les échantillons ignore actuellement cette limite.</p>
+<p>Correction : choisir Top reads, Bottom reads ou Outliers.</p>
+<h3 id="section-108-18">108.18. La raréfaction agrégée d’un grand groupe est beaucoup plus haute<a aria-label="Permalink" class="heading-anchor" href="#section-108-18">#</a></h3>
+<p>Cause : les reads sont additionnés entre tous les échantillons du groupe.</p>
+<p>Conséquence : ce n’est pas une moyenne par échantillon.</p>
+<h3 id="section-108-19">108.19. Aucun outlier n’est détecté<a aria-label="Permalink" class="heading-anchor" href="#section-108-19">#</a></h3>
+<p>Causes possibles : homogénéité réelle, moins de quatre échantillons, IQR nul, valeurs manquantes ou seuil global peu adapté aux groupes.</p>
+<h3 id="section-108-20">108.20. Un échantillon biologiquement normal est signalé<a aria-label="Permalink" class="heading-anchor" href="#section-108-20">#</a></h3>
+<p>Cause possible : la règle est appliquée globalement et non au sein de son groupe.</p>
+<p>Correction : interpréter avec la metadata et le contexte expérimental.</p>
+<h3 id="section-108-21">108.21. Un échantillon très atypique n’est pas signalé<a aria-label="Permalink" class="heading-anchor" href="#section-108-21">#</a></h3>
+<p>Causes possibles : la métrique concernée n’est pas utilisée, IQR nul, peu d’échantillons, outlier sur la part de zéros uniquement ou transformation des données.</p>
+<h3 id="section-108-22">108.22. Le groupe a 30 % d’outliers et apparaît en rouge<a aria-label="Permalink" class="heading-anchor" href="#section-108-22">#</a></h3>
+<p>Cause : la couleur utilise un seuil visuel interne de 30 %.</p>
+<p>Conséquence : ce n’est pas une p-value ni une preuve d’effet de groupe.</p>
+<h3 id="section-108-23">108.23. L’export OTU n’a pas l’orientation d’origine<a aria-label="Permalink" class="heading-anchor" href="#section-108-23">#</a></h3>
+<p>Cause : Description exporte toujours les taxons en lignes.</p>
+<h3 id="section-108-24">108.24. L’export CSV ne correspond pas au filtre visuel du tableau<a aria-label="Permalink" class="heading-anchor" href="#section-108-24">#</a></h3>
+<p>Cause : le bouton dédié exporte la table complète.</p>
+<p>Alternative : utiliser le bouton CSV intégré au tableau pour un export lié à l’état de DataTables.</p>
+<h3 id="section-108-25">108.25. Le fichier CSV est vide<a aria-label="Permalink" class="heading-anchor" href="#section-108-25">#</a></h3>
+<p>Cause probable : le composant correspondant est absent.</p>
+<h3 id="section-108-26">108.26. Les logs sont absents<a aria-label="Permalink" class="heading-anchor" href="#section-108-26">#</a></h3>
+<p>Causes possibles : dataset jamais filtré dans BarCodeR, attribut supprimé, objet produit par un autre outil, ancienne version ou log non conservé.</p>
+<h3 id="section-108-27">108.27. La vue Projet compte deux fois les mêmes échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-108-27">#</a></h3>
+<p>Cause : les nombres sont additionnés entre datasets, sans déduplication.</p>
+<h3 id="section-108-28">108.28. La heatmap donne des valeurs similaires malgré des ordres de grandeur différents<a aria-label="Permalink" class="heading-anchor" href="#section-108-28">#</a></h3>
+<p>Cause : chaque métrique est normalisée séparément entre 0 et 1.</p>
+<h3 id="section-108-29">108.29. Toute une colonne de heatmap vaut 0,5<a aria-label="Permalink" class="heading-anchor" href="#section-108-29">#</a></h3>
+<p>Cause : tous les datasets possèdent la même valeur pour cette métrique.</p>
+<h3 id="section-108-30">108.30. Le dataset de référence choisi n’est pas utilisé<a aria-label="Permalink" class="heading-anchor" href="#section-108-30">#</a></h3>
+<p>Cause possible : il n’est pas inclus dans la sélection des datasets à comparer.</p>
+<p>Correction : ajouter le dataset de référence à la sélection.</p>
+<h3 id="section-108-31">108.31. Le graphique d’écart ne fonctionne pas<a aria-label="Permalink" class="heading-anchor" href="#section-108-31">#</a></h3>
+<p>Causes possibles : référence nulle, référence manquante, un seul dataset sélectionné ou métrique absente.</p>
+<h3 id="section-108-32">108.32. La comparaison de filtration semble injuste<a aria-label="Permalink" class="heading-anchor" href="#section-108-32">#</a></h3>
+<p>Cause : elle compare des nombres absolus et non des pourcentages.</p>
+<p>Correction : rapporter les suppressions aux dimensions initiales avant de conclure.</p>
+<h3 id="section-108-33">108.33. La vue Projet est lente<a aria-label="Permalink" class="heading-anchor" href="#section-108-33">#</a></h3>
+<p>Causes possibles : nombreux datasets, matrices volumineuses, nombreuses séquences ou tables très larges.</p>
+<p>Correction : retirer temporairement certains datasets, limiter la sélection comparative, éviter d’ouvrir les grandes tables inutilement ou utiliser des datasets filtrés.</p>
+<h2 id="section-109">109. Checklist à l’ouverture d’un dataset<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nom du dataset sélectionné.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nombre d’échantillons.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le nombre de taxons.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le total des abondances.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la nature brute ou transformée de l’OTU table.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la présence de la taxonomie.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la présence des métadonnées.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la présence des séquences.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la présence des logs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Lire les alertes de sparsité et de profondeur.</li>
+</ul>
+<h2 id="section-110">110. Checklist avant une analyse par groupe<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Choisir une variable de groupement biologiquement pertinente.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier ses modalités.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les valeurs manquantes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les tailles des groupes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier que la variable n’est pas quantitative par erreur.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examiner les profondeurs par groupe.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examiner les richesses par groupe.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examiner les outliers.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ne pas confondre description et test statistique.</li>
+</ul>
+<h2 id="section-111">111. Checklist avant une raréfaction<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier que les abondances sont des comptes bruts.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier qu’elles sont entières et non négatives.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier qu’au moins deux échantillons ont 50 reads.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Choisir le bon dataset.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Choisir le bon groupement.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Cliquer sur Calculer.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Recalculer après tout changement de dataset.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Distinguer courbes individuelles et pools de groupes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ne pas interpréter un plateau comme une validation définitive.</li>
+</ul>
+<h2 id="section-112">112. Checklist avant d’exclure un outlier<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les trois métriques responsables.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la metadata.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier le groupe expérimental.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les contrôles positifs et négatifs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier les logs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la profondeur.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier la dominance taxonomique.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Vérifier si l’écart est biologiquement attendu.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ne pas supprimer depuis Description.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Utiliser Filtration uniquement après justification.</li>
+</ul>
+<h2 id="section-113">113. Checklist avant une comparaison de datasets<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même type d’abondances.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même marqueur ou objectif de comparaison explicite.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même technologie ou biais connus.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même définition des unités.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même niveau de filtration.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Même ensemble d’échantillons ou différences documentées.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Dataset de référence inclus dans la sélection.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Comprendre que les sommes ne sont pas dédupliquées.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Comprendre la normalisation 0–1.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ne pas interpréter « plus élevé » comme « meilleur ».</li>
+</ul>
+<h2 id="section-114">114. Limites actuelles à connaître<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<h3 id="section-114-1">114.1. Les abondances ne sont pas validées comme comptes bruts<a aria-label="Permalink" class="heading-anchor" href="#section-114-1">#</a></h3>
+<p>Toutes les métriques peuvent être trompeuses avec des données transformées.</p>
+<h3 id="section-114-2">114.2. Le nombre d’ASV est un terme générique<a aria-label="Permalink" class="heading-anchor" href="#section-114-2">#</a></h3>
+<p>Le module ne connaît pas la méthode de génération des unités.</p>
+<h3 id="section-114-3">114.3. L’arbre n’est pas résumé<a aria-label="Permalink" class="heading-anchor" href="#section-114-3">#</a></h3>
+<p>La présence et la cohérence du <code>phy_tree</code> ne sont pas affichées.</p>
+<h3 id="section-114-4">114.4. Les séquences ne sont pas alignées explicitement aux taxons<a aria-label="Permalink" class="heading-anchor" href="#section-114-4">#</a></h3>
+<p>Le module décrit les séquences présentes sans contrôle exhaustif de correspondance.</p>
+<h3 id="section-114-5">114.5. La sparsité et la complétude utilisent des résumés simples<a aria-label="Permalink" class="heading-anchor" href="#section-114-5">#</a></h3>
+<p>Elles peuvent masquer des hétérogénéités importantes.</p>
+<h3 id="section-114-6">114.6. Les diagnostics utilisent des seuils internes<a aria-label="Permalink" class="heading-anchor" href="#section-114-6">#</a></h3>
+<p>Les seuils ne sont pas des standards universels.</p>
+<h3 id="section-114-7">114.7. Les outliers sont détectés globalement<a aria-label="Permalink" class="heading-anchor" href="#section-114-7">#</a></h3>
+<p>Ils ne sont pas calculés à l’intérieur des groupes.</p>
+<h3 id="section-114-8">114.8. La part de zéros n’est pas un signal d’outlier<a aria-label="Permalink" class="heading-anchor" href="#section-114-8">#</a></h3>
+<p>Elle est affichée, mais n’entre pas dans le statut.</p>
+<h3 id="section-114-9">114.9. La raréfaction doit être relancée manuellement<a aria-label="Permalink" class="heading-anchor" href="#section-114-9">#</a></h3>
+<p>Un changement de dataset ne réinitialise pas automatiquement le résultat.</p>
+<h3 id="section-114-10">114.10. La limite de courbes n’agit pas sur le mode Tous<a aria-label="Permalink" class="heading-anchor" href="#section-114-10">#</a></h3>
+<p>Un grand dataset peut produire un graphique très lourd.</p>
+<h3 id="section-114-11">114.11. Les courbes agrégées utilisent des pools<a aria-label="Permalink" class="heading-anchor" href="#section-114-11">#</a></h3>
+<p>Elles ne représentent pas des moyennes d’échantillons.</p>
+<h3 id="section-114-12">114.12. Les tables sont préparées intégralement en mémoire<a aria-label="Permalink" class="heading-anchor" href="#section-114-12">#</a></h3>
+<p>L’affichage de très grands objets peut être coûteux.</p>
+<h3 id="section-114-13">114.13. Les exports Description réorientent certaines tables<a aria-label="Permalink" class="heading-anchor" href="#section-114-13">#</a></h3>
+<p>L’OTU table est exportée avec les taxons en lignes.</p>
+<h3 id="section-114-14">114.14. Les noms de colonnes peuvent être ajustés pour l’affichage<a aria-label="Permalink" class="heading-anchor" href="#section-114-14">#</a></h3>
+<p>Le phyloseq original reste inchangé.</p>
+<h3 id="section-114-15">114.15. La vue Projet additionne les dimensions<a aria-label="Permalink" class="heading-anchor" href="#section-114-15">#</a></h3>
+<p>Elle ne déduplique ni les échantillons ni les taxons.</p>
+<h3 id="section-114-16">114.16. La heatmap compare des positions relatives<a aria-label="Permalink" class="heading-anchor" href="#section-114-16">#</a></h3>
+<p>Elle ne compare pas des unités communes.</p>
+<h3 id="section-114-17">114.17. La comparaison de filtration utilise des nombres absolus<a aria-label="Permalink" class="heading-anchor" href="#section-114-17">#</a></h3>
+<p>Elle ne corrige pas pour la taille initiale.</p>
+<h3 id="section-114-18">114.18. Aucun test statistique n’est réalisé<a aria-label="Permalink" class="heading-anchor" href="#section-114-18">#</a></h3>
+<p>Les différences visualisées restent descriptives.</p>
+<h2 id="section-115">115. Parcours recommandé<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<ol>
+<li>Ouvrir Description après l’import.</li>
+<li>Vérifier le dataset actif.</li>
+<li>Examiner les dimensions et les composants.</li>
+<li>Lire les alertes de structure.</li>
+<li>Vérifier la nature des abondances.</li>
+<li>Examiner reads versus richesse.</li>
+<li>Examiner les distributions d’abondance.</li>
+<li>Examiner la richesse.</li>
+<li>Examiner les séquences si disponibles.</li>
+<li>Choisir une variable de groupement pertinente.</li>
+<li>Inspecter les outliers.</li>
+<li>Lancer la raréfaction si les données sont des comptes.</li>
+<li>Examiner les tables.</li>
+<li>Examiner la complétude.</li>
+<li>Examiner les logs.</li>
+<li>Comparer les datasets dans la vue Projet.</li>
+<li>Passer ensuite vers Data Edition ou Filtration si une action est nécessaire.</li>
+</ol>
+<h2 id="section-116">116. Sources internes vérifiées<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>Cette documentation a été reconstruite à partir du code actuel de BarCodeR :</p>
+<ol>
+<li><code>modules/description/mod_description_ui.R</code> : structure des vues Dataset et Projet, contrôles, graphiques, tables et exports.</li>
+<li><code>modules/description/mod_description_server.R</code> : helpers d’affichage, règle IQR, tableaux interactifs et orientation de l’OTU table.</li>
+<li><code>modules/description/mod_description_server.R</code> : extraction des métadonnées, séquences, métriques par ASV et métriques par échantillon.</li>
+<li><code>modules/description/mod_description_server.R</code> : complétude, statistiques globales et messages descriptifs.</li>
+<li><code>modules/description/mod_description_server.R</code> : réactifs, sélection des datasets, synchronisation du dataset actif et variables de groupement.</li>
+<li><code>modules/description/mod_description_server.R</code> : provenance OpenMetaBar.</li>
+<li><code>modules/description/mod_description_server.R</code> : en-tête, métriques principales, diagnostics et fiche d’échantillon.</li>
+<li><code>modules/description/mod_description_server.R</code> : graphiques d’abondance, richesse et séquences.</li>
+<li><code>modules/description/mod_description_server.R</code> : calcul et affichage des courbes de raréfaction.</li>
+<li><code>modules/description/mod_description_server.R</code> : détection, scoring, contextualisation et tableaux des outliers.</li>
+<li><code>modules/description/mod_description_server.R</code> : affichage, complétude et export des tables et logs.</li>
+<li><code>modules/description/mod_description_server.R</code> : résumé du projet, normalisation des métriques, référence, filtration et comparaisons.</li>
+<li><code>modules/_shared/_active_dataset_sync.R</code> : synchronisation entre le sélecteur Description et le dataset actif global.</li>
+<li><code>modules/_shared/_ui_state.R</code> : restauration de certains paramètres d’interface.</li>
+<li><code>app.R</code> : initialisation du module Description avec <code>datasets()</code>, <code>active_ds()</code> et la langue active.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Présentation générale</a><a class="toc-l3" href="#vue-dataset">Vue Dataset</a><a class="toc-l3" href="#vue-projet">Vue Projet</a><a class="toc-l2" href="#section-2">2. Rôle de l’onglet</a><a class="toc-l2" href="#section-3">3. Effet de l’onglet sur les données</a><a class="toc-l3" href="#section-3-1">3.1. Exception : dataset actif</a><a class="toc-l2" href="#section-4">4. Conditions nécessaires</a><a class="toc-l2" href="#section-5">5. Hypothèse importante sur les abondances</a><a class="toc-l2" href="#section-6">6. Organisation de l’interface</a><a class="toc-l3" href="#vue-dataset-2">Vue Dataset</a><a class="toc-l3" href="#vue-projet-2">Vue Projet</a><a class="toc-l2" href="#section-7">7. Sélectionner le dataset</a><a class="toc-l3" href="#section-7-1">7.1. Synchronisation globale</a><a class="toc-l3" href="#section-7-2">7.2. Valeur de repli</a><a class="toc-l3" href="#section-7-3">7.3. Changement de dataset</a><a class="toc-l2" href="#section-8">8. Variable de groupement</a><a class="toc-l3" href="#section-8-1">8.1. Variables proposées</a><a class="toc-l3" href="#section-8-2">8.2. Colonnes numériques</a><a class="toc-l3" href="#section-8-3">8.3. Valeurs manquantes</a><a class="toc-l3" href="#section-8-4">8.4. Aucun groupement</a><a class="toc-l3" href="#section-8-5">8.5. Effets du groupement</a><a class="toc-l2" href="#section-9">9. Le groupement ne change pas la détection des outliers</a><a class="toc-l2" href="#section-10">10. Bouton « Voir les logs »</a><a class="toc-l2" href="#section-11">11. En-tête du dataset</a><a class="toc-l2" href="#section-12">12. Badges de composants</a><a class="toc-l3" href="#section-12-1">12.1. OTU</a><a class="toc-l3" href="#section-12-2">12.2. Taxonomie</a><a class="toc-l3" href="#section-12-3">12.3. Métadonnées</a><a class="toc-l3" href="#section-12-4">12.4. RefSeq</a><a class="toc-l3" href="#section-12-5">12.5. Logs</a><a class="toc-l3" href="#section-12-6">12.6. Arbre phylogénétique</a><a class="toc-l2" href="#section-13">13. Orientation de l’OTU table</a><a class="toc-l2" href="#section-14">14. Métrique : nombre de taxons</a><a class="toc-l2" href="#section-15">15. Métrique : nombre d’échantillons</a><a class="toc-l2" href="#section-16">16. Métrique : total des reads</a><a class="toc-l2" href="#section-17">17. Métrique : reads par échantillon</a><a class="toc-l2" href="#section-18">18. Métrique : richesse observée</a><a class="toc-l2" href="#section-19">19. Métrique : dominance du taxon majoritaire</a><a class="toc-l2" href="#section-20">20. Métrique : part de zéros par échantillon</a><a class="toc-l2" href="#section-21">21. Métrique : sparsité globale</a><a class="toc-l3" href="#section-21-1">21.1. Interprétation</a><a class="toc-l3" href="#section-21-2">21.2. Seuils d’affichage utilisés</a><a class="toc-l3" href="#section-21-3">21.3. Présence de NA</a><a class="toc-l2" href="#section-22">22. Variabilité de la profondeur</a><a class="toc-l2" href="#section-23">23. Complétude taxonomique</a><a class="toc-l3" href="#section-23-1">23.1. Conséquence</a><a class="toc-l3" href="#section-23-2">23.2. Chaînes contenant des espaces</a><a class="toc-l2" href="#section-24">24. Valeurs manquantes des métadonnées</a><a class="toc-l3" href="#section-24-1">24.1. Valeur "NA"</a><a class="toc-l3" href="#section-24-2">24.2. Espaces</a><a class="toc-l3" href="#section-24-3">24.3. Type affiché</a><a class="toc-l2" href="#section-25">25. Longueur des séquences</a><a class="toc-l3" href="#section-25-1">25.1. Interprétation</a><a class="toc-l2" href="#section-26">26. Pourcentage de GC</a><a class="toc-l2" href="#section-27">27. Noms des séquences</a><a class="toc-l2" href="#section-28">28. Message d’interprétation automatique</a><a class="toc-l2" href="#section-29">29. Lecture rapide du dataset</a><a class="toc-l3" href="#section-29-1">29.1. Structure</a><a class="toc-l3" href="#section-29-2">29.2. Contenu disponible</a><a class="toc-l3" href="#section-29-3">29.3. Séquences</a><a class="toc-l3" href="#section-29-4">29.4. Filtration</a><a class="toc-l2" href="#section-30">30. Diagnostics automatiques</a><a class="toc-l2" href="#section-31">31. Provenance OpenMetaBar</a><a class="toc-l3" href="#section-31-1">31.1. Résumé du run</a><a class="toc-l3" href="#section-31-2">31.2. Démultiplexage</a><a class="toc-l3" href="#section-31-3">31.3. Filtres</a><a class="toc-l3" href="#section-31-4">31.4. LotuS3</a><a class="toc-l3" href="#section-31-5">31.5. LCA</a><a class="toc-l3" href="#section-31-6">31.6. IDMABIO</a><a class="toc-l3" href="#section-31-7">31.7. NextITS</a><a class="toc-l3" href="#section-31-8">31.8. Environnement cluster</a><a class="toc-l3" href="#section-31-9">31.9. Fichiers FASTQ</a><a class="toc-l3" href="#section-31-10">31.10. Renommage des échantillons</a><a class="toc-l3" href="#section-31-11">31.11. Absence de provenance</a><a class="toc-l2" href="#section-32">32. Visualisations interactives — Vue d’ensemble</a><a class="toc-l2" href="#section-33">33. Reads versus richesse</a><a class="toc-l3" href="#section-33-1">33.1. Interprétation</a><a class="toc-l3" href="#section-33-2">33.2. Limite</a><a class="toc-l3" href="#section-33-3">33.3. Interaction</a><a class="toc-l2" href="#section-34">34. Fiche d’échantillon</a><a class="toc-l3" href="#section-34-1">34.1. Échantillon initial</a><a class="toc-l3" href="#section-34-2">34.2. Métadonnées affichées</a><a class="toc-l2" href="#section-35">35. Top 15 des échantillons</a><a class="toc-l3" href="#section-35-1">35.1. Limite</a><a class="toc-l2" href="#section-36">36. Top 15 des taxons</a><a class="toc-l3" href="#section-36-1">36.1. Prévalence</a><a class="toc-l3" href="#section-36-2">36.2. Limite</a><a class="toc-l2" href="#section-37">37. Contribution cumulée des échantillons</a><a class="toc-l2" href="#section-38">38. Contribution cumulée des taxons</a><a class="toc-l2" href="#section-39">39. Onglet Abondance</a><a class="toc-l2" href="#section-40">40. Histogramme des reads</a><a class="toc-l2" href="#section-41">41. Reads par groupe</a><a class="toc-l3" href="#section-41-1">41.1. Absence de groupement</a><a class="toc-l3" href="#section-41-2">41.2. Interprétation</a><a class="toc-l2" href="#section-42">42. Contribution cumulée des reads par groupe</a><a class="toc-l3" href="#section-42-1">42.1. Conséquence</a><a class="toc-l2" href="#section-43">43. Onglet Richesse</a><a class="toc-l2" href="#section-44">44. Histogramme de richesse</a><a class="toc-l2" href="#section-45">45. Richesse par groupe</a><a class="toc-l2" href="#section-46">46. Richesse versus dominance</a><a class="toc-l3" href="#section-46-1">46.1. Ce graphique n’est pas un indice d’équitabilité</a><a class="toc-l2" href="#section-47">47. Onglet Séquences</a><a class="toc-l2" href="#section-48">48. Relation longueur versus GC</a><a class="toc-l2" href="#section-49">49. Courbes de raréfaction</a><a class="toc-l2" href="#section-50">50. Méthode de raréfaction utilisée</a><a class="toc-l2" href="#section-51">51. Conditions du calcul de raréfaction</a><a class="toc-l3" href="#section-51-1">51.1. Seuil de 50 reads</a><a class="toc-l2" href="#section-52">52. Nature attendue des données pour la raréfaction</a><a class="toc-l2" href="#section-53">53. Profondeurs calculées</a><a class="toc-l2" href="#section-54">54. Courbes individuelles</a><a class="toc-l2" href="#section-55">55. Sous-sélection des courbes individuelles</a><a class="toc-l3" href="#section-55-1">55.1. Tous les échantillons</a><a class="toc-l3" href="#section-55-2">55.2. Top reads</a><a class="toc-l3" href="#section-55-3">55.3. Bottom reads</a><a class="toc-l3" href="#section-55-4">55.4. Outliers</a><a class="toc-l2" href="#section-56">56. Nombre maximal de courbes</a><a class="toc-l2" href="#section-57">57. Courbes agrégées par groupe</a><a class="toc-l3" href="#section-57-1">57.1. Ce que représente la courbe</a><a class="toc-l3" href="#section-57-2">57.2. Effet de la taille des groupes</a><a class="toc-l3" href="#section-57-3">57.3. Sans groupement</a><a class="toc-l2" href="#section-58">58. Afficher la légende</a><a class="toc-l2" href="#section-59">59. Recalcul nécessaire</a><a class="toc-l3" href="#section-59-1">59.1. Changement de groupement</a><a class="toc-l3" href="#section-59-2">59.2. Risque de résultat ancien</a><a class="toc-l2" href="#section-60">60. Interprétation des courbes de raréfaction</a><a class="toc-l2" href="#section-61">61. Limites de la raréfaction affichée</a><a class="toc-l2" href="#section-62">62. Détection des outliers</a><a class="toc-l2" href="#section-63">63. Règle IQR</a><a class="toc-l2" href="#section-64">64. Outliers hauts et bas</a><a class="toc-l2" href="#section-65">65. Conditions minimales de la règle IQR</a><a class="toc-l2" href="#section-66">66. Statut d’un échantillon</a><a class="toc-l2" href="#section-67">67. Nombre de signaux</a><a class="toc-l2" href="#section-68">68. Score d’outlier</a><a class="toc-l3" href="#section-68-1">68.1. Interprétation</a><a class="toc-l2" href="#section-69">69. Ordre de priorité des outliers</a><a class="toc-l2" href="#section-70">70. Résumé des outliers</a><a class="toc-l2" href="#section-71">71. Concentration des outliers par groupe</a><a class="toc-l3" href="#section-71-1">71.1. Seuils de couleur</a><a class="toc-l2" href="#section-72">72. Détection globale et lecture par groupe</a><a class="toc-l2" href="#section-73">73. Tableau des échantillons à surveiller</a><a class="toc-l2" href="#section-74">74. Tableau complet des échantillons</a><a class="toc-l2" href="#section-75">75. Ce qu’un outlier ne signifie pas</a><a class="toc-l2" href="#section-76">76. Tables et logs</a><a class="toc-l2" href="#section-77">77. Résumé des tables</a><a class="toc-l2" href="#section-78">78. OTU table affichée</a><a class="toc-l3" href="#section-78-1">78.1. Orientation originale</a><a class="toc-l3" href="#section-78-2">78.2. Contenu</a><a class="toc-l2" href="#section-79">79. Taxonomie affichée</a><a class="toc-l3" href="#section-79-1">79.1. Noms de rangs</a><a class="toc-l2" href="#section-80">80. Métadonnées affichées</a><a class="toc-l2" href="#section-81">81. Fonctions des tableaux interactifs</a><a class="toc-l2" href="#section-82">82. Export CSV dédié</a><a class="toc-l3" href="#section-82-1">82.1. Format</a><a class="toc-l3" href="#section-82-2">82.2. Filtres visuels</a><a class="toc-l3" href="#section-82-3">82.3. Composant absent</a><a class="toc-l2" href="#section-83">83. Complétude taxonomique</a><a class="toc-l2" href="#section-84">84. Complétude des métadonnées</a><a class="toc-l2" href="#section-85">85. Variables groupables</a><a class="toc-l2" href="#section-86">86. Logs de filtration</a><a class="toc-l3" href="#section-86-1">86.1. ASV supprimées</a><a class="toc-l3" href="#section-86-2">86.2. Échantillons supprimés</a><a class="toc-l3" href="#section-86-3">86.3. Absence d’identifiant explicite</a><a class="toc-l2" href="#section-87">87. Export des logs</a><a class="toc-l2" href="#section-88">88. Portée des logs de filtration</a><a class="toc-l2" href="#section-89">89. Vue Projet</a><a class="toc-l2" href="#section-90">90. Résumé global du projet</a><a class="toc-l2" href="#section-91">91. Échantillons cumulés</a><a class="toc-l2" href="#section-92">92. Reads cumulés</a><a class="toc-l2" href="#section-93">93. Sparsité moyenne du projet</a><a class="toc-l2" href="#section-94">94. Tableau récapitulatif du projet</a><a class="toc-l2" href="#section-95">95. Datasets à comparer</a><a class="toc-l2" href="#section-96">96. Dataset de référence</a><a class="toc-l3" href="#section-96-1">96.1. Référence hors sélection</a><a class="toc-l2" href="#section-97">97. Métrique clé</a><a class="toc-l2" href="#section-98">98. Lecture synthétique du projet</a><a class="toc-l2" href="#section-99">99. Heatmap synthétique</a><a class="toc-l3" href="#section-99-1">99.1. Normalisation</a><a class="toc-l3" href="#section-99-2">99.2. Valeurs identiques</a><a class="toc-l3" href="#section-99-3">99.3. Interprétation</a><a class="toc-l2" href="#section-100">100. Dotplot comparatif</a><a class="toc-l2" href="#section-101">101. Écart versus référence</a><a class="toc-l3" href="#section-101-1">101.1. Référence nulle</a><a class="toc-l3" href="#section-101-2">101.2. Un seul dataset</a><a class="toc-l3" href="#section-101-3">101.3. Interprétation selon la métrique</a><a class="toc-l2" href="#section-102">102. Comparaison de filtration</a><a class="toc-l3" href="#section-102-1">102.1. Limite importante</a><a class="toc-l3" href="#section-102-2">102.2. Absence de log</a><a class="toc-l2" href="#section-103">103. Barplots comparatifs</a><a class="toc-l2" href="#section-104">104. Comparabilité des datasets</a><a class="toc-l2" href="#section-105">105. Comparaison de marqueurs différents</a><a class="toc-l2" href="#section-106">106. Comparaison avant et après filtration</a><a class="toc-l2" href="#section-107">107. Performance</a><a class="toc-l3" href="#section-107-1">107.1. Initialisation paresseuse</a><a class="toc-l3" href="#section-107-2">107.2. Tables volumineuses</a><a class="toc-l3" href="#section-107-3">107.3. Raréfaction</a><a class="toc-l2" href="#section-108">108. Résolution des problèmes</a><a class="toc-l3" href="#section-108-1">108.1. Aucun dataset n’apparaît</a><a class="toc-l3" href="#section-108-2">108.2. Le dataset affiché change dans les autres onglets</a><a class="toc-l3" href="#section-108-3">108.3. Le projet est indiqué comme non sauvegardé après une simple consultation</a><a class="toc-l3" href="#section-108-4">108.4. Les valeurs affichées comme reads sont décimales</a><a class="toc-l3" href="#section-108-5">108.5. La richesse semble incohérente</a><a class="toc-l3" href="#section-108-6">108.6. La sparsité semble trop faible</a><a class="toc-l3" href="#section-108-7">108.7. Aucune variable de groupement n’est proposée</a><a class="toc-l3" href="#section-108-8">108.8. Une variable numérique apparaît comme groupe</a><a class="toc-l3" href="#section-108-9">108.9. Les valeurs manquantes apparaissent comme un groupe NA</a><a class="toc-l3" href="#section-108-10">108.10. Le bouton Voir les logs ne semble rien faire</a><a class="toc-l3" href="#section-108-11">108.11. Les séquences sont indiquées absentes</a><a class="toc-l3" href="#section-108-12">108.12. Le GC semble étrange</a><a class="toc-l3" href="#section-108-13">108.13. Les noms de rang taxonomique ont changé</a><a class="toc-l3" href="#section-108-14">108.14. Une colonne SampleID_meta apparaît</a><a class="toc-l3" href="#section-108-15">108.15. Les courbes de raréfaction ne se calculent pas</a><a class="toc-l3" href="#section-108-16">108.16. Les courbes de raréfaction correspondent à l’ancien dataset</a><a class="toc-l3" href="#section-108-17">108.17. Le nombre maximal de courbes n’est pas respecté</a><a class="toc-l3" href="#section-108-18">108.18. La raréfaction agrégée d’un grand groupe est beaucoup plus haute</a><a class="toc-l3" href="#section-108-19">108.19. Aucun outlier n’est détecté</a><a class="toc-l3" href="#section-108-20">108.20. Un échantillon biologiquement normal est signalé</a><a class="toc-l3" href="#section-108-21">108.21. Un échantillon très atypique n’est pas signalé</a><a class="toc-l3" href="#section-108-22">108.22. Le groupe a 30 % d’outliers et apparaît en rouge</a><a class="toc-l3" href="#section-108-23">108.23. L’export OTU n’a pas l’orientation d’origine</a><a class="toc-l3" href="#section-108-24">108.24. L’export CSV ne correspond pas au filtre visuel du tableau</a><a class="toc-l3" href="#section-108-25">108.25. Le fichier CSV est vide</a><a class="toc-l3" href="#section-108-26">108.26. Les logs sont absents</a><a class="toc-l3" href="#section-108-27">108.27. La vue Projet compte deux fois les mêmes échantillons</a><a class="toc-l3" href="#section-108-28">108.28. La heatmap donne des valeurs similaires malgré des ordres de grandeur différents</a><a class="toc-l3" href="#section-108-29">108.29. Toute une colonne de heatmap vaut 0,5</a><a class="toc-l3" href="#section-108-30">108.30. Le dataset de référence choisi n’est pas utilisé</a><a class="toc-l3" href="#section-108-31">108.31. Le graphique d’écart ne fonctionne pas</a><a class="toc-l3" href="#section-108-32">108.32. La comparaison de filtration semble injuste</a><a class="toc-l3" href="#section-108-33">108.33. La vue Projet est lente</a><a class="toc-l2" href="#section-109">109. Checklist à l’ouverture d’un dataset</a><a class="toc-l2" href="#section-110">110. Checklist avant une analyse par groupe</a><a class="toc-l2" href="#section-111">111. Checklist avant une raréfaction</a><a class="toc-l2" href="#section-112">112. Checklist avant d’exclure un outlier</a><a class="toc-l2" href="#section-113">113. Checklist avant une comparaison de datasets</a><a class="toc-l2" href="#section-114">114. Limites actuelles à connaître</a><a class="toc-l3" href="#section-114-1">114.1. Les abondances ne sont pas validées comme comptes bruts</a><a class="toc-l3" href="#section-114-2">114.2. Le nombre d’ASV est un terme générique</a><a class="toc-l3" href="#section-114-3">114.3. L’arbre n’est pas résumé</a><a class="toc-l3" href="#section-114-4">114.4. Les séquences ne sont pas alignées explicitement aux taxons</a><a class="toc-l3" href="#section-114-5">114.5. La sparsité et la complétude utilisent des résumés simples</a><a class="toc-l3" href="#section-114-6">114.6. Les diagnostics utilisent des seuils internes</a><a class="toc-l3" href="#section-114-7">114.7. Les outliers sont détectés globalement</a><a class="toc-l3" href="#section-114-8">114.8. La part de zéros n’est pas un signal d’outlier</a><a class="toc-l3" href="#section-114-9">114.9. La raréfaction doit être relancée manuellement</a><a class="toc-l3" href="#section-114-10">114.10. La limite de courbes n’agit pas sur le mode Tous</a><a class="toc-l3" href="#section-114-11">114.11. Les courbes agrégées utilisent des pools</a><a class="toc-l3" href="#section-114-12">114.12. Les tables sont préparées intégralement en mémoire</a><a class="toc-l3" href="#section-114-13">114.13. Les exports Description réorientent certaines tables</a><a class="toc-l3" href="#section-114-14">114.14. Les noms de colonnes peuvent être ajustés pour l’affichage</a><a class="toc-l3" href="#section-114-15">114.15. La vue Projet additionne les dimensions</a><a class="toc-l3" href="#section-114-16">114.16. La heatmap compare des positions relatives</a><a class="toc-l3" href="#section-114-17">114.17. La comparaison de filtration utilise des nombres absolus</a><a class="toc-l3" href="#section-114-18">114.18. Aucun test statistique n’est réalisé</a><a class="toc-l2" href="#section-115">115. Parcours recommandé</a><a class="toc-l2" href="#section-116">116. Sources internes vérifiées</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Description</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

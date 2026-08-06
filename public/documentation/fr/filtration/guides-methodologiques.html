@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Filtration — Guides méthodologiques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="guide" data-module="filtration" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Guides méthodologiques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link active" href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Filtration</a><span>›</span><span>Guides méthodologiques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Filtration — Guide méthodologique</h1>
+<h2 id="section-1">1. Rôle général de l’onglet<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>L’onglet <strong>Filtration</strong> permet de construire un sous-ensemble d’un objet <code>phyloseq</code> déjà chargé dans BarCodeR.</p>
+<p>Il peut retirer :</p>
+<ul>
+<li>des taxons selon leur annotation taxonomique ;</li>
+<li>des ASV peu abondantes ou peu prévalentes ;</li>
+<li>des échantillons selon leur profondeur, leur richesse, leur nom ou leurs métadonnées ;</li>
+<li>des séquences ne respectant pas certains critères techniques.</li>
+</ul>
+<p>Le résultat est d’abord construit sous la forme d’un objet temporaire :</p>
+<pre tabindex="0"><code class="language-r">ps_filtered
+</code></pre>
+<p>Ce résultat peut ensuite être examiné dans le résumé, enregistré sous un nouveau nom, utilisé pour remplacer son dataset parent, inspecté dans Description, comparé aux autres datasets et exporté.</p>
+<h3 id="diff-rence-avec-data-edition">Différence avec Data Edition<a aria-label="Permalink" class="heading-anchor" href="#diff-rence-avec-data-edition">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Data Edition</th>
+<th>Filtration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modifie directement les tables du dataset sélectionné</td>
+<td>Construit d’abord un objet temporaire dérivé</td>
+</tr>
+<tr>
+<td>Les modifications sont immédiates dans <code>datasets()</code></td>
+<td>Le parent reste inchangé pendant le paramétrage</td>
+</tr>
+<tr>
+<td>Adapté aux corrections de cellules et de structure</td>
+<td>Adapté au retrait d’échantillons ou de taxons selon des critères</td>
+</tr>
+<tr>
+<td>Journalise les éditions dans <code>edit_log</code></td>
+<td>Journalise la filtration dans <code>filtration_log</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Tant que le résultat n’est pas enregistré, il n’apparaît pas dans Datasets, n’est pas accessible aux autres modules, n’est pas sauvegardé sur le disque et peut être perdu lors du rechargement de la session.</p>
+<h2 id="section-2">2. Fonctionnement automatique et cycle de vie du résultat<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Il n’existe pas de bouton <strong>Appliquer les filtres</strong>. La filtration est recalculée automatiquement lorsqu’un paramètre actif change, par exemple lors de l’activation d’un bloc, d’un changement de seuil, d’une sélection taxonomique, de l’ajout d’une condition de metadata ou d’un changement de dataset.</p>
+<p>Sur un dataset volumineux, chaque modification peut déclencher la lecture de l’OTU table, le calcul des abondances et de la prévalence, plusieurs appels à <code>prune_taxa()</code> ou <code>prune_samples()</code>, l’analyse des séquences et la reconstruction du journal et du résumé. Il est préférable de modifier les paramètres progressivement et d’attendre la fin du recalcul avant de poursuivre.</p>
+<h3 id="le-parent-reste-intact-pendant-le-r-glage">Le parent reste intact pendant le réglage<a aria-label="Permalink" class="heading-anchor" href="#le-parent-reste-intact-pendant-le-r-glage">#</a></h3>
+<pre tabindex="0"><code class="language-text">dataset parent
+      ↓
+calcul réactif
+      ↓
+dataset filtré temporaire
+</code></pre>
+<p>Le dataset parent n’est remplacé qu’au moment de l’enregistrement, si le résultat est enregistré sous le même nom.</p>
+<h3 id="attention-au-champ-de-nom-vide">Attention au champ de nom vide<a aria-label="Permalink" class="heading-anchor" href="#attention-au-champ-de-nom-vide">#</a></h3>
+<p>Le champ d’enregistrement est vide par défaut. Une valeur vide signifie :</p>
+<blockquote>
+<p>Enregistrer le résultat sous le nom du parent et remplacer le parent.</p>
+</blockquote>
+<p>Cette opération ne demande pas de confirmation supplémentaire. Pour conserver le dataset brut, saisir explicitement un nouveau nom, par exemple <code>COI_raw</code> et <code>COI_filtered</code>.</p>
+<p>L’enregistrement modifie uniquement la mémoire de BarCodeR. Il faut ensuite utiliser <strong>Datasets → Sauvegarder le projet</strong> pour rendre le résultat persistant.</p>
+<h2 id="section-3">3. Ordre d’application des filtres<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Les filtres sont toujours appliqués dans l’ordre suivant :</p>
+<pre tabindex="0"><code class="language-text">1. Taxonomie
+2. Abondance des ASV
+3. Échantillons
+4. Séquences
+</code></pre>
+<p>Cet ordre est fixe. Il ne dépend pas de l’ordre dans lequel les boxes sont ouvertes ou paramétrées.</p>
+<h3 id="cons-quences">Conséquences<a aria-label="Permalink" class="heading-anchor" href="#cons-quences">#</a></h3>
+<p>Chaque bloc travaille sur le résultat du bloc précédent. Par exemple :</p>
+<ol>
+<li>suppression des chloroplastes ;</li>
+<li>recalcul du total et de la prévalence des ASV restantes ;</li>
+<li>recalcul des reads et de la richesse des échantillons ;</li>
+<li>retrait des échantillons insuffisants ;</li>
+<li>retrait des séquences ne respectant pas les critères techniques.</li>
+</ol>
+<p>Les seuils appliqués aux échantillons ne portent donc pas nécessairement sur les valeurs du dataset brut affichées dans Description.</p>
+<h3 id="un-seul-passage-sans-convergence">Un seul passage, sans convergence<a aria-label="Permalink" class="heading-anchor" href="#un-seul-passage-sans-convergence">#</a></h3>
+<p>Le pipeline ne recommence pas depuis le début après la dernière étape. Cela signifie notamment que :</p>
+<ul>
+<li>la suppression d’échantillons peut rendre certaines ASV moins prévalentes que le seuil choisi, sans qu’elles soient supprimées une seconde fois ;</li>
+<li>la filtration des séquences peut réduire les reads ou la richesse de certains échantillons sous les seuils choisis, sans que ces échantillons soient retirés ;</li>
+<li>des taxons ou échantillons à zéro peuvent subsister dans le résultat final.</li>
+</ul>
+<p>Un second passage de filtration peut donc retirer davantage d’éléments que le premier.</p>
+<h2 id="section-4">4. Sélection du dataset et persistance des paramètres<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Le sélecteur principal est synchronisé avec le dataset actif global. Changer de dataset dans Filtration modifie <code>active_ds()</code>, change le dataset actif dans les autres onglets et peut marquer le projet comme non sauvegardé.</p>
+<h3 id="les-param-tres-ne-sont-pas-tous-r-initialis-s">Les paramètres ne sont pas tous réinitialisés<a aria-label="Permalink" class="heading-anchor" href="#les-param-tres-ne-sont-pas-tous-r-initialis-s">#</a></h3>
+<p>Lors du changement de dataset, plusieurs réglages peuvent rester actifs :</p>
+<ul>
+<li>seuils d’abondance ;</li>
+<li>seuils d’échantillons ;</li>
+<li>critères de séquences ;</li>
+<li>mots-clés taxonomiques ;</li>
+<li>conditions avancées ;</li>
+<li>nom d’enregistrement.</li>
+</ul>
+<p>Les listes dépendantes du dataset sont actualisées, notamment les rangs taxonomiques, les valeurs taxonomiques, les noms des échantillons et les variables de metadata.</p>
+<p>Une condition avancée peut néanmoins rester présente alors que sa variable n’existe plus dans le nouveau dataset. Dans ce cas, le calcul peut être bloqué jusqu’à suppression ou correction de la condition.</p>
+<p>Après chaque changement de dataset, vérifier l’ensemble des blocs avant d’enregistrer.</p>
+<h2 id="section-5">5. Lecture de l’état de l’interface<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Chaque bloc possède un état visuel.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Couleur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gris</td>
+<td>Aucun paramètre actif ou modifié</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td>Des paramètres ont été modifiés, mais le bloc n’est pas activé</td>
+</tr>
+<tr>
+<td>Vert</td>
+<td>La case d’activation du bloc est cochée</td>
+</tr>
+</tbody>
+</table></div>
+<p>Une bordure verte ne garantit pas qu’un filtre retire réellement des éléments. Par exemple, le bloc ASV peut être activé avec tous les seuils à zéro : il apparaît vert, mais ses critères restent neutres.</p>
+<p>Le bandeau global tente de distinguer les blocs réellement paramétrés, mais un dataset peut néanmoins recevoir un <code>filtration_log</code> sans qu’aucun élément ait été supprimé.</p>
+<h3 id="aper-us-graphiques">Aperçus graphiques<a aria-label="Permalink" class="heading-anchor" href="#aper-us-graphiques">#</a></h3>
+<p>Les histogrammes des seuils sont calculés sur le dataset parent sélectionné, et non sur l’objet progressivement filtré. Ils montrent notamment :</p>
+<ul>
+<li>total des reads par ASV ;</li>
+<li>prévalence ;</li>
+<li>abondance relative maximale ;</li>
+<li>reads par échantillon ;</li>
+<li>richesse par échantillon ;</li>
+<li>longueur ;</li>
+<li>GC.</li>
+</ul>
+<p>La ligne de seuil permet d’examiner la distribution initiale, mais ne représente pas toujours les valeurs réellement utilisées après les étapes précédentes. Le résumé <strong>avant/après</strong> constitue la principale prévisualisation du résultat final.</p>
+<h2 id="section-6">6. Filtration taxonomique<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>La filtration taxonomique nécessite une <code>tax_table</code>. Elle permet d’exclure certaines valeurs d’un rang, de conserver uniquement certaines valeurs et d’exclure des annotations contenant des mots-clés.</p>
+<h3 id="param-tres-pr-s-lectionn-s">Paramètres présélectionnés<a aria-label="Permalink" class="heading-anchor" href="#param-tres-pr-s-lectionn-s">#</a></h3>
+<p>Les mots-clés suivants sont sélectionnés par défaut :</p>
+<pre tabindex="0"><code class="language-text">chloroplast
+mitochondria
+</code></pre>
+<p>Ils ne sont pas appliqués tant que le bloc n’est pas activé. En revanche, cocher simplement <strong>Activer la filtration</strong> peut immédiatement retirer les taxons correspondant à ces termes.</p>
+<p>Ces mots-clés ne sont pas des contaminants universels. Ils peuvent représenter le signal biologique recherché selon le marqueur et l’objectif de l’étude.</p>
+<h3 id="exclusion-et-conservation-par-rang">Exclusion et conservation par rang<a aria-label="Permalink" class="heading-anchor" href="#exclusion-et-conservation-par-rang">#</a></h3>
+<p>Pour le rang taxonomique choisi :</p>
+<ul>
+<li><strong>Exclure</strong> supprime les ASV dont la valeur correspond exactement à une valeur sélectionnée ;</li>
+<li><strong>Garder uniquement</strong> conserve les ASV correspondant à une valeur sélectionnée.</li>
+</ul>
+<p>L’ordre interne est :</p>
+<pre tabindex="0"><code class="language-text">1. Exclusion
+2. Conservation
+3. Recherche par mots-clés
+</code></pre>
+<p>Des critères contradictoires peuvent supprimer l’ensemble des taxons.</p>
+<h3 id="recherche-par-mots-cl-s">Recherche par mots-clés<a aria-label="Permalink" class="heading-anchor" href="#recherche-par-mots-cl-s">#</a></h3>
+<p>Les mots-clés sont recherchés dans toutes les colonnes taxonomiques, sans distinction de casse, comme sous-chaînes et avec un motif combiné par <code>|</code>.</p>
+<p>Ainsi, <code>chloroplast</code> peut correspondre à <code>Chloroplast</code>, <code>chloroplastidae</code> ou <code>Unclassified chloroplast sequence</code>. La recherche ne se limite pas au rang sélectionné.</p>
+<h3 id="taxonomie-absente">Taxonomie absente<a aria-label="Permalink" class="heading-anchor" href="#taxonomie-absente">#</a></h3>
+<p>Si le bloc est activé sans taxonomie disponible, le filtre est ignoré. Les autres blocs peuvent néanmoins continuer à produire un résultat. Il faut vérifier le résumé réel plutôt que se fier uniquement à l’état vert de la box.</p>
+<h2 id="section-7">7. Filtration des ASV selon l’abondance<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Trois critères sont disponibles et sont appliqués successivement :</p>
+<pre tabindex="0"><code class="language-text">1. Total de reads
+2. Prévalence
+3. Abondance relative maximale
+</code></pre>
+<p>Ces critères supposent que les valeurs de l’OTU table sont interprétables comme des abondances. Ils peuvent être trompeurs sur des données CLR, des abondances relatives, des données logarithmiques, des valeurs négatives ou des matrices déjà normalisées.</p>
+<h3 id="total-de-reads-par-asv">Total de reads par ASV<a aria-label="Permalink" class="heading-anchor" href="#total-de-reads-par-asv">#</a></h3>
+<p>Pour chaque ASV :</p>
+<pre tabindex="0"><code class="language-text">Total = somme des abondances dans les échantillons présents à cette étape
+</code></pre>
+<p>La règle appliquée est stricte :</p>
+<pre tabindex="0"><code class="language-text">Total &gt; seuil
+</code></pre>
+<p>Avec un seuil de 10, un total égal à 10 est supprimé et un total égal à 11 est conservé.</p>
+<h3 id="pr-valence">Prévalence<a aria-label="Permalink" class="heading-anchor" href="#pr-valence">#</a></h3>
+<p>La prévalence correspond au nombre d’échantillons où l’abondance est strictement supérieure à zéro. La règle est :</p>
+<pre tabindex="0"><code class="language-text">Prévalence ≥ seuil
+</code></pre>
+<p>Avec un seuil de 3, une ASV présente dans exactement trois échantillons est conservée.</p>
+<p>Un seuil absolu doit être interprété en fonction du nombre total d’échantillons. Une présence dans trois échantillons représente 30 % d’un projet de dix échantillons, mais seulement 3 % d’un projet de cent échantillons.</p>
+<h3 id="abondance-relative-maximale">Abondance relative maximale<a aria-label="Permalink" class="heading-anchor" href="#abondance-relative-maximale">#</a></h3>
+<p>Pour chaque ASV, BarCodeR calcule son abondance relative dans chaque échantillon, puis retient sa valeur maximale :</p>
+<pre tabindex="0"><code class="language-text">Maximum de : abondance de l’ASV / abondance totale de l’échantillon × 100
+</code></pre>
+<p>La règle est :</p>
+<pre tabindex="0"><code class="language-text">Abondance relative maximale ≥ seuil
+</code></pre>
+<p>Ce filtre permet de conserver une ASV globalement rare mais localement importante.</p>
+<p>Le calcul est effectué après les filtres de total et de prévalence. La suppression de taxons modifie donc les dénominateurs et augmente mécaniquement la part relative des taxons restants.</p>
+<h2 id="section-8">8. Filtration des échantillons<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Les critères sont appliqués dans cet ordre :</p>
+<pre tabindex="0"><code class="language-text">1. Reads minimaux
+2. Richesse minimale
+3. Noms des échantillons
+4. Condition simple de metadata
+5. Conditions avancées
+</code></pre>
+<h3 id="reads-minimaux">Reads minimaux<a aria-label="Permalink" class="heading-anchor" href="#reads-minimaux">#</a></h3>
+<p>Le nombre de reads est recalculé après les filtres taxonomiques et d’abondance :</p>
+<pre tabindex="0"><code class="language-text">Reads = somme des abondances des taxons encore présents
+</code></pre>
+<p>La règle est inclusive :</p>
+<pre tabindex="0"><code class="language-text">Reads ≥ seuil
+</code></pre>
+<h3 id="richesse-minimale">Richesse minimale<a aria-label="Permalink" class="heading-anchor" href="#richesse-minimale">#</a></h3>
+<p>La richesse correspond au nombre de taxons dont l’abondance est strictement supérieure à zéro. La règle est :</p>
+<pre tabindex="0"><code class="language-text">Richesse ≥ seuil
+</code></pre>
+<p>La richesse peut différer de celle affichée dans Description pour le dataset parent.</p>
+<h3 id="filtration-par-noms">Filtration par noms<a aria-label="Permalink" class="heading-anchor" href="#filtration-par-noms">#</a></h3>
+<p>Les noms correspondent exactement à <code>sample_names(ps)</code>. Il n’existe pas de recherche partielle ou insensible à la casse.</p>
+<ul>
+<li><strong>Garder</strong> conserve uniquement les noms sélectionnés ;</li>
+<li><strong>Exclure</strong> retire les noms sélectionnés.</li>
+</ul>
+<p>Cette étape est appliquée après les seuils de reads et de richesse. Un échantillon sélectionné avec Garder peut donc avoir déjà été supprimé.</p>
+<h3 id="condition-simple-de-metadata">Condition simple de metadata<a aria-label="Permalink" class="heading-anchor" href="#condition-simple-de-metadata">#</a></h3>
+<p>Le module distingue principalement les colonnes numériques et les facteurs ou chaînes de caractères. Les dates, colonnes logiques et classes particulières peuvent ne pas être correctement reconnues dans le filtre simple.</p>
+<h4>Variables numériques</h4>
+<p>Les opérateurs disponibles sont <code>≥</code>, <code>&gt;</code>, <code>≤</code>, <code>&lt;</code> et <code>entre</code>. L’option <code>entre</code> inclut les deux limites. Si les limites sont inversées, BarCodeR utilise automatiquement la plus petite et la plus grande.</p>
+<p>Les valeurs proposées initialement, comme la médiane ou les quartiles, sont uniquement des valeurs pratiques. Elles ne constituent pas des recommandations scientifiques.</p>
+<p>Avec <strong>Garder</strong>, les valeurs manquantes sont généralement retirées. Avec <strong>Exclure</strong>, elles sont généralement conservées, car elles ne satisfont pas la condition avant inversion.</p>
+<h4>Variables catégorielles</h4>
+<p>Les comparaisons sont exactes après conversion en texte. Elles sont sensibles à la casse, aux espaces et à l’orthographe.</p>
+<p>Plusieurs valeurs sélectionnées dans une même condition sont combinées avec une logique OU.</p>
+<p>Les valeurs manquantes sont généralement supprimées avec Garder et conservées avec Exclure.</p>
+<h2 id="section-9">9. Conditions avancées de metadata<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Chaque condition avancée définit une variable, une action Garder ou Exclure, une comparaison ou plusieurs valeurs et un bouton de suppression.</p>
+<p>Toutes les conditions sont combinées entre elles avec une logique <strong>ET</strong>.</p>
+<p>Exemple :</p>
+<pre tabindex="0"><code class="language-text">Garder Campagne = 2026
+ET
+Exclure Site = contrôle
+ET
+Garder Profondeur ≥ 50
+</code></pre>
+<p>Une logique OU entre deux variables distinctes n’est pas proposée.</p>
+<p>Pour une variable catégorielle, plusieurs modalités sélectionnées dans une même ligne constituent toutefois un OU interne, par exemple <code>Site = A ou B</code>.</p>
+<p>Les variables non reconnues comme numériques sont traitées comme du texte. Une date peut donc être sélectionnée comme catégorie, mais pas filtrée comme véritable intervalle temporel.</p>
+<h3 id="condition-incompl-te">Condition incomplète<a aria-label="Permalink" class="heading-anchor" href="#condition-incompl-te">#</a></h3>
+<p>Une condition avancée incomplète peut empêcher complètement la construction du résultat temporaire, même si les autres filtres sont valides. Il faut alors compléter la condition ou la supprimer.</p>
+<h2 id="section-10">10. Filtration technique des séquences<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>La filtration technique utilise <code>refseq(ps)</code> et peut appliquer des critères de longueur, GC, bases ambiguës et homopolymères. Elle est appliquée en dernier.</p>
+<h3 id="absence-ou-mauvais-alignement-des-s-quences">Absence ou mauvais alignement des séquences<a aria-label="Permalink" class="heading-anchor" href="#absence-ou-mauvais-alignement-des-s-quences">#</a></h3>
+<p>Si <code>refseq</code> est absente, le bloc est ignoré et une ligne est ajoutée au journal.</p>
+<p>BarCodeR essaie d’aligner les séquences sur <code>taxa_names(ps)</code> :</p>
+<ul>
+<li>si les séquences n’ont pas de nom mais sont aussi nombreuses que les taxons, l’ordre est supposé identique ;</li>
+<li>si elles sont nommées, leurs noms sont mis en correspondance avec les taxons.</li>
+</ul>
+<p>Si aucune séquence ne peut être alignée, le bloc est ignoré.</p>
+<p>Si la couverture est partielle, les ASV possédant une séquence sont évaluées et les ASV sans séquence sont conservées sans être testées.</p>
+<p>Les graphiques de longueur et de GC utilisent un alignement plus strict et peuvent être absents alors que le filtre est appliqué partiellement.</p>
+<h3 id="longueur">Longueur<a aria-label="Permalink" class="heading-anchor" href="#longueur">#</a></h3>
+<p>Les limites sont inclusives :</p>
+<pre tabindex="0"><code class="language-text">Longueur minimale ≤ longueur ≤ longueur maximale
+</code></pre>
+<p>Une valeur maximale égale à zéro désactive la limite haute. Si le minimum est supérieur au maximum, toutes les séquences peuvent être rejetées.</p>
+<h3 id="gc">GC<a aria-label="Permalink" class="heading-anchor" href="#gc">#</a></h3>
+<p>Le GC utilisé par le filtre est calculé sur les bases A, C, G et T :</p>
+<pre tabindex="0"><code class="language-text">G + C
+────────────── × 100
+A + C + G + T
+</code></pre>
+<p>Les bases ambiguës ne sont pas incluses dans ce dénominateur. Les limites minimale et maximale sont inclusives. Les valeurs neutres sont 0 % et 100 %.</p>
+<h3 id="bases-ambigu-s">Bases ambiguës<a aria-label="Permalink" class="heading-anchor" href="#bases-ambigu-s">#</a></h3>
+<p>Les caractères comptabilisés sont :</p>
+<pre tabindex="0"><code class="language-text">N R Y S W K M B D H V
+</code></pre>
+<p>Les gaps, points ou autres symboles ne sont pas explicitement comptés par ce critère.</p>
+<p>Dans l’implémentation actuelle, <strong>Maximum d’ambiguïtés = 0</strong> désactive le filtre. Cela ne permet pas d’exiger strictement zéro base ambiguë.</p>
+<h3 id="homopolym-res">Homopolymères<a aria-label="Permalink" class="heading-anchor" href="#homopolym-res">#</a></h3>
+<p>BarCodeR recherche la plus longue série de caractères identiques consécutifs. Par exemple, <code>AAAATCG</code> possède un homopolymère maximal de 4.</p>
+<p>Tous les caractères peuvent être concernés, y compris les bases ambiguës ou les symboles répétés. La séquence est conservée si la longueur maximale observée est inférieure ou égale au seuil. Une valeur de zéro désactive également ce critère.</p>
+<h3 id="cons-quence-de-l-ordre">Conséquence de l’ordre<a aria-label="Permalink" class="heading-anchor" href="#cons-quence-de-l-ordre">#</a></h3>
+<p>Après la filtration technique, les seuils d’échantillons ne sont pas recalculés. Des échantillons peuvent donc finir sous le seuil de reads, sous le seuil de richesse ou avec zéro read.</p>
+<h2 id="section-11">11. Protection contre les résultats vides et limites de validation<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Avant une opération qui supprimerait tous les taxons ou tous les échantillons, BarCodeR interrompt le calcul et affiche une erreur.</p>
+<p>Cette protection garantit uniquement qu’au moins un taxon et un échantillon restent disponibles. Elle ne garantit pas :</p>
+<ul>
+<li>un nombre suffisant de réplicats ;</li>
+<li>une profondeur minimale finale ;</li>
+<li>une richesse minimale finale ;</li>
+<li>l’absence d’échantillons à zéro ;</li>
+<li>l’absence de taxons à zéro ;</li>
+<li>l’adéquation du résultat à une analyse statistique.</li>
+</ul>
+<p>Le résultat final doit être contrôlé dans Description.</p>
+<h2 id="section-12">12. Journal de filtration et provenance<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Le résultat reçoit un attribut :</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>Il peut contenir le nom du parent, la date, les dimensions avant et après, des lignes descriptives, les paramètres structurés, les taxons supprimés et les échantillons supprimés.</p>
+<h3 id="param-tres-structur-s">Paramètres structurés<a aria-label="Permalink" class="heading-anchor" href="#param-tres-structur-s">#</a></h3>
+<p>Les paramètres sont enregistrés dans :</p>
+<pre tabindex="0"><code class="language-r">filtration_log$params
+</code></pre>
+<p>Ils comprennent notamment les blocs activés, le rang taxonomique, les valeurs exclues ou conservées, les mots-clés, les seuils d’abondance, les filtres de noms, les conditions de metadata et les paramètres de séquences.</p>
+<p>Cette structure est la source la plus fiable pour reproduire ou auditer la filtration.</p>
+<h3 id="langue-du-journal">Langue du journal<a aria-label="Permalink" class="heading-anchor" href="#langue-du-journal">#</a></h3>
+<p>Les textes sont enregistrés dans la langue active au moment du calcul et ne sont pas retraduits ensuite.</p>
+<p>La colonne <strong>Blocs actifs</strong> du tableau récapitulatif recherche actuellement certaines expressions françaises dans les textes du journal. Elle peut donc afficher <code>—</code> pour un dataset filtré dans une autre langue. Les paramètres structurés restent plus fiables que cette colonne.</p>
+<h3 id="tables-des-l-ments-supprim-s">Tables des éléments supprimés<a aria-label="Permalink" class="heading-anchor" href="#tables-des-l-ments-supprim-s">#</a></h3>
+<p>Les tables <code>removed_taxa</code> et <code>removed_samples</code> utilisent les métriques du dataset parent avant tous les filtres.</p>
+<p>Un échantillon retiré parce qu’il ne possède plus que 800 reads après retrait taxonomique peut donc apparaître avec 5 000 reads dans la table des supprimés.</p>
+<p>Les tables ne donnent pas toujours une cause individuelle exacte pour chaque ligne. Les étapes du journal indiquent surtout les effets globaux.</p>
+<h3 id="filtrations-successives">Filtrations successives<a aria-label="Permalink" class="heading-anchor" href="#filtrations-successives">#</a></h3>
+<p>Un nouveau passage remplace l’ancien <code>filtration_log</code>. L’historique précédent n’est pas empilé.</p>
+<p>Pour conserver chaque étape, utiliser des noms séparés :</p>
+<pre tabindex="0"><code class="language-text">COI_raw
+COI_tax
+COI_abundance
+COI_final
+</code></pre>
+<h3 id="attributs-conserv-s-ou-potentiellement-perdus">Attributs conservés ou potentiellement perdus<a aria-label="Permalink" class="heading-anchor" href="#attributs-conserv-s-ou-potentiellement-perdus">#</a></h3>
+<p>BarCodeR recopie explicitement <code>openmetabar_run</code> et <code>edit_log</code>.</p>
+<p>Les opérations de pruning peuvent supprimer d’autres attributs non standards, notamment <code>dataset_meta</code>, les notes et tags ou des attributs personnalisés. Ces informations doivent être vérifiées après filtration.</p>
+<h2 id="section-13">13. Enregistrement du résultat et risques d’écrasement<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Trois cas sont possibles.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Nom saisi</th>
+<th>Comportement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Champ vide ou nom du parent</td>
+<td>Remplacement immédiat du parent</td>
+</tr>
+<tr>
+<td>Nouveau nom</td>
+<td>Création d’un nouveau dataset</td>
+</tr>
+<tr>
+<td>Nom d’un autre dataset</td>
+<td>Demande de confirmation avant remplacement</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le nom est normalisé avec le helper commun de BarCodeR. Contrairement à Input data, aucun suffixe <code>_2</code> n’est ajouté automatiquement en cas de collision.</p>
+<h3 id="enregistrement-en-m-moire-uniquement">Enregistrement en mémoire uniquement<a aria-label="Permalink" class="heading-anchor" href="#enregistrement-en-m-moire-uniquement">#</a></h3>
+<p>Le bouton Enregistrer modifie <code>datasets()</code>. Il ne sauvegarde pas le projet sur le disque.</p>
+<p>Le résultat enregistré devient le dataset actif.</p>
+<h3 id="r-application-automatique-des-filtres">Réapplication automatique des filtres<a aria-label="Permalink" class="heading-anchor" href="#r-application-automatique-des-filtres">#</a></h3>
+<p>Comme le sélecteur Filtration suit le dataset actif, le résultat enregistré devient immédiatement le nouveau parent du module. Les filtres restant actifs, ils sont réappliqués automatiquement :</p>
+<pre tabindex="0"><code class="language-text">parent brut
+    ↓
+premier résultat enregistré
+    ↓
+mêmes filtres encore actifs
+    ↓
+nouveau résultat temporaire
+</code></pre>
+<p>Un second clic sur Enregistrer peut donc retirer davantage d’éléments.</p>
+<p>Après l’enregistrement :</p>
+<ol>
+<li>ne pas recliquer immédiatement ;</li>
+<li>désactiver les filtres ou quitter l’onglet ;</li>
+<li>vérifier le résultat dans Description ;</li>
+<li>sauvegarder le projet dans Datasets.</li>
+</ol>
+<h2 id="section-14">14. Inspection des datasets et exports<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>La partie inférieure affiche les datasets présents dans le registre, mais pas le résultat temporaire non enregistré.</p>
+<p>Le tableau peut indiquer le nom, le statut filtré, le parent, la date, les dimensions avant et après, les nombres supprimés et les blocs actifs.</p>
+<p>Un dataset est affiché comme filtré dès qu’un <code>filtration_log</code> existe, même si aucun élément n’a réellement été supprimé.</p>
+<p>Si le résultat écrase son parent sous le même nom, il peut apparaître comme son propre parent.</p>
+<p>Si le dataset est ensuite modifié dans Data Edition, ses dimensions actuelles peuvent ne plus correspondre uniquement à la filtration consignée.</p>
+<h3 id="panneau-de-d-tail">Panneau de détail<a aria-label="Permalink" class="heading-anchor" href="#panneau-de-d-tail">#</a></h3>
+<p>Le panneau permet d’examiner le journal, les paramètres, les taxons et échantillons supprimés, l’OTU table, la taxonomie, la metadata, les séquences et différents histogrammes.</p>
+<p>Quelques particularités doivent être connues :</p>
+<ul>
+<li>l’histogramme nommé Reads représente en réalité le total par taxon ;</li>
+<li>l’histogramme logarithmique utilise <code>log10(total + 1)</code> ;</li>
+<li>le GC affiché dans le détail divise par la longueur totale de la chaîne et peut différer du GC utilisé pour filtrer ;</li>
+<li>l’OTU table est systématiquement transposée pour le détail, sans normalisation fiable de son orientation ;</li>
+<li>certains panneaux peuvent être vides ou produire une erreur si le composant correspondant est absent.</li>
+</ul>
+<h3 id="exports-tsv">Exports TSV<a aria-label="Permalink" class="heading-anchor" href="#exports-tsv">#</a></h3>
+<p>Les noms sont génériques :</p>
+<pre tabindex="0"><code class="language-text">otu_table.tsv
+taxonomy.tsv
+metadata.tsv
+</code></pre>
+<p>Ils ne contiennent pas le nom du dataset ni la date. Les rownames sont exportés comme première colonne, parfois sans nom explicite.</p>
+<p>L’OTU table est également transposée systématiquement dans cet export. Son orientation dépend donc de l’orientation initiale du phyloseq.</p>
+<h3 id="export-biom">Export BIOM<a aria-label="Permalink" class="heading-anchor" href="#export-biom">#</a></h3>
+<p>Le fichier BIOM contient uniquement la matrice d’abondance. Il ne contient pas automatiquement la taxonomie, la metadata, les séquences, l’arbre ou le journal.</p>
+<p>L’orientation stockée est utilisée directement. Si les taxons sont en colonnes, le fichier peut être inversé.</p>
+<p>Si <code>biomformat</code> n’est pas disponible, BarCodeR produit actuellement un fichier portant l’extension <code>.biom</code> mais contenant un message texte. Ce fichier n’est pas un BIOM valide.</p>
+<h2 id="section-15">15. Interprétation scientifique et stratégie recommandée<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>BarCodeR ne peut pas déterminer automatiquement les seuils adaptés. Ils dépendent notamment du marqueur, de la technologie, du protocole, du nombre d’échantillons, de la profondeur, des contrôles, de la diversité attendue, du pipeline et de l’objectif scientifique.</p>
+<h3 id="taxons-rares">Taxons rares<a aria-label="Permalink" class="heading-anchor" href="#taxons-rares">#</a></h3>
+<p>Une ASV rare peut être une erreur, une contamination, un artefact, un véritable taxon rare ou un événement biologique important. La rareté seule ne justifie pas automatiquement une suppression.</p>
+<h3 id="groupes-exp-rimentaux">Groupes expérimentaux<a aria-label="Permalink" class="heading-anchor" href="#groupes-exp-rimentaux">#</a></h3>
+<p>Un seuil global peut déséquilibrer fortement les groupes. Il faut vérifier après filtration le nombre d’échantillons par groupe, les contrôles conservés, le nombre de réplicats et la profondeur de chaque groupe.</p>
+<h3 id="comparaison-de-strat-gies">Comparaison de stratégies<a aria-label="Permalink" class="heading-anchor" href="#comparaison-de-strat-gies">#</a></h3>
+<p>Pour comparer deux méthodes de filtration, partir du même dataset parent :</p>
+<pre tabindex="0"><code class="language-text">COI_raw → méthode A
+COI_raw → méthode B
+</code></pre>
+<p>Éviter <code>COI_raw → méthode A → méthode B</code>, sauf si l’objectif est explicitement une filtration progressive.</p>
+<h3 id="parcours-conseill">Parcours conseillé<a aria-label="Permalink" class="heading-anchor" href="#parcours-conseill">#</a></h3>
+<ol>
+<li>Sauvegarder le projet.</li>
+<li>Conserver le dataset brut.</li>
+<li>Sélectionner le parent.</li>
+<li>Vérifier tous les paramètres hérités.</li>
+<li>Activer un seul bloc à la fois.</li>
+<li>Examiner les dimensions après chaque bloc.</li>
+<li>Ajouter progressivement les autres critères.</li>
+<li>Vérifier les groupes et les contrôles.</li>
+<li>Saisir un nouveau nom.</li>
+<li>Enregistrer une seule fois.</li>
+<li>Quitter ou désactiver les filtres.</li>
+<li>Vérifier le résultat dans Description.</li>
+<li>Vérifier les zéros, les notes, les tags et la provenance.</li>
+<li>Sauvegarder le projet.</li>
+<li>Exporter le dataset final.</li>
+</ol>
+<h2 id="section-16">16. Résolution des problèmes et contrôles<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="probl-mes-de-param-trage">Problèmes de paramétrage<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-de-param-trage">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause probable</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Des filtres anciens sont appliqués au nouveau dataset</td>
+<td>Les paramètres persistent</td>
+<td>Vérifier tous les blocs après changement</td>
+</tr>
+<tr>
+<td>Box verte mais aucune suppression</td>
+<td>Bloc activé avec critères neutres</td>
+<td>Vérifier les seuils et le résumé</td>
+</tr>
+<tr>
+<td>Box orange</td>
+<td>Paramètres modifiés, bloc désactivé</td>
+<td>Activer ou remettre les valeurs neutres</td>
+</tr>
+<tr>
+<td>Activation taxonomique supprime immédiatement des ASV</td>
+<td>Mots-clés présélectionnés</td>
+<td>Vérifier <code>chloroplast</code> et <code>mitochondria</code></td>
+</tr>
+<tr>
+<td>Résultat indisponible</td>
+<td>Condition avancée incomplète ou filtre trop strict</td>
+<td>Compléter, supprimer ou assouplir</td>
+</tr>
+<tr>
+<td>Tous les taxons ou échantillons seraient supprimés</td>
+<td>Critères contradictoires ou excessifs</td>
+<td>Réduire les seuils et vérifier les valeurs</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="probl-mes-li-s-aux-seuils">Problèmes liés aux seuils<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-li-s-aux-seuils">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Explication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Une ASV ayant exactement le seuil total est supprimée</td>
+<td>Le total utilise <code>&gt;</code></td>
+</tr>
+<tr>
+<td>Une ASV peu abondante passe le seuil relatif</td>
+<td>Elle est importante dans au moins un échantillon</td>
+</tr>
+<tr>
+<td>Un échantillon au-dessus du seuil graphique est supprimé</td>
+<td>Le seuil réel est appliqué après retrait des taxons</td>
+</tr>
+<tr>
+<td>Une valeur manquante est supprimée avec Garder</td>
+<td>Elle ne satisfait pas la condition</td>
+</tr>
+<tr>
+<td>Une valeur manquante reste avec Exclure</td>
+<td>Elle ne correspond pas au critère avant inversion</td>
+</tr>
+<tr>
+<td>Les conditions avancées sont très restrictives</td>
+<td>Elles sont combinées par ET</td>
+</tr>
+<tr>
+<td>Impossible de créer un OU entre variables</td>
+<td>Cette logique n’est pas proposée directement</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="probl-mes-de-s-quences">Problèmes de séquences<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-de-s-quences">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause ou comportement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aucun graphique de longueur ou GC</td>
+<td>RefSeq absente ou alignement incomplet</td>
+</tr>
+<tr>
+<td>Bloc actif mais ignoré</td>
+<td>Aucune séquence alignable</td>
+</tr>
+<tr>
+<td>Certaines ASV sans séquence restent</td>
+<td>La couverture est partielle</td>
+</tr>
+<tr>
+<td>Maximum d’ambiguïtés à zéro ne filtre pas</td>
+<td>Zéro désactive le filtre</td>
+</tr>
+<tr>
+<td>Maximum d’homopolymère à zéro ne filtre pas</td>
+<td>Zéro désactive le filtre</td>
+</tr>
+<tr>
+<td>Échantillons à zéro après filtration</td>
+<td>Les seuils d’échantillons ne sont pas réappliqués</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="probl-mes-de-journal-et-de-provenance">Problèmes de journal et de provenance<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-de-journal-et-de-provenance">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause probable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Table supprimée avec des métriques supérieures au seuil</td>
+<td>Métriques calculées sur le parent brut</td>
+</tr>
+<tr>
+<td>Pas de raison précise par élément</td>
+<td>Le journal stocke surtout des effets globaux</td>
+</tr>
+<tr>
+<td>Ancien journal disparu</td>
+<td>Le nouveau passage remplace <code>filtration_log</code></td>
+</tr>
+<tr>
+<td>Notes ou tags disparus</td>
+<td>Attribut personnalisé perdu pendant le pruning</td>
+</tr>
+<tr>
+<td>Statut Filtré sans suppression</td>
+<td>La présence du journal suffit</td>
+</tr>
+<tr>
+<td>Blocs actifs affichés comme <code>—</code></td>
+<td>Journal textuel enregistré dans une autre langue</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="probl-mes-d-enregistrement">Problèmes d’enregistrement<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-d-enregistrement">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause ou action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le parent a été écrasé</td>
+<td>Le nom était vide ou identique au parent</td>
+</tr>
+<tr>
+<td>Aucun suffixe <code>_2</code> ajouté</td>
+<td>Filtration utilise un remplacement, pas un renommage automatique</td>
+</tr>
+<tr>
+<td>Résultat perdu après fermeture</td>
+<td>Projet non sauvegardé dans Datasets</td>
+</tr>
+<tr>
+<td>Résultat modifié après enregistrement</td>
+<td>Les filtres ont été réappliqués au nouveau dataset actif</td>
+</tr>
+<tr>
+<td>Second clic plus destructeur</td>
+<td>Deuxième passage sur le résultat du premier</td>
+</tr>
+<tr>
+<td>Enregistrement refusé</td>
+<td>Incohérence entre OTU, metadata ou taxonomie</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="probl-mes-d-inspection-ou-d-export">Problèmes d’inspection ou d’export<a aria-label="Permalink" class="heading-anchor" href="#probl-mes-d-inspection-ou-d-export">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptôme</th>
+<th>Cause probable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Le résultat temporaire n’apparaît pas dans le tableau</td>
+<td>Il n’a pas encore été enregistré</td>
+</tr>
+<tr>
+<td>Histogramme Reads basé sur les ASV</td>
+<td>Le graphique calcule le total par taxon</td>
+</tr>
+<tr>
+<td>GC différent entre deux graphiques</td>
+<td>Formules de dénominateur différentes</td>
+</tr>
+<tr>
+<td>OTU table transposée</td>
+<td>Le panneau applique systématiquement <code>t()</code></td>
+</tr>
+<tr>
+<td>BIOM inversé</td>
+<td>Orientation de l’OTU table non corrigée</td>
+</tr>
+<tr>
+<td>Fichier <code>.biom</code> contenant du texte</td>
+<td>Package <code>biomformat</code> absent</td>
+</tr>
+<tr>
+<td>Onglet de détail en erreur</td>
+<td>Composant phyloseq absent</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="checklist-avant-filtration">Checklist avant filtration<a aria-label="Permalink" class="heading-anchor" href="#checklist-avant-filtration">#</a></h3>
+<ul>
+<li>Vérifier le dataset et le projet actifs.</li>
+<li>Sauvegarder le projet.</li>
+<li>Conserver une version brute.</li>
+<li>Vérifier que les abondances sont adaptées aux seuils.</li>
+<li>Vérifier l’orientation de l’OTU table.</li>
+<li>Vérifier taxonomie, metadata et RefSeq.</li>
+<li>Définir l’objectif de chaque filtre.</li>
+<li>Vérifier les paramètres hérités d’un autre dataset.</li>
+</ul>
+<h3 id="checklist-avant-enregistrement">Checklist avant enregistrement<a aria-label="Permalink" class="heading-anchor" href="#checklist-avant-enregistrement">#</a></h3>
+<ul>
+<li>Lire le résumé complet.</li>
+<li>Vérifier ASV et échantillons avant/après.</li>
+<li>Vérifier les étapes ignorées.</li>
+<li>Vérifier les conditions avancées.</li>
+<li>Saisir un nouveau nom pour conserver le parent.</li>
+<li>Cliquer une seule fois sur Enregistrer.</li>
+<li>Ne pas confondre enregistrement et sauvegarde du projet.</li>
+</ul>
+<h3 id="checklist-apr-s-enregistrement">Checklist après enregistrement<a aria-label="Permalink" class="heading-anchor" href="#checklist-apr-s-enregistrement">#</a></h3>
+<ul>
+<li>Ouvrir Description.</li>
+<li>Vérifier les dimensions.</li>
+<li>Vérifier les reads et la richesse.</li>
+<li>Vérifier les taxons et échantillons à zéro.</li>
+<li>Vérifier les effectifs par groupe.</li>
+<li>Vérifier taxonomie, RefSeq et arbre.</li>
+<li>Vérifier notes, tags et journal.</li>
+<li>Sauvegarder dans Datasets.</li>
+<li>Exporter le dataset final.</li>
+</ul>
+<h2 id="section-17">17. Limites principales du module<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Les principales limites à conserver en tête sont les suivantes :</p>
+<ul>
+<li>recalcul automatique potentiellement coûteux ;</li>
+<li>histogrammes basés sur le parent brut ;</li>
+<li>ordre des filtres imposé ;</li>
+<li>absence de réévaluation itérative des seuils ;</li>
+<li>absence de nettoyage final des zéros ;</li>
+<li>paramètres persistants lors du changement de dataset ;</li>
+<li>mots-clés taxonomiques présélectionnés ;</li>
+<li>gestion limitée des dates et classes particulières ;</li>
+<li>logique ET uniquement entre les conditions avancées ;</li>
+<li>impossibilité d’imposer zéro ambiguïté avec le contrôle actuel ;</li>
+<li>conservation possible d’ASV sans séquence ;</li>
+<li>remplacement du journal précédent ;</li>
+<li>absence de cause individuelle systématique ;</li>
+<li>métriques des supprimés calculées sur le parent brut ;</li>
+<li>perte possible d’attributs personnalisés ;</li>
+<li>écrasement du parent sans confirmation lorsque le nom est vide ;</li>
+<li>réapplication automatique des filtres après enregistrement ;</li>
+<li>absence de sauvegarde sur disque depuis le bouton Enregistrer ;</li>
+<li>détection multilingue imparfaite des blocs actifs ;</li>
+<li>orientations d’export parfois ambiguës ;</li>
+<li>export BIOM minimal et dépendant de <code>biomformat</code>.</li>
+</ul>
+<h2 id="sources-internes-v-rifi-es">Sources internes vérifiées<a aria-label="Permalink" class="heading-anchor" href="#sources-internes-v-rifi-es">#</a></h2>
+<p>Cette documentation repose sur le fonctionnement actuel des fichiers suivants :</p>
+<ol>
+<li><code>modules/filtration/mod_filtration_ui.R</code> : interface principale et paramètres des quatre blocs.</li>
+<li><code>modules/filtration/mod_filtration_server.R</code> : parsing numérique, ordre des filtres, calculs, protections, journal et résultat temporaire.</li>
+<li><code>modules/filtration/io/mod_filtration_io_ui.R</code> : enregistrement, inspection et exports.</li>
+<li><code>modules/filtration/io/mod_filtration_io_server.R</code> : écrasement, ajout au registre, tableaux, détails et export BIOM.</li>
+<li><code>modules/_shared/_provenance.R</code> : conservation des attributs lors du pruning.</li>
+<li><code>modules/_shared/_dataset_naming.R</code> : normalisation des noms.</li>
+<li><code>modules/_shared/_ps_guard.R</code> : contrôle d’intégrité avant insertion dans le registre.</li>
+<li><code>app.R</code> : assemblage des sous-modules, registre global et dataset actif.</li>
+<li><code>.claude/architecture/23-filtration.md</code> : architecture prévue, vérifiée contre le comportement effectif.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Rôle général de l’onglet</a><a class="toc-l3" href="#diff-rence-avec-data-edition">Différence avec Data Edition</a><a class="toc-l2" href="#section-2">2. Fonctionnement automatique et cycle de vie du résultat</a><a class="toc-l3" href="#le-parent-reste-intact-pendant-le-r-glage">Le parent reste intact pendant le réglage</a><a class="toc-l3" href="#attention-au-champ-de-nom-vide">Attention au champ de nom vide</a><a class="toc-l2" href="#section-3">3. Ordre d’application des filtres</a><a class="toc-l3" href="#cons-quences">Conséquences</a><a class="toc-l3" href="#un-seul-passage-sans-convergence">Un seul passage, sans convergence</a><a class="toc-l2" href="#section-4">4. Sélection du dataset et persistance des paramètres</a><a class="toc-l3" href="#les-param-tres-ne-sont-pas-tous-r-initialis-s">Les paramètres ne sont pas tous réinitialisés</a><a class="toc-l2" href="#section-5">5. Lecture de l’état de l’interface</a><a class="toc-l3" href="#aper-us-graphiques">Aperçus graphiques</a><a class="toc-l2" href="#section-6">6. Filtration taxonomique</a><a class="toc-l3" href="#param-tres-pr-s-lectionn-s">Paramètres présélectionnés</a><a class="toc-l3" href="#exclusion-et-conservation-par-rang">Exclusion et conservation par rang</a><a class="toc-l3" href="#recherche-par-mots-cl-s">Recherche par mots-clés</a><a class="toc-l3" href="#taxonomie-absente">Taxonomie absente</a><a class="toc-l2" href="#section-7">7. Filtration des ASV selon l’abondance</a><a class="toc-l3" href="#total-de-reads-par-asv">Total de reads par ASV</a><a class="toc-l3" href="#pr-valence">Prévalence</a><a class="toc-l3" href="#abondance-relative-maximale">Abondance relative maximale</a><a class="toc-l2" href="#section-8">8. Filtration des échantillons</a><a class="toc-l3" href="#reads-minimaux">Reads minimaux</a><a class="toc-l3" href="#richesse-minimale">Richesse minimale</a><a class="toc-l3" href="#filtration-par-noms">Filtration par noms</a><a class="toc-l3" href="#condition-simple-de-metadata">Condition simple de metadata</a><a class="toc-l2" href="#section-9">9. Conditions avancées de metadata</a><a class="toc-l3" href="#condition-incompl-te">Condition incomplète</a><a class="toc-l2" href="#section-10">10. Filtration technique des séquences</a><a class="toc-l3" href="#absence-ou-mauvais-alignement-des-s-quences">Absence ou mauvais alignement des séquences</a><a class="toc-l3" href="#longueur">Longueur</a><a class="toc-l3" href="#gc">GC</a><a class="toc-l3" href="#bases-ambigu-s">Bases ambiguës</a><a class="toc-l3" href="#homopolym-res">Homopolymères</a><a class="toc-l3" href="#cons-quence-de-l-ordre">Conséquence de l’ordre</a><a class="toc-l2" href="#section-11">11. Protection contre les résultats vides et limites de validation</a><a class="toc-l2" href="#section-12">12. Journal de filtration et provenance</a><a class="toc-l3" href="#param-tres-structur-s">Paramètres structurés</a><a class="toc-l3" href="#langue-du-journal">Langue du journal</a><a class="toc-l3" href="#tables-des-l-ments-supprim-s">Tables des éléments supprimés</a><a class="toc-l3" href="#filtrations-successives">Filtrations successives</a><a class="toc-l3" href="#attributs-conserv-s-ou-potentiellement-perdus">Attributs conservés ou potentiellement perdus</a><a class="toc-l2" href="#section-13">13. Enregistrement du résultat et risques d’écrasement</a><a class="toc-l3" href="#enregistrement-en-m-moire-uniquement">Enregistrement en mémoire uniquement</a><a class="toc-l3" href="#r-application-automatique-des-filtres">Réapplication automatique des filtres</a><a class="toc-l2" href="#section-14">14. Inspection des datasets et exports</a><a class="toc-l3" href="#panneau-de-d-tail">Panneau de détail</a><a class="toc-l3" href="#exports-tsv">Exports TSV</a><a class="toc-l3" href="#export-biom">Export BIOM</a><a class="toc-l2" href="#section-15">15. Interprétation scientifique et stratégie recommandée</a><a class="toc-l3" href="#taxons-rares">Taxons rares</a><a class="toc-l3" href="#groupes-exp-rimentaux">Groupes expérimentaux</a><a class="toc-l3" href="#comparaison-de-strat-gies">Comparaison de stratégies</a><a class="toc-l3" href="#parcours-conseill">Parcours conseillé</a><a class="toc-l2" href="#section-16">16. Résolution des problèmes et contrôles</a><a class="toc-l3" href="#probl-mes-de-param-trage">Problèmes de paramétrage</a><a class="toc-l3" href="#probl-mes-li-s-aux-seuils">Problèmes liés aux seuils</a><a class="toc-l3" href="#probl-mes-de-s-quences">Problèmes de séquences</a><a class="toc-l3" href="#probl-mes-de-journal-et-de-provenance">Problèmes de journal et de provenance</a><a class="toc-l3" href="#probl-mes-d-enregistrement">Problèmes d’enregistrement</a><a class="toc-l3" href="#probl-mes-d-inspection-ou-d-export">Problèmes d’inspection ou d’export</a><a class="toc-l3" href="#checklist-avant-filtration">Checklist avant filtration</a><a class="toc-l3" href="#checklist-avant-enregistrement">Checklist avant enregistrement</a><a class="toc-l3" href="#checklist-apr-s-enregistrement">Checklist après enregistrement</a><a class="toc-l2" href="#section-17">17. Limites principales du module</a><a class="toc-l2" href="#sources-internes-v-rifi-es">Sources internes vérifiées</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Filtration</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

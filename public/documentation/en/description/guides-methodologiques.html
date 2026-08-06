@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Description — Methodological guides — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="en" data-kind="guide" data-module="description" data-no-result="No result found on this page.">
+<a class="skip-link" href="#doc-content">Methodological guides</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR documentation</strong><small>Embedded documentation — works offline</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Back to BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="en" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" selected>English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">Description</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Methodological guides</a>
+        <a class="" href="references-techniques.html">Technical reference</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analysis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Documentation version</span><strong>1.8.0</strong><span>Generated on 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Description</a><span>›</span><span>Methodological guides</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Search this page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No result found on this page.</div>
+    <article class="doc-article"><h1 id="top">Description — Methodological guides</h1>
+<h2 id="section-1">1. General overview<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>The <strong>Description</strong> tab is used to inspect the structure and content of the <code>phyloseq</code> objects available in BarCodeR before moving to editing, filtering, or statistical analysis.</p>
+<p>It is organized into two complementary views.</p>
+<h3 id="dataset-view">Dataset view<a aria-label="Permalink" class="heading-anchor" href="#dataset-view">#</a></h3>
+<p>This view inspects one <code>phyloseq</code> object at a time and lets you:</p>
+<ul>
+<li>check its dimensions;</li>
+<li>check which components are available;</li>
+<li>review descriptive metrics;</li>
+<li>visualize abundance and observed richness;</li>
+<li>inspect reference sequences;</li>
+<li>calculate rarefaction curves;</li>
+<li>identify atypical samples;</li>
+<li>view and export tables;</li>
+<li>inspect filtration logs;</li>
+<li>review OpenMetaBar provenance.</li>
+</ul>
+<h3 id="project-view">Project view<a aria-label="Permalink" class="heading-anchor" href="#project-view">#</a></h3>
+<p>This view compares several datasets currently held in memory and lets you:</p>
+<ul>
+<li>obtain a summary of all loaded objects;</li>
+<li>select the datasets to compare;</li>
+<li>compare their dimensions;</li>
+<li>compare sequencing depth and richness;</li>
+<li>compare sparsity;</li>
+<li>examine differences relative to a reference dataset;</li>
+<li>compare removals documented in filtration logs.</li>
+</ul>
+<h2 id="section-2">2. Purpose of the tab<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Description is primarily intended to help you understand the data, verify an import, identify obvious anomalies, prepare later methodological choices, and compare the general structure of several datasets.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Appropriate tab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modify tables</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>Remove samples or taxa</td>
+<td>Filtration</td>
+</tr>
+<tr>
+<td>Rename or delete a dataset</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Run a statistical analysis</td>
+<td>Analysis</td>
+</tr>
+<tr>
+<td>Start a pipeline from FASTQ files</td>
+<td>OpenMetaBar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-3">3. Effect of the tab on the data<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Description does not modify the OTU table, taxonomy, metadata, sequences, tree, abundances, identifiers, or logs. Plots and tables are built from the object currently held in memory.</p>
+<h3 id="section-3-1">3.1. Exception: the active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-3-1">#</a></h3>
+<p>The main Dataset-view selector is synchronized with the global active dataset. Changing the dataset in Description:</p>
+<ul>
+<li>updates <code>active_ds()</code>;</li>
+<li>changes the active dataset in the rest of BarCodeR;</li>
+<li>may mark the project as having unsaved changes.</li>
+</ul>
+<p>The phyloseq content is not changed, but the global working context is.</p>
+<h2 id="section-4">4. Required components<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Most Description functions require at least an <code>otu_table</code>.</p>
+<p>The following components are optional:</p>
+<ul>
+<li><code>sample_data</code>;</li>
+<li><code>tax_table</code>;</li>
+<li><code>refseq</code>;</li>
+<li>phylogenetic tree;</li>
+<li>provenance attributes;</li>
+<li>filtration logs.</li>
+</ul>
+<p>A missing component reduces the available information but does not necessarily prevent the tab from opening.</p>
+<h2 id="section-5">5. Important assumption about abundance values<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>The module labels OTU-table values as <strong>reads</strong>, but it does not verify that they are raw, integer, untransformed, non-negative counts.</p>
+<p>If the phyloseq object contains relative abundances, CLR- or log-transformed values, normalized values, decimals, or negative values, the metrics displayed as “reads” no longer represent raw sequencing depth.</p>
+<p>This distinction is essential when interpreting totals, richness, dominance, rarefaction curves, and comparisons between datasets.</p>
+<h2 id="section-6">6. Interface organization<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>The tab has two main controls:</p>
+<pre tabindex="0"><code class="language-text">Dataset
+Project
+</code></pre>
+<h3 id="dataset-view-2">Dataset view<a aria-label="Permalink" class="heading-anchor" href="#dataset-view-2">#</a></h3>
+<p>It contains:</p>
+<ol>
+<li>Dataset controls.</li>
+<li>OpenMetaBar provenance.</li>
+<li>Quick dataset reading.</li>
+<li>Interactive visualizations.</li>
+<li>Tables and logs.</li>
+</ol>
+<h3 id="project-view-2">Project view<a aria-label="Permalink" class="heading-anchor" href="#project-view-2">#</a></h3>
+<p>It contains:</p>
+<ol>
+<li>Global project overview.</li>
+<li>Interactive comparisons.</li>
+</ol>
+<h2 id="section-7">7. Selecting the dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>The <strong>Select a dataset</strong> field contains all datasets currently available in the session.</p>
+<h3 id="section-7-1">7.1. Global synchronization<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>The selection follows the global active dataset. If the active dataset is changed in Datasets, in the sidebar, or in another global selector, Description follows that value. Conversely, changing the selection in Description changes the application's active dataset.</p>
+<h3 id="section-7-2">7.2. Fallback value<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>If no valid active dataset is defined, Description uses:</p>
+<ol>
+<li>the previously selected dataset if it still exists;</li>
+<li>otherwise the first dataset in the list.</li>
+</ol>
+<h3 id="section-7-3">7.3. Changing datasets<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>When the dataset changes, metrics, plots, tables, grouping options, provenance, and outliers are recomputed.</p>
+<blockquote>
+<p><strong>Rarefaction warning:</strong> rarefaction is not automatically recomputed when the dataset changes. Click <strong>Calculate curves</strong> again.</p>
+</blockquote>
+<h2 id="section-8">8. Grouping variable<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>The <strong>Grouping variable — samples</strong> field colors or separates samples using a column from <code>sample_data</code>.</p>
+<h3 id="section-8-1">8.1. Variables offered<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>A column is offered when it contains at least two and at most fifteen distinct non-missing values. <code>Date</code>, <code>POSIXct</code>, and <code>POSIXt</code> columns are excluded.</p>
+<h3 id="section-8-2">8.2. Numeric columns<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>A numeric column may be offered if it contains between two and fifteen distinct values. It is then treated as categorical.</p>
+<p>For example:</p>
+<pre tabindex="0"><code class="language-text">Temperature = 10, 15, 20
+</code></pre>
+<p>is treated as three groups rather than as a continuous quantitative variable.</p>
+<h3 id="section-8-3">8.3. Missing values<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>Missing values are grouped under the label <code>NA</code>. A literal string <code>"NA"</code> and a true missing value may therefore be difficult to distinguish visually.</p>
+<h3 id="section-8-4">8.4. No grouping<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>When <strong>No grouping</strong> is selected, all samples are assigned to a single group named <code>All</code>.</p>
+<h3 id="section-8-5">8.5. Effects of grouping<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>Grouping affects:</p>
+<ul>
+<li>color in the reads-versus-richness plot;</li>
+<li>group violin plots;</li>
+<li>cumulative curves by group;</li>
+<li>rarefaction colors;</li>
+<li>pooled-group rarefaction;</li>
+<li>outlier context;</li>
+<li>outlier concentration by group.</li>
+</ul>
+<p>It does not modify the data.</p>
+<h2 id="section-9">9. Grouping does not change outlier detection<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Outliers are computed across all samples in the dataset. They are not recalculated separately within each group.</p>
+<p>The grouping variable only contextualizes outliers, shows where they are concentrated, and colors the visualizations.</p>
+<p>A sample can therefore be typical within its own group but flagged as an outlier relative to the full dataset.</p>
+<h2 id="section-10">10. “View logs” button<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>The <strong>View logs</strong> button selects the <strong>Filtration logs</strong> sub-tab in the Tables and logs section.</p>
+<p>In the current implementation, it does not automatically scroll the page and may not expand the box if it is collapsed. After clicking, you may need to scroll to Tables and logs, expand the box, and open the already-selected sub-tab.</p>
+<h2 id="section-11">11. Dataset header<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>The header displays:</p>
+<ul>
+<li>dataset name;</li>
+<li>number of samples;</li>
+<li>number of taxa;</li>
+<li>total abundance;</li>
+<li>available components.</li>
+</ul>
+<p>Example:</p>
+<pre tabindex="0"><code class="language-text">130 samples • 2,450 ASVs/OTUs • 7,779,736 reads
+</code></pre>
+<h2 id="section-12">12. Component badges<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Badges indicate the presence of an OTU table, taxonomy, metadata, reference sequences, and filtration logs.</p>
+<h3 id="section-12-1">12.1. OTU<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Indicates that an <code>otu_table</code> was detected.</p>
+<h3 id="section-12-2">12.2. Taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Indicates that a <code>tax_table</code> was detected. It does not guarantee that all ASVs are annotated, all ranks are complete, or the taxonomy is biologically correct.</p>
+<h3 id="section-12-3">12.3. Metadata<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Indicates that <code>sample_data</code> was detected. It does not guarantee that every variable is usable, that types are correct, or that there are no missing values.</p>
+<h3 id="section-12-4">12.4. RefSeq<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Indicates that reference sequences are available and that the <code>Biostrings</code> package can read them. If <code>Biostrings</code> is unavailable, Description may report sequences as absent even when the object contains <code>refseq</code>.</p>
+<h3 id="section-12-5">12.5. Logs<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Indicates the presence of the <code>filtration_log</code> attribute. It does not guarantee that the log actually contains removed ASV or sample rows.</p>
+<h3 id="section-12-6">12.6. Phylogenetic tree<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>The current module has no dedicated tree badge. The absence of a badge therefore says nothing about whether <code>phy_tree</code> is present.</p>
+<h2 id="section-13">13. OTU-table orientation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Description temporarily orients the matrix for calculations with taxa in rows and samples in columns.</p>
+<p>If the original object stores taxa in columns, the matrix is transposed in memory for descriptive calculations. The original phyloseq object is not transposed or modified.</p>
+<h2 id="section-14">14. Metric: number of taxa<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>The displayed number is the number of rows in the reoriented matrix, equivalent to <code>phyloseq::ntaxa(ps)</code>.</p>
+<p>The interface uses the term <strong>ASV</strong>, but the units may be ASVs, OTUs, ZOTUs, grouped species, or other units. Description does not verify how the taxa were generated.</p>
+<h2 id="section-15">15. Metric: number of samples<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>The value is the number of columns in the reoriented matrix, equivalent to <code>phyloseq::nsamples(ps)</code>.</p>
+<h2 id="section-16">16. Metric: total reads<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>The total is the sum of all OTU-table cells, ignoring missing values.</p>
+<p>It can only be interpreted as total reads if the matrix contains raw counts.</p>
+<h2 id="section-17">17. Metric: reads per sample<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>For each sample:</p>
+<pre tabindex="0"><code class="language-text">Reads = sum of all taxon abundances
+</code></pre>
+<p>The module then calculates minimum, maximum, mean, median, and standard deviation. The median is shown in the main cards.</p>
+<h2 id="section-18">18. Metric: observed richness<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>For each sample:</p>
+<pre tabindex="0"><code class="language-text">Richness = number of taxa with abundance strictly greater than zero
+</code></pre>
+<p>This is raw observed richness. It is not Chao1, ACE, Shannon, Simpson, or richness corrected for depth.</p>
+<p>Samples with different depths may therefore have richness values that are not directly comparable.</p>
+<h2 id="section-19">19. Metric: dominance of the most abundant taxon<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>For each sample:</p>
+<pre tabindex="0"><code class="language-text">Dominance (%) =
+maximum taxon abundance
+÷ total sample abundance
+× 100
+</code></pre>
+<p>High dominance may reflect genuine community dominance, preferential amplification, a contaminant, compositional imbalance, low depth, or a particular sample. It cannot by itself establish poor quality.</p>
+<h2 id="section-20">20. Metric: zero proportion per sample<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>For each sample:</p>
+<pre tabindex="0"><code class="language-text">Zeros (%) =
+number of taxa with abundance equal to zero
+÷ total number of taxa
+× 100
+</code></pre>
+<p>This describes the proportion of taxa absent from the sample. It is not used in the current outlier detection.</p>
+<h2 id="section-21">21. Metric: global sparsity<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Sparsity is:</p>
+<pre tabindex="0"><code class="language-text">number of zero cells
+÷ total number of OTU-table cells
+× 100
+</code></pre>
+<h3 id="section-21-1">21.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-21-1">#</a></h3>
+<p>High sparsity means that many taxon–sample combinations have zero abundance. This is common in metabarcoding because of diversity, specialization, spatial variation, detection limits, sequencing depth, and bioinformatic processing.</p>
+<h3 id="section-21-2">21.2. Display thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-21-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Sparsity</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 97%</td>
+<td>Very high sparsity</td>
+</tr>
+<tr>
+<td style="text-align:right">90 to &lt;97%</td>
+<td>High sparsity</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;90%</td>
+<td>Controlled sparsity</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are internal display rules, not universal scientific standards.</p>
+<h3 id="section-21-3">21.3. Presence of <code>NA</code><a aria-label="Permalink" class="heading-anchor" href="#section-21-3">#</a></h3>
+<p>The denominator uses the full matrix size. <code>NA</code> values are not counted as zeros but remain in the total number of cells, so sparsity may be slightly underestimated when missing values are present.</p>
+<h2 id="section-22">22. Depth variability<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Description calculates a coefficient of variation:</p>
+<pre tabindex="0"><code class="language-text">CV (%) =
+standard deviation of reads per sample
+÷ mean reads per sample
+× 100
+</code></pre>
+<p>A “very heterogeneous depth” message is displayed when <code>CV ≥ 100%</code>.</p>
+<p>This is an internal descriptive threshold, not a universal limit. A CV below 100% does not guarantee sufficiently homogeneous depth for every analysis.</p>
+<h2 id="section-23">23. Taxonomic completeness<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>For each taxonomic rank:</p>
+<pre tabindex="0"><code class="language-text">Completeness (%) =
+number of non-missing, non-empty values
+÷ total number of ASVs
+× 100
+</code></pre>
+<p>The displayed mean completeness is the unweighted mean of completeness percentages across all ranks.</p>
+<h3 id="section-23-1">23.1. Consequence<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>A dataset with several highly incomplete ranks and a few complete ranks may have an intermediate average that hides those differences. Review the detailed table.</p>
+<h3 id="section-23-2">23.2. Space-only strings<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>A string containing only spaces may be considered filled if it was not cleaned before import.</p>
+<h2 id="section-24">24. Missing metadata values<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>For each variable:</p>
+<pre tabindex="0"><code class="language-text">Missing (%) =
+number of NA or empty strings
+÷ number of samples
+× 100
+</code></pre>
+<p>The displayed mean is the unweighted mean of missing-value rates across all variables.</p>
+<h3 id="section-24-1">24.1. The value <code>"NA"</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>The character string <code>"NA"</code> is not a true missing value and may be counted as a level.</p>
+<h3 id="section-24-2">24.2. Spaces<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>A string containing only spaces may be considered non-missing.</p>
+<h3 id="section-24-3">24.3. Displayed type<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>The completeness table displays the first R class of the column: <code>character</code>, <code>numeric</code>, <code>factor</code>, <code>Date</code>, and so on. This can reveal columns that became <code>character</code> during import.</p>
+<h2 id="section-25">25. Sequence lengths<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>When <code>refseq</code> and <code>Biostrings</code> are available, Description calculates minimum, maximum, mean, median, and standard deviation of sequence length in base pairs.</p>
+<h3 id="section-25-1">25.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-25-1">#</a></h3>
+<p>A multimodal or very wide distribution may indicate multiple amplified regions, multiple markers, truncated sequences, indels, nonspecific products, poorly filtered sequences, or genuine biological variation.</p>
+<p>Expected length must be interpreted according to the marker, primers, whether primers are still present, and the pipeline used.</p>
+<h2 id="section-26">26. GC percentage<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>GC percentage is calculated from A, C, G, and T bases:</p>
+<pre tabindex="0"><code class="language-text">GC (%) =
+number of G + number of C
+÷ total number of A, C, G, and T
+× 100
+</code></pre>
+<p>Ambiguous bases are excluded from the ACGT denominator. A sequence with many ambiguous characters may therefore have a GC value based only on its unambiguous portion.</p>
+<h2 id="section-27">27. Sequence names<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Description uses the names stored in <code>refseq</code>. If sequences lack valid names, generic display identifiers are generated:</p>
+<pre tabindex="0"><code class="language-text">ASV_1
+ASV_2
+ASV_3
+</code></pre>
+<p>The module does not explicitly verify that every sequence name corresponds to a taxon in the OTU table.</p>
+<h2 id="section-28">28. Automatic interpretation message<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>The summary card builds a short text from median reads, median richness, sparsity, and component availability.</p>
+<p>This is descriptive assistance. It is not scientific validation, definitive quality control, a filtering decision, or an automatic statistical recommendation.</p>
+<h2 id="section-29">29. Quick dataset reading<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>The section covers four areas.</p>
+<h3 id="section-29-1">29.1. Structure<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>Summary of median reads, median richness, and sparsity.</p>
+<h3 id="section-29-2">29.2. Available content<a aria-label="Permalink" class="heading-anchor" href="#section-29-2">#</a></h3>
+<p>Presence or absence of the OTU table, taxonomy, metadata, and sequences.</p>
+<h3 id="section-29-3">29.3. Sequences<a aria-label="Permalink" class="heading-anchor" href="#section-29-3">#</a></h3>
+<p>When available: median length and median GC.</p>
+<h3 id="section-29-4">29.4. Filtration<a aria-label="Permalink" class="heading-anchor" href="#section-29-4">#</a></h3>
+<p>When <code>filtration_log</code> exists: number of removed ASVs and removed samples.</p>
+<h2 id="section-30">30. Automatic diagnostics<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>The diagnostic grid may flag:</p>
+<ul>
+<li>high sparsity;</li>
+<li>heterogeneous depth;</li>
+<li>missing metadata;</li>
+<li>missing taxonomy;</li>
+<li>missing sequences;</li>
+<li>presence of a filtration history.</li>
+</ul>
+<p>These alerts do not change anything and should not be used alone to exclude data.</p>
+<h2 id="section-31">31. OpenMetaBar provenance<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>The <strong>OpenMetaBar provenance</strong> box reads <code>attr(ps, "openmetabar_run")</code>. It does not contact the cluster. It is a snapshot stored in the phyloseq object when it was imported.</p>
+<h3 id="section-31-1">31.1. Run summary<a aria-label="Permalink" class="heading-anchor" href="#section-31-1">#</a></h3>
+<p>May include run ID, label, launch date, technology, marker, engine, database type and path, design file, sample count, and FASTQ count.</p>
+<h3 id="section-31-2">31.2. Demultiplexing<a aria-label="Permalink" class="heading-anchor" href="#section-31-2">#</a></h3>
+<p>May include MiniBar activation, method, tolerances, and other stored options.</p>
+<h3 id="section-31-3">31.3. Filters<a aria-label="Permalink" class="heading-anchor" href="#section-31-3">#</a></h3>
+<p>May include orientation, quality, length, coding filter, and genetic code.</p>
+<h3 id="section-31-4">31.4. LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-31-4">#</a></h3>
+<p>May include platform, amplicon type, clustering, assignment, and other stored settings.</p>
+<h3 id="section-31-5">31.5. LCA<a aria-label="Permalink" class="heading-anchor" href="#section-31-5">#</a></h3>
+<p>May include coverage, identity thresholds, agreement fraction, and assignment mode.</p>
+<h3 id="section-31-6">31.6. IDMABIO<a aria-label="Permalink" class="heading-anchor" href="#section-31-6">#</a></h3>
+<p>Present only when that route was used.</p>
+<h3 id="section-31-7">31.7. NextITS<a aria-label="Permalink" class="heading-anchor" href="#section-31-7">#</a></h3>
+<p>Present only when that route was used.</p>
+<h3 id="section-31-8">31.8. Cluster environment<a aria-label="Permalink" class="heading-anchor" href="#section-31-8">#</a></h3>
+<p>May include partition, memory, CPUs, modules, and remote paths.</p>
+<h3 id="section-31-9">31.9. FASTQ files<a aria-label="Permalink" class="heading-anchor" href="#section-31-9">#</a></h3>
+<p>The file list may be displayed. Paths represent recorded provenance, not necessarily files that are still accessible.</p>
+<h3 id="section-31-10">31.10. Sample renaming<a aria-label="Permalink" class="heading-anchor" href="#section-31-10">#</a></h3>
+<p>Provenance may retain original name, corrected name, date, and reason.</p>
+<h3 id="section-31-11">31.11. Missing provenance<a aria-label="Permalink" class="heading-anchor" href="#section-31-11">#</a></h3>
+<p>Missing provenance does not prove that the dataset was never produced by OpenMetaBar. The attribute may have been removed, lost during conversion, overwritten, absent from an older version, or not retained in an external export.</p>
+<h2 id="section-32">32. Interactive visualizations — Overview<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>The overview contains:</p>
+<ol>
+<li>Reads versus richness.</li>
+<li>Sample detail card.</li>
+<li>Top 15 samples.</li>
+<li>Top 15 taxa.</li>
+<li>Cumulative sample contribution.</li>
+<li>Cumulative taxon contribution.</li>
+</ol>
+<h2 id="section-33">33. Reads versus richness<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>Each point represents one sample.</p>
+<pre tabindex="0"><code class="language-text">X = total abundance
+Y = observed richness
+</code></pre>
+<p>Color represents the selected group, and shape represents status: circle for standard, diamond for outlier.</p>
+<h3 id="section-33-1">33.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>The plot helps identify relationships between depth and richness, shallow samples, rich but shallow samples, points far from the main cloud, and differences between groups.</p>
+<h3 id="section-33-2">33.2. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>A positive reads–richness relationship does not prove that depth is the only cause of biological differences.</p>
+<h3 id="section-33-3">33.3. Interaction<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>Clicking a point updates the sample detail card.</p>
+<h2 id="section-34">34. Sample detail card<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>The card displays SampleID, reads, richness, dominance, zero proportion, status, and up to six available metadata values.</p>
+<h3 id="section-34-1">34.1. Initial sample<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>Before any click, the card displays the first detected outlier if one exists; otherwise it displays the first sample in the dataset.</p>
+<h3 id="section-34-2">34.2. Displayed metadata<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>Columns that are completely missing for the selected sample are excluded. Only the first six usable columns are shown, so the card is not exhaustive.</p>
+<h2 id="section-35">35. Top 15 samples<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>The plot ranks samples by decreasing total abundance and displays at most fifteen. Clicking a bar updates the sample card.</p>
+<h3 id="section-35-1">35.1. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-35-1">#</a></h3>
+<p>The deepest samples are not necessarily the best, richest, most representative, or most reliable.</p>
+<h2 id="section-36">36. Top 15 taxa<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>The plot ranks taxa by total abundance across all samples. The tooltip also shows the number and percentage of samples in which each taxon is present.</p>
+<h3 id="section-36-1">36.1. Prevalence<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<pre tabindex="0"><code class="language-text">Prevalence = number of samples where abundance &gt; 0
+</code></pre>
+<pre tabindex="0"><code class="language-text">Prevalence (%) =
+prevalence
+÷ total number of samples
+× 100
+</code></pre>
+<h3 id="section-36-2">36.2. Limitation<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>The plot uses the taxon identifier rather than the taxonomic annotation. An ASV that is highly abundant in a single sample may rank first despite low prevalence.</p>
+<h2 id="section-37">37. Cumulative contribution of samples<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Samples are ranked by decreasing abundance. The curve shows the cumulative proportion of abundance explained by the leading samples.</p>
+<p>A steep initial increase indicates that sequencing depth is concentrated in a small number of samples.</p>
+<h2 id="section-38">38. Cumulative contribution of taxa<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Taxa are ranked by decreasing total abundance. The curve shows the cumulative proportion of abundance explained by dominant taxa.</p>
+<p>It does not account for taxonomy, prevalence, grouping, or biological rarity.</p>
+<h2 id="section-39">39. Abundance tab<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>It includes:</p>
+<ul>
+<li>reads histogram;</li>
+<li>reads violin plot by group;</li>
+<li>cumulative reads contribution by group.</li>
+</ul>
+<h2 id="section-40">40. Reads histogram<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>The histogram describes the distribution of total abundance per sample. It helps reveal skewness, shallow or very deep samples, and multiple depth populations.</p>
+<p>The number of bins is determined automatically by Plotly.</p>
+<h2 id="section-41">41. Reads by group<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>The violin plot is available when the grouping variable contains several groups. It displays the distribution, a boxplot, the mean, and individual points.</p>
+<h3 id="section-41-1">41.1. No grouping<a aria-label="Permalink" class="heading-anchor" href="#section-41-1">#</a></h3>
+<p>If no grouping is selected, a message indicates that no qualitative grouping variable is available.</p>
+<h3 id="section-41-2">41.2. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-41-2">#</a></h3>
+<p>The plot is descriptive. It performs no statistical test, normalization, adjustment for group sizes, or adjustment for covariates.</p>
+<h2 id="section-42">42. Cumulative reads contribution by group<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>Within each group, samples are sorted by decreasing abundance and the cumulative proportion is calculated inside that group. Each curve therefore reaches 100% for its own group.</p>
+<h3 id="section-42-1">42.1. Consequence<a aria-label="Permalink" class="heading-anchor" href="#section-42-1">#</a></h3>
+<p>The curves show internal concentration of depth within each group. They do not show what proportion of all project reads belongs to each group.</p>
+<p>A very small group and a very large group both reach 100%.</p>
+<h2 id="section-43">43. Richness tab<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>It includes:</p>
+<ul>
+<li>richness histogram;</li>
+<li>richness by group;</li>
+<li>richness versus dominance.</li>
+</ul>
+<h2 id="section-44">44. Richness histogram<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>It displays the distribution of the number of observed taxa per sample.</p>
+<p>This richness is not corrected for depth. A deeper sample may mechanically contain more observed taxa.</p>
+<h2 id="section-45">45. Richness by group<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>The violin plot compares observed richness between groups. Like the reads plot, it is descriptive and performs no statistical test.</p>
+<h2 id="section-46">46. Richness versus dominance<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<pre tabindex="0"><code class="language-text">X = observed richness
+Y = dominance of the most abundant taxon
+</code></pre>
+<p>The plot can distinguish rich and even communities, rich but dominated communities, poor and dominated communities, or atypical profiles.</p>
+<h3 id="section-46-1">46.1. This is not an evenness index<a aria-label="Permalink" class="heading-anchor" href="#section-46-1">#</a></h3>
+<p>Maximum-taxon dominance can be used as a simple proxy, but it is not Pielou, Shannon, Simpson, or a complete evenness measure.</p>
+<p>Two communities with the same maximum dominance can have very different distributions among the remaining taxa.</p>
+<h2 id="section-47">47. Sequences tab<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>It includes:</p>
+<ul>
+<li>sequence-length histogram;</li>
+<li>GC histogram;</li>
+<li>length versus GC relationship.</li>
+</ul>
+<p>These plots require <code>refseq</code> and the <code>Biostrings</code> package.</p>
+<h2 id="section-48">48. Length versus GC<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>Each point represents a sequence. The plot may reveal groups with different lengths or composition, very short or long sequences, atypical GC values, or a mixture of markers.</p>
+<p>It cannot by itself determine whether a sequence is a contaminant or is incorrect.</p>
+<h2 id="section-49">49. Rarefaction curves<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>The Rarefaction sub-tab starts a separate calculation. It is not computed automatically when the tab opens.</p>
+<p>Click <strong>Calculate curves</strong>.</p>
+<h2 id="section-50">50. Rarefaction method used<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p>The module uses:</p>
+<pre tabindex="0"><code class="language-r">vegan::rarefy()
+</code></pre>
+<p>This function calculates the analytical expected number of observed taxa at a specified depth.</p>
+<p>It is not repeated random subsampling, does not create a new phyloseq object, does not call <code>rarefy_even_depth()</code>, does not replace abundances, and does not save a normalization.</p>
+<p>The original data remain unchanged.</p>
+<h2 id="section-51">51. Rarefaction calculation requirements<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>The calculation requires:</p>
+<ul>
+<li>the <code>vegan</code> package;</li>
+<li>an OTU table;</li>
+<li>at least two samples with positive abundance;</li>
+<li>at least two samples with at least 50 reads.</li>
+</ul>
+<p>Samples with fewer than 50 reads are excluded.</p>
+<h3 id="section-51-1">51.1. The 50-read threshold<a aria-label="Permalink" class="heading-anchor" href="#section-51-1">#</a></h3>
+<p>The threshold is hard-coded and cannot currently be changed in the interface.</p>
+<p>It is an internal practical rule, not a universal standard.</p>
+<h2 id="section-52">52. Expected data type for rarefaction<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p><code>vegan::rarefy()</code> is designed for counts.</p>
+<p>Rarefaction is not appropriate for:</p>
+<ul>
+<li>relative abundances;</li>
+<li>CLR data;</li>
+<li>negative data;</li>
+<li>continuous transformations;</li>
+<li>non-integer values.</li>
+</ul>
+<p>The module does not explicitly block every such situation. Verify the nature of the OTU table before calculating curves.</p>
+<h2 id="section-53">53. Calculated depths<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>The module generates up to about 80 depths distributed between 1 and the maximum observed depth.</p>
+<p>For each sample, only depths less than or equal to its total are retained. Depths are rounded and deduplicated.</p>
+<h2 id="section-54">54. Individual curves<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>The <strong>Individual curves colored by group</strong> mode displays one line per sample. Color represents the group.</p>
+<p>The tooltip includes:</p>
+<ul>
+<li>SampleID;</li>
+<li>group;</li>
+<li>total reads;</li>
+<li>rarefied depth;</li>
+<li>expected richness;</li>
+<li>observed richness;</li>
+<li>outlier status.</li>
+</ul>
+<h2 id="section-55">55. Subsetting individual curves<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>Options are:</p>
+<ul>
+<li>All samples;</li>
+<li>Top reads;</li>
+<li>Bottom reads;</li>
+<li>Outliers.</li>
+</ul>
+<h3 id="section-55-1">55.1. All samples<a aria-label="Permalink" class="heading-anchor" href="#section-55-1">#</a></h3>
+<p>All eligible curves are displayed.</p>
+<p>In the current implementation, the <strong>Maximum number of curves</strong> field is not applied in this mode. A dataset with many samples can therefore produce a heavy plot.</p>
+<h3 id="section-55-2">55.2. Top reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-2">#</a></h3>
+<p>Keeps the deepest samples, up to the selected limit.</p>
+<h3 id="section-55-3">55.3. Bottom reads<a aria-label="Permalink" class="heading-anchor" href="#section-55-3">#</a></h3>
+<p>Keeps the shallowest samples among those with at least 50 reads.</p>
+<h3 id="section-55-4">55.4. Outliers<a aria-label="Permalink" class="heading-anchor" href="#section-55-4">#</a></h3>
+<p>Keeps samples flagged as outliers by the IQR rule.</p>
+<p>If there are no outliers, the plot may remain empty after calculation.</p>
+<h2 id="section-56">56. Maximum number of curves<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>The value is limited between 2 and 200.</p>
+<p>It applies to Top reads, Bottom reads, and Outliers, but currently not to All samples.</p>
+<h2 id="section-57">57. Curves aggregated by group<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>The <strong>Curves aggregated by group</strong> mode sums abundance across all samples in each group. One curve is then calculated for the pooled community.</p>
+<h3 id="section-57-1">57.1. What the curve represents<a aria-label="Permalink" class="heading-anchor" href="#section-57-1">#</a></h3>
+<p>It represents expected richness in the group's pooled reads.</p>
+<p>It does not represent:</p>
+<ul>
+<li>the mean of individual curves;</li>
+<li>mean richness per sample;</li>
+<li>a mean with a confidence interval;</li>
+<li>a comparison adjusted for sample count.</li>
+</ul>
+<h3 id="section-57-2">57.2. Effect of group size<a aria-label="Permalink" class="heading-anchor" href="#section-57-2">#</a></h3>
+<p>A group with more samples or more reads has a larger pool and may reach higher richness.</p>
+<p>Interpret pooled curves together with the number of samples and total reads in each group. These values are shown in tooltips.</p>
+<h3 id="section-57-3">57.3. Without grouping<a aria-label="Permalink" class="heading-anchor" href="#section-57-3">#</a></h3>
+<p>If no grouping is selected, all samples are pooled into a single curve named <code>All</code>.</p>
+<h2 id="section-58">58. Display legend<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>The legend is disabled by default. With many groups, enabling it can reduce plot readability.</p>
+<p>For individual curves, only one legend entry is shown per group even when several samples share the same color.</p>
+<h2 id="section-59">59. Recalculation is required<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>The rarefaction result belongs to the dataset that was active when the button was clicked.</p>
+<p>Changing the dataset does not automatically recalculate it. Click <strong>Calculate curves</strong> again.</p>
+<h3 id="section-59-1">59.1. Changing the grouping variable<a aria-label="Permalink" class="heading-anchor" href="#section-59-1">#</a></h3>
+<p>Changing the grouping variable after calculation may update colors or aggregation using the already-computed result.</p>
+<h3 id="section-59-2">59.2. Risk of a stale result<a aria-label="Permalink" class="heading-anchor" href="#section-59-2">#</a></h3>
+<p>After changing datasets without recalculating, the stored result may still correspond to the previous dataset.</p>
+<p>Always recalculate rarefaction after changing datasets.</p>
+<h2 id="section-60">60. Interpreting rarefaction curves<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>A flattening curve suggests that adding reads progressively reveals fewer new taxa.</p>
+<p>A curve that is still strongly increasing suggests that additional depth might reveal more taxa.</p>
+<p>However, a lack of plateau does not necessarily prove poor quality, insufficient sequencing, or experimental failure. It may also reflect an extremely diverse community, many rare taxa, residual noise, sequencing errors, or strong biological heterogeneity.</p>
+<h2 id="section-61">61. Limitations of the displayed rarefaction<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>The plot does not provide:</p>
+<ul>
+<li>confidence intervals;</li>
+<li>means over repeated random subsampling;</li>
+<li>extrapolation;</li>
+<li>Good's coverage;</li>
+<li>Chao1;</li>
+<li>statistical comparison of curves;</li>
+<li>an automatic saturation threshold.</li>
+</ul>
+<p>It is a descriptive tool.</p>
+<h2 id="section-62">62. Outlier detection<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>Detection is based on three metrics:</p>
+<ol>
+<li>depth;</li>
+<li>richness;</li>
+<li>dominance.</li>
+</ol>
+<p>Zero proportion is not used for flagging.</p>
+<h2 id="section-63">63. IQR rule<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<p>For each metric, Description calculates:</p>
+<pre tabindex="0"><code class="language-text">Q1 = first quartile
+Q3 = third quartile
+IQR = Q3 - Q1
+</code></pre>
+<p>Limits:</p>
+<pre tabindex="0"><code class="language-text">Lower limit = Q1 - 1.5 × IQR
+Upper limit = Q3 + 1.5 × IQR
+</code></pre>
+<p>A value outside these limits is flagged as an outlier. This is the conventional Tukey boxplot-whisker rule.</p>
+<h2 id="section-64">64. High and low outliers<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>The rule applies to both tails.</p>
+<p>A sample may be flagged for very low or very high depth, very low or very high richness, or very low or very high dominance.</p>
+<p>Although some interface wording emphasizes excessive dominance, the actual calculation also detects exceptionally low dominance.</p>
+<h2 id="section-65">65. Minimum conditions for the IQR rule<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>No outlier is detected for a metric when:</p>
+<ul>
+<li>fewer than four values are available;</li>
+<li>all values are missing;</li>
+<li>the IQR is zero.</li>
+</ul>
+<p>No detected outlier may therefore mean true homogeneity, too few samples, no variability, or an unusable signal.</p>
+<h2 id="section-66">66. Sample status<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>A sample is labelled <code>Outlier</code> when it is atypical for at least one of the three metrics. Otherwise it is labelled <code>Standard</code>.</p>
+<p>The status is descriptive. No sample is removed automatically.</p>
+<h2 id="section-67">67. Number of signals<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>The number of signals is the number of atypical metrics among depth, richness, and dominance.</p>
+<p>Possible values:</p>
+<pre tabindex="0"><code class="language-text">0, 1, 2, or 3
+</code></pre>
+<p>A sample flagged on three signals is prioritized before a sample flagged on one.</p>
+<h2 id="section-68">68. Outlier score<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>For each metric, the amount beyond the limit is expressed in IQR units.</p>
+<p>Conceptual example:</p>
+<pre tabindex="0"><code class="language-text">Depth score =
+distance beyond the limit
+÷ IQR
+</code></pre>
+<p>The global score is the sum of depth, richness, and dominance scores. Standard samples receive zero.</p>
+<h3 id="section-68-1">68.1. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-68-1">#</a></h3>
+<p>A higher score indicates a value farther beyond the IQR limits.</p>
+<p>It is not a probability, p-value, universal quality metric, or deletion threshold.</p>
+<h2 id="section-69">69. Outlier priority order<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>Outliers are sorted by:</p>
+<ol>
+<li>number of signals;</li>
+<li>global score;</li>
+<li>number of reads.</li>
+</ol>
+<p>The first becomes the spotlight sample.</p>
+<h2 id="section-70">70. Outlier summary<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>The section displays:</p>
+<ul>
+<li>total number of outliers;</li>
+<li>percentage of affected samples;</li>
+<li>number of depth outliers;</li>
+<li>number of richness outliers;</li>
+<li>number of dominance outliers;</li>
+<li>most frequent signal;</li>
+<li>most affected group, when grouping is active.</li>
+</ul>
+<h2 id="section-71">71. Outlier concentration by group<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<p>For each group:</p>
+<pre tabindex="0"><code class="language-text">Outlier percentage =
+number of outliers in the group
+÷ total samples in the group
+× 100
+</code></pre>
+<p>The four most affected groups are displayed.</p>
+<h3 id="section-71-1">71.1. Color thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-71-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align:right">Percentage</th>
+<th>Visual level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">≥ 30%</td>
+<td>Danger</td>
+</tr>
+<tr>
+<td style="text-align:right">15 to &lt;30%</td>
+<td>Warning</td>
+</tr>
+<tr>
+<td style="text-align:right">&lt;15%</td>
+<td>Low</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are visual conventions only, not validated statistical thresholds.</p>
+<h2 id="section-72">72. Global detection and group interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>Group concentration must be interpreted carefully: outlier thresholds are calculated globally, and the percentage is then calculated within each group.</p>
+<p>A group that is naturally different from the rest of the dataset may contain many outliers without containing technically defective samples.</p>
+<h2 id="section-73">73. Samples-to-watch table<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>The table contains SampleID, group, signals, signal count, score, reads, richness, and dominance.</p>
+<p>It includes only samples detected by at least one IQR rule. It supports search, column filters, scrolling, and DataTables export.</p>
+<h2 id="section-74">74. Complete sample table<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>The complete table displays SampleID, group, signals, signal count, reads, richness, dominance, zero proportion, and status.</p>
+<p>Outliers appear first.</p>
+<h2 id="section-75">75. What an outlier does not mean<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>An outlier is not automatically an error, contaminant, sample to remove, sequencing failure, or bad control.</p>
+<p>It may represent genuine biology, a highly heterogeneous matrix, a different experimental group, true strong dominance, low biomass, or a rare event.</p>
+<p>Any decision must be contextualized using metadata, protocol, controls, filtration results, and visualizations.</p>
+<h2 id="section-76">76. Tables and logs<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>The box is initially collapsed. It contains:</p>
+<ul>
+<li>OTU table;</li>
+<li>Taxonomy;</li>
+<li>Metadata;</li>
+<li>Completeness;</li>
+<li>Filtration logs.</li>
+</ul>
+<h2 id="section-77">77. Table summary<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>Cards show:</p>
+<ul>
+<li>OTU-table dimensions;</li>
+<li>taxonomy dimensions;</li>
+<li>metadata dimensions;</li>
+<li>number of exportable log rows.</li>
+</ul>
+<p>Dimensions exclude the identifier column added for display.</p>
+<h2 id="section-78">78. Displayed OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>Description converts the table to a standard orientation with taxa in rows and samples in columns.</p>
+<p>An explicit <code>ASV</code> column is added. Even when the units are OTUs or ZOTUs, the column is still named ASV.</p>
+<h3 id="section-78-1">78.1. Original orientation<a aria-label="Permalink" class="heading-anchor" href="#section-78-1">#</a></h3>
+<p>Description's export does not necessarily preserve the original phyloseq orientation. It exports the reoriented version used for display.</p>
+<h3 id="section-78-2">78.2. Content<a aria-label="Permalink" class="heading-anchor" href="#section-78-2">#</a></h3>
+<p>Values are not changed. They may remain integer, decimal, negative, transformed, or missing.</p>
+<h2 id="section-79">79. Displayed taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>The taxonomy table contains an ASV column and the taxonomic ranks.</p>
+<h3 id="section-79-1">79.1. Rank names<a aria-label="Permalink" class="heading-anchor" href="#section-79-1">#</a></h3>
+<p>Empty or duplicated column names are replaced with unique names for display.</p>
+<p>Examples:</p>
+<pre tabindex="0"><code class="language-text">Unnamed_rank_1
+Genus
+Genus_1
+</code></pre>
+<p>This only affects the table displayed and exported from Description. The <code>tax_table</code> in the phyloseq object is not renamed.</p>
+<h2 id="section-80">80. Displayed metadata<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p>The row names of <code>sample_data</code> become a <code>SampleID</code> column.</p>
+<p>If the metadata already contains a <code>SampleID</code> column, it is renamed to avoid collision:</p>
+<pre tabindex="0"><code class="language-text">SampleID_meta
+SampleID_meta_2
+</code></pre>
+<p>The original phyloseq object is not modified.</p>
+<h2 id="section-81">81. Interactive-table features<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>Tables provide:</p>
+<ul>
+<li>filters above columns;</li>
+<li>search;</li>
+<li>vertical scrolling;</li>
+<li>horizontal scrolling;</li>
+<li>a fixed first column;</li>
+<li>pagination;</li>
+<li>Copy button;</li>
+<li>CSV button.</li>
+</ul>
+<p>For large matrices, the complete data are still prepared in R memory before display.</p>
+<h2 id="section-82">82. Dedicated CSV export<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>Each table has a dedicated export button.</p>
+<p>Files:</p>
+<pre tabindex="0"><code class="language-text">&lt;dataset&gt;_otu_table.csv
+&lt;dataset&gt;_tax_table.csv
+&lt;dataset&gt;_metadata.csv
+&lt;dataset&gt;_filtration_logs.csv
+</code></pre>
+<h3 id="section-82-1">82.1. Format<a aria-label="Permalink" class="heading-anchor" href="#section-82-1">#</a></h3>
+<p>Files are produced with <code>write.csv()</code>: comma separator, row names excluded, identifiers included as an explicit column, and standard R representation of missing values.</p>
+<h3 id="section-82-2">82.2. Visual filters<a aria-label="Permalink" class="heading-anchor" href="#section-82-2">#</a></h3>
+<p>The dedicated export contains the full calculated table. It is not restricted to currently visible or filtered rows in the interactive table.</p>
+<h3 id="section-82-3">82.3. Missing component<a aria-label="Permalink" class="heading-anchor" href="#section-82-3">#</a></h3>
+<p>If a component is absent, the button may produce an empty CSV file.</p>
+<h2 id="section-83">83. Taxonomic completeness<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>For each rank, the table displays the filled percentage and missing percentage.</p>
+<p>It helps distinguish nearly complete, partially filled, and largely empty ranks. The most complete rank is also shown in the summary.</p>
+<h2 id="section-84">84. Metadata completeness<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>For each variable, the table displays:</p>
+<ul>
+<li>R type;</li>
+<li>missing percentage;</li>
+<li>number of unique values.</li>
+</ul>
+<p>This helps identify completely empty columns, almost constant variables, potential grouping variables, numeric columns converted to text, and nearly unique identifiers.</p>
+<h2 id="section-85">85. Groupable variables<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>The number of groupable variables is the number of columns meeting these criteria:</p>
+<ul>
+<li>2 to 15 levels;</li>
+<li>non-temporal.</li>
+</ul>
+<p>This does not guarantee biological relevance. A variable such as <code>Replicate_number = 1, 2, 3</code> may be offered even though it is not necessarily an appropriate experimental group.</p>
+<h2 id="section-86">86. Filtration logs<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>Description reads:</p>
+<pre tabindex="0"><code class="language-r">attr(ps, "filtration_log")
+</code></pre>
+<p>It looks in particular for <code>removed_taxa</code> and <code>removed_samples</code>.</p>
+<h3 id="section-86-1">86.1. Removed ASVs<a aria-label="Permalink" class="heading-anchor" href="#section-86-1">#</a></h3>
+<p>The table may contain identifier, abundance, prevalence, reason, parameters, and other columns stored by Filtration. Content depends on the version and step that created the log.</p>
+<h3 id="section-86-2">86.2. Removed samples<a aria-label="Permalink" class="heading-anchor" href="#section-86-2">#</a></h3>
+<p>The table may contain SampleID, depth, reason, and other stored information.</p>
+<h3 id="section-86-3">86.3. No explicit identifier<a aria-label="Permalink" class="heading-anchor" href="#section-86-3">#</a></h3>
+<p>If row names are used as identifiers, Description adds an <code>ASV</code> or <code>SampleID</code> column.</p>
+<h2 id="section-87">87. Log export<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>Taxon and sample logs are combined into one CSV.</p>
+<p>A <code>log_type</code> column is added with values <code>removed_taxa</code> or <code>removed_samples</code>.</p>
+<p>Columns present in only one log type are added to the other with missing values.</p>
+<h2 id="section-88">88. Scope of filtration logs<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>The log represents information attached to the current object.</p>
+<p>It does not guarantee a complete history of all earlier versions, that the parent still exists, that every external step was documented, that manual edits were logged, or that logs were never overwritten.</p>
+<h2 id="section-89">89. Project view<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>Project view works with all datasets currently present in <code>datasets()</code>.</p>
+<p>It does not directly read every project saved on disk. It compares only the objects currently loaded into memory in the open project.</p>
+<h2 id="section-90">90. Global project summary<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>The summary contains:</p>
+<ul>
+<li>number of loaded datasets;</li>
+<li>number selected for comparison;</li>
+<li>summed sample count;</li>
+<li>summed abundance;</li>
+<li>mean sparsity.</li>
+</ul>
+<h2 id="section-91">91. Cumulative sample count<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>The value is the sum of the sample count in each dataset.</p>
+<p>It is not the number of unique samples. If the same samples exist in several datasets, they are counted repeatedly.</p>
+<p>Example:</p>
+<pre tabindex="0"><code class="language-text">COI: 100 samples
+16S: the same 100 samples
+Displayed total: 200
+</code></pre>
+<h2 id="section-92">92. Cumulative reads<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p>The value is the sum of abundance across all datasets.</p>
+<p>It is meaningful only when the datasets contain comparable values. Adding raw counts, proportions, and CLR data has no common interpretation.</p>
+<h2 id="section-93">93. Mean project sparsity<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>Mean sparsity is the simple mean of dataset sparsities.</p>
+<p>Each dataset has the same weight regardless of its dimensions. A 10 × 10 dataset and a 50,000 × 500 dataset contribute equally to this mean.</p>
+<h2 id="section-94">94. Project summary table<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>The table includes, among other fields:</p>
+<ul>
+<li>Dataset;</li>
+<li>ASVs;</li>
+<li>samples;</li>
+<li>total reads;</li>
+<li>mean and median reads;</li>
+<li>mean richness;</li>
+<li>sparsity;</li>
+<li>taxonomic completeness;</li>
+<li>missing metadata;</li>
+<li>component presence;</li>
+<li>log presence;</li>
+<li>number of removed ASVs;</li>
+<li>number of removed samples;</li>
+<li>selection status for plots.</li>
+</ul>
+<h2 id="section-95">95. Datasets to compare<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>The multiple selector defines which datasets are included in comparison plots.</p>
+<p>By default, all datasets are selected unless a previous selection was restored from the project's UI state.</p>
+<p>The selection does not modify the registry, change the active dataset, or filter objects. It only affects comparison plots.</p>
+<h2 id="section-96">96. Reference dataset<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>The reference dataset is used only in the <strong>Difference versus reference</strong> plot.</p>
+<p>It is not used in the heatmap, dotplot, absolute barplots, or filtration comparison.</p>
+<h3 id="section-96-1">96.1. Reference outside the selection<a aria-label="Permalink" class="heading-anchor" href="#section-96-1">#</a></h3>
+<p>The selector may offer a dataset that is not included in the comparison selection.</p>
+<p>In that case, the plot silently uses the first selected dataset as fallback reference.</p>
+<p>To avoid ambiguity, always include the reference dataset in the selection.</p>
+<h2 id="section-97">97. Key metric<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>Available metrics are:</p>
+<ul>
+<li>ASVs;</li>
+<li>samples;</li>
+<li>reads;</li>
+<li>mean richness;</li>
+<li>sparsity.</li>
+</ul>
+<p>The chosen metric affects the synthetic interpretation text and the Difference versus reference plot.</p>
+<h2 id="section-98">98. Synthetic project reading<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>The text identifies the dataset with the highest value for the selected metric.</p>
+<p>A higher value does not necessarily mean higher quality.</p>
+<ul>
+<li><strong>More reads</strong> may reflect greater depth or sequencing imbalance.</li>
+<li><strong>More ASVs</strong> may reflect higher diversity, noise, or a different method.</li>
+<li><strong>More sparsity</strong> means more zeroes and is not necessarily desirable.</li>
+</ul>
+<h2 id="section-99">99. Synthetic heatmap<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>The heatmap compares:</p>
+<ul>
+<li>ASVs;</li>
+<li>samples;</li>
+<li>reads;</li>
+<li>mean richness;</li>
+<li>sparsity.</li>
+</ul>
+<h3 id="section-99-1">99.1. Normalization<a aria-label="Permalink" class="heading-anchor" href="#section-99-1">#</a></h3>
+<p>Each metric is scaled separately between 0 and 1:</p>
+<pre tabindex="0"><code class="language-text">Normalized value =
+value - minimum
+÷ maximum - minimum
+</code></pre>
+<h3 id="section-99-2">99.2. Identical values<a aria-label="Permalink" class="heading-anchor" href="#section-99-2">#</a></h3>
+<p>If every dataset has the same value for a metric, the normalized value is set to 0.5.</p>
+<h3 id="section-99-3">99.3. Interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-99-3">#</a></h3>
+<p>Color indicates a dataset's relative position for one metric.</p>
+<p>It cannot directly compare a read count, sparsity value, and sample count. Units differ and were normalized independently.</p>
+<p>Raw values remain available in the tooltip.</p>
+<h2 id="section-100">100. Comparative dotplot<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p>The dotplot uses the same 0–1 normalization.</p>
+<p>Each point represents a dataset, a metric, and its relative position.</p>
+<p>It provides a quick general profile but is not a global score, multivariate analysis, or quality ranking.</p>
+<h2 id="section-101">101. Difference versus reference<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<p>For the selected metric:</p>
+<pre tabindex="0"><code class="language-text">Difference (%) =
+dataset value - reference value
+÷ reference value
+× 100
+</code></pre>
+<p>The reference dataset is not shown as a bar because its difference is zero by definition.</p>
+<h3 id="section-101-1">101.1. Zero reference<a aria-label="Permalink" class="heading-anchor" href="#section-101-1">#</a></h3>
+<p>The plot is not produced when the reference value is zero or missing.</p>
+<h3 id="section-101-2">101.2. One dataset only<a aria-label="Permalink" class="heading-anchor" href="#section-101-2">#</a></h3>
+<p>At least one additional dataset must be selected besides the reference.</p>
+<h3 id="section-101-3">101.3. Metric-dependent interpretation<a aria-label="Permalink" class="heading-anchor" href="#section-101-3">#</a></h3>
+<p>A positive difference means more ASVs, samples, reads, richness, or sparsity depending on the chosen metric.</p>
+<p>It does not always mean improvement.</p>
+<h2 id="section-102">102. Filtration comparison<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>The plot displays the number of removed ASVs and removed samples using <code>filtration_log</code>.</p>
+<h3 id="section-102-1">102.1. Important limitation<a aria-label="Permalink" class="heading-anchor" href="#section-102-1">#</a></h3>
+<p>Values are absolute. They are not divided by initial ASV count, initial sample count, read volume, or dataset size.</p>
+<p>Removing 1,000 ASVs from a dataset of 100,000 ASVs is not equivalent to removing 1,000 from a dataset of 2,000.</p>
+<h3 id="section-102-2">102.2. Missing log<a aria-label="Permalink" class="heading-anchor" href="#section-102-2">#</a></h3>
+<p>A dataset without a log appears as missing. No log does not prove that no filtration was performed.</p>
+<h2 id="section-103">103. Comparative barplots<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>Project view includes absolute barplots for:</p>
+<ul>
+<li>number of samples;</li>
+<li>number of ASVs;</li>
+<li>total reads;</li>
+<li>mean richness;</li>
+<li>sparsity.</li>
+</ul>
+<p>These plots perform no normalization and no statistical test.</p>
+<h2 id="section-104">104. Dataset comparability<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>Two datasets are not automatically comparable simply because they are loaded into the same project.</p>
+<p>Before interpreting plots, verify:</p>
+<ul>
+<li>same technology;</li>
+<li>same marker;</li>
+<li>same region;</li>
+<li>same pipeline;</li>
+<li>same filters;</li>
+<li>same taxonomic database;</li>
+<li>same samples;</li>
+<li>same abundance type;</li>
+<li>same transformation level;</li>
+<li>same definition of taxonomic units.</li>
+</ul>
+<h2 id="section-105">105. Comparing different markers<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>Comparing COI, 16S, and ITS may be useful for describing their respective dimensions.</p>
+<p>However, ASV count, richness, read count, and sparsity should not be interpreted as equivalent biological measurements across markers.</p>
+<p>Each marker has different resolution, primers, databases, biases, and biological targets.</p>
+<h2 id="section-106">106. Before-and-after filtration comparison<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>Project view is useful for comparing a raw dataset with a filtered dataset.</p>
+<p>Still verify that the filtered object truly derives from the raw object, the same samples are compared, abundances were not transformed, the log is present, and the parent has not been renamed or deleted.</p>
+<h2 id="section-107">107. Performance<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>Description performs several calculations in memory.</p>
+<p>Potentially expensive operations include:</p>
+<ul>
+<li>summing large matrices;</li>
+<li>computing metrics for every dataset;</li>
+<li>converting full tables;</li>
+<li>displaying a very wide OTU table;</li>
+<li>sequence calculations;</li>
+<li>rarefaction;</li>
+<li>Plotly rendering;</li>
+<li>comparing many datasets.</li>
+</ul>
+<h3 id="section-107-1">107.1. Lazy initialization<a aria-label="Permalink" class="heading-anchor" href="#section-107-1">#</a></h3>
+<p>The module is initialized when the Description tab is opened. The first display may therefore be slower.</p>
+<h3 id="section-107-2">107.2. Large tables<a aria-label="Permalink" class="heading-anchor" href="#section-107-2">#</a></h3>
+<p>Deferred rendering improves display, but the complete table is prepared in R memory.</p>
+<h3 id="section-107-3">107.3. Rarefaction<a aria-label="Permalink" class="heading-anchor" href="#section-107-3">#</a></h3>
+<p>Displaying every curve for hundreds of samples can slow the browser. Use Top reads, Bottom reads, or Outliers to reduce the plot.</p>
+<h2 id="section-108">108. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<h3 id="section-108-1">108.1. No dataset appears<a aria-label="Permalink" class="heading-anchor" href="#section-108-1">#</a></h3>
+<p>Possible causes: no dataset loaded, wrong project open, failed import, or session restored without a registry.</p>
+<p>Correction: use Input data, OpenMetaBar, or Datasets.</p>
+<h3 id="section-108-2">108.2. The displayed dataset changes in other tabs<a aria-label="Permalink" class="heading-anchor" href="#section-108-2">#</a></h3>
+<p>Cause: the Description selector is synchronized with the global active dataset.</p>
+<p>Correction: this is expected. Use a module-local selection where available.</p>
+<h3 id="section-108-3">108.3. The project becomes unsaved after simple inspection<a aria-label="Permalink" class="heading-anchor" href="#section-108-3">#</a></h3>
+<p>Possible cause: the active dataset was changed in Description.</p>
+<p>Correction: save the project if this choice should persist.</p>
+<h3 id="section-108-4">108.4. Values displayed as reads are decimal<a aria-label="Permalink" class="heading-anchor" href="#section-108-4">#</a></h3>
+<p>Cause: the OTU table probably contains transformed or normalized values.</p>
+<p>Consequence: depth metrics and rarefaction must not be interpreted as raw counts.</p>
+<h3 id="section-108-5">108.5. Richness seems inconsistent<a aria-label="Permalink" class="heading-anchor" href="#section-108-5">#</a></h3>
+<p>Possible causes: transformed abundance, negative values, unpruned taxa, depth differences, structural zeros, or an unexpected object orientation.</p>
+<p>Richness counts only values strictly greater than zero.</p>
+<h3 id="section-108-6">108.6. Sparsity seems too low<a aria-label="Permalink" class="heading-anchor" href="#section-108-6">#</a></h3>
+<p>Possible cause: the matrix contains <code>NA</code> values, which are not counted as zeroes but remain in the denominator.</p>
+<h3 id="section-108-7">108.7. No grouping variable is offered<a aria-label="Permalink" class="heading-anchor" href="#section-108-7">#</a></h3>
+<p>Possible causes: missing metadata, only one level, more than fifteen levels, date variable, or only missing values.</p>
+<p>Correction: inspect metadata in Data Edition.</p>
+<h3 id="section-108-8">108.8. A numeric variable appears as a group<a aria-label="Permalink" class="heading-anchor" href="#section-108-8">#</a></h3>
+<p>Cause: it has between two and fifteen distinct values.</p>
+<p>Correction: do not select it if a categorical interpretation is inappropriate.</p>
+<h3 id="section-108-9">108.9. Missing values appear as an <code>NA</code> group<a aria-label="Permalink" class="heading-anchor" href="#section-108-9">#</a></h3>
+<p>Cause: Description converts missing values into a group label.</p>
+<p>Correction: clean or complete the metadata if needed.</p>
+<h3 id="section-108-10">108.10. The View logs button appears to do nothing<a aria-label="Permalink" class="heading-anchor" href="#section-108-10">#</a></h3>
+<p>Cause: it selects the Logs sub-tab but does not automatically expand the box.</p>
+<p>Correction: scroll to Tables and logs and expand it.</p>
+<h3 id="section-108-11">108.11. Sequences are reported as absent<a aria-label="Permalink" class="heading-anchor" href="#section-108-11">#</a></h3>
+<p>Possible causes: no <code>refseq</code>, unavailable <code>Biostrings</code>, or an invalid sequence object.</p>
+<h3 id="section-108-12">108.12. GC values look unusual<a aria-label="Permalink" class="heading-anchor" href="#section-108-12">#</a></h3>
+<p>Possible causes: ambiguous bases, very short sequences, multiple markers, non-nucleotide sequences, or many non-ACGT characters.</p>
+<h3 id="section-108-13">108.13. Taxonomic rank names changed<a aria-label="Permalink" class="heading-anchor" href="#section-108-13">#</a></h3>
+<p>Cause: Description makes empty or duplicated names unique for display. The original object is unchanged.</p>
+<h3 id="section-108-14">108.14. A <code>SampleID_meta</code> column appears<a aria-label="Permalink" class="heading-anchor" href="#section-108-14">#</a></h3>
+<p>Cause: metadata already contained a <code>SampleID</code> column. Description reserves <code>SampleID</code> for row names.</p>
+<h3 id="section-108-15">108.15. Rarefaction curves are not calculated<a aria-label="Permalink" class="heading-anchor" href="#section-108-15">#</a></h3>
+<p>Possible causes: missing <code>vegan</code>, missing OTU table, fewer than two positive samples, fewer than two samples with 50 reads, unsuitable data, or count errors.</p>
+<h3 id="section-108-16">108.16. Rarefaction curves belong to the previous dataset<a aria-label="Permalink" class="heading-anchor" href="#section-108-16">#</a></h3>
+<p>Cause: calculation was not rerun after changing datasets.</p>
+<p>Correction: click <strong>Calculate curves</strong> again.</p>
+<h3 id="section-108-17">108.17. Maximum curve count is not respected<a aria-label="Permalink" class="heading-anchor" href="#section-108-17">#</a></h3>
+<p>Cause: All samples currently ignores this limit.</p>
+<p>Correction: choose Top reads, Bottom reads, or Outliers.</p>
+<h3 id="section-108-18">108.18. Pooled rarefaction for a large group is much higher<a aria-label="Permalink" class="heading-anchor" href="#section-108-18">#</a></h3>
+<p>Cause: reads are summed across all samples in the group.</p>
+<p>Consequence: it is not a per-sample mean.</p>
+<h3 id="section-108-19">108.19. No outlier is detected<a aria-label="Permalink" class="heading-anchor" href="#section-108-19">#</a></h3>
+<p>Possible causes: true homogeneity, fewer than four samples, zero IQR, missing values, or a global threshold poorly suited to group structure.</p>
+<h3 id="section-108-20">108.20. A biologically normal sample is flagged<a aria-label="Permalink" class="heading-anchor" href="#section-108-20">#</a></h3>
+<p>Possible cause: the rule is applied globally rather than within its group.</p>
+<p>Correction: interpret using metadata and experimental context.</p>
+<h3 id="section-108-21">108.21. A very atypical sample is not flagged<a aria-label="Permalink" class="heading-anchor" href="#section-108-21">#</a></h3>
+<p>Possible causes: the relevant metric is not used, zero IQR, too few samples, an outlier only in zero proportion, or transformed data.</p>
+<h3 id="section-108-22">108.22. A group has 30% outliers and appears red<a aria-label="Permalink" class="heading-anchor" href="#section-108-22">#</a></h3>
+<p>Cause: color uses an internal 30% visual threshold.</p>
+<p>Consequence: this is not a p-value or evidence of a group effect.</p>
+<h3 id="section-108-23">108.23. OTU export does not preserve original orientation<a aria-label="Permalink" class="heading-anchor" href="#section-108-23">#</a></h3>
+<p>Cause: Description always exports taxa in rows.</p>
+<h3 id="section-108-24">108.24. CSV export does not match the visual table filter<a aria-label="Permalink" class="heading-anchor" href="#section-108-24">#</a></h3>
+<p>Cause: the dedicated button exports the complete table.</p>
+<p>Alternative: use DataTables' built-in CSV button for an export linked to the current table state.</p>
+<h3 id="section-108-25">108.25. The CSV file is empty<a aria-label="Permalink" class="heading-anchor" href="#section-108-25">#</a></h3>
+<p>Likely cause: the corresponding component is absent.</p>
+<h3 id="section-108-26">108.26. Logs are absent<a aria-label="Permalink" class="heading-anchor" href="#section-108-26">#</a></h3>
+<p>Possible causes: the dataset was never filtered in BarCodeR, the attribute was removed, the object came from another tool, an older version was used, or logs were not preserved.</p>
+<h3 id="section-108-27">108.27. Project view counts the same samples twice<a aria-label="Permalink" class="heading-anchor" href="#section-108-27">#</a></h3>
+<p>Cause: counts are summed across datasets without deduplication.</p>
+<h3 id="section-108-28">108.28. Heatmap values look similar despite different orders of magnitude<a aria-label="Permalink" class="heading-anchor" href="#section-108-28">#</a></h3>
+<p>Cause: each metric is normalized separately between 0 and 1.</p>
+<h3 id="section-108-29">108.29. An entire heatmap column equals 0.5<a aria-label="Permalink" class="heading-anchor" href="#section-108-29">#</a></h3>
+<p>Cause: every dataset has the same value for that metric.</p>
+<h3 id="section-108-30">108.30. The selected reference dataset is not used<a aria-label="Permalink" class="heading-anchor" href="#section-108-30">#</a></h3>
+<p>Possible cause: it is not included in the comparison selection.</p>
+<p>Correction: add the reference dataset to the selection.</p>
+<h3 id="section-108-31">108.31. The difference plot does not work<a aria-label="Permalink" class="heading-anchor" href="#section-108-31">#</a></h3>
+<p>Possible causes: zero reference, missing reference, only one selected dataset, or missing metric.</p>
+<h3 id="section-108-32">108.32. Filtration comparison seems unfair<a aria-label="Permalink" class="heading-anchor" href="#section-108-32">#</a></h3>
+<p>Cause: it compares absolute counts rather than percentages.</p>
+<p>Correction: relate removals to original dimensions before concluding.</p>
+<h3 id="section-108-33">108.33. Project view is slow<a aria-label="Permalink" class="heading-anchor" href="#section-108-33">#</a></h3>
+<p>Possible causes: many datasets, large matrices, many sequences, or very wide tables.</p>
+<p>Correction: temporarily remove some datasets, limit the comparison selection, avoid opening large tables unnecessarily, or use filtered datasets.</p>
+<h2 id="section-109">109. Checklist when opening a dataset<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify the selected dataset name.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify sample count.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify taxon count.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify total abundance.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify whether the OTU table is raw or transformed.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify taxonomy availability.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify metadata availability.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify sequence availability.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify log availability.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Read sparsity and depth alerts.</li>
+</ul>
+<h2 id="section-110">110. Checklist before group-based analysis<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Choose a biologically relevant grouping variable.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify its levels.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify missing values.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Verify group sizes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ensure the variable is not quantitative by mistake.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examine depth by group.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examine richness by group.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Examine outliers.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Do not confuse description with statistical testing.</li>
+</ul>
+<h2 id="section-111">111. Checklist before rarefaction<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirm abundances are raw counts.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirm they are integer and non-negative.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Confirm at least two samples have 50 reads.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Select the correct dataset.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Select the correct grouping variable.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Click Calculate.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Recalculate after every dataset change.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Distinguish individual curves from pooled groups.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Do not treat a plateau as definitive validation.</li>
+</ul>
+<h2 id="section-112">112. Checklist before excluding an outlier<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Identify the three responsible metrics.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review metadata.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review the experimental group.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review positive and negative controls.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review logs.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review depth.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Review taxonomic dominance.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Determine whether the difference is biologically expected.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Do not remove samples from Description.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Use Filtration only with justification.</li>
+</ul>
+<h2 id="section-113">113. Checklist before comparing datasets<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same abundance type.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same marker or an explicit comparison objective.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same technology or known biases.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same unit definition.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same filtration level.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Same sample set or documented differences.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Reference dataset included in the selection.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Understand that sums are not deduplicated.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Understand 0–1 normalization.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Do not interpret “higher” as “better.”</li>
+</ul>
+<h2 id="section-114">114. Current limitations<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<h3 id="section-114-1">114.1. Abundances are not validated as raw counts<a aria-label="Permalink" class="heading-anchor" href="#section-114-1">#</a></h3>
+<p>Every metric can be misleading with transformed data.</p>
+<h3 id="section-114-2">114.2. ASV count is a generic label<a aria-label="Permalink" class="heading-anchor" href="#section-114-2">#</a></h3>
+<p>The module does not know how units were generated.</p>
+<h3 id="section-114-3">114.3. The tree is not summarized<a aria-label="Permalink" class="heading-anchor" href="#section-114-3">#</a></h3>
+<p>Presence and consistency of <code>phy_tree</code> are not displayed.</p>
+<h3 id="section-114-4">114.4. Sequences are not explicitly aligned to taxa<a aria-label="Permalink" class="heading-anchor" href="#section-114-4">#</a></h3>
+<p>The module describes available sequences without an exhaustive correspondence check.</p>
+<h3 id="section-114-5">114.5. Sparsity and completeness use simple summaries<a aria-label="Permalink" class="heading-anchor" href="#section-114-5">#</a></h3>
+<p>They may hide important heterogeneity.</p>
+<h3 id="section-114-6">114.6. Diagnostics use internal thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-114-6">#</a></h3>
+<p>They are not universal standards.</p>
+<h3 id="section-114-7">114.7. Outliers are detected globally<a aria-label="Permalink" class="heading-anchor" href="#section-114-7">#</a></h3>
+<p>They are not calculated within groups.</p>
+<h3 id="section-114-8">114.8. Zero proportion is not an outlier signal<a aria-label="Permalink" class="heading-anchor" href="#section-114-8">#</a></h3>
+<p>It is displayed but does not affect status.</p>
+<h3 id="section-114-9">114.9. Rarefaction must be rerun manually<a aria-label="Permalink" class="heading-anchor" href="#section-114-9">#</a></h3>
+<p>Changing datasets does not automatically reset the result.</p>
+<h3 id="section-114-10">114.10. The curve limit does not affect All samples<a aria-label="Permalink" class="heading-anchor" href="#section-114-10">#</a></h3>
+<p>A large dataset can produce a very heavy plot.</p>
+<h3 id="section-114-11">114.11. Aggregated curves use pooled counts<a aria-label="Permalink" class="heading-anchor" href="#section-114-11">#</a></h3>
+<p>They are not sample means.</p>
+<h3 id="section-114-12">114.12. Tables are fully prepared in memory<a aria-label="Permalink" class="heading-anchor" href="#section-114-12">#</a></h3>
+<p>Very large objects may be expensive to display.</p>
+<h3 id="section-114-13">114.13. Description exports reorient some tables<a aria-label="Permalink" class="heading-anchor" href="#section-114-13">#</a></h3>
+<p>The OTU table is exported with taxa in rows.</p>
+<h3 id="section-114-14">114.14. Column names may be adjusted for display<a aria-label="Permalink" class="heading-anchor" href="#section-114-14">#</a></h3>
+<p>The original phyloseq object remains unchanged.</p>
+<h3 id="section-114-15">114.15. Project view sums dimensions<a aria-label="Permalink" class="heading-anchor" href="#section-114-15">#</a></h3>
+<p>It deduplicates neither samples nor taxa.</p>
+<h3 id="section-114-16">114.16. The heatmap compares relative positions<a aria-label="Permalink" class="heading-anchor" href="#section-114-16">#</a></h3>
+<p>It does not compare common units.</p>
+<h3 id="section-114-17">114.17. Filtration comparison uses absolute numbers<a aria-label="Permalink" class="heading-anchor" href="#section-114-17">#</a></h3>
+<p>It does not adjust for original size.</p>
+<h3 id="section-114-18">114.18. No statistical test is performed<a aria-label="Permalink" class="heading-anchor" href="#section-114-18">#</a></h3>
+<p>Displayed differences remain descriptive.</p>
+<h2 id="section-115">115. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<ol>
+<li>Open Description after import.</li>
+<li>Verify the active dataset.</li>
+<li>Examine dimensions and components.</li>
+<li>Read structure alerts.</li>
+<li>Verify the nature of abundance values.</li>
+<li>Examine reads versus richness.</li>
+<li>Examine abundance distributions.</li>
+<li>Examine richness.</li>
+<li>Examine sequences when available.</li>
+<li>Choose a relevant grouping variable.</li>
+<li>Inspect outliers.</li>
+<li>Calculate rarefaction when data are counts.</li>
+<li>Examine tables.</li>
+<li>Examine completeness.</li>
+<li>Examine logs.</li>
+<li>Compare datasets in Project view.</li>
+<li>Move to Data Edition or Filtration when an action is required.</li>
+</ol>
+<h2 id="section-116">116. Verified internal sources<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>This documentation was reconstructed from the current BarCodeR code:</p>
+<ol>
+<li><code>modules/description/mod_description_ui.R</code>: Dataset and Project layouts, controls, plots, tables, and exports.</li>
+<li><code>modules/description/mod_description_server.R</code>: display helpers, IQR rule, interactive tables, and OTU-table orientation.</li>
+<li><code>modules/description/mod_description_server.R</code>: metadata and sequence extraction, ASV metrics, and sample metrics.</li>
+<li><code>modules/description/mod_description_server.R</code>: completeness, global statistics, and descriptive messages.</li>
+<li><code>modules/description/mod_description_server.R</code>: reactives, dataset selection, active-dataset synchronization, and grouping variables.</li>
+<li><code>modules/description/mod_description_server.R</code>: OpenMetaBar provenance.</li>
+<li><code>modules/description/mod_description_server.R</code>: header, main metrics, diagnostics, and sample card.</li>
+<li><code>modules/description/mod_description_server.R</code>: abundance, richness, and sequence plots.</li>
+<li><code>modules/description/mod_description_server.R</code>: rarefaction calculation and rendering.</li>
+<li><code>modules/description/mod_description_server.R</code>: outlier detection, scoring, contextualization, and tables.</li>
+<li><code>modules/description/mod_description_server.R</code>: table and log display, completeness, and export.</li>
+<li><code>modules/description/mod_description_server.R</code>: project summary, metric normalization, reference comparison, filtration, and comparisons.</li>
+<li><code>modules/_shared/_active_dataset_sync.R</code>: synchronization between Description and the global active dataset.</li>
+<li><code>modules/_shared/_ui_state.R</code>: restoration of selected interface settings.</li>
+<li><code>app.R</code>: Description initialization with <code>datasets()</code>, <code>active_ds()</code>, and the active language.</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <nav><a class="toc-l2" href="#section-1">1. General overview</a><a class="toc-l3" href="#dataset-view">Dataset view</a><a class="toc-l3" href="#project-view">Project view</a><a class="toc-l2" href="#section-2">2. Purpose of the tab</a><a class="toc-l2" href="#section-3">3. Effect of the tab on the data</a><a class="toc-l3" href="#section-3-1">3.1. Exception: the active dataset</a><a class="toc-l2" href="#section-4">4. Required components</a><a class="toc-l2" href="#section-5">5. Important assumption about abundance values</a><a class="toc-l2" href="#section-6">6. Interface organization</a><a class="toc-l3" href="#dataset-view-2">Dataset view</a><a class="toc-l3" href="#project-view-2">Project view</a><a class="toc-l2" href="#section-7">7. Selecting the dataset</a><a class="toc-l3" href="#section-7-1">7.1. Global synchronization</a><a class="toc-l3" href="#section-7-2">7.2. Fallback value</a><a class="toc-l3" href="#section-7-3">7.3. Changing datasets</a><a class="toc-l2" href="#section-8">8. Grouping variable</a><a class="toc-l3" href="#section-8-1">8.1. Variables offered</a><a class="toc-l3" href="#section-8-2">8.2. Numeric columns</a><a class="toc-l3" href="#section-8-3">8.3. Missing values</a><a class="toc-l3" href="#section-8-4">8.4. No grouping</a><a class="toc-l3" href="#section-8-5">8.5. Effects of grouping</a><a class="toc-l2" href="#section-9">9. Grouping does not change outlier detection</a><a class="toc-l2" href="#section-10">10. “View logs” button</a><a class="toc-l2" href="#section-11">11. Dataset header</a><a class="toc-l2" href="#section-12">12. Component badges</a><a class="toc-l3" href="#section-12-1">12.1. OTU</a><a class="toc-l3" href="#section-12-2">12.2. Taxonomy</a><a class="toc-l3" href="#section-12-3">12.3. Metadata</a><a class="toc-l3" href="#section-12-4">12.4. RefSeq</a><a class="toc-l3" href="#section-12-5">12.5. Logs</a><a class="toc-l3" href="#section-12-6">12.6. Phylogenetic tree</a><a class="toc-l2" href="#section-13">13. OTU-table orientation</a><a class="toc-l2" href="#section-14">14. Metric: number of taxa</a><a class="toc-l2" href="#section-15">15. Metric: number of samples</a><a class="toc-l2" href="#section-16">16. Metric: total reads</a><a class="toc-l2" href="#section-17">17. Metric: reads per sample</a><a class="toc-l2" href="#section-18">18. Metric: observed richness</a><a class="toc-l2" href="#section-19">19. Metric: dominance of the most abundant taxon</a><a class="toc-l2" href="#section-20">20. Metric: zero proportion per sample</a><a class="toc-l2" href="#section-21">21. Metric: global sparsity</a><a class="toc-l3" href="#section-21-1">21.1. Interpretation</a><a class="toc-l3" href="#section-21-2">21.2. Display thresholds</a><a class="toc-l3" href="#section-21-3">21.3. Presence of NA</a><a class="toc-l2" href="#section-22">22. Depth variability</a><a class="toc-l2" href="#section-23">23. Taxonomic completeness</a><a class="toc-l3" href="#section-23-1">23.1. Consequence</a><a class="toc-l3" href="#section-23-2">23.2. Space-only strings</a><a class="toc-l2" href="#section-24">24. Missing metadata values</a><a class="toc-l3" href="#section-24-1">24.1. The value "NA"</a><a class="toc-l3" href="#section-24-2">24.2. Spaces</a><a class="toc-l3" href="#section-24-3">24.3. Displayed type</a><a class="toc-l2" href="#section-25">25. Sequence lengths</a><a class="toc-l3" href="#section-25-1">25.1. Interpretation</a><a class="toc-l2" href="#section-26">26. GC percentage</a><a class="toc-l2" href="#section-27">27. Sequence names</a><a class="toc-l2" href="#section-28">28. Automatic interpretation message</a><a class="toc-l2" href="#section-29">29. Quick dataset reading</a><a class="toc-l3" href="#section-29-1">29.1. Structure</a><a class="toc-l3" href="#section-29-2">29.2. Available content</a><a class="toc-l3" href="#section-29-3">29.3. Sequences</a><a class="toc-l3" href="#section-29-4">29.4. Filtration</a><a class="toc-l2" href="#section-30">30. Automatic diagnostics</a><a class="toc-l2" href="#section-31">31. OpenMetaBar provenance</a><a class="toc-l3" href="#section-31-1">31.1. Run summary</a><a class="toc-l3" href="#section-31-2">31.2. Demultiplexing</a><a class="toc-l3" href="#section-31-3">31.3. Filters</a><a class="toc-l3" href="#section-31-4">31.4. LotuS3</a><a class="toc-l3" href="#section-31-5">31.5. LCA</a><a class="toc-l3" href="#section-31-6">31.6. IDMABIO</a><a class="toc-l3" href="#section-31-7">31.7. NextITS</a><a class="toc-l3" href="#section-31-8">31.8. Cluster environment</a><a class="toc-l3" href="#section-31-9">31.9. FASTQ files</a><a class="toc-l3" href="#section-31-10">31.10. Sample renaming</a><a class="toc-l3" href="#section-31-11">31.11. Missing provenance</a><a class="toc-l2" href="#section-32">32. Interactive visualizations — Overview</a><a class="toc-l2" href="#section-33">33. Reads versus richness</a><a class="toc-l3" href="#section-33-1">33.1. Interpretation</a><a class="toc-l3" href="#section-33-2">33.2. Limitation</a><a class="toc-l3" href="#section-33-3">33.3. Interaction</a><a class="toc-l2" href="#section-34">34. Sample detail card</a><a class="toc-l3" href="#section-34-1">34.1. Initial sample</a><a class="toc-l3" href="#section-34-2">34.2. Displayed metadata</a><a class="toc-l2" href="#section-35">35. Top 15 samples</a><a class="toc-l3" href="#section-35-1">35.1. Limitation</a><a class="toc-l2" href="#section-36">36. Top 15 taxa</a><a class="toc-l3" href="#section-36-1">36.1. Prevalence</a><a class="toc-l3" href="#section-36-2">36.2. Limitation</a><a class="toc-l2" href="#section-37">37. Cumulative contribution of samples</a><a class="toc-l2" href="#section-38">38. Cumulative contribution of taxa</a><a class="toc-l2" href="#section-39">39. Abundance tab</a><a class="toc-l2" href="#section-40">40. Reads histogram</a><a class="toc-l2" href="#section-41">41. Reads by group</a><a class="toc-l3" href="#section-41-1">41.1. No grouping</a><a class="toc-l3" href="#section-41-2">41.2. Interpretation</a><a class="toc-l2" href="#section-42">42. Cumulative reads contribution by group</a><a class="toc-l3" href="#section-42-1">42.1. Consequence</a><a class="toc-l2" href="#section-43">43. Richness tab</a><a class="toc-l2" href="#section-44">44. Richness histogram</a><a class="toc-l2" href="#section-45">45. Richness by group</a><a class="toc-l2" href="#section-46">46. Richness versus dominance</a><a class="toc-l3" href="#section-46-1">46.1. This is not an evenness index</a><a class="toc-l2" href="#section-47">47. Sequences tab</a><a class="toc-l2" href="#section-48">48. Length versus GC</a><a class="toc-l2" href="#section-49">49. Rarefaction curves</a><a class="toc-l2" href="#section-50">50. Rarefaction method used</a><a class="toc-l2" href="#section-51">51. Rarefaction calculation requirements</a><a class="toc-l3" href="#section-51-1">51.1. The 50-read threshold</a><a class="toc-l2" href="#section-52">52. Expected data type for rarefaction</a><a class="toc-l2" href="#section-53">53. Calculated depths</a><a class="toc-l2" href="#section-54">54. Individual curves</a><a class="toc-l2" href="#section-55">55. Subsetting individual curves</a><a class="toc-l3" href="#section-55-1">55.1. All samples</a><a class="toc-l3" href="#section-55-2">55.2. Top reads</a><a class="toc-l3" href="#section-55-3">55.3. Bottom reads</a><a class="toc-l3" href="#section-55-4">55.4. Outliers</a><a class="toc-l2" href="#section-56">56. Maximum number of curves</a><a class="toc-l2" href="#section-57">57. Curves aggregated by group</a><a class="toc-l3" href="#section-57-1">57.1. What the curve represents</a><a class="toc-l3" href="#section-57-2">57.2. Effect of group size</a><a class="toc-l3" href="#section-57-3">57.3. Without grouping</a><a class="toc-l2" href="#section-58">58. Display legend</a><a class="toc-l2" href="#section-59">59. Recalculation is required</a><a class="toc-l3" href="#section-59-1">59.1. Changing the grouping variable</a><a class="toc-l3" href="#section-59-2">59.2. Risk of a stale result</a><a class="toc-l2" href="#section-60">60. Interpreting rarefaction curves</a><a class="toc-l2" href="#section-61">61. Limitations of the displayed rarefaction</a><a class="toc-l2" href="#section-62">62. Outlier detection</a><a class="toc-l2" href="#section-63">63. IQR rule</a><a class="toc-l2" href="#section-64">64. High and low outliers</a><a class="toc-l2" href="#section-65">65. Minimum conditions for the IQR rule</a><a class="toc-l2" href="#section-66">66. Sample status</a><a class="toc-l2" href="#section-67">67. Number of signals</a><a class="toc-l2" href="#section-68">68. Outlier score</a><a class="toc-l3" href="#section-68-1">68.1. Interpretation</a><a class="toc-l2" href="#section-69">69. Outlier priority order</a><a class="toc-l2" href="#section-70">70. Outlier summary</a><a class="toc-l2" href="#section-71">71. Outlier concentration by group</a><a class="toc-l3" href="#section-71-1">71.1. Color thresholds</a><a class="toc-l2" href="#section-72">72. Global detection and group interpretation</a><a class="toc-l2" href="#section-73">73. Samples-to-watch table</a><a class="toc-l2" href="#section-74">74. Complete sample table</a><a class="toc-l2" href="#section-75">75. What an outlier does not mean</a><a class="toc-l2" href="#section-76">76. Tables and logs</a><a class="toc-l2" href="#section-77">77. Table summary</a><a class="toc-l2" href="#section-78">78. Displayed OTU table</a><a class="toc-l3" href="#section-78-1">78.1. Original orientation</a><a class="toc-l3" href="#section-78-2">78.2. Content</a><a class="toc-l2" href="#section-79">79. Displayed taxonomy</a><a class="toc-l3" href="#section-79-1">79.1. Rank names</a><a class="toc-l2" href="#section-80">80. Displayed metadata</a><a class="toc-l2" href="#section-81">81. Interactive-table features</a><a class="toc-l2" href="#section-82">82. Dedicated CSV export</a><a class="toc-l3" href="#section-82-1">82.1. Format</a><a class="toc-l3" href="#section-82-2">82.2. Visual filters</a><a class="toc-l3" href="#section-82-3">82.3. Missing component</a><a class="toc-l2" href="#section-83">83. Taxonomic completeness</a><a class="toc-l2" href="#section-84">84. Metadata completeness</a><a class="toc-l2" href="#section-85">85. Groupable variables</a><a class="toc-l2" href="#section-86">86. Filtration logs</a><a class="toc-l3" href="#section-86-1">86.1. Removed ASVs</a><a class="toc-l3" href="#section-86-2">86.2. Removed samples</a><a class="toc-l3" href="#section-86-3">86.3. No explicit identifier</a><a class="toc-l2" href="#section-87">87. Log export</a><a class="toc-l2" href="#section-88">88. Scope of filtration logs</a><a class="toc-l2" href="#section-89">89. Project view</a><a class="toc-l2" href="#section-90">90. Global project summary</a><a class="toc-l2" href="#section-91">91. Cumulative sample count</a><a class="toc-l2" href="#section-92">92. Cumulative reads</a><a class="toc-l2" href="#section-93">93. Mean project sparsity</a><a class="toc-l2" href="#section-94">94. Project summary table</a><a class="toc-l2" href="#section-95">95. Datasets to compare</a><a class="toc-l2" href="#section-96">96. Reference dataset</a><a class="toc-l3" href="#section-96-1">96.1. Reference outside the selection</a><a class="toc-l2" href="#section-97">97. Key metric</a><a class="toc-l2" href="#section-98">98. Synthetic project reading</a><a class="toc-l2" href="#section-99">99. Synthetic heatmap</a><a class="toc-l3" href="#section-99-1">99.1. Normalization</a><a class="toc-l3" href="#section-99-2">99.2. Identical values</a><a class="toc-l3" href="#section-99-3">99.3. Interpretation</a><a class="toc-l2" href="#section-100">100. Comparative dotplot</a><a class="toc-l2" href="#section-101">101. Difference versus reference</a><a class="toc-l3" href="#section-101-1">101.1. Zero reference</a><a class="toc-l3" href="#section-101-2">101.2. One dataset only</a><a class="toc-l3" href="#section-101-3">101.3. Metric-dependent interpretation</a><a class="toc-l2" href="#section-102">102. Filtration comparison</a><a class="toc-l3" href="#section-102-1">102.1. Important limitation</a><a class="toc-l3" href="#section-102-2">102.2. Missing log</a><a class="toc-l2" href="#section-103">103. Comparative barplots</a><a class="toc-l2" href="#section-104">104. Dataset comparability</a><a class="toc-l2" href="#section-105">105. Comparing different markers</a><a class="toc-l2" href="#section-106">106. Before-and-after filtration comparison</a><a class="toc-l2" href="#section-107">107. Performance</a><a class="toc-l3" href="#section-107-1">107.1. Lazy initialization</a><a class="toc-l3" href="#section-107-2">107.2. Large tables</a><a class="toc-l3" href="#section-107-3">107.3. Rarefaction</a><a class="toc-l2" href="#section-108">108. Troubleshooting</a><a class="toc-l3" href="#section-108-1">108.1. No dataset appears</a><a class="toc-l3" href="#section-108-2">108.2. The displayed dataset changes in other tabs</a><a class="toc-l3" href="#section-108-3">108.3. The project becomes unsaved after simple inspection</a><a class="toc-l3" href="#section-108-4">108.4. Values displayed as reads are decimal</a><a class="toc-l3" href="#section-108-5">108.5. Richness seems inconsistent</a><a class="toc-l3" href="#section-108-6">108.6. Sparsity seems too low</a><a class="toc-l3" href="#section-108-7">108.7. No grouping variable is offered</a><a class="toc-l3" href="#section-108-8">108.8. A numeric variable appears as a group</a><a class="toc-l3" href="#section-108-9">108.9. Missing values appear as an NA group</a><a class="toc-l3" href="#section-108-10">108.10. The View logs button appears to do nothing</a><a class="toc-l3" href="#section-108-11">108.11. Sequences are reported as absent</a><a class="toc-l3" href="#section-108-12">108.12. GC values look unusual</a><a class="toc-l3" href="#section-108-13">108.13. Taxonomic rank names changed</a><a class="toc-l3" href="#section-108-14">108.14. A SampleID_meta column appears</a><a class="toc-l3" href="#section-108-15">108.15. Rarefaction curves are not calculated</a><a class="toc-l3" href="#section-108-16">108.16. Rarefaction curves belong to the previous dataset</a><a class="toc-l3" href="#section-108-17">108.17. Maximum curve count is not respected</a><a class="toc-l3" href="#section-108-18">108.18. Pooled rarefaction for a large group is much higher</a><a class="toc-l3" href="#section-108-19">108.19. No outlier is detected</a><a class="toc-l3" href="#section-108-20">108.20. A biologically normal sample is flagged</a><a class="toc-l3" href="#section-108-21">108.21. A very atypical sample is not flagged</a><a class="toc-l3" href="#section-108-22">108.22. A group has 30% outliers and appears red</a><a class="toc-l3" href="#section-108-23">108.23. OTU export does not preserve original orientation</a><a class="toc-l3" href="#section-108-24">108.24. CSV export does not match the visual table filter</a><a class="toc-l3" href="#section-108-25">108.25. The CSV file is empty</a><a class="toc-l3" href="#section-108-26">108.26. Logs are absent</a><a class="toc-l3" href="#section-108-27">108.27. Project view counts the same samples twice</a><a class="toc-l3" href="#section-108-28">108.28. Heatmap values look similar despite different orders of magnitude</a><a class="toc-l3" href="#section-108-29">108.29. An entire heatmap column equals 0.5</a><a class="toc-l3" href="#section-108-30">108.30. The selected reference dataset is not used</a><a class="toc-l3" href="#section-108-31">108.31. The difference plot does not work</a><a class="toc-l3" href="#section-108-32">108.32. Filtration comparison seems unfair</a><a class="toc-l3" href="#section-108-33">108.33. Project view is slow</a><a class="toc-l2" href="#section-109">109. Checklist when opening a dataset</a><a class="toc-l2" href="#section-110">110. Checklist before group-based analysis</a><a class="toc-l2" href="#section-111">111. Checklist before rarefaction</a><a class="toc-l2" href="#section-112">112. Checklist before excluding an outlier</a><a class="toc-l2" href="#section-113">113. Checklist before comparing datasets</a><a class="toc-l2" href="#section-114">114. Current limitations</a><a class="toc-l3" href="#section-114-1">114.1. Abundances are not validated as raw counts</a><a class="toc-l3" href="#section-114-2">114.2. ASV count is a generic label</a><a class="toc-l3" href="#section-114-3">114.3. The tree is not summarized</a><a class="toc-l3" href="#section-114-4">114.4. Sequences are not explicitly aligned to taxa</a><a class="toc-l3" href="#section-114-5">114.5. Sparsity and completeness use simple summaries</a><a class="toc-l3" href="#section-114-6">114.6. Diagnostics use internal thresholds</a><a class="toc-l3" href="#section-114-7">114.7. Outliers are detected globally</a><a class="toc-l3" href="#section-114-8">114.8. Zero proportion is not an outlier signal</a><a class="toc-l3" href="#section-114-9">114.9. Rarefaction must be rerun manually</a><a class="toc-l3" href="#section-114-10">114.10. The curve limit does not affect All samples</a><a class="toc-l3" href="#section-114-11">114.11. Aggregated curves use pooled counts</a><a class="toc-l3" href="#section-114-12">114.12. Tables are fully prepared in memory</a><a class="toc-l3" href="#section-114-13">114.13. Description exports reorient some tables</a><a class="toc-l3" href="#section-114-14">114.14. Column names may be adjusted for display</a><a class="toc-l3" href="#section-114-15">114.15. Project view sums dimensions</a><a class="toc-l3" href="#section-114-16">114.16. The heatmap compares relative positions</a><a class="toc-l3" href="#section-114-17">114.17. Filtration comparison uses absolute numbers</a><a class="toc-l3" href="#section-114-18">114.18. No statistical test is performed</a><a class="toc-l2" href="#section-115">115. Recommended workflow</a><a class="toc-l2" href="#section-116">116. Verified internal sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Description</span><span>Documentation version 1.8.0</span></footer>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>डेटा संपादन — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="data-edition" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link active" href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">डेटा संपादन</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">डेटा संपादन — पद्धति संबंधी मार्गदर्शिका</h1>
+<h2 id="section-1">1. सामान्य परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Data Edition</strong> लोड किए गए <code>phyloseq</code> dataset के आंतरिक components को सीधे बदलता है: sample metadata, OTU abundances, taxonomy, reference sequences और phylogenetic tree। यह component import/export/delete, ASV renaming और descriptive edit log भी प्रदान करता है।</p>
+<h2 id="section-2">2. मूल सिद्धांत: बदलाव तुरंत लागू होते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Data Edition अलग draft area नहीं है। Cell edits, column operations, merges, ASV renaming, taxonomy replacements, full imports और component deletion तुरंत <code>datasets()</code> में चुने हुए object को बदल देते हैं।</p>
+<h2 id="section-3">3. Save बटन pending बदलाव लागू नहीं करता<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>बदलाव पहले ही लागू हो चुके होते हैं। <strong>Save</strong> केवल current edited state को उसी नाम, नए नाम या किसी दूसरे registry entry पर दर्ज करता है। यह project को disk पर save नहीं करता।</p>
+<h2 id="section-4">4. Original version के लिए महत्वपूर्ण परिणाम<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p><code>COI_raw</code> को edit करके <code>COI_edited</code> नाम से save करने पर untouched <code>COI_raw</code> नहीं बचता, क्योंकि source entry पहले ही बदल चुकी है। Edit से पहले <strong>Datasets</strong> में raw dataset की duplicate copy बनाएँ।</p>
+<h2 id="section-5">5. Source files पर प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Data Edition original RDS, RData, CSV, FASTA, Newick या remote files को rewrite नहीं करता। यह memory में मौजूद object बदलता है। Changes बनाए रखने के लिए project save करें या dataset export करें।</p>
+<h2 id="section-6">6. Tab की संरचना<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>इसमें dataset selection, metadata editor, OTU editor, taxonomy editor, full component import/export/delete, logs और registry saving शामिल हैं।</p>
+<h2 id="section-7">7. Edit करने वाला dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Picker registry के datasets दिखाता है और <code>active_ds()</code> से synchronized है। यहाँ dataset बदलने से global active dataset बदलता है।</p>
+<h2 id="section-8">8. Editing के दौरान dataset बदलना<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Dataset बदलने पर metadata, OTU और taxonomy editors के local states reload होते हैं और initial/previous states तथा previews reset होते हैं। Local initial state हमेशा original file state नहीं होता।</p>
+<h2 id="section-9">9. Dataset बदलकर वापस आने के बाद Reset<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>यदि <code>COI</code> edit किया, दूसरा dataset खोला और फिर <code>COI</code> पर लौटे, तो Reset लौटते समय load हुई already-edited state पर जाएगा, पहली edit से पहले वाली state पर नहीं।</p>
+<h2 id="section-10">10. Editing और project persistence<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>हर action <code>datasets()</code> अपडेट करता है और project को unsaved mark कर सकता है। Application बंद करने से पहले <strong>Datasets → Save project</strong> उपयोग करें।</p>
+<h2 id="section-11">11. दो import mechanisms का अंतर<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Table editors में <strong>Merge</strong> matching identifiers के लिए केवल missing columns जोड़ता है। Full component import file चुनते ही पूरा selected component replace कर देता है।</p>
+<h2 id="section-12">12. Data Edition किन कामों के लिए नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Biological filtering, normalization, abundance transformation या threshold-based removal के लिए यह preferred tool नहीं है। ऐसे काम Filtration या controlled external workflow में करें।</p>
+<h2 id="section-13">13. Edit history<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Actions <code>attr(ps, "edit_log")</code> में time, dataset, table, action, description, before/after dimensions और warnings जोड़ सकते हैं।</p>
+<h2 id="section-14">14. Log backup नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Log complete old tables नहीं रखता। यह audit trail है, version control या full restoration system नहीं।</p>
+<h2 id="section-15">15. Log की भाषा<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p><code>edit_log</code> की internal actions और warnings French में रहती हैं, चाहे interface किसी और भाषा में हो।</p>
+<h2 id="section-16">16. Logs की तीन views<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><strong>Latest global action</strong> current module session की अंतिम action दिखाता है, <strong>Full history</strong> stored log दिखाता है और <strong>Summary</strong> actions, tables, warnings और dates aggregate करता है।</p>
+<h2 id="section-17">17. Total में गिनी जाने वाली actions<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Cell edits, structural changes, imports, exports, undo, reset, registry saves, renaming और automatic synchronization सब count हो सकते हैं।</p>
+<h2 id="section-18">18. Undo: केवल एक step<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>हर editor केवल एक previous local state रखता है। Undo पूरे history में पीछे नहीं जाता; बार-बार click करने पर दो recent states के बीच toggle हो सकता है।</p>
+<h2 id="section-19">19. Reset<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<p>Reset उस local state पर लौटता है जो submodule ने dataset load करते समय capture की थी। यह तुरंत लागू, logged और undoable है, लेकिन original source file पर लौटने की guarantee नहीं।</p>
+<h2 id="section-20">20. Metadata editing — परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>यह <code>sample_data(ps)</code> पर काम करता है और values edit, variable add/delete/rename, file merge, undo और reset देता है।</p>
+<h2 id="section-21">21. Missing metadata का automatic creation<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>यदि usable metadata नहीं है, editor minimal <code>sample_data</code> बनाता है जिसमें <code>SampleID</code> column और प्रत्येक sample के लिए एक row होती है। यह dedicated log entry के बिना dataset बदल सकता है।</p>
+<h2 id="section-22">22. Sample identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>असली identifiers rownames हैं जो <code>sample_names(ps)</code> से aligned हैं। Displayed <code>SampleID</code> column साधारण variable है; उसे edit करने से OTU sample names नहीं बदलते।</p>
+<h2 id="section-23">23. Editable metadata table<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Cells सीधे edit होती हैं और cell validation पर तुरंत लागू हो जाती हैं। कोई global Apply button नहीं है।</p>
+<h2 id="section-24">24. Factors का treatment<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Factors local रूप से character में बदलते हैं। पहली rewrite के बाद levels और order खो सकते हैं।</p>
+<h2 id="section-25">25. List columns का treatment<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>List columns comma-separated text में flatten हो जाती हैं, जिसे original structure के बिना वापस बनाना कठिन हो सकता है।</p>
+<h2 id="section-26">26. Numeric column edit करना<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Valid number numeric रहता है, blank cell <code>NA_real_</code> बनती है और nonnumeric text पूरी column को character में बदल सकता है तथा warning देता है।</p>
+<h2 id="section-27">27. Numeric से text conversion का परिणाम<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>Continuous covariate <code>character</code> बनने पर statistical modules में quantitative variable की तरह काम नहीं कर सकती। Editing के बाद types जाँचें।</p>
+<h2 id="section-28">28. Logical, date और special classes<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Explicit preservation मुख्यतः numeric columns के लिए है। <code>logical</code>, <code>Date</code>, <code>POSIXct</code>, ordered factors और custom classes खो सकते हैं।</p>
+<h2 id="section-29">29. Metadata column जोड़ना<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>नई column <code>NA</code> से भरी होती है। Name ASCII letter से शुरू हो, केवल letters, numbers या <code>_</code> रखे, dot न हो और unique हो।</p>
+<h2 id="section-30">30. Compatible name suggestions<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Module normalized valid name suggest कर सकता है, लेकिन उसे automatic apply नहीं करता।</p>
+<h2 id="section-31">31. Metadata column rename करना<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Values सुरक्षित रहती हैं और valid unique name आवश्यक है। Rownames या sample identifiers नहीं बदलते।</p>
+<h2 id="section-32">32. Renaming का analyses पर प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>Old variable name उपयोग करने वाली formulas या saved settings automatic update नहीं होतीं और फिर configure करनी पड़ती हैं।</p>
+<h2 id="section-33">33. Metadata column delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>Exact case-sensitive name आवश्यक है। Case-insensitive या approximate suggestions दिखाई जा सकती हैं।</p>
+<h2 id="section-34">34. अंतिम column delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>कम से कम एक column बचाने की general protection नहीं है। पूरी metadata हटानी हो तो full component deletion उपयोग करें।</p>
+<h2 id="section-35">35. Metadata rows की consistency<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Missing samples <code>NA</code> के साथ जोड़ी जाती हैं, rows <code>sample_names(ps)</code> के अनुसार reorder होती हैं और extra rows हट जाती हैं।</p>
+<h2 id="section-36">36. Metadata में file merge करना<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>CSV, TSV और TXT accepted हैं; comma, semicolon या tab separator चुना जा सकता है।</p>
+<h2 id="section-37">37. Metadata separator की automatic detection<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>अधिकतम तीस nonempty lines देखकर field count और regularity compare की जाती है। Uncertain result manually override किया जा सकता है।</p>
+<h2 id="section-38">38. First column as identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>Enable करने पर first column rownames बनती है। Disable होने पर numeric rownames सामान्यतः sample matching रोकती हैं।</p>
+<h2 id="section-39">39. Metadata merge का वास्तविक behavior<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Matching rownames के लिए केवल new columns जोड़ी जाती हैं। Matching samples values पाते हैं, बाकी current samples <code>NA</code> पाते हैं।</p>
+<h2 id="section-40">40. Existing columns<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Merge existing columns update नहीं करता। यदि कोई new column नहीं है तो कुछ नहीं बदलता।</p>
+<h2 id="section-41">41. Merge file में extra samples<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Phyloseq में न मौजूद identifiers ignore होते हैं और new samples नहीं बनाते।</p>
+<h2 id="section-42">42. Merge file में missing current samples<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<p>वे dataset में बने रहते हैं और new columns में <code>NA</code> पाते हैं।</p>
+<h2 id="section-43">43. OTU-table editing — परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>यह cell edit, column add/delete, merge, display sorting, ASV renaming, orientation declaration, undo और reset देता है।</p>
+<h2 id="section-44">44. OTU-table orientation<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>Editor <code>taxa_are_rows()</code> preserve करता है। Taxa rows में हों तो columns samples हैं; अन्यथा columns taxa हैं।</p>
+<h2 id="section-45">45. “ASV in columns” transpose command नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Switch मुख्यतः automatic ASV renaming को बताता है। उसे बदलने से matrix transpose या <code>taxa_are_rows</code> तुरंत नहीं बदलता।</p>
+<h2 id="section-46">46. गलत axis चुनने का risk<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<p>Samples को ASV की तरह rename किया जा सकता है, declared orientation बदल सकती है और taxonomy, sequences तथा tree desynchronize हो सकते हैं।</p>
+<h2 id="section-47">47. Editable OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>हर cell edit की जा सकती है और module बाद में numeric matrix rebuild करता है।</p>
+<h2 id="section-48">48. OTU table की numeric conversion<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<p>हर action के बाद पूरी table numeric में convert होती है। Nonconvertible values <code>NA</code> बनती हैं और warning आती है।</p>
+<h2 id="section-49">49. Blank OTU values<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<p>Blank cells, whitespace और <code>NA</code> report होती हैं, लेकिन zero से automatic replace नहीं होतीं।</p>
+<h2 id="section-50">50. Nonnumeric values<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<p><code>absent</code>, <code>low</code> या <code>?</code> जैसे text numeric conversion में सामान्यतः <code>NA</code> बनते हैं।</p>
+<h2 id="section-51">51. Negative और decimal values<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<p>Block नहीं होते। Table counts, proportions, transformed values या CLR रख सकती है, हालांकि downstream methods उन्हें reject कर सकती हैं।</p>
+<h2 id="section-52">52. OTU table में column जोड़ना<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<p>Taxa rows में हों तो sample जुड़ता है; taxa columns में हों तो taxon जुड़ता है। नई column <code>NA</code> से शुरू होती है।</p>
+<h2 id="section-53">53. Sample जोड़ने के risks<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>Corresponding <code>sample_data</code> row automatic नहीं बनती, इसलिए phyloseq inconsistent हो सकता है।</p>
+<h2 id="section-54">54. Taxon जोड़ने के risks<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>Taxonomy, sequence या tree tip automatic नहीं बनते। Coverage incomplete होने पर RefSeq या tree हट सकते हैं।</p>
+<h2 id="section-55">55. Structural additions के लिए recommendation<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<p>New taxa या samples के लिए R में complete phyloseq rebuild और validate करें, केवल एक table extend न करें।</p>
+<h2 id="section-56">56. OTU column delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-56">#</a></h2>
+<p>Orientation के अनुसार sample या taxon हटता है। Metadata या taxonomy हर बार synchronize नहीं होती।</p>
+<h2 id="section-57">57. Biological removal के लिए Filtration उपयोग करें<a aria-label="Permalink" class="heading-anchor" href="#section-57">#</a></h2>
+<p>Filtration documented criteria से samples/taxa हटाकर coherent child dataset बनाता है।</p>
+<h2 id="section-58">58. Natural ASV sorting<a aria-label="Permalink" class="heading-anchor" href="#section-58">#</a></h2>
+<p>Display में <code>ASV1</code>, <code>ASV2</code>, <code>ASV10</code> numerical order में आते हैं; internal order नहीं बदलता।</p>
+<h2 id="section-59">59. Sorting enabled होने पर editing<a aria-label="Permalink" class="heading-anchor" href="#section-59">#</a></h2>
+<p>Displayed row original identifier से map की जाती है ताकि सही element edit हो।</p>
+<h2 id="section-60">60. OTU table में file merge करना<a aria-label="Permalink" class="heading-anchor" href="#section-60">#</a></h2>
+<p>Separator detect होता है, rownames उपयोग होती हैं, common rows खोजी जाती हैं और केवल new columns जुड़ती हैं।</p>
+<h2 id="section-61">61. Imported columns का अर्थ<a aria-label="Permalink" class="heading-anchor" href="#section-61">#</a></h2>
+<p>Current orientation पर निर्भर है; module यह infer नहीं करता कि columns samples हैं या taxa।</p>
+<h2 id="section-62">62. OTU merge file की extra rows<a aria-label="Permalink" class="heading-anchor" href="#section-62">#</a></h2>
+<p>Ignore होती हैं और new identifiers नहीं बनातीं।</p>
+<h2 id="section-63">63. File में missing current rows<a aria-label="Permalink" class="heading-anchor" href="#section-63">#</a></h2>
+<p>नई columns में उन rows के लिए <code>NA</code> रहता है।</p>
+<h2 id="section-64">64. Automatic ASV renaming<a aria-label="Permalink" class="heading-anchor" href="#section-64">#</a></h2>
+<p>Prefix, declared ASV axis और current identifiers को combine करता है।</p>
+<h2 id="section-65">65. Final numbers preserve करना<a aria-label="Permalink" class="heading-anchor" href="#section-65">#</a></h2>
+<p>यदि सभी identifiers unique number पर समाप्त होते हैं, numbers preserve होते हैं; <code>ASV128</code> से <code>Feature128</code>।</p>
+<h2 id="section-66">66. Sequential renaming<a aria-label="Permalink" class="heading-anchor" href="#section-66">#</a></h2>
+<p>यदि किसी एक identifier में usable final number नहीं है, सभी identifiers internal order के अनुसार sequential rename होते हैं।</p>
+<h2 id="section-67">67. New-name collisions<a aria-label="Permalink" class="heading-anchor" href="#section-67">#</a></h2>
+<p>Generated names unique न हों तो sequential fallback उपयोग होता है।</p>
+<h2 id="section-68">68. Prefix validation<a aria-label="Permalink" class="heading-anchor" href="#section-68">#</a></h2>
+<p>केवल outer whitespace हटता है। <code>ASV</code>, <code>OTU</code>, <code>ZOTU</code> या <code>Feature</code> जैसे simple prefix उपयोग करें।</p>
+<h2 id="section-69">69. ASV renaming propagation<a aria-label="Permalink" class="heading-anchor" href="#section-69">#</a></h2>
+<p>Old identifiers unique हों तो names <code>tax_table</code>, <code>refseq</code> और tree tips तक propagate होते हैं।</p>
+<h2 id="section-70">70. Renaming से पहले duplicate identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-70">#</a></h2>
+<p>Propagation disable हो जाती है और object inconsistent रह सकता है। Duplicates upstream ठीक करें।</p>
+<h2 id="section-71">71. OTU change के बाद sequences realign करना<a aria-label="Permalink" class="heading-anchor" href="#section-71">#</a></h2>
+<p>Unnamed sequences count match होने पर order से नामित होती हैं। Complete named sequences reorder होती हैं। किसी taxon की sequence missing हो तो पूरा <code>refseq</code> हटता है।</p>
+<h2 id="section-72">72. OTU change के बाद tree realign करना<a aria-label="Permalink" class="heading-anchor" href="#section-72">#</a></h2>
+<p>Extra tips prune होती हैं। कोई OTU taxon tree में missing हो तो पूरा tree हटता है।</p>
+<h2 id="section-73">73. <code>ape</code> package absent<a aria-label="Permalink" class="heading-anchor" href="#section-73">#</a></h2>
+<p>OTU change के समय <code>ape</code> उपलब्ध न हो तो tree हटता है और warning log होती है।</p>
+<h2 id="section-74">74. Structural OTU changes के बाद taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-74">#</a></h2>
+<p>ASV renaming में propagation explicit है, लेकिन हर structural edit में guarantee नहीं। बाद में identifiers जाँचें।</p>
+<h2 id="section-75">75. Taxonomy editing — परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-75">#</a></h2>
+<p>यह <code>tax_table(ps)</code> पर cells, ranks, file merge, automatic replacement, undo और reset देता है।</p>
+<h2 id="section-76">76. Missing taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-76">#</a></h2>
+<p>Taxonomy table न हो तो full component import उपयोग करें।</p>
+<h2 id="section-77">77. First taxonomy edit से पहले confirmation<a aria-label="Permalink" class="heading-anchor" href="#section-77">#</a></h2>
+<p>पहली attempt केवल information modal दिखाती है और action नहीं चलाती। Modal बंद करके action दोहराएँ।</p>
+<h2 id="section-78">78. Dataset बदलने के बाद नई confirmation<a aria-label="Permalink" class="heading-anchor" href="#section-78">#</a></h2>
+<p>Dataset selection बदलने पर confirmation state reset होती है।</p>
+<h2 id="section-79">79. Taxonomy cell edit करना<a aria-label="Permalink" class="heading-anchor" href="#section-79">#</a></h2>
+<p>Value text के रूप में save होती है। Nomenclature या taxonomy validation नहीं होती।</p>
+<h2 id="section-80">80. Hierarchy validation नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-80">#</a></h2>
+<p>Species–genus–family consistency या scientific-name validity check नहीं होती।</p>
+<h2 id="section-81">81. Taxonomic rank जोड़ना<a aria-label="Permalink" class="heading-anchor" href="#section-81">#</a></h2>
+<p>अंत में <code>NA</code> column जुड़ती है और strict valid unique name चाहिए।</p>
+<h2 id="section-82">82. Rank order<a aria-label="Permalink" class="heading-anchor" href="#section-82">#</a></h2>
+<p>कोई order enforce नहीं होता। Coherent order manually बनाए रखें।</p>
+<h2 id="section-83">83. Taxonomic rank rename करना<a aria-label="Permalink" class="heading-anchor" href="#section-83">#</a></h2>
+<p>Direct button नहीं है। New rank बनाएँ, values transfer करें और old rank delete करें, या R में करें।</p>
+<h2 id="section-84">84. Rank delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-84">#</a></h2>
+<p>Exact name से तुरंत delete होता है; suggestions दिखाई जा सकती हैं।</p>
+<h2 id="section-85">85. सभी ranks delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-85">#</a></h2>
+<p>General protection नहीं है। पूरी taxonomy हटानी हो तो full component deletion उपयोग करें।</p>
+<h2 id="section-86">86. ASV के अनुसार taxonomy sorting<a aria-label="Permalink" class="heading-anchor" href="#section-86">#</a></h2>
+<p>Natural sorting केवल display बदलती है और identifier की पहली numeric sequence उपयोग करती है।</p>
+<h2 id="section-87">87. ASV renaming के बाद synchronization<a aria-label="Permalink" class="heading-anchor" href="#section-87">#</a></h2>
+<p>Taxonomy rownames बदलें और row count समान रहे तो local states update होते हैं और synchronization log entry जुड़ती है।</p>
+<h2 id="section-88">88. Taxonomy synchronization की सीमा<a aria-label="Permalink" class="heading-anchor" href="#section-88">#</a></h2>
+<p>Same identifiers के साथ full replacement local values refresh न करे। दूसरा dataset चुनकर वापस आएँ।</p>
+<h2 id="section-89">89. Taxonomy में file merge करना<a aria-label="Permalink" class="heading-anchor" href="#section-89">#</a></h2>
+<p>Common taxa के लिए केवल missing rank columns जुड़ती हैं; अन्य taxa <code>NA</code> पाते हैं।</p>
+<h2 id="section-90">90. Taxonomy separator की automatic detection नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-90">#</a></h2>
+<p>Separator manually चुनना आवश्यक है।</p>
+<h2 id="section-91">91. Existing taxonomy columns<a aria-label="Permalink" class="heading-anchor" href="#section-91">#</a></h2>
+<p>Merge existing <code>Genus</code> जैसे ranks replace नहीं करता। पूरी table replace करने के लिए full import उपयोग करें।</p>
+<h2 id="section-92">92. Automatic value replacement<a aria-label="Permalink" class="heading-anchor" href="#section-92">#</a></h2>
+<p><code>NA</code>, <code>unidentified</code>, <code>unclassified</code>, <code>unknown</code>, <code>missing</code> जैसे patterns को common text से बदला जा सकता है।</p>
+<h2 id="section-93">93. Exact case-insensitive matching<a aria-label="Permalink" class="heading-anchor" href="#section-93">#</a></h2>
+<p>Patterns trim और lowercase होकर exact compare होते हैं; broad substring search नहीं है।</p>
+<h2 id="section-94">94. <code>NA</code> pattern<a aria-label="Permalink" class="heading-anchor" href="#section-94">#</a></h2>
+<p>True missing values और textual <code>NA</code> variants दोनों match होते हैं।</p>
+<h2 id="section-95">95. Empty pattern<a aria-label="Permalink" class="heading-anchor" href="#section-95">#</a></h2>
+<p>Empty या whitespace-only strings target होती हैं।</p>
+<h2 id="section-96">96. Replacement scope<a aria-label="Permalink" class="heading-anchor" href="#section-96">#</a></h2>
+<p>Replacement सभी taxonomy ranks पर लागू होता है; single-column targeting नहीं।</p>
+<h2 id="section-97">97. Mandatory preview<a aria-label="Permalink" class="heading-anchor" href="#section-97">#</a></h2>
+<p>Confirmation से पहले total cells और pattern/column counts दिखते हैं।</p>
+<h2 id="section-98">98. Overlapping patterns<a aria-label="Permalink" class="heading-anchor" href="#section-98">#</a></h2>
+<p>एक cell कई patterns match कर सकती है; per-pattern counts overlap कर सकते हैं।</p>
+<h2 id="section-99">99. Nonempty replacement value<a aria-label="Permalink" class="heading-anchor" href="#section-99">#</a></h2>
+<p>Empty replacement string reject होती है।</p>
+<h2 id="section-100">100. Replacement के scientific consequences<a aria-label="Permalink" class="heading-anchor" href="#section-100">#</a></h2>
+<p><code>NA</code> को <code>Unassigned</code> करने से missing information वास्तविक category बनती है और completeness, agglomeration तथा plots बदलते हैं।</p>
+<h2 id="section-101">101. Unassigned taxa grouping<a aria-label="Permalink" class="heading-anchor" href="#section-101">#</a></h2>
+<p>Same text वाले taxa <code>tax_glom()</code> से group हो सकते हैं, true missing values से अलग behavior है।</p>
+<h2 id="section-102">102. Initial taxonomy state और Reset<a aria-label="Permalink" class="heading-anchor" href="#section-102">#</a></h2>
+<p>Local editor dataset load करते समय initial state recapture करता है; dataset switch Reset reference बदल सकता है।</p>
+<h2 id="section-103">103. Import, export और deletion — परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-103">#</a></h2>
+<p>यह area whole components manage करता है: metadata, OTU, taxonomy, RefSeq और tree।</p>
+<h2 id="section-104">104. Automatic import<a aria-label="Permalink" class="heading-anchor" href="#section-104">#</a></h2>
+<p>File select होते ही import शुरू होता है; extra confirmation button या general preview नहीं है।</p>
+<h2 id="section-105">105. File-size limit<a aria-label="Permalink" class="heading-anchor" href="#section-105">#</a></h2>
+<p>Global BarCodeR upload limit लागू होती है, वर्तमान में लगभग 500 MB।</p>
+<h2 id="section-106">106. Full imports के separator detection<a aria-label="Permalink" class="heading-anchor" href="#section-106">#</a></h2>
+<p>मुख्यतः first line inspect होती है: semicolon priority, फिर tab, अन्यथा comma। Merge detection से कम robust है।</p>
+<h2 id="section-107">107. Full metadata import<a aria-label="Permalink" class="heading-anchor" href="#section-107">#</a></h2>
+<p>First column identifiers देती है। Unknown samples reject होते हैं; missing current samples <code>NA</code> के साथ जोड़ी जाती हैं। Old metadata पूरी replace होती है।</p>
+<h2 id="section-108">108. Full OTU-table import<a aria-label="Permalink" class="heading-anchor" href="#section-108">#</a></h2>
+<p>File taxa rows और samples columns के रूप में पढ़ी जाती है तथा <code>taxa_are_rows = TRUE</code> लागू होता है।</p>
+<h2 id="section-109">109. OTU import के accepted identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-109">#</a></h2>
+<p>File taxa और samples existing identifiers के subsets होने चाहिए। New samples या taxa नहीं जुड़ते।</p>
+<h2 id="section-110">110. OTU import में missing identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-110">#</a></h2>
+<p>Current samples या taxa file में missing हों तो zero से भरते हैं और current object order में reorder होते हैं।</p>
+<h2 id="section-111">111. OTU import की numeric conversion<a aria-label="Permalink" class="heading-anchor" href="#section-111">#</a></h2>
+<p>पूरी table numeric बनती है। Invalid values <code>NA</code> बनती हैं; import warning के साथ जारी रह सकता है।</p>
+<h2 id="section-112">112. Full taxonomy import<a aria-label="Permalink" class="heading-anchor" href="#section-112">#</a></h2>
+<p>First column taxa देती है। Unknown taxa reject होते हैं; missing taxa <code>NA</code> पाते हैं। Old table और ranks replace होते हैं।</p>
+<h2 id="section-113">113. RefSeq import<a aria-label="Permalink" class="heading-anchor" href="#section-113">#</a></h2>
+<p>FASTA identifiers सभी taxa से match और पूर्ण coverage देने चाहिए। Partial files या unknown identifiers reject होते हैं।</p>
+<h2 id="section-114">114. Tree import<a aria-label="Permalink" class="heading-anchor" href="#section-114">#</a></h2>
+<p>Newick tips सभी taxa से match और पूर्ण coverage दें। Unknown tips या missing taxa rejection करते हैं।</p>
+<h2 id="section-115">115. Complete component replacement<a aria-label="Permalink" class="heading-anchor" href="#section-115">#</a></h2>
+<p>Old component snapshot के रूप में नहीं बचता। केवल dimensions, file info और warnings log होते हैं।</p>
+<h2 id="section-116">116. Full import के बाद editors refresh करना<a aria-label="Permalink" class="heading-anchor" href="#section-116">#</a></h2>
+<p>Dataset name न बदले तो local editors old copy रख सकते हैं। आगे edit करने से पहले dataset switch करके वापस आएँ।</p>
+<h2 id="section-117">117. Component export<a aria-label="Permalink" class="heading-anchor" href="#section-117">#</a></h2>
+<p>Metadata, OTU और taxonomy CSV; RefSeq FASTA; tree Newick में export होते हैं।</p>
+<h2 id="section-118">118. CSV export separator<a aria-label="Permalink" class="heading-anchor" href="#section-118">#</a></h2>
+<p><code>.csv</code> extension के बावजूद semicolon <code>;</code> उपयोग होता है।</p>
+<h2 id="section-119">119. Metadata export<a aria-label="Permalink" class="heading-anchor" href="#section-119">#</a></h2>
+<p>Rownames से <code>SampleID</code> column बनती है और missing values blank cells के रूप में export होती हैं।</p>
+<h2 id="section-120">120. OTU export<a aria-label="Permalink" class="heading-anchor" href="#section-120">#</a></h2>
+<p>Stored orientation preserve होती है और file <code>taxa_are_rows</code> स्पष्ट रूप से record नहीं करती।</p>
+<h2 id="section-121">121. Taxonomy export<a aria-label="Permalink" class="heading-anchor" href="#section-121">#</a></h2>
+<p>Taxon identifiers first column में और missing annotations blank cells के रूप में लिखे जाते हैं।</p>
+<h2 id="section-122">122. RefSeq export<a aria-label="Permalink" class="heading-anchor" href="#section-122">#</a></h2>
+<p>Current names के साथ FASTA लिखा जाता है; <code>Biostrings</code> आवश्यक है।</p>
+<h2 id="section-123">123. Tree export<a aria-label="Permalink" class="heading-anchor" href="#section-123">#</a></h2>
+<p>Newick लिखा जाता है; <code>ape</code> आवश्यक है।</p>
+<h2 id="section-124">124. Export और audit log<a aria-label="Permalink" class="heading-anchor" href="#section-124">#</a></h2>
+<p>हर export <code>edit_log</code> entry जोड़ता है और project को unsaved mark कर सकता है।</p>
+<h2 id="section-125">125. Component deletion<a aria-label="Permalink" class="heading-anchor" href="#section-125">#</a></h2>
+<p>Modal present components दिखाती है और confirmation से पहले multiple selections अनुमति देती है।</p>
+<h2 id="section-126">126. Metadata delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-126">#</a></h2>
+<p><code>sam_data</code> हटता है और groups/covariates वाली analyses उपलब्ध नहीं रहतीं।</p>
+<h2 id="section-127">127. Taxonomy delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-127">#</a></h2>
+<p><code>tax_table</code> हटता है और taxonomy-based analyses उपलब्ध नहीं रहतीं।</p>
+<h2 id="section-128">128. RefSeq delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-128">#</a></h2>
+<p>Length, GC और sequence-based functions reference sequences खो देती हैं।</p>
+<h2 id="section-129">129. Tree delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-129">#</a></h2>
+<p>UniFrac, Faith PD और phylogenetic visualization उपलब्ध नहीं रहती।</p>
+<h2 id="section-130">130. OTU table delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-130">#</a></h2>
+<p>Interface इसे अनुमति देता है, लेकिन core component हटने से dataset अधिकांश modules में unusable हो जाता है।</p>
+<h2 id="section-131">131. कई components साथ delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-131">#</a></h2>
+<p>कई slots हट सकते हैं, भले remaining object internally inconsistent हो जाए।</p>
+<h2 id="section-132">132. Component deletion undo करना<a aria-label="Permalink" class="heading-anchor" href="#section-132">#</a></h2>
+<p>इस area में Undo नहीं है। Component reimport करें, project restore करें या earlier export load करें।</p>
+<h2 id="section-133">133. Deletion और disk files<a aria-label="Permalink" class="heading-anchor" href="#section-133">#</a></h2>
+<p>Project save होने तक deletion memory में है। Source files और previous disk backups नहीं हटते।</p>
+<h2 id="section-134">134. Dataset को registry में save करना<a aria-label="Permalink" class="heading-anchor" href="#section-134">#</a></h2>
+<p>Name field same-name registration, new entry या existing entry replacement देता है।</p>
+<h2 id="section-135">135. Empty name<a aria-label="Permalink" class="heading-anchor" href="#section-135">#</a></h2>
+<p>Dataset current name से re-register होता है, active रहता है और log entry मिलती है। Project disk पर save नहीं होता।</p>
+<h2 id="section-136">136. Available new name<a aria-label="Permalink" class="heading-anchor" href="#section-136">#</a></h2>
+<p>Current edited state का नया registry entry बनता है और active हो जाता है। Source entry रहती है, लेकिन पहले ही edited है।</p>
+<h2 id="section-137">137. Name किसी दूसरे dataset द्वारा उपयोग हो रहा हो<a aria-label="Permalink" class="heading-anchor" href="#section-137">#</a></h2>
+<p>Confirmation के बाद target edited source state से पूरी तरह overwrite होता है; source entry भी रहती है।</p>
+<h2 id="section-138">138. Dataset-name cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-138">#</a></h2>
+<p>Shared naming helper collision check से पहले label clean करता है।</p>
+<h2 id="section-139">139. दूसरे dataset को overwrite करना<a aria-label="Permalink" class="heading-anchor" href="#section-139">#</a></h2>
+<p>Tables, sequences, tree, attributes, logs और provenance सब replace होते हैं। यह merge नहीं है।</p>
+<h2 id="section-140">140. Complete project save करना<a aria-label="Permalink" class="heading-anchor" href="#section-140">#</a></h2>
+<p>Editing के बाद registry disk पर persist करने के लिए <strong>Datasets → Save project</strong> उपयोग करें।</p>
+<h2 id="section-141">141. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-141">#</a></h2>
+<p>नीचे common failures और वास्तविक causes दिए गए हैं।</p>
+<h2 id="section-141-1">141.1. गलत dataset modify हो गया<a aria-label="Permalink" class="heading-anchor" href="#section-141-1">#</a></h2>
+<p>Picker global active dataset follow करता है। हर action से पहले displayed name जाँचें।</p>
+<h2 id="section-141-2">141.2. New name चाहा लेकिन original भी बदल गया<a aria-label="Permalink" class="heading-anchor" href="#section-141-2">#</a></h2>
+<p>Edits copying से पहले होती हैं। Backup, export या original file restore करें।</p>
+<h2 id="section-141-3">141.3. Save ने project save नहीं किया<a aria-label="Permalink" class="heading-anchor" href="#section-141-3">#</a></h2>
+<p>यह केवल memory registry बदलता है। Datasets से save करें।</p>
+<h2 id="section-141-4">141.4. Metadata automatic दिखाई दी<a aria-label="Permalink" class="heading-anchor" href="#section-141-4">#</a></h2>
+<p>Dataset में <code>sample_data</code> नहीं था; minimal table बनाई गई।</p>
+<h2 id="section-141-5">141.5. <code>SampleID</code> edit करने से samples rename नहीं हुए<a aria-label="Permalink" class="heading-anchor" href="#section-141-5">#</a></h2>
+<p>True identifiers rownames हैं।</p>
+<h2 id="section-141-6">141.6. Numeric variable text बन गई<a aria-label="Permalink" class="heading-anchor" href="#section-141-6">#</a></h2>
+<p>Nonnumeric value दर्ज हुई। पूरी column ठीक करें या typed metadata reimport करें।</p>
+<h2 id="section-141-7">141.7. Factor character बन गया<a aria-label="Permalink" class="heading-anchor" href="#section-141-7">#</a></h2>
+<p>Editor factors flatten करता है। आवश्यकता हो तो R में levels restore करें।</p>
+<h2 id="section-141-8">141.8. New column का type गलत है<a aria-label="Permalink" class="heading-anchor" href="#section-141-8">#</a></h2>
+<p>यह <code>NA</code> से शुरू होती है और entered values से infer होती है। बाद में validate और convert करें।</p>
+<h2 id="section-141-9">141.9. Metadata merge ने existing column update नहीं की<a aria-label="Permalink" class="heading-anchor" href="#section-141-9">#</a></h2>
+<p>Merge केवल missing columns जोड़ता है। Full import या cell edit उपयोग करें।</p>
+<h2 id="section-141-10">141.10. कोई common identifier नहीं मिला<a aria-label="Permalink" class="heading-anchor" href="#section-141-10">#</a></h2>
+<p>First column, rownames option, case, whitespace और spelling जाँचें।</p>
+<h2 id="section-141-11">141.11. Detected separator गलत है<a aria-label="Permalink" class="heading-anchor" href="#section-141-11">#</a></h2>
+<p>Irregular file में manually override करें।</p>
+<h2 id="section-141-12">141.12. OTU values <code>NA</code> बन गईं<a aria-label="Permalink" class="heading-anchor" href="#section-141-12">#</a></h2>
+<p>Text, symbols, whitespace या decimal comma के कारण numeric conversion fail हुआ।</p>
+<h2 id="section-141-13">141.13. Decimal commas <code>NA</code> बनते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-141-13">#</a></h2>
+<p>Expected decimal mark point है। Source file ठीक करें।</p>
+<h2 id="section-141-14">141.14. Added OTU column ने metadata desynchronize की<a aria-label="Permalink" class="heading-anchor" href="#section-141-14">#</a></h2>
+<p>Sample केवल OTU table में जुड़ा। Matching metadata जोड़ें या object rebuild करें।</p>
+<h2 id="section-141-15">141.15. OTU change के बाद RefSeq गायब हुई<a aria-label="Permalink" class="heading-anchor" href="#section-141-15">#</a></h2>
+<p>अब सभी taxa cover नहीं हो रहे थे।</p>
+<h2 id="section-141-16">141.16. OTU change के बाद tree गायब हुआ<a aria-label="Permalink" class="heading-anchor" href="#section-141-16">#</a></h2>
+<p>Taxon missing था, renaming propagate नहीं हुआ या <code>ape</code> unavailable था।</p>
+<h2 id="section-141-17">141.17. Tree tips गायब हुईं<a aria-label="Permalink" class="heading-anchor" href="#section-141-17">#</a></h2>
+<p>OTU table में न मौजूद extra tips automatic prune होती हैं।</p>
+<h2 id="section-141-18">141.18. Samples ASV की तरह rename हो गए<a aria-label="Permalink" class="heading-anchor" href="#section-141-18">#</a></h2>
+<p>गलत axis declare हुआ। Copy या backup restore करें।</p>
+<h2 id="section-141-19">141.19. ASV prefix ने unusual names बनाए<a aria-label="Permalink" class="heading-anchor" href="#section-141-19">#</a></h2>
+<p>Prefix strict validate नहीं होता। Simple prefix उपयोग करें।</p>
+<h2 id="section-141-20">141.20. Taxonomy OTU table से match नहीं करती<a aria-label="Permalink" class="heading-anchor" href="#section-141-20">#</a></h2>
+<p>Rownames, duplicates और editor refresh जाँचें; R में identifier sets compare करें।</p>
+<h2 id="section-141-21">141.21. First taxonomy change नहीं चला<a aria-label="Permalink" class="heading-anchor" href="#section-141-21">#</a></h2>
+<p>पहली attempt warning modal खोलती है। Action दोहराएँ।</p>
+<h2 id="section-141-22">141.22. Taxonomy replacement ने कई ranks बदले<a aria-label="Permalink" class="heading-anchor" href="#section-141-22">#</a></h2>
+<p>Replacement सभी columns पर लागू है। Per-rank preview देखें।</p>
+<h2 id="section-141-23">141.23. <code>NA</code> अब real category माना जा रहा है<a aria-label="Permalink" class="heading-anchor" href="#section-141-23">#</a></h2>
+<p>Missing value text से replace हुआ और assigned taxonomy की तरह aggregate हो सकता है।</p>
+<h2 id="section-141-24">141.24. Taxonomy merge ने <code>Genus</code> replace नहीं किया<a aria-label="Permalink" class="heading-anchor" href="#section-141-24">#</a></h2>
+<p>Rank पहले से मौजूद है; Merge केवल missing ranks जोड़ता है।</p>
+<h2 id="section-141-25">141.25. Taxonomy separator detect नहीं हुआ<a aria-label="Permalink" class="heading-anchor" href="#section-141-25">#</a></h2>
+<p>इस editor में manual selection आवश्यक है।</p>
+<h2 id="section-141-26">141.26. Full import ने columns मिटा दीं<a aria-label="Permalink" class="heading-anchor" href="#section-141-26">#</a></h2>
+<p>यह पूरा component replace करता है। Backup restore करें या additive changes के लिए Merge उपयोग करें।</p>
+<h2 id="section-141-27">141.27. Full OTU import ने orientation बदली<a aria-label="Permalink" class="heading-anchor" href="#section-141-27">#</a></h2>
+<p>यह हमेशा taxa rows लागू करता है।</p>
+<h2 id="section-141-28">141.28. Full import new samples reject करता है<a aria-label="Permalink" class="heading-anchor" href="#section-141-28">#</a></h2>
+<p>Identifiers पहले से मौजूद होने चाहिए। Extended sample universe के लिए नया complete phyloseq बनाएँ।</p>
+<h2 id="section-141-29">141.29. Full import new taxa reject करता है<a aria-label="Permalink" class="heading-anchor" href="#section-141-29">#</a></h2>
+<p>Rownames <code>taxa_names(ps)</code> में होने चाहिए।</p>
+<h2 id="section-141-30">141.30. FASTA import reject है<a aria-label="Permalink" class="heading-anchor" href="#section-141-30">#</a></h2>
+<p>Format, identifier uniqueness, full coverage और <code>Biostrings</code> availability जाँचें।</p>
+<h2 id="section-141-31">141.31. Tree import reject है<a aria-label="Permalink" class="heading-anchor" href="#section-141-31">#</a></h2>
+<p>Valid Newick, unknown tips, missing taxa और <code>ape</code> availability जाँचें।</p>
+<h2 id="section-141-32">141.32. Import के बाद editor old table दिखाता है<a aria-label="Permalink" class="heading-anchor" href="#section-141-32">#</a></h2>
+<p>दूसरा dataset चुनकर वापस आएँ ताकि local state refresh हो।</p>
+<h2 id="section-141-33">141.33. Deleted old table editing के बाद वापस आ गई<a aria-label="Permalink" class="heading-anchor" href="#section-141-33">#</a></h2>
+<p>Stale submodule state ने पुरानी copy rewrite की हो सकती है। Delete/full import के बाद refresh करें।</p>
+<h2 id="section-141-34">141.34. Download करने से unsaved modification बनी<a aria-label="Permalink" class="heading-anchor" href="#section-141-34">#</a></h2>
+<p>Exports log होती हैं और dataset attribute बदलता है।</p>
+<h2 id="section-141-35">141.35. Table deletion undo नहीं हो सकती<a aria-label="Permalink" class="heading-anchor" href="#section-141-35">#</a></h2>
+<p>Component-deletion area में Undo नहीं है। Reimport या restore करें।</p>
+<h2 id="section-141-36">141.36. OTU table delete करने के बाद dataset काम नहीं करता<a aria-label="Permalink" class="heading-anchor" href="#section-141-36">#</a></h2>
+<p>Complete version restore करें; OTU central component है।</p>
+<h2 id="section-141-37">141.37. Undo कई actions पीछे नहीं जाता<a aria-label="Permalink" class="heading-anchor" href="#section-141-37">#</a></h2>
+<p>केवल एक previous state store होती है।</p>
+<h2 id="section-141-38">141.38. Reset original file पर नहीं लौटता<a aria-label="Permalink" class="heading-anchor" href="#section-141-38">#</a></h2>
+<p>यह local editor load के समय captured state पर लौटता है।</p>
+<h2 id="section-141-39">141.39. दूसरी भाषा में भी log French है<a aria-label="Permalink" class="heading-anchor" href="#section-141-39">#</a></h2>
+<p>Internal audit messages French में store होती हैं।</p>
+<h2 id="section-141-40">141.40. Export के बाद action count बढ़ता है<a aria-label="Permalink" class="heading-anchor" href="#section-141-40">#</a></h2>
+<p>Exports actions के रूप में log होती हैं।</p>
+<h2 id="section-142">142. Editing से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-142">#</a></h2>
+<ul>
+<li>Current project और dataset confirm करें।</li>
+<li>Raw dataset duplicate करें।</li>
+<li>Project save और important data export करें।</li>
+<li>Components और OTU orientation जाँचें।</li>
+<li>Same project लिखने वाली other sessions बंद करें।</li>
+</ul>
+<h2 id="section-143">143. Metadata editing से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-143">#</a></h2>
+<ul>
+<li>Rownames जाँचें और <code>SampleID</code> column से अलग समझें।</li>
+<li>Types, factors, dates और missing values document करें।</li>
+<li>Valid column names उपयोग करें।</li>
+<li>Editing के बाद types फिर जाँचें।</li>
+</ul>
+<h2 id="section-144">144. OTU editing से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-144">#</a></h2>
+<ul>
+<li><code>taxa_are_rows</code> और ASV axis जाँचें।</li>
+<li>Abundance nature और text absence confirm करें।</li>
+<li>Structural changes से पहले metadata, taxonomy, RefSeq और tree जाँचें।</li>
+<li>Mass renaming से पहले export करें।</li>
+</ul>
+<h2 id="section-145">145. Taxonomy replacement से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-145">#</a></h2>
+<ul>
+<li>Patterns, case और whitespace जाँचें।</li>
+<li>Rank-wise counts देखें।</li>
+<li><code>NA</code> और text category का अंतर समझें।</li>
+<li>Agglomeration effects anticipate करें।</li>
+<li>Original taxonomy सुरक्षित रखें।</li>
+</ul>
+<h2 id="section-146">146. Full import से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-146">#</a></h2>
+<ul>
+<li>Dataset, separator, first column, identifiers और coverage जाँचें।</li>
+<li>Previous component backup करें।</li>
+<li>समझें कि component replace होगा।</li>
+<li>Editors refresh करें और Description में validate करें।</li>
+</ul>
+<h2 id="section-147">147. Component delete से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-147">#</a></h2>
+<ul>
+<li>Component export और project save करें।</li>
+<li>Dependent modules जाँचें।</li>
+<li>Exceptional case के अलावा OTU delete न करें।</li>
+<li>याद रखें Undo नहीं है।</li>
+</ul>
+<h2 id="section-148">148. Data Edition के बाद checklist<a aria-label="Permalink" class="heading-anchor" href="#section-148">#</a></h2>
+<ul>
+<li>Description खोलकर dimensions, sums, types, missing values, taxonomy, RefSeq और tree जाँचें।</li>
+<li>Identifier alignment और edit log देखें।</li>
+<li>Datasets में project save करें।</li>
+</ul>
+<h2 id="section-149">149. Editing के बाद recommended R checks<a aria-label="Permalink" class="heading-anchor" href="#section-149">#</a></h2>
+<pre tabindex="0"><code class="language-r">setequal(sample_names(ps), rownames(as.data.frame(sample_data(ps))))
+setequal(taxa_names(ps), rownames(as(tax_table(ps), "matrix")))
+setequal(taxa_names(ps), names(refseq(ps)))
+setequal(taxa_names(ps), phy_tree(ps)$tip.label)
+
+otu &lt;- as(otu_table(ps), "matrix")
+anyNA(otu)
+any(otu &lt; 0, na.rm = TRUE)
+all(otu == round(otu), na.rm = TRUE)
+</code></pre>
+<h2 id="section-150">150. वर्तमान सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-150">#</a></h2>
+<ul>
+<li>Changes तुरंत लागू होती हैं और original automatic सुरक्षित नहीं रहता।</li>
+<li>Save project persist नहीं करता।</li>
+<li>Undo एक state रखता है और Reset local loading पर निर्भर है।</li>
+<li>Metadata automatic बन सकती है।</li>
+<li>Factors और special classes खो सकती हैं।</li>
+<li>ASV switch transpose command नहीं है।</li>
+<li>OTU edits components desynchronize कर सकती हैं।</li>
+<li>Taxonomy replacements सभी ranks पर लागू होती हैं।</li>
+<li>Full imports preview के बिना शुरू होती हैं और identifiers extend नहीं करतीं।</li>
+<li>Local editors stale copies दिखा सकते हैं।</li>
+<li>Export log बदलता है।</li>
+<li>OTU deletion अनुमति है।</li>
+<li>हर action के बाद full integrity guard नहीं चलता।</li>
+</ul>
+<h2 id="section-151">151. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-151">#</a></h2>
+<ol>
+<li>Project save करें और raw dataset duplicate करें।</li>
+<li>Copy edit करें।</li>
+<li>OTU orientation verify करें।</li>
+<li>Metadata edit और types validate करें।</li>
+<li>OTU केवल आवश्यकता पर edit करें।</li>
+<li>Structural changes के बाद taxonomy, RefSeq और tree जाँचें।</li>
+<li>Taxonomy previews उपयोग करें।</li>
+<li>Full import/delete के बाद refresh करें।</li>
+<li>Description में validate करें।</li>
+<li>Project save और final dataset export करें।</li>
+</ol>
+<h2 id="section-152">152. सत्यापित आंतरिक स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section-152">#</a></h2>
+<p>यह guide current Data Edition main module, metadata editor, OTU editor, taxonomy editor, component import/export/deletion submodule, active-dataset synchronization, naming helper, <code>app.R</code> और effective code से verify की गई architecture notes के आधार पर पुनर्निर्मित है।</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य परिचय</a><a class="toc-l2" href="#section-2">2. मूल सिद्धांत: बदलाव तुरंत लागू होते हैं</a><a class="toc-l2" href="#section-3">3. Save बटन pending बदलाव लागू नहीं करता</a><a class="toc-l2" href="#section-4">4. Original version के लिए महत्वपूर्ण परिणाम</a><a class="toc-l2" href="#section-5">5. Source files पर प्रभाव</a><a class="toc-l2" href="#section-6">6. Tab की संरचना</a><a class="toc-l2" href="#section-7">7. Edit करने वाला dataset</a><a class="toc-l2" href="#section-8">8. Editing के दौरान dataset बदलना</a><a class="toc-l2" href="#section-9">9. Dataset बदलकर वापस आने के बाद Reset</a><a class="toc-l2" href="#section-10">10. Editing और project persistence</a><a class="toc-l2" href="#section-11">11. दो import mechanisms का अंतर</a><a class="toc-l2" href="#section-12">12. Data Edition किन कामों के लिए नहीं है</a><a class="toc-l2" href="#section-13">13. Edit history</a><a class="toc-l2" href="#section-14">14. Log backup नहीं है</a><a class="toc-l2" href="#section-15">15. Log की भाषा</a><a class="toc-l2" href="#section-16">16. Logs की तीन views</a><a class="toc-l2" href="#section-17">17. Total में गिनी जाने वाली actions</a><a class="toc-l2" href="#section-18">18. Undo: केवल एक step</a><a class="toc-l2" href="#section-19">19. Reset</a><a class="toc-l2" href="#section-20">20. Metadata editing — परिचय</a><a class="toc-l2" href="#section-21">21. Missing metadata का automatic creation</a><a class="toc-l2" href="#section-22">22. Sample identifiers</a><a class="toc-l2" href="#section-23">23. Editable metadata table</a><a class="toc-l2" href="#section-24">24. Factors का treatment</a><a class="toc-l2" href="#section-25">25. List columns का treatment</a><a class="toc-l2" href="#section-26">26. Numeric column edit करना</a><a class="toc-l2" href="#section-27">27. Numeric से text conversion का परिणाम</a><a class="toc-l2" href="#section-28">28. Logical, date और special classes</a><a class="toc-l2" href="#section-29">29. Metadata column जोड़ना</a><a class="toc-l2" href="#section-30">30. Compatible name suggestions</a><a class="toc-l2" href="#section-31">31. Metadata column rename करना</a><a class="toc-l2" href="#section-32">32. Renaming का analyses पर प्रभाव</a><a class="toc-l2" href="#section-33">33. Metadata column delete करना</a><a class="toc-l2" href="#section-34">34. अंतिम column delete करना</a><a class="toc-l2" href="#section-35">35. Metadata rows की consistency</a><a class="toc-l2" href="#section-36">36. Metadata में file merge करना</a><a class="toc-l2" href="#section-37">37. Metadata separator की automatic detection</a><a class="toc-l2" href="#section-38">38. First column as identifiers</a><a class="toc-l2" href="#section-39">39. Metadata merge का वास्तविक behavior</a><a class="toc-l2" href="#section-40">40. Existing columns</a><a class="toc-l2" href="#section-41">41. Merge file में extra samples</a><a class="toc-l2" href="#section-42">42. Merge file में missing current samples</a><a class="toc-l2" href="#section-43">43. OTU-table editing — परिचय</a><a class="toc-l2" href="#section-44">44. OTU-table orientation</a><a class="toc-l2" href="#section-45">45. “ASV in columns” transpose command नहीं है</a><a class="toc-l2" href="#section-46">46. गलत axis चुनने का risk</a><a class="toc-l2" href="#section-47">47. Editable OTU table</a><a class="toc-l2" href="#section-48">48. OTU table की numeric conversion</a><a class="toc-l2" href="#section-49">49. Blank OTU values</a><a class="toc-l2" href="#section-50">50. Nonnumeric values</a><a class="toc-l2" href="#section-51">51. Negative और decimal values</a><a class="toc-l2" href="#section-52">52. OTU table में column जोड़ना</a><a class="toc-l2" href="#section-53">53. Sample जोड़ने के risks</a><a class="toc-l2" href="#section-54">54. Taxon जोड़ने के risks</a><a class="toc-l2" href="#section-55">55. Structural additions के लिए recommendation</a><a class="toc-l2" href="#section-56">56. OTU column delete करना</a><a class="toc-l2" href="#section-57">57. Biological removal के लिए Filtration उपयोग करें</a><a class="toc-l2" href="#section-58">58. Natural ASV sorting</a><a class="toc-l2" href="#section-59">59. Sorting enabled होने पर editing</a><a class="toc-l2" href="#section-60">60. OTU table में file merge करना</a><a class="toc-l2" href="#section-61">61. Imported columns का अर्थ</a><a class="toc-l2" href="#section-62">62. OTU merge file की extra rows</a><a class="toc-l2" href="#section-63">63. File में missing current rows</a><a class="toc-l2" href="#section-64">64. Automatic ASV renaming</a><a class="toc-l2" href="#section-65">65. Final numbers preserve करना</a><a class="toc-l2" href="#section-66">66. Sequential renaming</a><a class="toc-l2" href="#section-67">67. New-name collisions</a><a class="toc-l2" href="#section-68">68. Prefix validation</a><a class="toc-l2" href="#section-69">69. ASV renaming propagation</a><a class="toc-l2" href="#section-70">70. Renaming से पहले duplicate identifiers</a><a class="toc-l2" href="#section-71">71. OTU change के बाद sequences realign करना</a><a class="toc-l2" href="#section-72">72. OTU change के बाद tree realign करना</a><a class="toc-l2" href="#section-73">73. ape package absent</a><a class="toc-l2" href="#section-74">74. Structural OTU changes के बाद taxonomy</a><a class="toc-l2" href="#section-75">75. Taxonomy editing — परिचय</a><a class="toc-l2" href="#section-76">76. Missing taxonomy</a><a class="toc-l2" href="#section-77">77. First taxonomy edit से पहले confirmation</a><a class="toc-l2" href="#section-78">78. Dataset बदलने के बाद नई confirmation</a><a class="toc-l2" href="#section-79">79. Taxonomy cell edit करना</a><a class="toc-l2" href="#section-80">80. Hierarchy validation नहीं</a><a class="toc-l2" href="#section-81">81. Taxonomic rank जोड़ना</a><a class="toc-l2" href="#section-82">82. Rank order</a><a class="toc-l2" href="#section-83">83. Taxonomic rank rename करना</a><a class="toc-l2" href="#section-84">84. Rank delete करना</a><a class="toc-l2" href="#section-85">85. सभी ranks delete करना</a><a class="toc-l2" href="#section-86">86. ASV के अनुसार taxonomy sorting</a><a class="toc-l2" href="#section-87">87. ASV renaming के बाद synchronization</a><a class="toc-l2" href="#section-88">88. Taxonomy synchronization की सीमा</a><a class="toc-l2" href="#section-89">89. Taxonomy में file merge करना</a><a class="toc-l2" href="#section-90">90. Taxonomy separator की automatic detection नहीं</a><a class="toc-l2" href="#section-91">91. Existing taxonomy columns</a><a class="toc-l2" href="#section-92">92. Automatic value replacement</a><a class="toc-l2" href="#section-93">93. Exact case-insensitive matching</a><a class="toc-l2" href="#section-94">94. NA pattern</a><a class="toc-l2" href="#section-95">95. Empty pattern</a><a class="toc-l2" href="#section-96">96. Replacement scope</a><a class="toc-l2" href="#section-97">97. Mandatory preview</a><a class="toc-l2" href="#section-98">98. Overlapping patterns</a><a class="toc-l2" href="#section-99">99. Nonempty replacement value</a><a class="toc-l2" href="#section-100">100. Replacement के scientific consequences</a><a class="toc-l2" href="#section-101">101. Unassigned taxa grouping</a><a class="toc-l2" href="#section-102">102. Initial taxonomy state और Reset</a><a class="toc-l2" href="#section-103">103. Import, export और deletion — परिचय</a><a class="toc-l2" href="#section-104">104. Automatic import</a><a class="toc-l2" href="#section-105">105. File-size limit</a><a class="toc-l2" href="#section-106">106. Full imports के separator detection</a><a class="toc-l2" href="#section-107">107. Full metadata import</a><a class="toc-l2" href="#section-108">108. Full OTU-table import</a><a class="toc-l2" href="#section-109">109. OTU import के accepted identifiers</a><a class="toc-l2" href="#section-110">110. OTU import में missing identifiers</a><a class="toc-l2" href="#section-111">111. OTU import की numeric conversion</a><a class="toc-l2" href="#section-112">112. Full taxonomy import</a><a class="toc-l2" href="#section-113">113. RefSeq import</a><a class="toc-l2" href="#section-114">114. Tree import</a><a class="toc-l2" href="#section-115">115. Complete component replacement</a><a class="toc-l2" href="#section-116">116. Full import के बाद editors refresh करना</a><a class="toc-l2" href="#section-117">117. Component export</a><a class="toc-l2" href="#section-118">118. CSV export separator</a><a class="toc-l2" href="#section-119">119. Metadata export</a><a class="toc-l2" href="#section-120">120. OTU export</a><a class="toc-l2" href="#section-121">121. Taxonomy export</a><a class="toc-l2" href="#section-122">122. RefSeq export</a><a class="toc-l2" href="#section-123">123. Tree export</a><a class="toc-l2" href="#section-124">124. Export और audit log</a><a class="toc-l2" href="#section-125">125. Component deletion</a><a class="toc-l2" href="#section-126">126. Metadata delete करना</a><a class="toc-l2" href="#section-127">127. Taxonomy delete करना</a><a class="toc-l2" href="#section-128">128. RefSeq delete करना</a><a class="toc-l2" href="#section-129">129. Tree delete करना</a><a class="toc-l2" href="#section-130">130. OTU table delete करना</a><a class="toc-l2" href="#section-131">131. कई components साथ delete करना</a><a class="toc-l2" href="#section-132">132. Component deletion undo करना</a><a class="toc-l2" href="#section-133">133. Deletion और disk files</a><a class="toc-l2" href="#section-134">134. Dataset को registry में save करना</a><a class="toc-l2" href="#section-135">135. Empty name</a><a class="toc-l2" href="#section-136">136. Available new name</a><a class="toc-l2" href="#section-137">137. Name किसी दूसरे dataset द्वारा उपयोग हो रहा हो</a><a class="toc-l2" href="#section-138">138. Dataset-name cleaning</a><a class="toc-l2" href="#section-139">139. दूसरे dataset को overwrite करना</a><a class="toc-l2" href="#section-140">140. Complete project save करना</a><a class="toc-l2" href="#section-141">141. Troubleshooting</a><a class="toc-l2" href="#section-141-1">141.1. गलत dataset modify हो गया</a><a class="toc-l2" href="#section-141-2">141.2. New name चाहा लेकिन original भी बदल गया</a><a class="toc-l2" href="#section-141-3">141.3. Save ने project save नहीं किया</a><a class="toc-l2" href="#section-141-4">141.4. Metadata automatic दिखाई दी</a><a class="toc-l2" href="#section-141-5">141.5. SampleID edit करने से samples rename नहीं हुए</a><a class="toc-l2" href="#section-141-6">141.6. Numeric variable text बन गई</a><a class="toc-l2" href="#section-141-7">141.7. Factor character बन गया</a><a class="toc-l2" href="#section-141-8">141.8. New column का type गलत है</a><a class="toc-l2" href="#section-141-9">141.9. Metadata merge ने existing column update नहीं की</a><a class="toc-l2" href="#section-141-10">141.10. कोई common identifier नहीं मिला</a><a class="toc-l2" href="#section-141-11">141.11. Detected separator गलत है</a><a class="toc-l2" href="#section-141-12">141.12. OTU values NA बन गईं</a><a class="toc-l2" href="#section-141-13">141.13. Decimal commas NA बनते हैं</a><a class="toc-l2" href="#section-141-14">141.14. Added OTU column ने metadata desynchronize की</a><a class="toc-l2" href="#section-141-15">141.15. OTU change के बाद RefSeq गायब हुई</a><a class="toc-l2" href="#section-141-16">141.16. OTU change के बाद tree गायब हुआ</a><a class="toc-l2" href="#section-141-17">141.17. Tree tips गायब हुईं</a><a class="toc-l2" href="#section-141-18">141.18. Samples ASV की तरह rename हो गए</a><a class="toc-l2" href="#section-141-19">141.19. ASV prefix ने unusual names बनाए</a><a class="toc-l2" href="#section-141-20">141.20. Taxonomy OTU table से match नहीं करती</a><a class="toc-l2" href="#section-141-21">141.21. First taxonomy change नहीं चला</a><a class="toc-l2" href="#section-141-22">141.22. Taxonomy replacement ने कई ranks बदले</a><a class="toc-l2" href="#section-141-23">141.23. NA अब real category माना जा रहा है</a><a class="toc-l2" href="#section-141-24">141.24. Taxonomy merge ने Genus replace नहीं किया</a><a class="toc-l2" href="#section-141-25">141.25. Taxonomy separator detect नहीं हुआ</a><a class="toc-l2" href="#section-141-26">141.26. Full import ने columns मिटा दीं</a><a class="toc-l2" href="#section-141-27">141.27. Full OTU import ने orientation बदली</a><a class="toc-l2" href="#section-141-28">141.28. Full import new samples reject करता है</a><a class="toc-l2" href="#section-141-29">141.29. Full import new taxa reject करता है</a><a class="toc-l2" href="#section-141-30">141.30. FASTA import reject है</a><a class="toc-l2" href="#section-141-31">141.31. Tree import reject है</a><a class="toc-l2" href="#section-141-32">141.32. Import के बाद editor old table दिखाता है</a><a class="toc-l2" href="#section-141-33">141.33. Deleted old table editing के बाद वापस आ गई</a><a class="toc-l2" href="#section-141-34">141.34. Download करने से unsaved modification बनी</a><a class="toc-l2" href="#section-141-35">141.35. Table deletion undo नहीं हो सकती</a><a class="toc-l2" href="#section-141-36">141.36. OTU table delete करने के बाद dataset काम नहीं करता</a><a class="toc-l2" href="#section-141-37">141.37. Undo कई actions पीछे नहीं जाता</a><a class="toc-l2" href="#section-141-38">141.38. Reset original file पर नहीं लौटता</a><a class="toc-l2" href="#section-141-39">141.39. दूसरी भाषा में भी log French है</a><a class="toc-l2" href="#section-141-40">141.40. Export के बाद action count बढ़ता है</a><a class="toc-l2" href="#section-142">142. Editing से पहले checklist</a><a class="toc-l2" href="#section-143">143. Metadata editing से पहले checklist</a><a class="toc-l2" href="#section-144">144. OTU editing से पहले checklist</a><a class="toc-l2" href="#section-145">145. Taxonomy replacement से पहले checklist</a><a class="toc-l2" href="#section-146">146. Full import से पहले checklist</a><a class="toc-l2" href="#section-147">147. Component delete से पहले checklist</a><a class="toc-l2" href="#section-148">148. Data Edition के बाद checklist</a><a class="toc-l2" href="#section-149">149. Editing के बाद recommended R checks</a><a class="toc-l2" href="#section-150">150. वर्तमान सीमाएँ</a><a class="toc-l2" href="#section-151">151. Recommended workflow</a><a class="toc-l2" href="#section-152">152. सत्यापित आंतरिक स्रोत</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · डेटा संपादन</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

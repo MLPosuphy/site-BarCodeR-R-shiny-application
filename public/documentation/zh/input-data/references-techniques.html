@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>输入数据 — 技术参考 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="reference" data-module="input-data" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">技术参考</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link active" href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">方法指南</a>
+        <a class="active" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">输入数据</a><span>›</span><span>技术参考</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">输入数据 — 技术参考</h1>
+<p>根据当前 BarCodeR 版本中实际代码自动生成的技术清单。</p>
+<blockquote>
+<p><strong>本页由 documentation-src/build_docs.py 重新生成。函数名、标识符和行号来自当前源代码。</strong></p>
+</blockquote>
+<h2 id="section-1">1. 源文件<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>作用</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加载器界面</td>
+<td><code>modules/data/mod_data_loader_ui.R</code></td>
+</tr>
+<tr>
+<td>读取、检测、弹窗与插入</td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+</tr>
+<tr>
+<td>数据集名称清理</td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+</tr>
+<tr>
+<td>Phyloseq 完整性保护</td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+</tr>
+<tr>
+<td>全局注册表与上传限制</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>文档源</td>
+<td><code>documentation-src/zh/input-data/</code></td>
+</tr>
+<tr>
+<td>生成的文档</td>
+<td><code>www/documentation/zh/input-data/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. 架构与主要数据流<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">fileInput rds_input
+  → read_serialized_input()
+  → detect_supported_object_type()
+  → pending_obj / pending_type / pending_candidates
+  → selection or confirmation modal
+  → mt_prepare_loaded_phyloseq()
+  → bcr_guard_ps() for a single dataset
+  → datasets() registry
+  → active_ds()
+  → unsaved project state
+</code></pre>
+<h3 id="section-2-1">2.1. 反应式状态与内存<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending_obj()</code></td>
+<td>等待用户确认的已加载对象。</td>
+</tr>
+<tr>
+<td><code>pending_type()</code></td>
+<td>检测类型：数据集或项目。</td>
+</tr>
+<tr>
+<td><code>pending_file_name()</code></td>
+<td>上传文件的原始名称。</td>
+</tr>
+<tr>
+<td><code>pending_object_name()</code></td>
+<td>在 RData 文件中选择的对象名称。</td>
+</tr>
+<tr>
+<td><code>pending_candidates()</code></td>
+<td>多对象 RData 中找到的兼容候选对象。</td>
+</tr>
+<tr>
+<td><code>datasets()</code></td>
+<td>当前 BarCodeR 项目中全部数据集的反应式注册表。</td>
+</tr>
+<tr>
+<td><code>active_ds()</code></td>
+<td>下游模块默认使用的数据集名称。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. 可追溯链<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">single phyloseq
+  → proposed label
+  → add or replace modal
+  → mt_prepare_loaded_phyloseq()
+  → bcr_guard_ps()
+  → datasets(new_registry)
+  → active_ds(final_label)
+  → detailed cleaning report
+</code></pre>
+<pre tabindex="0"><code class="language-text">project object
+  → datasets / ps_registry / list-of-phyloseq extraction
+  → clean_project_phyloseq_list()
+  → name collision resolution
+  → merge or replace datasets()
+  → active dataset restoration
+  → aggregate restoration report
+</code></pre>
+<h2 id="section-3">3. Shiny 输入<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>控件</th>
+<th>UI 来源</th>
+<th>服务器引用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cancel_load_dataset</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:629</code></td>
+<td><code>mod_data_loader_server.R:1082</code></td>
+</tr>
+<tr>
+<td><code>cancel_project_load</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:772</code></td>
+<td><code>mod_data_loader_server.R:1158</code></td>
+</tr>
+<tr>
+<td><code>cancel_rdata_choice</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:574</code></td>
+<td><code>mod_data_loader_server.R:1032</code></td>
+</tr>
+<tr>
+<td><code>close_dataset_report</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:730</code></td>
+<td><code>mod_data_loader_server.R:735</code></td>
+</tr>
+<tr>
+<td><code>close_info_modal</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:539</code></td>
+<td><code>mod_data_loader_server.R:544</code></td>
+</tr>
+<tr>
+<td><code>close_loader_modal_top</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_data_loader_server.R:548</code></td>
+</tr>
+<tr>
+<td><code>close_project_report</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:832</code></td>
+<td><code>mod_data_loader_server.R:837</code></td>
+</tr>
+<tr>
+<td><code>confirm_load_dataset</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:630</code></td>
+<td><code>mod_data_loader_server.R:1088</code></td>
+</tr>
+<tr>
+<td><code>confirm_project_load</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:773</code></td>
+<td><code>mod_data_loader_server.R:1164</code></td>
+</tr>
+<tr>
+<td><code>confirm_rdata_choice</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:575</code></td>
+<td><code>mod_data_loader_server.R:1038</code></td>
+</tr>
+<tr>
+<td><code>dataset_import_mode</code></td>
+<td><code>radioButtons</code></td>
+<td><code>mod_data_loader_server.R:606</code></td>
+<td><code>mod_data_loader_server.R:1095</code></td>
+</tr>
+<tr>
+<td><code>dataset_label_modal</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_data_loader_server.R:596</code></td>
+<td><code>mod_data_loader_server.R:1096</code></td>
+</tr>
+<tr>
+<td><code>project_import_mode</code></td>
+<td><code>radioButtons</code></td>
+<td><code>mod_data_loader_server.R:756</code></td>
+<td><code>mod_data_loader_server.R:1165</code></td>
+</tr>
+<tr>
+<td><code>rdata_object_choice</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_data_loader_server.R:562</code></td>
+<td><code>mod_data_loader_server.R:1039</code>, <code>mod_data_loader_server.R:1042</code>, <code>mod_data_loader_server.R:1044</code>, <code>mod_data_loader_server.R:1047</code>, <code>mod_data_loader_server.R:1055</code></td>
+</tr>
+<tr>
+<td><code>rds_input</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_data_loader_ui.R:314</code></td>
+<td><code>mod_data_loader_server.R:968</code>, <code>mod_data_loader_server.R:969</code>, <code>mod_data_loader_server.R:973</code>, <code>mod_data_loader_server.R:988</code>, <code>mod_data_loader_server.R:999</code>, <code>mod_data_loader_server.R:1005</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Shiny 输出<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>控件</th>
+<th>UI 来源</th>
+<th>服务器引用</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table></div>
+<h2 id="section-5">5. 验证与完整性保护<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>序列化文件</td>
+<td><code>readRDS()</code> / <code>load()</code></td>
+<td>读取对象；RData 在隔离环境中加载。</td>
+</tr>
+<tr>
+<td>对象检测</td>
+<td><code>detect_supported_object_type()</code></td>
+<td>识别 phyloseq、datasets/ps_registry 项目或 phyloseq 列表。</td>
+</tr>
+<tr>
+<td>样本标识符</td>
+<td><code>sanitize_sample_names()</code></td>
+<td>音译字符、替换不安全字符并解决重复名称。</td>
+</tr>
+<tr>
+<td>Metadata 空白</td>
+<td><code>replace_empty_metadata_with_na()</code></td>
+<td>把列转为字符并将空白单元格替换为 NA。</td>
+</tr>
+<tr>
+<td>Phyloseq 结构</td>
+<td><code>bcr_guard_ps()</code></td>
+<td>要求包含 OTU table，并检查样本和分类单元标识符。</td>
+</tr>
+<tr>
+<td>数据集名称</td>
+<td><code>bcr_clean_label()</code> / <code>bcr_make_unique_label()</code></td>
+<td>在注册表中创建安全且唯一的键。</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. 内部函数<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. 文件与序列化<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default_label_from_fileinput()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>42</td>
+<td>文件与序列化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>reset_fileinput()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>84</td>
+<td>文件与序列化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>read_serialized_input()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>352</td>
+<td>在隔离环境中读取 RDS/RData，并列出可兼容对象。</td>
+</tr>
+<tr>
+<td><code>build_rdata_choice_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>552</td>
+<td>文件与序列化 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. 通用<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_data_loader_server()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>1</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>12</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>make_unique_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>40</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>mode_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>80</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>is_same_string()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>91</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>empty_change_df()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>160</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>summarize_report()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>324</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>detect_supported_object_type()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>337</td>
+<td>将对象分类为 phyloseq 数据集、项目或不支持的内容。</td>
+</tr>
+<tr>
+<td><code>make_table_rows()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>478</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_make_unique_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>35</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sb_try()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>11</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sb_ps_slots()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>17</td>
+<td>通用 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. 状态 / 清理<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clear_pending()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>26</td>
+<td>状态 / 清理 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-4">6.4. 界面 / 渲染<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>426</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>make_kpi_card()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>469</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>make_change_card()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>490</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>show_message_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>527</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sb_ps_require()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>84</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_guard_message()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>142</td>
+<td>界面 / 渲染 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-5">6.5. 验证 / 格式化<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clean_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>39</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sanitize_sample_names()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>97</td>
+<td>规范样本标识符并解决重复名称。</td>
+</tr>
+<tr>
+<td><code>replace_empty_metadata_with_na()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>140</td>
+<td>将 metadata 空白单元格转为字符后替换为 NA。</td>
+</tr>
+<tr>
+<td><code>bcr_clean_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>25</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>sb_ps_check_ids()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>42</td>
+<td>验证 / 格式化 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>bcr_guard_ps()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>136</td>
+<td>插入前检查 phyloseq 类、OTU table 和标识符一致性。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-6">6.6. Phyloseq / 数据集<a aria-label="Permalink" class="heading-anchor" href="#section-6-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>来源</th>
+<th>行号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prepare_named_phyloseq_list()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>51</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>extract_project_dataset_names()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>59</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>mt_prepare_loaded_phyloseq()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>164</td>
+<td>清理并同步 OTU/metadata 标识符，同时生成修改报告。</td>
+</tr>
+<tr>
+<td><code>build_dataset_load_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>580</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>build_dataset_report_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>635</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>build_project_load_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>739</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>build_project_report_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>778</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+<tr>
+<td><code>load_pending_project()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>849</td>
+<td>清理项目中的 phyloseq，合并或替换注册表，并恢复活动数据集。</td>
+</tr>
+<tr>
+<td><code>clean_project_phyloseq_list()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>866</td>
+<td>Phyloseq / 数据集 层的内部辅助函数。</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 源文件</a><a class="toc-l2" href="#section-2">2. 架构与主要数据流</a><a class="toc-l3" href="#section-2-1">2.1. 反应式状态与内存</a><a class="toc-l3" href="#section-2-2">2.2. 可追溯链</a><a class="toc-l2" href="#section-3">3. Shiny 输入</a><a class="toc-l2" href="#section-4">4. Shiny 输出</a><a class="toc-l2" href="#section-5">5. 验证与完整性保护</a><a class="toc-l2" href="#section-6">6. 内部函数</a><a class="toc-l3" href="#section-6-1">6.1. 文件与序列化</a><a class="toc-l3" href="#section-6-2">6.2. 通用</a><a class="toc-l3" href="#section-6-3">6.3. 状态 / 清理</a><a class="toc-l3" href="#section-6-4">6.4. 界面 / 渲染</a><a class="toc-l3" href="#section-6-5">6.5. 验证 / 格式化</a><a class="toc-l3" href="#section-6-6">6.6. Phyloseq / 数据集</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 输入数据</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

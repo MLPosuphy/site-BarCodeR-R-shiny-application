@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>分析 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="analyse" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link active" href="../analyse/guides-methodologiques.html">分析</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">分析</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">分析 — 方法指南</h1>
+<h2 id="section-1">1. 作用与结构<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>分析</strong>页包含六类方法：差异丰度、排序、矩阵比较、关联网络、PERMANOVA/离散度和聚类。它们回答不同问题，不能互换。结果由数据集、分类层级、过滤、转换、距离、模型、协变量和实验设计共同决定。</p>
+<h2 id="section-2">2. 通用运行方式<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>科学参数改变后必须重新计算；视觉参数通常只重绘上一次结果。旧图可能继续显示，因此需要检查“需要重新计算”。差异分析、排序、矩阵比较、网络和聚类各自具有独立的临时过滤状态，不会修改 <code>datasets()</code>。PERMANOVA 使用自己的层级和流行度设置。样本、重复或分类单元不足，metadata/树缺失，数据类型错误，模型不可估计或依赖包缺失都会使分析失败。</p>
+<h2 id="section-3">3. 差异丰度分析<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>可用引擎：ANCOM-BC2、LinDA、ALDEx2、corncob 和 MaAsLin 3。效应单位不同：自然对数、log2、CLR 差异或 logit 系数。模型可包含主因素、参考水平、协变量以及部分引擎支持的随机效应。更改参考水平会反转效应方向。完全混杂不能通过添加协变量解决。ALDEx2 和 corncob 不支持随机效应。大多数方法要求计数数据；比例、CLR、负值或已转换矩阵可能无效。</p>
+<h2 id="section-4">4. 多引擎共识<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>比较模式使用统一的流行度过滤，使所有引擎检验同一批分类单元。共识只比较校正后的显著性和效应方向，不比较效应幅度。corncob 的离散度和 MaAsLin 3 的出现率是独立问题，不参与丰度共识。通常使用 Benjamini-Hochberg 校正，并同时查看 q 值、效应、流行度、丰度和方法一致性。</p>
+<h2 id="section-5">5. 排序方法<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>PCA 总结欧氏转换矩阵；PCoA 表示距离矩阵；NMDS 保留距离排序；CCA、RDA 和 dbRDA 使用 metadata 约束群落结构。原始计数 PCA 常被测序深度和高丰度分类单元主导。非欧氏距离的 PCoA 可能出现负特征值。NMDS 必须检查 stress、收敛、goodness 和 Shepard 图。DCA 梯度长度可帮助在线性和单峰方法之间选择。</p>
+<h2 id="section-6">6. 排序参数与诊断<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>转换包括相对丰度、Hellinger、log1p、CLR 和 VST。CLR 需要正伪计数，VST 需要 DESeq2。不是所有组合都合理：CLR + Bray-Curtis 有问题；Aitchison 已包含 log-ratio；Jaccard 适合存在/缺失；UniFrac 需要匹配的系统发育树。稀释会丢失 reads 并可能删除样本。椭圆和 <code>envfit</code> 向量只是辅助解释，不证明因果。保存的排序可用 Procrustes 比较。</p>
+<h2 id="section-7">7. 矩阵比较<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>用于比较在同一生物单位上测得的多个数据集。必须通过名称或 metadata 构建可靠匹配键；重复或模糊键会使分析无效。Mantel 比较距离矩阵；Procrustes/PROTEST 对齐排序并识别大残差样本；协惯量寻找共同轴；MCOA 使用共有样本交集构建多数据集共识。还提供样本/分类重叠、A/B PCoA、alpha 多样性、PERMANOVA 和 Venn/UpSet。</p>
+<h2 id="section-8">8. 关联网络<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>节点代表分类单元，边代表统计关联，不是已证明的生态互作。准备步骤可聚合、过滤、标准化和转换。方法包括 CLR 相关、比例性、SPIEC-EASI、SparCC、gCoda、CCLasso 和 mixOmics sPLS。边可按权重、q 值和 bootstrap 稳定性过滤。hub 和模块只能作为假设，可能受丰度、分组结构或组成效应影响。</p>
+<h2 id="section-9">9. 网络比较与多域网络<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>可以按 metadata 组分别推断网络并比较共有/特异边、符号、hub 和模块。组间样本量不平衡会造成统计功效差异。多域模式组合配对的 16S、ITS、18S 等数据集，只保留共有样本。输出包括交互网络、域交互矩阵、Sankey、Chord、边表和 GraphML。跨域边不证明直接生物互作。</p>
+<h2 id="section-10">10. PERMANOVA 与离散度<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>PERMANOVA (<code>adonis2</code>) 检验组中心差异；PERMDISP (<code>betadisper</code>) 检验组内离散度差异。两者都显著时，PERMANOVA 可能受离散度混杂。模型可包含协变量、自由公式、置换块、顺序/边际检验和 pairwise。顺序检验依赖项顺序；边际 R² 不一定可加。配对或重复设计必须使用 <code>strata</code> 限制置换。</p>
+<h2 id="section-11">11. 聚类<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>聚类是无监督的，可聚类样本、分类单元或两者。转换和距离定义相似性。层次聚类方法通过 cophenetic 相关比较；不兼容距离时排除 Ward。候选 <code>k</code> 可用 silhouette、Dunn、树高跳跃和簇大小评估。统计上最优的 <code>k</code> 不一定有生物意义。按分类单元缩放 heatmap 会隐藏绝对丰度差异。</p>
+<h2 id="section-12">12. 转换、距离与数据类型<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>原始计数 + Bray 强调绝对丰度；相对丰度 + Bray 强调组成；存在/缺失 + Jaccard 强调共享分类单元；CLR/欧氏或 Aitchison 强调 log-ratio；UniFrac 强调系统发育。宏条形码数据具有组成性。稀释、ALDEx2、ANCOM-BC 和多种网络方法要求计数。不能把 CLR 当作 reads。伪计数只解决对数计算，不决定零值的生物意义。</p>
+<h2 id="section-13">13. 实验设计与解释<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>统计方法不能替代生物重复。样本少而协变量多会导致不稳定模型。完全混杂无法分离效应。交互项需要各组合都有观测。大量分类单元检验必须使用 q 值。999 次置换的最小 p 值约为 0.001。需要结合效应量、R²、稳定性、流行度、丰度和生态合理性。</p>
+<h2 id="section-14">14. 历史记录、导出与可复现性<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>每个子模块只有在明确保存后才写入当前项目的快照。快照可包含参数、结果、PNG、RDS、XLSX/TSV、日志和包版本。R 代码导出尝试复现保存结果，可能依赖快照 RDS、包版本和随机种子。兼容图可进入 MultiView。GraphML 可用于 Cytoscape 或 Gephi。</p>
+<h2 id="section-15">15. 性能与依赖<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>高成本情况包括 ASV 层级多引擎差异分析、NMDS 和大量置换、MCOA、bootstrap 网络、pairwise PERMANOVA 和大矩阵聚类。先使用聚合层级、过滤稀有分类单元并限制引擎、对比、置换和网络规模。可选包包括 ANCOMBC、ALDEx2、corncob、maaslin3、vegan、ade4、SpiecEasi、propr、gCoda、CCLasso、mixOmics、DESeq2 和 openxlsx。取消操作可能只能在不可中断单元之间生效。</p>
+<h2 id="section-16">16. 常见问题<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图是旧结果</td>
+<td>未重新计算</td>
+<td>重新运行</td>
+</tr>
+<tr>
+<td>引擎被跳过</td>
+<td>包/数据/模型不兼容</td>
+<td>查看日志</td>
+</tr>
+<tr>
+<td>CLR + Bray 警告</td>
+<td>几何不合理</td>
+<td>使用 Aitchison/欧氏</td>
+</tr>
+<tr>
+<td>UniFrac 不可用</td>
+<td>树缺失或不匹配</td>
+<td>检查叶节点</td>
+</tr>
+<tr>
+<td>共有样本很少</td>
+<td>匹配键错误</td>
+<td>检查重复和名称清理</td>
+</tr>
+<tr>
+<td>网络过密/过空</td>
+<td>阈值或功效问题</td>
+<td>调整过滤</td>
+</tr>
+<tr>
+<td>PERMANOVA 与 PERMDISP 都显著</td>
+<td>离散度混杂</td>
+<td>谨慎解释</td>
+</tr>
+<tr>
+<td>Ward 不可用</td>
+<td>距离不兼容</td>
+<td>更换距离或连接方法</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-17">17. 检查清单与推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>差异分析前检查计数、组、参考、重复、NA、协变量和随机效应。排序/PERMANOVA 前联合选择转换与距离，设置置换块并检查 stress、特征值和离散度。矩阵比较前验证匹配键和共有样本。网络前限制稀有分类单元并评估稳定性。推荐顺序：Description → 持久过滤 → 描述性排序 → PERMDISP/PERMANOVA → 差异分析 → 多标记矩阵比较 → 网络/聚类生成假设 → 保存表、图、代码和项目。</p>
+<h2 id="section-18">18. 主要限制与验证来源<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>各子模块状态独立，图可能过期，引擎效应尺度不可直接比较，PERMANOVA 受离散度影响，矩阵比较完全依赖匹配，网络不证明因果，聚类高度依赖数据准备。来源已在 <code>modules/analyse/</code> 的主模块、<code>daa_ancombc</code>、<code>ordination</code>、<code>comparaison_matrices</code>、<code>reseaux_d_association</code>、<code>permanova_dispersion</code>、<code>clustering</code> 和 <code>_shared/fct_permanova.R</code> 中核对。</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 作用与结构</a><a class="toc-l2" href="#section-2">2. 通用运行方式</a><a class="toc-l2" href="#section-3">3. 差异丰度分析</a><a class="toc-l2" href="#section-4">4. 多引擎共识</a><a class="toc-l2" href="#section-5">5. 排序方法</a><a class="toc-l2" href="#section-6">6. 排序参数与诊断</a><a class="toc-l2" href="#section-7">7. 矩阵比较</a><a class="toc-l2" href="#section-8">8. 关联网络</a><a class="toc-l2" href="#section-9">9. 网络比较与多域网络</a><a class="toc-l2" href="#section-10">10. PERMANOVA 与离散度</a><a class="toc-l2" href="#section-11">11. 聚类</a><a class="toc-l2" href="#section-12">12. 转换、距离与数据类型</a><a class="toc-l2" href="#section-13">13. 实验设计与解释</a><a class="toc-l2" href="#section-14">14. 历史记录、导出与可复现性</a><a class="toc-l2" href="#section-15">15. 性能与依赖</a><a class="toc-l2" href="#section-16">16. 常见问题</a><a class="toc-l2" href="#section-17">17. 检查清单与推荐流程</a><a class="toc-l2" href="#section-18">18. 主要限制与验证来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 分析</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

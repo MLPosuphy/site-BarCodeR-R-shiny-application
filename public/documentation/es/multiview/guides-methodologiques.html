@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>MultiView — Guías metodológicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="guide" data-module="multiview" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Guías metodológicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link active" href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">MultiView</a><span>›</span><span>Guías metodológicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">MultiView — Guía metodológica</h1>
+<h2 id="section-1">1. Función general<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>MultiView reúne las figuras ya guardadas por los módulos científicos de BarCodeR. Permite buscarlas, filtrarlas, marcarlas como favoritas, etiquetarlas, abrir varias en una cuadrícula GridStack, moverlas, redimensionarlas, exportar un PNG compuesto y guardar la disposición. <strong>No recalcula ningún análisis científico</strong>, no restaura la interactividad Plotly, no modifica parámetros, colores ni ejes. Para cambiar un análisis hay que volver al módulo de origen.</p>
+<h2 id="section-2">2. Origen de las figuras<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Se analiza recursivamente el proyecto actual bajo <code>save/projects/&lt;proyecto&gt;/</code>; la carpeta propia de MultiView se excluye. Cualquier carpeta que contenga PNG puede convertirse en un tipo. Solo se cargan los <strong>100 PNG modificados más recientemente por carpeta</strong>, sin paginación; los filtros de fecha no recuperan archivos excluidos por este límite.</p>
+<h2 id="section-3">3. Asociación PNG/RDS<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Un PNG solo se asocia con el RDS que tenga exactamente el mismo nombre base. PNG+RDS permite mostrar dataset, descripción, parámetros y badges. Un PNG sin RDS sigue visible con metadatos limitados; un RDS sin PNG no aparece. Se buscan datasets, transformación, distancia, rango taxonómico, grupo, permutaciones y semilla; snapshots no estándar pueden quedar incompletos.</p>
+<h2 id="section-4">4. Carga y actualización<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>El escaneo empieza únicamente al abrir MultiView. <strong>Actualizar</strong> relanza el escaneo; la actualización automática lo hace cada 10 segundos mientras la pestaña está activa y puede ser costosa en discos de red o con RDS grandes. La fecha mostrada es la fecha de modificación del PNG, no necesariamente la fecha del análisis.</p>
+<h2 id="section-5">5. Búsqueda, filtros y ordenación<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Se puede filtrar por tipo, etiqueta exacta de dataset, fechas, favoritos y etiquetas. Varias etiquetas se combinan con lógica O. La búsqueda literal, sin distinguir mayúsculas, cubre clave, dataset, descripción y parámetros. Un análisis multi-datasets puede aparecer como una única cadena combinada. Los KPI pueden contar favoritos huérfanos.</p>
+<h2 id="section-6">6. Galería y tabla<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>La galería muestra miniatura, tipo, archivo, fecha, dataset, badges, etiquetas y favorito. El indicador «comparable» significa únicamente mismo tipo y mismo nombre de dataset; no valida transformación, distancia, filtración, rango, grupos, ejes o método. La selección de la tabla no está conectada a Abrir/Reemplazar; para seleccionar varias figuras hay que usar la Galería.</p>
+<h2 id="section-7">7. Selección de figuras<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>La casilla o Espacio selecciona; clic o Intro abre detalles; doble clic o arrastrar añade a la cuadrícula; la estrella gestiona favoritos y Escape cierra el panel. Seleccionar todo afecta solo a las tarjetas visibles, pero selecciones ocultas pueden persistir tras cambiar filtros. Conviene deseleccionar antes de una nueva comparación. Muchas figuras pueden ralentizar el navegador.</p>
+<h2 id="section-8">8. Panel de detalles<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Muestra imagen grande, tipo, fecha, dataset, clave, parámetros principales/técnicos, etiquetas, favorito, descarga PNG y apertura en cuadrícula. No permite descargar el RDS científico, relanzar el análisis, generar código R, abrir directamente el módulo de origen ni comparar parámetros automáticamente.</p>
+<h2 id="section-9">9. Favoritos y etiquetas<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>Se guardan inmediatamente en <code>save/projects/&lt;proyecto&gt;/multiview/tags.rds</code>; la antigua ruta <code>save/multiview/tags.rds</code> está obsoleta. Las etiquetas aceptan comas o punto y coma. Al borrar un PNG quedan referencias huérfanas. El estado se comparte entre sesiones del mismo proyecto, no está aislado por usuario y escrituras concurrentes pueden sobrescribirse.</p>
+<h2 id="section-10">10. Cuadrícula de análisis abiertos<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Las figuras se añaden por selección, doble clic, arrastrar o detalles; no se duplica una misma figura. La cuadrícula tiene 12 columnas y por defecto coloca dos tarjetas por fila, ancho 6 y alto 6. <code>object-fit: contain</code> conserva la imagen completa pero puede dejar márgenes. Redimensionar no aumenta la resolución. El modo edición controla movimiento/tamaño; cerrar una tarjeta no elimina archivos.</p>
+<h2 id="section-11">11. Fijación, reemplazo y cierre<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Las tarjetas fijadas sobreviven a «Reemplazar en la cuadrícula» y «Cerrar todo», aunque pueden moverse, redimensionarse o cerrarse individualmente. Reemplazar conserva las fijadas, elimina las demás y añade la selección actual.</p>
+<h2 id="section-12">12. Presets de disposición<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>Disponibles: 1×2, 2×2, 1×3, 3×1 y Hero+2. Si hay más figuras que posiciones, las adicionales reutilizan la última posición y pueden superponerse. Hay que reorganizarlas, elegir otro preset o reducir la selección. Reiniciar devuelve la disposición por defecto sin cerrar tarjetas.</p>
+<h2 id="section-13">13. Exportación PNG compuesta<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p><code>html-to-image</code> captura todo el DOM de la cuadrícula con fondo blanco y <code>pixelRatio=2</code>. Puede incluir títulos, metadatos y botones; no es una unión limpia de los PNG científicos. Es un PNG raster generado en el navegador, no añadido al historial y sin datos estructurados. No hay PDF, SVG, TIFF, PowerPoint ni HTML interactivo. Cuadrículas grandes, imágenes enormes, CDN ausente o cuadrícula vacía pueden fallar.</p>
+<h2 id="section-14">14. Guardar una composición<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Un RDS en <code>multiview/compositions/</code> guarda nombre, descripción, fecha, claves, posición, tamaño, fijaciones y valores de filtros. <strong>No copia</strong> PNG, RDS científicos, phyloseq, tablas, etiquetas ni favoritos: es una receta de disposición. Al cargar, solo se restauran figuras aún existentes, disposición y fijaciones; los filtros guardados no se reaplican. Figuras eliminadas, renombradas o movidas se omiten.</p>
+<h2 id="section-15">15. Importación y exportación de composiciones<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Exportar descarga el RDS receta. Importar comprueba principalmente que sea una lista con <code>tabs</code>, lo copia al proyecto y no lo carga automáticamente. La receta sola no es portable: el proyecto destino necesita las mismas claves internas tipo+archivo. Para compartir, conviene enviar el PNG compuesto o los PNG/RDS originales. No existe importación directa de PNG externos.</p>
+<h2 id="section-16">16. Comparar correctamente las figuras<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Comprobar dataset, muestras, filtración, transformación, normalización, rango, método, distancia, grupos, ejes, límites, unidades, colores, categorías, umbrales y versión de datos. Top N/Otros puede cambiar barplots; ordenaciones independientes pueden rotar o invertirse y requieren Procrustes para comparación cuantitativa; volcano plots pueden usar referencias y unidades de efecto distintas. MultiView organiza y presenta, pero no prueba diferencias estadísticas.</p>
+<h2 id="section-17">17. Proyectos, sesiones y uso multiusuario<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Biblioteca, etiquetas, favoritos y composiciones dependen del proyecto actual. La cuadrícula viva solo existe en la sesión si no se guarda una composición. Algunos ajustes se restauran, pero filtros de dataset/etiquetas/fechas, selección y disposición no guardada no. Los prefijos de recursos Shiny son globales al proceso; proyectos concurrentes pueden apuntar temporalmente al recurso equivocado. El estado no está aislado por usuario.</p>
+<h2 id="section-18">18. Dependencias externas y uso sin conexión<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>GridStack, SortableJS y html-to-image se cargan desde jsDelivr. Sin Internet, la consulta puede funcionar parcialmente, pero mover, redimensionar, arrastrar, presets o exportar pueden fallar. GridStack espera unos seis segundos antes de abandonar. Para uso totalmente offline hay que integrar las bibliotecas en <code>www/</code>.</p>
+<h2 id="section-19">19. Resolución de problemas<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No hay figuras</td>
+<td>No hay PNG guardados</td>
+<td>Guardar desde un módulo científico</td>
+</tr>
+<tr>
+<td>Figura nueva ausente</td>
+<td>No se ha reescaneado</td>
+<td>Actualizar</td>
+</tr>
+<tr>
+<td>Figura antigua ausente</td>
+<td>Límite de 100</td>
+<td>Revisar/archivar la carpeta</td>
+</tr>
+<tr>
+<td>Faltan parámetros</td>
+<td>RDS ausente o nombre distinto</td>
+<td>Corregir pareja PNG/RDS</td>
+</tr>
+<tr>
+<td>Selección de tabla ignorada</td>
+<td>No está conectada</td>
+<td>Seleccionar en Galería</td>
+</tr>
+<tr>
+<td>Tarjetas superpuestas</td>
+<td>Más figuras que slots</td>
+<td>Reorganizar manualmente</td>
+</tr>
+<tr>
+<td>Composición incompleta</td>
+<td>Faltan archivos fuente</td>
+<td>Restaurar historiales</td>
+</tr>
+<tr>
+<td>Filtros no restaurados</td>
+<td>Comportamiento actual</td>
+<td>Reconfigurar manualmente</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-20">20. Listas de control<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Antes de componer: verificar proyecto, actualizar, confirmar parejas PNG/RDS, revisar parámetros, limpiar selección y limitar tarjetas. Antes de comparar: armonizar datos, filtros, métodos, rangos, ejes, unidades, colores y umbrales. Antes de exportar: revisar superposiciones, tamaños y resolución, y abrir el archivo descargado. Antes de guardar: verificar disposición/fijaciones, nombrar y describir, recordar que las imágenes no se copian y probar la recarga.</p>
+<h2 id="section-21">21. Límites principales<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Biblioteca solo PNG, pérdida de interactividad, ausencia de recálculo/armonización, límite de 100, fechas basadas en <code>mtime</code>, metadatos dependientes del RDS, fallo de selección Tabla, badge comparable débil, etiquetas compartidas/huérfanas, presets con superposición, export raster con controles, recetas no autónomas, filtros no restaurados, dependencia CDN, fragilidad multiusuario y pérdida de cuadrícula no guardada.</p>
+<h2 id="section-22">22. Flujo recomendado<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Guardar figuras fuente; abrir y actualizar MultiView; filtrar y revisar parámetros; etiquetar y marcar favoritos; seleccionar en Galería; abrir cuadrícula; verificar comparabilidad; aplicar preset y ajustar; fijar paneles clave; exportar y controlar PNG; guardar y probar composición; conservar historiales originales y utilizar tablas estadísticas para concluir.</p>
+<h2 id="section-23">23. Fuentes internas verificadas<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p><code>app.R</code>, <code>modules/multiview/mod_multiview_ui.R</code>, <code>modules/multiview/mod_multiview_server.R</code>, <code>modules/multiview/_shared/mod_multiview_helpers.R</code>, <code>modules/_shared/_project_store.R</code>, <code>.claude/architecture/16-multiview.md</code>.</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Función general</a><a class="toc-l2" href="#section-2">2. Origen de las figuras</a><a class="toc-l2" href="#section-3">3. Asociación PNG/RDS</a><a class="toc-l2" href="#section-4">4. Carga y actualización</a><a class="toc-l2" href="#section-5">5. Búsqueda, filtros y ordenación</a><a class="toc-l2" href="#section-6">6. Galería y tabla</a><a class="toc-l2" href="#section-7">7. Selección de figuras</a><a class="toc-l2" href="#section-8">8. Panel de detalles</a><a class="toc-l2" href="#section-9">9. Favoritos y etiquetas</a><a class="toc-l2" href="#section-10">10. Cuadrícula de análisis abiertos</a><a class="toc-l2" href="#section-11">11. Fijación, reemplazo y cierre</a><a class="toc-l2" href="#section-12">12. Presets de disposición</a><a class="toc-l2" href="#section-13">13. Exportación PNG compuesta</a><a class="toc-l2" href="#section-14">14. Guardar una composición</a><a class="toc-l2" href="#section-15">15. Importación y exportación de composiciones</a><a class="toc-l2" href="#section-16">16. Comparar correctamente las figuras</a><a class="toc-l2" href="#section-17">17. Proyectos, sesiones y uso multiusuario</a><a class="toc-l2" href="#section-18">18. Dependencias externas y uso sin conexión</a><a class="toc-l2" href="#section-19">19. Resolución de problemas</a><a class="toc-l2" href="#section-20">20. Listas de control</a><a class="toc-l2" href="#section-21">21. Límites principales</a><a class="toc-l2" href="#section-22">22. Flujo recomendado</a><a class="toc-l2" href="#section-23">23. Fuentes internas verificadas</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · MultiView</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

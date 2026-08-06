@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Description — Références techniques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="reference" data-module="description" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Références techniques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link active" href="../description/guides-methodologiques.html">Description</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="active" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Description</a><span>›</span><span>Références techniques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Description — Références techniques</h1>
+<p>Inventaire technique généré à partir du code réellement embarqué dans cette version de BarCodeR.</p>
+<blockquote>
+<p><strong>Cette page est régénérée par documentation-src/build_docs.py. Les noms de fonctions, identifiants et lignes proviennent du code source actuel.</strong></p>
+</blockquote>
+<h2 id="section-1">1. Fichiers sources<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface Shiny</td>
+<td><code>modules/description/mod_description_ui.R</code></td>
+</tr>
+<tr>
+<td>Metrics, plots, tables and comparison logic</td>
+<td><code>modules/description/mod_description_server.R</code></td>
+</tr>
+<tr>
+<td>Global active-dataset synchronization</td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+</tr>
+<tr>
+<td>Persistent UI state</td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/fr/description/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/fr/description/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. Architecture et flux principaux<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">datasets() + active_ds()
+  → selected_dataset_single
+  → phyloseq extraction and temporary OTU orientation
+  → sample / ASV / sequence / completeness metrics
+  → Plotly and DT outputs
+  → optional vegan::rarefy() computation
+</code></pre>
+<pre tabindex="0"><code class="language-text">all in-memory datasets
+  → compute_dataset_stats()
+  → selected comparison subset
+  → normalized heatmap / dotplot / baseline delta
+  → filtration-log comparison
+</code></pre>
+<h3 id="section-2-1">2.1. État réactif et mémoire<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selected_dataset_single</code></td>
+<td>Dataset inspecté et synchronisé avec active_ds().</td>
+</tr>
+<tr>
+<td><code>sample_group_var</code></td>
+<td>Colonne de sample_data utilisée comme groupe descriptif.</td>
+</tr>
+<tr>
+<td><code>rarefaction_result</code></td>
+<td>Résultat mémorisé du dernier calcul vegan::rarefy().</td>
+</tr>
+<tr>
+<td><code>selected_sample_id</code></td>
+<td>Échantillon affiché dans la fiche détaillée.</td>
+</tr>
+<tr>
+<td><code>selected_datasets_compare</code></td>
+<td>Sous-ensemble de datasets inclus dans les graphiques Projet.</td>
+</tr>
+<tr>
+<td><code>project_baseline_dataset</code></td>
+<td>Référence utilisée pour calculer les écarts relatifs.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Chaînes de traçabilité<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">selected dataset
+  → active_ds() synchronization
+  → compute_dataset_stats() + sample/asv metrics
+  → diagnostic cards and interactive plots
+  → tables / CSV exports
+</code></pre>
+<pre tabindex="0"><code class="language-text">Calculate curves
+  → positive-count and ≥50-read checks
+  → vegan::rarefy() on up to ~80 depths
+  → cached rarefaction_result
+  → individual or pooled-group rendering
+</code></pre>
+<h2 id="section-3">3. Entrées Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Références serveur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>download_logs_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:932</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_meta_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:917</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_otu_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:899</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>download_tax_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:908</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>jump_to_logs</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_description_ui.R:692</code></td>
+<td><code>mod_description_server.R:1084</code></td>
+</tr>
+<tr>
+<td><code>project_baseline_dataset</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:983</code></td>
+<td><code>mod_description_server.R:1016</code>, <code>mod_description_server.R:1020</code>, <code>mod_description_server.R:2597</code></td>
+</tr>
+<tr>
+<td><code>project_focus_metric</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:987</code></td>
+<td><code>mod_description_server.R:1079</code>, <code>mod_description_server.R:2522</code>, <code>mod_description_server.R:2599</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_curve_mode</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:817</code></td>
+<td><code>mod_description_server.R:1063</code>, <code>mod_description_server.R:1820</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_display_mode</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_description_ui.R:824</code></td>
+<td><code>mod_description_server.R:1071</code>, <code>mod_description_server.R:1757</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_max_samples</code></td>
+<td><code>numericInput</code></td>
+<td><code>mod_description_ui.R:825</code></td>
+<td><code>mod_description_server.R:1758</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_show_legend</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_description_ui.R:818</code></td>
+<td><code>mod_description_server.R:1821</code></td>
+</tr>
+<tr>
+<td><code>run_rarefaction</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_description_ui.R:816</code></td>
+<td><code>mod_description_server.R:1683</code></td>
+</tr>
+<tr>
+<td><code>sample_group_var</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:922</code>, <code>mod_description_server.R:1039</code>, <code>mod_description_server.R:1734</code>, <code>mod_description_server.R:1932</code>, <code>mod_description_server.R:2130</code></td>
+</tr>
+<tr>
+<td><code>selected_dataset_single</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:796</code></td>
+</tr>
+<tr>
+<td><code>selected_datasets_compare</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_description_server.R:807</code>, <code>mod_description_server.R:1009</code>, <code>mod_description_server.R:1013</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Sorties Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Références serveur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clicked_sample_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:756</code></td>
+<td><code>mod_description_server.R:1324</code></td>
+</tr>
+<tr>
+<td><code>dataset_diagnostic_grid</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:733</code></td>
+<td><code>mod_description_server.R:1222</code></td>
+</tr>
+<tr>
+<td><code>dataset_header</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:697</code></td>
+<td><code>mod_description_server.R:1104</code></td>
+</tr>
+<tr>
+<td><code>dataset_hero_metrics</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:698</code></td>
+<td><code>mod_description_server.R:1138</code></td>
+</tr>
+<tr>
+<td><code>dataset_key_message</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:699</code></td>
+<td><code>mod_description_server.R:1151</code></td>
+</tr>
+<tr>
+<td><code>dataset_quick_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:731</code></td>
+<td><code>mod_description_server.R:1161</code></td>
+</tr>
+<tr>
+<td><code>download_logs_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:932</code></td>
+<td><code>mod_description_server.R:2441</code></td>
+</tr>
+<tr>
+<td><code>download_meta_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:917</code></td>
+<td><code>mod_description_server.R:2433</code></td>
+</tr>
+<tr>
+<td><code>download_otu_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:899</code></td>
+<td><code>mod_description_server.R:2417</code></td>
+</tr>
+<tr>
+<td><code>download_tax_table</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_description_ui.R:908</code></td>
+<td><code>mod_description_server.R:2425</code></td>
+</tr>
+<tr>
+<td><code>log_removed_samples</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_server.R:2382</code></td>
+<td><code>mod_description_server.R:2401</code></td>
+</tr>
+<tr>
+<td><code>log_removed_taxa</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_server.R:2376</code></td>
+<td><code>mod_description_server.R:2389</code></td>
+</tr>
+<tr>
+<td><code>log_table</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:934</code></td>
+<td><code>mod_description_server.R:2354</code></td>
+</tr>
+<tr>
+<td><code>meta_missingness_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:926</code></td>
+<td><code>mod_description_server.R:2345</code></td>
+</tr>
+<tr>
+<td><code>meta_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:919</code></td>
+<td><code>mod_description_server.R:2328</code></td>
+</tr>
+<tr>
+<td><code>meta_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:915</code></td>
+<td><code>mod_description_server.R:2299</code></td>
+</tr>
+<tr>
+<td><code>openmetabar_provenance</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:715</code></td>
+<td><code>mod_description_server.R:823</code></td>
+</tr>
+<tr>
+<td><code>otu_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:901</code></td>
+<td><code>mod_description_server.R:2312</code></td>
+</tr>
+<tr>
+<td><code>otu_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:897</code></td>
+<td><code>mod_description_server.R:2272</code></td>
+</tr>
+<tr>
+<td><code>outlier_group_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:854</code></td>
+<td><code>mod_description_server.R:2125</code></td>
+</tr>
+<tr>
+<td><code>outlier_signal_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:849</code></td>
+<td><code>mod_description_server.R:2038</code></td>
+</tr>
+<tr>
+<td><code>outlier_spotlight_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:850</code></td>
+<td><code>mod_description_server.R:2078</code></td>
+</tr>
+<tr>
+<td><code>outlier_story_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:844</code></td>
+<td><code>mod_description_server.R:1924</code></td>
+</tr>
+<tr>
+<td><code>outlier_summary_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:846</code></td>
+<td><code>mod_description_server.R:2019</code></td>
+</tr>
+<tr>
+<td><code>project_baseline_delta</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2594</code></td>
+</tr>
+<tr>
+<td><code>project_filtration_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2626</code></td>
+</tr>
+<tr>
+<td><code>project_metric_dotplot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2573</code></td>
+</tr>
+<tr>
+<td><code>project_metric_heatmap</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2546</code></td>
+</tr>
+<tr>
+<td><code>project_overview_cards</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:954</code></td>
+<td><code>mod_description_server.R:2507</code></td>
+</tr>
+<tr>
+<td><code>project_plot_memory</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2666</code></td>
+</tr>
+<tr>
+<td><code>project_plot_reads</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2658</code></td>
+</tr>
+<tr>
+<td><code>project_plot_richness</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2662</code></td>
+</tr>
+<tr>
+<td><code>project_plot_samples</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2650</code></td>
+</tr>
+<tr>
+<td><code>project_plot_taxa</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:2654</code></td>
+</tr>
+<tr>
+<td><code>project_story_card</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:956</code></td>
+<td><code>mod_description_server.R:2519</code></td>
+</tr>
+<tr>
+<td><code>project_summary_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:958</code></td>
+<td><code>mod_description_server.R:2538</code></td>
+</tr>
+<tr>
+<td><code>rarefaction_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1816</code></td>
+</tr>
+<tr>
+<td><code>sample_metric_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:870</code></td>
+<td><code>mod_description_server.R:2216</code></td>
+</tr>
+<tr>
+<td><code>sample_outlier_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:861</code></td>
+<td><code>mod_description_server.R:2185</code></td>
+</tr>
+<tr>
+<td><code>selected_cum_asvs_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1496</code></td>
+</tr>
+<tr>
+<td><code>selected_cum_reads_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1469</code></td>
+</tr>
+<tr>
+<td><code>selected_evenness_proxy_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1605</code></td>
+</tr>
+<tr>
+<td><code>selected_gc_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1644</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_cumulative_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1553</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1549</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1523</code></td>
+</tr>
+<tr>
+<td><code>selected_reads_richness_scatter</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1372</code></td>
+</tr>
+<tr>
+<td><code>selected_richness_group_plot</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1601</code></td>
+</tr>
+<tr>
+<td><code>selected_richness_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1586</code></td>
+</tr>
+<tr>
+<td><code>selected_seq_len_hist</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1629</code></td>
+</tr>
+<tr>
+<td><code>selected_seq_scatter</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1659</code></td>
+</tr>
+<tr>
+<td><code>selected_top_asvs_bar</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1443</code></td>
+</tr>
+<tr>
+<td><code>selected_top_samples_bar</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_description_server.R:1411</code></td>
+</tr>
+<tr>
+<td><code>tables_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:886</code></td>
+<td><code>mod_description_server.R:2255</code></td>
+</tr>
+<tr>
+<td><code>tax_missingness_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:925</code></td>
+<td><code>mod_description_server.R:2336</code></td>
+</tr>
+<tr>
+<td><code>tax_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_description_ui.R:910</code></td>
+<td><code>mod_description_server.R:2320</code></td>
+</tr>
+<tr>
+<td><code>tax_table_overview</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_description_ui.R:906</code></td>
+<td><code>mod_description_server.R:2286</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. Validation et garde d’intégrité<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Contrôle</th>
+<th>Fonction</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orientation OTU</td>
+<td><code>get_otu_taxa_rows()</code></td>
+<td>Transpose uniquement la matrice de calcul ; le phyloseq reste inchangé.</td>
+</tr>
+<tr>
+<td>Groupement</td>
+<td><code>get_group_var_choices()</code></td>
+<td>Conserve les variables non temporelles ayant 2 à 15 modalités non manquantes.</td>
+</tr>
+<tr>
+<td>Outliers</td>
+<td><code>iqr_outlier_flag()</code> / <code>iqr_distance_score()</code></td>
+<td>Détection globale sur reads, richesse et dominance selon 1,5 IQR.</td>
+</tr>
+<tr>
+<td>Raréfaction</td>
+<td><code>vegan::rarefy()</code></td>
+<td>Exige des comptes compatibles ; exclut les échantillons sous 50 reads.</td>
+</tr>
+<tr>
+<td>Tables</td>
+<td><code>get_table_*_df()</code></td>
+<td>Ajoute ASV/SampleID et sécurise les noms uniquement pour l’affichage/export.</td>
+</tr>
+<tr>
+<td>Vue Projet</td>
+<td><code>compute_dataset_stats()</code></td>
+<td>Additionne les dimensions entre datasets sans déduplication.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. Fonctions internes<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. Configuration<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_read_ui_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>60</td>
+<td>Fonction interne de la couche Configuration.</td>
+</tr>
+<tr>
+<td><code>bcr_capture_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>96</td>
+<td>Fonction interne de la couche Configuration.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. Fichiers et sérialisation<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_ui_state_path()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>26</td>
+<td>Fonction interne de la couche Fichiers et sérialisation.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. Général<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_description_server()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>3</td>
+<td>Initialise les vues Dataset/Projet et tous les réactifs descriptifs du module.</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>24</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>tr_tokens()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>34</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>tr_signal()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>36</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>first_non_na()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>65</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>stat_or_na()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>72</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>iqr_outlier_flag()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>86</td>
+<td>Applique la règle de Tukey à 1,5 IQR pour marquer les valeurs atypiques.</td>
+</tr>
+<tr>
+<td><code>iqr_distance_score()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>98</td>
+<td>Quantifie le dépassement d’une valeur au-delà des limites IQR.</td>
+</tr>
+<tr>
+<td><code>scale_01()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>125</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>alert_item()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>205</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>desc_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>300</td>
+<td>Uniformise les graphiques Plotly du module.</td>
+</tr>
+<tr>
+<td><code>empty_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>359</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>dt_opts()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>388</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>datatable_modern()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>401</td>
+<td>Construit les tableaux DT avec filtres, défilement et exports.</td>
+</tr>
+<tr>
+<td><code>get_otu_taxa_rows()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>413</td>
+<td>Extrait l’OTU table et la réoriente temporairement avec les taxons en lignes.</td>
+</tr>
+<tr>
+<td><code>get_sample_metadata()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>423</td>
+<td>Construit la table des métadonnées alignée sur les échantillons.</td>
+</tr>
+<tr>
+<td><code>get_seq_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>449</td>
+<td>Extrait les séquences, leurs longueurs et leur composition GC.</td>
+</tr>
+<tr>
+<td><code>get_asv_metrics()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>471</td>
+<td>Calcule abondance totale et prévalence de chaque unité taxonomique.</td>
+</tr>
+<tr>
+<td><code>get_sample_metrics()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>494</td>
+<td>Calcule reads, richesse, dominance et proportion de zéros par échantillon.</td>
+</tr>
+<tr>
+<td><code>get_group_var_choices()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>530</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>get_grouped_sample_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>542</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>get_table_otu_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>555</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>get_table_tax_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>561</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>get_table_meta_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>569</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>get_log_export_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>573</td>
+<td>Combine les taxons et échantillons supprimés dans une table exportable.</td>
+</tr>
+<tr>
+<td><code>get_tax_missingness_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>607</td>
+<td>Calcule la complétude de chaque rang taxonomique.</td>
+</tr>
+<tr>
+<td><code>get_meta_missingness_df()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>633</td>
+<td>Calcule valeurs manquantes, type et nombre de modalités des métadonnées.</td>
+</tr>
+<tr>
+<td><code>kv_block()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>835</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>refresh_group_var_picker()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>1036</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>group_violin_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>1538</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bar_compare_plot()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>2641</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_bind_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>30</td>
+<td>Synchronise le sélecteur Description avec le dataset actif global.</td>
+</tr>
+<tr>
+<td><code>bcr_follow_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>51</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_is_nav_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>34</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_capture_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>40</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_is_param_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>89</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>.bcr_session_token()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>132</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_restore_param()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>165</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_restore_module_inputs()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>233</td>
+<td>Restaure les réglages documentés depuis l’état d’interface du projet.</td>
+</tr>
+<tr>
+<td><code>bcr_apply_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>310</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-4">6.4. Interface / rendu<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_outlier_reason()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>113</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>build_group_palette()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>141</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>status_pill()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>149</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>metric_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>155</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>mini_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>164</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>outlier_stat_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>173</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>quick_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>189</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>panel_card()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>197</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>bcr_read_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>51</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>bcr_ui_state_prime()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>140</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>bcr_write_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>286</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-5">6.5. Validation / formatage<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fmt_number()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>50</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>fmt_pct()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>60</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>sanitize_display_names()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>132</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>normalize_plot_title()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>219</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>normalize_plot_axis()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>254</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>normalize_plot_legend()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>283</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>fmt_val()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>830</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-6">6.6. Phyloseq / datasets<a aria-label="Permalink" class="heading-anchor" href="#section-6-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compute_dataset_stats()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>657</td>
+<td>Agrège les dimensions, la sparsité, la complétude et les métriques globales d’un dataset.</td>
+</tr>
+<tr>
+<td><code>build_dataset_story()</code></td>
+<td><code>modules/description/mod_description_server.R</code></td>
+<td>744</td>
+<td>Fonction interne de la couche Phyloseq / datasets.</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Fichiers sources</a><a class="toc-l2" href="#section-2">2. Architecture et flux principaux</a><a class="toc-l3" href="#section-2-1">2.1. État réactif et mémoire</a><a class="toc-l3" href="#section-2-2">2.2. Chaînes de traçabilité</a><a class="toc-l2" href="#section-3">3. Entrées Shiny</a><a class="toc-l2" href="#section-4">4. Sorties Shiny</a><a class="toc-l2" href="#section-5">5. Validation et garde d’intégrité</a><a class="toc-l2" href="#section-6">6. Fonctions internes</a><a class="toc-l3" href="#section-6-1">6.1. Configuration</a><a class="toc-l3" href="#section-6-2">6.2. Fichiers et sérialisation</a><a class="toc-l3" href="#section-6-3">6.3. Général</a><a class="toc-l3" href="#section-6-4">6.4. Interface / rendu</a><a class="toc-l3" href="#section-6-5">6.5. Validation / formatage</a><a class="toc-l3" href="#section-6-6">6.6. Phyloseq / datasets</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Description</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

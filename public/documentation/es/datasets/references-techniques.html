@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Conjuntos de datos — Referencias técnicas — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="es" data-kind="reference" data-module="datasets" data-no-result="No se encontró ningún resultado en esta página.">
+<a class="skip-link" href="#doc-content">Referencias técnicas</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentación de BarCodeR</strong><small>Documentación integrada — funciona sin conexión</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Volver a BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="es" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" selected>Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Módulos</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Datos de entrada</a>
+      
+    
+      <a class="module-link active" href="../datasets/guides-methodologiques.html">Conjuntos de datos</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">Guías metodológicas</a>
+        <a class="active" href="references-techniques.html">Referencias técnicas</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Descripción</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Edición de datos</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtración</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploración</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Análisis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Versión de la documentación</span><strong>1.8.0</strong><span>Generada el 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Conjuntos de datos</a><span>›</span><span>Referencias técnicas</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Buscar en esta página…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No se encontró ningún resultado en esta página.</div>
+    <article class="doc-article"><h1 id="top">Conjuntos de datos — Referencias técnicas</h1>
+<p>Inventario técnico generado a partir del código incluido en esta versión de BarCodeR.</p>
+<blockquote>
+<p><strong>Esta página se regenera mediante documentation-src/build_docs.py. Los nombres de funciones, identificadores y líneas proceden del código fuente actual.</strong></p>
+</blockquote>
+<h2 id="section-1">1. Archivos fuente<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Función</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface Shiny</td>
+<td><code>modules/datasets/mod_datasets_ui.R</code></td>
+</tr>
+<tr>
+<td>Dataset and project actions</td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+</tr>
+<tr>
+<td>Dataset naming</td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+</tr>
+<tr>
+<td>Persistent project store</td>
+<td><code>modules/_shared/_project_store.R</code></td>
+</tr>
+<tr>
+<td>UI state persistence</td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/es/datasets/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/es/datasets/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. Arquitectura y flujos principales<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">datasets() + active_ds()
+  → registry rendering
+  → activate / rename / duplicate / reorder / delete
+  → unsaved-state marker
+  → bcr_save_registry()
+  → save/projects/&lt;slug&gt;/registry.rds
+</code></pre>
+<pre tabindex="0"><code class="language-text">project manager
+  → manifest + .current pointer
+  → save / restore / create / open / rename
+  → duplicate / delete
+  → ZIP export / import
+  → full-session reload on project switch
+</code></pre>
+<h3 id="section-2-1">2.1. Estado reactivo y memoria<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>datasets()</code></td>
+<td>Lista reactiva con nombre que contiene los objetos phyloseq presentes en memoria.</td>
+</tr>
+<tr>
+<td><code>active_ds()</code></td>
+<td>Nombre del dataset utilizado como referencia global de la aplicación.</td>
+</tr>
+<tr>
+<td><code>vals$persist_project()</code></td>
+<td>Callback global que guarda el registro actual.</td>
+</tr>
+<tr>
+<td><code>vals$switch_project()</code></td>
+<td>Callback global que cambia de proyecto y recarga la sesión.</td>
+</tr>
+<tr>
+<td><code>proj_tick()</code></td>
+<td>Contador reactivo que actualiza la lista y el tamaño de los proyectos.</td>
+</tr>
+<tr>
+<td><code>rv$export_name</code></td>
+<td>Dataset seleccionado para la exportación individual.</td>
+</tr>
+<tr>
+<td><code>rv$del_project_slug</code></td>
+<td>Slug del proyecto pendiente de confirmación de eliminación.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Cadenas de trazabilidad<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">row action
+  → Shiny input (activate/edit/duplicate/export/reorder/delete)
+  → datasets() and/or active_ds() mutation
+  → project marked unsaved
+  → explicit Save project
+  → registry.rds + manifest.rds
+</code></pre>
+<pre tabindex="0"><code class="language-text">Open project
+  → attempt to persist current project
+  → bcr_write_current_slug()
+  → session reload
+  → bcr_load_registry() + UI-state restoration
+</code></pre>
+<h2 id="section-3">3. Entradas Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Widget</th>
+<th>UI Fuente</th>
+<th>Referencias del servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ask_delete_project</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:727</code>, <code>mod_datasets_server.R:728</code></td>
+</tr>
+<tr>
+<td><code>ask_rename_project</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:598</code></td>
+<td><code>mod_datasets_server.R:689</code></td>
+</tr>
+<tr>
+<td><code>close_ds_modal_top</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:81</code></td>
+</tr>
+<tr>
+<td><code>confirm_delete_project</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:744</code></td>
+<td><code>mod_datasets_server.R:749</code></td>
+</tr>
+<tr>
+<td><code>confirm_new_project</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:662</code></td>
+<td><code>mod_datasets_server.R:667</code></td>
+</tr>
+<tr>
+<td><code>confirm_rename_project</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:697</code></td>
+<td><code>mod_datasets_server.R:701</code></td>
+</tr>
+<tr>
+<td><code>confirm_restore</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:511</code></td>
+<td><code>mod_datasets_server.R:517</code></td>
+</tr>
+<tr>
+<td><code>del_confirm</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:403</code></td>
+<td><code>mod_datasets_server.R:408</code></td>
+</tr>
+<tr>
+<td><code>do_export_dl</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:155</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ds_act</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:248</code>, <code>mod_datasets_server.R:249</code>, <code>mod_datasets_server.R:250</code></td>
+</tr>
+<tr>
+<td><code>dup_confirm</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:373</code></td>
+<td><code>mod_datasets_server.R:378</code></td>
+</tr>
+<tr>
+<td><code>dup_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_datasets_server.R:369</code></td>
+<td><code>mod_datasets_server.R:381</code></td>
+</tr>
+<tr>
+<td><code>duplicate_project</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:713</code>, <code>mod_datasets_server.R:714</code></td>
+</tr>
+<tr>
+<td><code>edit_confirm</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_server.R:306</code></td>
+<td><code>mod_datasets_server.R:327</code></td>
+</tr>
+<tr>
+<td><code>edit_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_datasets_server.R:292</code></td>
+<td><code>mod_datasets_server.R:338</code></td>
+</tr>
+<tr>
+<td><code>edit_note</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:332</code></td>
+</tr>
+<tr>
+<td><code>edit_tags</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_datasets_server.R:300</code></td>
+<td><code>mod_datasets_server.R:333</code></td>
+</tr>
+<tr>
+<td><code>export_project</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:215</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_zip</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:204</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>global_active</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:432</code>, <code>mod_datasets_server.R:433</code></td>
+</tr>
+<tr>
+<td><code>import_project_zip</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_datasets_ui.R:211</code></td>
+<td><code>mod_datasets_server.R:798</code>, <code>mod_datasets_server.R:799</code></td>
+</tr>
+<tr>
+<td><code>new_project</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_ui.R:186</code></td>
+<td><code>mod_datasets_server.R:650</code></td>
+</tr>
+<tr>
+<td><code>new_project_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_datasets_server.R:657</code></td>
+<td><code>mod_datasets_server.R:668</code></td>
+</tr>
+<tr>
+<td><code>open_project</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_datasets_server.R:682</code>, <code>mod_datasets_server.R:683</code></td>
+</tr>
+<tr>
+<td><code>refresh_registry</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_ui.R:145</code></td>
+<td><code>mod_datasets_server.R:437</code></td>
+</tr>
+<tr>
+<td><code>rename_project_name</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_datasets_server.R:693</code></td>
+<td><code>mod_datasets_server.R:702</code></td>
+</tr>
+<tr>
+<td><code>restore_session</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_ui.R:191</code></td>
+<td><code>mod_datasets_server.R:497</code></td>
+</tr>
+<tr>
+<td><code>save_session</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_datasets_ui.R:181</code></td>
+<td><code>mod_datasets_server.R:475</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Salidas Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Widget</th>
+<th>UI Fuente</th>
+<th>Referencias del servidor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>current_project_line</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_datasets_ui.R:178</code></td>
+<td><code>mod_datasets_server.R:591</code></td>
+</tr>
+<tr>
+<td><code>do_export_dl</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:155</code></td>
+<td><code>mod_datasets_server.R:442</code></td>
+</tr>
+<tr>
+<td><code>export_project</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:215</code></td>
+<td><code>mod_datasets_server.R:454</code></td>
+</tr>
+<tr>
+<td><code>export_size_note</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_datasets_ui.R:222</code></td>
+<td><code>mod_datasets_server.R:771</code></td>
+</tr>
+<tr>
+<td><code>export_zip</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_datasets_ui.R:204</code></td>
+<td><code>mod_datasets_server.R:781</code></td>
+</tr>
+<tr>
+<td><code>project_list</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_datasets_ui.R:226</code></td>
+<td><code>mod_datasets_server.R:604</code></td>
+</tr>
+<tr>
+<td><code>registry_table</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_datasets_server.R:190</code></td>
+<td><code>mod_datasets_server.R:193</code></td>
+</tr>
+<tr>
+<td><code>registry_wrap</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_datasets_ui.R:151</code></td>
+<td><code>mod_datasets_server.R:180</code></td>
+</tr>
+<tr>
+<td><code>session_status</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_datasets_ui.R:197</code></td>
+<td><code>mod_datasets_server.R:537</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. Validación y control de integridad<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Función</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre del dataset</td>
+<td><code>bcr_clean_label()</code> / <code>bcr_make_unique_label()</code></td>
+<td>Genera una clave segura y evita sobrescrituras silenciosas.</td>
+</tr>
+<tr>
+<td>Linaje filtrado</td>
+<td><code>relabel_dataset_parents()</code></td>
+<td>Actualiza o borra parent_dataset en los descendientes reconocidos.</td>
+</tr>
+<tr>
+<td>Persistencia</td>
+<td><code>bcr_save_registry()</code></td>
+<td>Escribe el registro de forma atómica y protege una copia no vacía frente a memoria vacía.</td>
+</tr>
+<tr>
+<td>Proyecto actual</td>
+<td><code>.current</code> + <code>bcr_write_current_slug()</code></td>
+<td>Guarda el slug que se reabrirá al iniciar.</td>
+</tr>
+<tr>
+<td>Archivo ZIP</td>
+<td><code>bcr_find_project_root()</code></td>
+<td>Busca registry.rds, manifest.rds o carpetas de historial conocidas.</td>
+</tr>
+<tr>
+<td>Eliminación de proyecto</td>
+<td><code>bcr_delete_project()</code></td>
+<td>Rechaza el proyecto actual y comprueba que la carpeta desapareció.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. Funciones internas<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. Configuración<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bcr_read_ui_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>60</td>
+<td>Función interna de la capa Configuración.</td>
+</tr>
+<tr>
+<td><code>bcr_capture_params()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>96</td>
+<td>Función interna de la capa Configuración.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. Archivos y serialización<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_path()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>469</td>
+<td>Función interna de la capa Archivos y serialización.</td>
+</tr>
+<tr>
+<td><code>bcr_current_pointer_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>271</td>
+<td>Función interna de la capa Archivos y serialización.</td>
+</tr>
+<tr>
+<td><code>bcr_manifest_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>311</td>
+<td>Función interna de la capa Archivos y serialización.</td>
+</tr>
+<tr>
+<td><code>bcr_ui_state_path()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>26</td>
+<td>Función interna de la capa Archivos y serialización.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. General<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>27</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>fa_html()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>35</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>ds_kind()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>89</td>
+<td>Deduce la procedencia mostrada a partir de filtration_log y openmetabar_run.</td>
+</tr>
+<tr>
+<td><code>ds_parent()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>95</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>ds_last_modified()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>100</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>ds_meta()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>110</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>kind_badge()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>115</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>action_buttons()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>159</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>btn()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>160</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>row_slug()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>589</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>set_iv()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>612</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_make_unique_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>35</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>.bcr_or()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>46</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>.bcr_name_fingerprint()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>52</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_slugify()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>66</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_set_pending_open()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>105</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_take_pending_open()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>109</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_register_session()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>126</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_unregister_session()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>132</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_other_sessions()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>137</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>norm()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>183</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>norm()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>200</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_migrate_legacy_histories()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>222</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_read_current_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>273</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_write_current_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>294</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_read_manifest()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>375</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_write_manifest()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>384</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_unique_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>462</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>has_marker()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>548</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_is_nav_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>34</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_capture_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>40</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_is_param_input()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>89</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>.bcr_session_token()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>132</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_restore_param()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>165</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_restore_module_inputs()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>233</td>
+<td>Función interna de la capa General.</td>
+</tr>
+<tr>
+<td><code>bcr_apply_nav()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>310</td>
+<td>Función interna de la capa General.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-4">6.4. Interfaz / renderizado<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>45</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>74</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>open_edit_modal()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>284</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>open_dup_modal()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>358</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>open_delete_modal()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>390</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>bcr_read_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>51</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>bcr_ui_state_prime()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>140</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+<tr>
+<td><code>bcr_write_ui_state()</code></td>
+<td><code>modules/_shared/_ui_state.R</code></td>
+<td>286</td>
+<td>Función interna de la capa Interfaz / renderizado.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-5">6.5. Validación / formato<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fmt_size()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>583</td>
+<td>Función interna de la capa Validación / formato.</td>
+</tr>
+<tr>
+<td><code>bcr_clean_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>25</td>
+<td>Función interna de la capa Validación / formato.</td>
+</tr>
+<tr>
+<td><code>bcr_invalidate_size_cache()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>426</td>
+<td>Función interna de la capa Validación / formato.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-6">6.6. Phyloseq / datasets<a aria-label="Permalink" class="heading-anchor" href="#section-6-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Fuente</th>
+<th>Línea</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_datasets_server()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>21</td>
+<td>Inicializa el registro de datasets, el selector activo y el gestor de proyectos.</td>
+</tr>
+<tr>
+<td><code>reorder_dataset()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>274</td>
+<td>Reordena las entradas de datasets() sin modificar los objetos.</td>
+</tr>
+<tr>
+<td><code>relabel_dataset_parents()</code></td>
+<td><code>modules/datasets/mod_datasets_server.R</code></td>
+<td>316</td>
+<td>Actualiza las referencias parent_dataset tras renombrar o eliminar.</td>
+</tr>
+<tr>
+<td><code>bcr_project_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>86</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_set_project_slug()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>89</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_project_root()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>142</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_project_dir()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>150</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_project_dir_rel()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>160</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_register_project_resource()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>180</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_release_project_resources()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>199</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_registry_path()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>308</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_save_registry()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>326</td>
+<td>Escribe registry.rds con los datasets, su orden y el dataset activo.</td>
+</tr>
+<tr>
+<td><code>bcr_load_registry()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>348</td>
+<td>Lee el registro persistente de un proyecto.</td>
+</tr>
+<tr>
+<td><code>bcr_registry_status()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>366</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_project_size_bytes()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>410</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_list_projects()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>435</td>
+<td>Inventaría y ordena los proyectos persistidos.</td>
+</tr>
+<tr>
+<td><code>bcr_project_name_taken()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>474</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_create_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>489</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_rename_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>501</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_delete_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>508</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_export_project_zip()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>524</td>
+<td>Archiva el directorio completo del proyecto en ZIP.</td>
+</tr>
+<tr>
+<td><code>bcr_find_project_root()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>544</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+<tr>
+<td><code>bcr_import_project_zip()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>565</td>
+<td>Valida y extrae un archivo como proyecto nuevo.</td>
+</tr>
+<tr>
+<td><code>bcr_duplicate_project()</code></td>
+<td><code>modules/_shared/_project_store.R</code></td>
+<td>607</td>
+<td>Función interna de la capa Phyloseq / datasets.</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="En esta página">
+    <div class="toc-title">En esta página</div>
+    <nav><a class="toc-l2" href="#section-1">1. Archivos fuente</a><a class="toc-l2" href="#section-2">2. Arquitectura y flujos principales</a><a class="toc-l3" href="#section-2-1">2.1. Estado reactivo y memoria</a><a class="toc-l3" href="#section-2-2">2.2. Cadenas de trazabilidad</a><a class="toc-l2" href="#section-3">3. Entradas Shiny</a><a class="toc-l2" href="#section-4">4. Salidas Shiny</a><a class="toc-l2" href="#section-5">5. Validación y control de integridad</a><a class="toc-l2" href="#section-6">6. Funciones internas</a><a class="toc-l3" href="#section-6-1">6.1. Configuración</a><a class="toc-l3" href="#section-6-2">6.2. Archivos y serialización</a><a class="toc-l3" href="#section-6-3">6.3. General</a><a class="toc-l3" href="#section-6-4">6.4. Interfaz / renderizado</a><a class="toc-l3" href="#section-6-5">6.5. Validación / formato</a><a class="toc-l3" href="#section-6-6">6.6. Phyloseq / datasets</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Conjuntos de datos</span><span>Versión de la documentación 1.8.0</span></footer>
+</body>
+</html>

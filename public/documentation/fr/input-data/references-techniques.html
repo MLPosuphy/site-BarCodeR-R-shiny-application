@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Input data — Références techniques — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="fr" data-kind="reference" data-module="input-data" data-no-result="Aucun résultat trouvé dans cette page.">
+<a class="skip-link" href="#doc-content">Références techniques</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>Documentation BarCodeR</strong><small>Documentation embarquée — fonctionne hors connexion</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Retour à BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="fr" aria-label="Language">
+    <option value="fr" selected>Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link active" href="../input-data/guides-methodologiques.html">Input data</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">Guides méthodologiques</a>
+        <a class="active" href="references-techniques.html">Références techniques</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analyse</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Version de la documentation</span><strong>1.8.0</strong><span>Générée le 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">Input data</a><span>›</span><span>Références techniques</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Rechercher dans cette page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>Aucun résultat trouvé dans cette page.</div>
+    <article class="doc-article"><h1 id="top">Input data — Références techniques</h1>
+<p>Inventaire technique généré à partir du code réellement embarqué dans cette version de BarCodeR.</p>
+<blockquote>
+<p><strong>Cette page est régénérée par documentation-src/build_docs.py. Les noms de fonctions, identifiants et lignes proviennent du code source actuel.</strong></p>
+</blockquote>
+<h2 id="section-1">1. Fichiers sources<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface du chargeur</td>
+<td><code>modules/data/mod_data_loader_ui.R</code></td>
+</tr>
+<tr>
+<td>Lecture, détection, modales et insertion</td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+</tr>
+<tr>
+<td>Nettoyage des noms de datasets</td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+</tr>
+<tr>
+<td>Garde d’intégrité phyloseq</td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+</tr>
+<tr>
+<td>Registre global et limite de téléversement</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/fr/input-data/</code></td>
+</tr>
+<tr>
+<td>Documentation générée</td>
+<td><code>www/documentation/fr/input-data/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. Architecture et flux principaux<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">fileInput rds_input
+  → read_serialized_input()
+  → detect_supported_object_type()
+  → pending_obj / pending_type / pending_candidates
+  → selection or confirmation modal
+  → mt_prepare_loaded_phyloseq()
+  → bcr_guard_ps() for a single dataset
+  → datasets() registry
+  → active_ds()
+  → unsaved project state
+</code></pre>
+<h3 id="section-2-1">2.1. État réactif et mémoire<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending_obj()</code></td>
+<td>Objet chargé en attente de confirmation.</td>
+</tr>
+<tr>
+<td><code>pending_type()</code></td>
+<td>Type détecté : dataset ou projet.</td>
+</tr>
+<tr>
+<td><code>pending_file_name()</code></td>
+<td>Nom original du fichier téléversé.</td>
+</tr>
+<tr>
+<td><code>pending_object_name()</code></td>
+<td>Nom de l’objet choisi dans un fichier RData.</td>
+</tr>
+<tr>
+<td><code>pending_candidates()</code></td>
+<td>Objets compatibles trouvés dans un RData multi-objets.</td>
+</tr>
+<tr>
+<td><code>datasets()</code></td>
+<td>Registre réactif de tous les datasets du projet BarCodeR courant.</td>
+</tr>
+<tr>
+<td><code>active_ds()</code></td>
+<td>Nom du dataset utilisé par défaut dans les modules aval.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Chaînes de traçabilité<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">single phyloseq
+  → proposed label
+  → add or replace modal
+  → mt_prepare_loaded_phyloseq()
+  → bcr_guard_ps()
+  → datasets(new_registry)
+  → active_ds(final_label)
+  → detailed cleaning report
+</code></pre>
+<pre tabindex="0"><code class="language-text">project object
+  → datasets / ps_registry / list-of-phyloseq extraction
+  → clean_project_phyloseq_list()
+  → name collision resolution
+  → merge or replace datasets()
+  → active dataset restoration
+  → aggregate restoration report
+</code></pre>
+<h2 id="section-3">3. Entrées Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Références serveur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cancel_load_dataset</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:629</code></td>
+<td><code>mod_data_loader_server.R:1082</code></td>
+</tr>
+<tr>
+<td><code>cancel_project_load</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:772</code></td>
+<td><code>mod_data_loader_server.R:1158</code></td>
+</tr>
+<tr>
+<td><code>cancel_rdata_choice</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:574</code></td>
+<td><code>mod_data_loader_server.R:1032</code></td>
+</tr>
+<tr>
+<td><code>close_dataset_report</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:730</code></td>
+<td><code>mod_data_loader_server.R:735</code></td>
+</tr>
+<tr>
+<td><code>close_info_modal</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:539</code></td>
+<td><code>mod_data_loader_server.R:544</code></td>
+</tr>
+<tr>
+<td><code>close_loader_modal_top</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_data_loader_server.R:548</code></td>
+</tr>
+<tr>
+<td><code>close_project_report</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:832</code></td>
+<td><code>mod_data_loader_server.R:837</code></td>
+</tr>
+<tr>
+<td><code>confirm_load_dataset</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:630</code></td>
+<td><code>mod_data_loader_server.R:1088</code></td>
+</tr>
+<tr>
+<td><code>confirm_project_load</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:773</code></td>
+<td><code>mod_data_loader_server.R:1164</code></td>
+</tr>
+<tr>
+<td><code>confirm_rdata_choice</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_data_loader_server.R:575</code></td>
+<td><code>mod_data_loader_server.R:1038</code></td>
+</tr>
+<tr>
+<td><code>dataset_import_mode</code></td>
+<td><code>radioButtons</code></td>
+<td><code>mod_data_loader_server.R:606</code></td>
+<td><code>mod_data_loader_server.R:1095</code></td>
+</tr>
+<tr>
+<td><code>dataset_label_modal</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_data_loader_server.R:596</code></td>
+<td><code>mod_data_loader_server.R:1096</code></td>
+</tr>
+<tr>
+<td><code>project_import_mode</code></td>
+<td><code>radioButtons</code></td>
+<td><code>mod_data_loader_server.R:756</code></td>
+<td><code>mod_data_loader_server.R:1165</code></td>
+</tr>
+<tr>
+<td><code>rdata_object_choice</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_data_loader_server.R:562</code></td>
+<td><code>mod_data_loader_server.R:1039</code>, <code>mod_data_loader_server.R:1042</code>, <code>mod_data_loader_server.R:1044</code>, <code>mod_data_loader_server.R:1047</code>, <code>mod_data_loader_server.R:1055</code></td>
+</tr>
+<tr>
+<td><code>rds_input</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_data_loader_ui.R:314</code></td>
+<td><code>mod_data_loader_server.R:968</code>, <code>mod_data_loader_server.R:969</code>, <code>mod_data_loader_server.R:973</code>, <code>mod_data_loader_server.R:988</code>, <code>mod_data_loader_server.R:999</code>, <code>mod_data_loader_server.R:1005</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Sorties Shiny<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Références serveur</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table></div>
+<h2 id="section-5">5. Validation et garde d’intégrité<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Fonction</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fichier sérialisé</td>
+<td><code>readRDS()</code> / <code>load()</code></td>
+<td>Lit l’objet ; un RData est chargé dans un environnement isolé.</td>
+</tr>
+<tr>
+<td>Détection</td>
+<td><code>detect_supported_object_type()</code></td>
+<td>Reconnaît un phyloseq, un projet datasets/ps_registry ou une liste de phyloseq.</td>
+</tr>
+<tr>
+<td>Identifiants d’échantillons</td>
+<td><code>sanitize_sample_names()</code></td>
+<td>Translittère, remplace les caractères non sûrs et résout les doublons.</td>
+</tr>
+<tr>
+<td>Cellules metadata vides</td>
+<td><code>replace_empty_metadata_with_na()</code></td>
+<td>Convertit les colonnes en caractères puis remplace les chaînes vides par NA.</td>
+</tr>
+<tr>
+<td>Structure phyloseq</td>
+<td><code>bcr_guard_ps()</code></td>
+<td>Exige un phyloseq avec OTU table et vérifie les identifiants échantillons/taxons.</td>
+</tr>
+<tr>
+<td>Nom du dataset</td>
+<td><code>bcr_clean_label()</code> / <code>bcr_make_unique_label()</code></td>
+<td>Produit une clé sûre et unique dans le registre.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. Fonctions internes<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. Fichiers et sérialisation<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default_label_from_fileinput()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>42</td>
+<td>Construit le nom proposé depuis le fichier ou le nom de l'objet R.</td>
+</tr>
+<tr>
+<td><code>reset_fileinput()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>84</td>
+<td>Réinitialise le fileInput afin que le même fichier puisse être sélectionné à nouveau.</td>
+</tr>
+<tr>
+<td><code>read_serialized_input()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>352</td>
+<td>Lit un RDS/RData dans un environnement isolé et inventorie les objets compatibles.</td>
+</tr>
+<tr>
+<td><code>build_rdata_choice_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>552</td>
+<td>Construit la modale de sélection lorsqu'un RData contient plusieurs objets compatibles.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. Général<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_data_loader_server()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>1</td>
+<td>Initialise le serveur du module et relie le registre datasets() au dataset actif.</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>12</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>make_unique_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>40</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>mode_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>80</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>is_same_string()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>91</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>empty_change_df()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>160</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>summarize_report()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>324</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>detect_supported_object_type()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>337</td>
+<td>Classe un objet comme dataset phyloseq, projet ou objet non pris en charge.</td>
+</tr>
+<tr>
+<td><code>make_table_rows()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>478</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>bcr_make_unique_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>35</td>
+<td>Ajoute un suffixe numérique lorsqu'un nom de dataset existe déjà.</td>
+</tr>
+<tr>
+<td><code>sb_try()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>11</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+<tr>
+<td><code>sb_ps_slots()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>17</td>
+<td>Fonction interne de la couche Général.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. État / nettoyage<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clear_pending()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>26</td>
+<td>Efface l'objet, le type, le fichier et les candidats temporairement en attente d'une décision utilisateur.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-4">6.4. Interface / rendu<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>426</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>make_kpi_card()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>469</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>make_change_card()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>490</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>show_message_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>527</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>sb_ps_require()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>84</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+<tr>
+<td><code>bcr_guard_message()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>142</td>
+<td>Fonction interne de la couche Interface / rendu.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-5">6.5. Validation / formatage<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clean_label()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>39</td>
+<td>Fonction interne de la couche Validation / formatage.</td>
+</tr>
+<tr>
+<td><code>sanitize_sample_names()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>97</td>
+<td>Standardise les identifiants d'échantillons et résout les doublons.</td>
+</tr>
+<tr>
+<td><code>replace_empty_metadata_with_na()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>140</td>
+<td>Remplace les cellules metadata vides par NA après conversion en caractères.</td>
+</tr>
+<tr>
+<td><code>bcr_clean_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>25</td>
+<td>Nettoie le nom d'un dataset destiné au registre BarCodeR.</td>
+</tr>
+<tr>
+<td><code>sb_ps_check_ids()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>42</td>
+<td>Compare les identifiants des échantillons et taxons entre les composants phyloseq.</td>
+</tr>
+<tr>
+<td><code>bcr_guard_ps()</code></td>
+<td><code>modules/_shared/_ps_guard.R</code></td>
+<td>136</td>
+<td>Vérifie la classe phyloseq, l'OTU table et la cohérence des identifiants avant insertion.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-6">6.6. Phyloseq / datasets<a aria-label="Permalink" class="heading-anchor" href="#section-6-6">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifiant</th>
+<th>Source</th>
+<th>Ligne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prepare_named_phyloseq_list()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>51</td>
+<td>Conserve les objets phyloseq d'une liste et produit des noms utilisables.</td>
+</tr>
+<tr>
+<td><code>extract_project_dataset_names()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>59</td>
+<td>Extrait les noms présentés dans la modale de projet avant import.</td>
+</tr>
+<tr>
+<td><code>mt_prepare_loaded_phyloseq()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>164</td>
+<td>Nettoie et synchronise les identifiants OTU/metadata, puis produit le rapport de modifications.</td>
+</tr>
+<tr>
+<td><code>build_dataset_load_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>580</td>
+<td>Construit la confirmation du nom et du mode ajout/remplacement pour un dataset.</td>
+</tr>
+<tr>
+<td><code>build_dataset_report_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>635</td>
+<td>Construit le rapport détaillé affiché après l'import d'un dataset.</td>
+</tr>
+<tr>
+<td><code>build_project_load_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>739</td>
+<td>Construit la confirmation ajout/remplacement d'un projet de datasets.</td>
+</tr>
+<tr>
+<td><code>build_project_report_modal()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>778</td>
+<td>Construit le bilan agrégé après restauration d'un projet.</td>
+</tr>
+<tr>
+<td><code>load_pending_project()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>849</td>
+<td>Nettoie les phyloseq du projet, fusionne ou remplace le registre et restaure le dataset actif.</td>
+</tr>
+<tr>
+<td><code>clean_project_phyloseq_list()</code></td>
+<td><code>modules/data/mod_data_loader_server.R</code></td>
+<td>866</td>
+<td>Fonction interne de la couche Phyloseq / datasets.</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="Sur cette page">
+    <div class="toc-title">Sur cette page</div>
+    <nav><a class="toc-l2" href="#section-1">1. Fichiers sources</a><a class="toc-l2" href="#section-2">2. Architecture et flux principaux</a><a class="toc-l3" href="#section-2-1">2.1. État réactif et mémoire</a><a class="toc-l3" href="#section-2-2">2.2. Chaînes de traçabilité</a><a class="toc-l2" href="#section-3">3. Entrées Shiny</a><a class="toc-l2" href="#section-4">4. Sorties Shiny</a><a class="toc-l2" href="#section-5">5. Validation et garde d’intégrité</a><a class="toc-l2" href="#section-6">6. Fonctions internes</a><a class="toc-l3" href="#section-6-1">6.1. Fichiers et sérialisation</a><a class="toc-l3" href="#section-6-2">6.2. Général</a><a class="toc-l3" href="#section-6-3">6.3. État / nettoyage</a><a class="toc-l3" href="#section-6-4">6.4. Interface / rendu</a><a class="toc-l3" href="#section-6-5">6.5. Validation / formatage</a><a class="toc-l3" href="#section-6-6">6.6. Phyloseq / datasets</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · Input data</span><span>Version de la documentation 1.8.0</span></footer>
+</body>
+</html>

@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>डेटा संपादन — तकनीकी संदर्भ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="reference" data-module="data-edition" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">तकनीकी संदर्भ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link active" href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+      <nav class="level-nav">
+        <a class="" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="active" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">डेटा संपादन</a><span>›</span><span>तकनीकी संदर्भ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">डेटा संपादन — तकनीकी संदर्भ</h1>
+<p>इस BarCodeR संस्करण में मौजूद वास्तविक कोड से बनाया गया तकनीकी इन्वेंटरी।</p>
+<blockquote>
+<p><strong>यह पृष्ठ documentation-src/build_docs.py द्वारा दोबारा बनाया जाता है। Function names, identifiers और line numbers वर्तमान source code से आते हैं।</strong></p>
+</blockquote>
+<h2 id="section-1">1. स्रोत फ़ाइलें<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>भूमिका</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Main interface</td>
+<td><code>modules/dataedition/mod_dataedition_main_ui.R</code></td>
+</tr>
+<tr>
+<td>Main server and edit log</td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+</tr>
+<tr>
+<td>Metadata editor</td>
+<td><code>modules/dataedition/edit_metadata/</code></td>
+</tr>
+<tr>
+<td>OTU editor</td>
+<td><code>modules/dataedition/edit_otu/</code></td>
+</tr>
+<tr>
+<td>Taxonomy editor</td>
+<td><code>modules/dataedition/edit_taxonomy/</code></td>
+</tr>
+<tr>
+<td>Full component import/export/deletion</td>
+<td><code>modules/dataedition/input_tables/</code></td>
+</tr>
+<tr>
+<td>Active-dataset synchronization</td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+</tr>
+<tr>
+<td>Dataset naming</td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+</tr>
+<tr>
+<td>Application integration</td>
+<td><code>app.R</code></td>
+</tr>
+<tr>
+<td>Documentation source</td>
+<td><code>documentation-src/hi/data-edition/</code></td>
+</tr>
+<tr>
+<td>Generated documentation</td>
+<td><code>www/documentation/hi/data-edition/</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<pre tabindex="0"><code class="language-text">datasets() + active_ds()
+  → selected_dataset
+  → metadata / OTU / taxonomy local editor state
+  → immediate apply to the phyloseq object
+  → datasets() replacement
+  → edit_log append
+  → explicit project save in Datasets
+</code></pre>
+<pre tabindex="0"><code class="language-text">full component import
+  → fileInput selection
+  → identifier and coverage checks
+  → slot replacement
+  → local editors must be refreshed
+</code></pre>
+<h3 id="section-2-1">2.1. Reactive state और memory<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selected_dataset</code></td>
+<td>active_ds() के साथ synchronized संपादित dataset।</td>
+</tr>
+<tr>
+<td><code>edit_log</code></td>
+<td>Operations की descriptive audit entries रखने वाला phyloseq attribute।</td>
+</tr>
+<tr>
+<td><code>initial_data</code> / <code>previous_data</code></td>
+<td>हर submodule में Reset और Undo के local states।</td>
+</tr>
+<tr>
+<td><code>tax_edit_info_seen</code></td>
+<td>Taxonomy-edit warning दिखाया गया या नहीं।</td>
+</tr>
+<tr>
+<td><code>replacement_preview</code></td>
+<td>Replacement patterns से मेल खाने वाली taxonomy cells की सूची।</td>
+</tr>
+<tr>
+<td><code>pending_save_label</code></td>
+<td>Overwrite confirmation की प्रतीक्षा कर रहा cleaned name।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-2">2.2. Traceability chains<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<pre tabindex="0"><code class="language-text">cell / structure action
+  → capture previous local state
+  → rebuild sample_data / otu_table / tax_table
+  → update datasets()[selected_dataset]
+  → append edit_log
+  → mark project unsaved
+</code></pre>
+<pre tabindex="0"><code class="language-text">Save under another name
+  → edited source already changed
+  → copy current edited state to a new registry key
+  → new key becomes active
+  → project still requires explicit disk save
+</code></pre>
+<h2 id="section-3">3. Shiny inputs<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>add_col_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:155</code></td>
+<td><code>mod_edit_metadata_server.R:450</code>, <code>mod_edit_otu_server.R:545</code>, <code>mod_edit_taxonomy_server.R:580</code></td>
+</tr>
+<tr>
+<td><code>apply_asv_rename_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_otu_ui.R:185</code></td>
+<td><code>mod_edit_otu_server.R:889</code></td>
+</tr>
+<tr>
+<td><code>apply_csv_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:244</code></td>
+<td><code>mod_edit_metadata_server.R:800</code></td>
+</tr>
+<tr>
+<td><code>apply_csv_otu_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_otu_ui.R:241</code></td>
+<td><code>mod_edit_otu_server.R:807</code></td>
+</tr>
+<tr>
+<td><code>apply_csv_tax_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_taxonomy_ui.R:290</code></td>
+<td><code>mod_edit_taxonomy_server.R:814</code></td>
+</tr>
+<tr>
+<td><code>apply_remove</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:610</code></td>
+</tr>
+<tr>
+<td><code>apply_replace_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_taxonomy_ui.R:239</code></td>
+<td><code>mod_edit_taxonomy_server.R:1004</code></td>
+</tr>
+<tr>
+<td><code>asv_in_cols</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_otu_server.R:864</code>, <code>mod_edit_otu_server.R:899</code></td>
+</tr>
+<tr>
+<td><code>confirm_apply_replace_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_taxonomy_server.R:956</code></td>
+<td><code>mod_edit_taxonomy_server.R:963</code></td>
+</tr>
+<tr>
+<td><code>confirm_del_suggest_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_server.R:600</code></td>
+<td><code>mod_edit_metadata_server.R:653</code>, <code>mod_edit_otu_server.R:727</code>, <code>mod_edit_taxonomy_server.R:764</code></td>
+</tr>
+<tr>
+<td><code>confirm_overwrite_registry</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_dataedition_main_server.R:355</code></td>
+<td><code>mod_dataedition_main_server.R:374</code></td>
+</tr>
+<tr>
+<td><code>confirm_remove</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:673</code></td>
+</tr>
+<tr>
+<td><code>csv_row_names</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_metadata_server.R:808</code></td>
+</tr>
+<tr>
+<td><code>csv_sep</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_edit_metadata_ui.R:220</code></td>
+<td><code>mod_edit_metadata_server.R:773</code>, <code>mod_edit_metadata_server.R:807</code>, <code>mod_edit_metadata_server.R:865</code></td>
+</tr>
+<tr>
+<td><code>del_col</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_edit_metadata_ui.R:159</code></td>
+<td><code>mod_edit_metadata_server.R:544</code>, <code>mod_edit_otu_server.R:631</code>, <code>mod_edit_taxonomy_server.R:666</code></td>
+</tr>
+<tr>
+<td><code>del_col_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:160</code></td>
+<td><code>mod_edit_metadata_server.R:540</code>, <code>mod_edit_otu_server.R:627</code>, <code>mod_edit_taxonomy_server.R:661</code></td>
+</tr>
+<tr>
+<td><code>empty_patterns</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_taxonomy_server.R:880</code>, <code>mod_edit_taxonomy_server.R:969</code></td>
+</tr>
+<tr>
+<td><code>export_meta_csv</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:215</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_otu</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:219</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_refseq_fasta</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:232</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_tax</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:223</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>export_tree_nwk</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:236</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>import_meta_file</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:563</code></td>
+</tr>
+<tr>
+<td><code>import_otu_file</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:564</code></td>
+</tr>
+<tr>
+<td><code>import_refseq_file</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:566</code></td>
+</tr>
+<tr>
+<td><code>import_tax_file</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:565</code></td>
+</tr>
+<tr>
+<td><code>import_tree_file</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:567</code></td>
+</tr>
+<tr>
+<td><code>meta_file</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_edit_metadata_ui.R:212</code></td>
+<td><code>mod_edit_metadata_server.R:765</code>, <code>mod_edit_metadata_server.R:766</code>, <code>mod_edit_metadata_server.R:802</code></td>
+</tr>
+<tr>
+<td><code>meta_table_editable_cell_edit</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_metadata_server.R:379</code>, <code>mod_edit_metadata_server.R:380</code></td>
+</tr>
+<tr>
+<td><code>new_col</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_edit_metadata_ui.R:154</code></td>
+<td><code>mod_edit_metadata_server.R:454</code>, <code>mod_edit_otu_server.R:549</code>, <code>mod_edit_taxonomy_server.R:585</code></td>
+</tr>
+<tr>
+<td><code>otu_csv_row_names</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_otu_server.R:816</code></td>
+</tr>
+<tr>
+<td><code>otu_csv_sep</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_edit_otu_ui.R:217</code></td>
+<td><code>mod_edit_otu_server.R:784</code>, <code>mod_edit_otu_server.R:815</code>, <code>mod_edit_otu_server.R:883</code></td>
+</tr>
+<tr>
+<td><code>otu_file</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_edit_otu_ui.R:213</code></td>
+<td><code>mod_edit_otu_server.R:777</code>, <code>mod_edit_otu_server.R:778</code>, <code>mod_edit_otu_server.R:809</code></td>
+</tr>
+<tr>
+<td><code>otu_table_editable_cell_edit</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_otu_server.R:506</code>, <code>mod_edit_otu_server.R:507</code></td>
+</tr>
+<tr>
+<td><code>preview_replace_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_taxonomy_ui.R:233</code></td>
+<td><code>mod_edit_taxonomy_server.R:877</code>, <code>mod_edit_taxonomy_server.R:1005</code></td>
+</tr>
+<tr>
+<td><code>rename_asv_prefix</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_edit_otu_ui.R:180</code></td>
+<td><code>mod_edit_otu_server.R:891</code></td>
+</tr>
+<tr>
+<td><code>rename_col_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:198</code></td>
+<td><code>mod_edit_metadata_server.R:296</code></td>
+</tr>
+<tr>
+<td><code>rename_new_col</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_edit_metadata_ui.R:189</code></td>
+<td><code>mod_edit_metadata_server.R:300</code></td>
+</tr>
+<tr>
+<td><code>rename_old_col</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_edit_metadata_ui.R:180</code></td>
+<td><code>mod_edit_metadata_server.R:238</code>, <code>mod_edit_metadata_server.R:299</code></td>
+</tr>
+<tr>
+<td><code>replace_value</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_edit_taxonomy_ui.R:224</code></td>
+<td><code>mod_edit_taxonomy_server.R:881</code>, <code>mod_edit_taxonomy_server.R:970</code></td>
+</tr>
+<tr>
+<td><code>reset_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:170</code></td>
+<td><code>mod_edit_metadata_server.R:689</code>, <code>mod_edit_otu_server.R:763</code>, <code>mod_edit_taxonomy_server.R:800</code></td>
+</tr>
+<tr>
+<td><code>save_label</code></td>
+<td><code>textInput</code></td>
+<td><code>mod_dataedition_main_ui.R:156</code></td>
+<td><code>mod_dataedition_main_server.R:276</code>, <code>mod_dataedition_main_server.R:300</code></td>
+</tr>
+<tr>
+<td><code>save_to_registry</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_dataedition_main_ui.R:165</code></td>
+<td><code>mod_dataedition_main_server.R:294</code></td>
+</tr>
+<tr>
+<td><code>selected_dataset</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_main_server.R:218</code>, <code>mod_dataedition_main_server.R:232</code></td>
+</tr>
+<tr>
+<td><code>sort_by_asv</code></td>
+<td><code>checkboxInput</code></td>
+<td><code>mod_edit_otu_ui.R:252</code></td>
+<td><code>mod_edit_otu_server.R:474</code>, <code>mod_edit_otu_server.R:514</code>, <code>mod_edit_taxonomy_server.R:515</code>, <code>mod_edit_taxonomy_server.R:552</code></td>
+</tr>
+<tr>
+<td><code>tables_to_remove</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:619</code></td>
+</tr>
+<tr>
+<td><code>tax_csv_row_names</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_taxonomy_server.R:825</code></td>
+</tr>
+<tr>
+<td><code>tax_csv_sep</code></td>
+<td><code>selectInput</code></td>
+<td><code>mod_edit_taxonomy_ui.R:266</code></td>
+<td><code>mod_edit_taxonomy_server.R:824</code>, <code>mod_edit_taxonomy_server.R:1102</code></td>
+</tr>
+<tr>
+<td><code>tax_file</code></td>
+<td><code>fileInput</code></td>
+<td><code>mod_edit_taxonomy_ui.R:258</code></td>
+<td><code>mod_edit_taxonomy_server.R:818</code></td>
+</tr>
+<tr>
+<td><code>tax_table_editable_cell_edit</code></td>
+<td><code>server-only / dynamic</code></td>
+<td></td>
+<td><code>mod_edit_taxonomy_server.R:545</code>, <code>mod_edit_taxonomy_server.R:548</code></td>
+</tr>
+<tr>
+<td><code>undo_btn</code></td>
+<td><code>actionButton</code></td>
+<td><code>mod_edit_metadata_ui.R:165</code></td>
+<td><code>mod_edit_metadata_server.R:679</code>, <code>mod_edit_otu_server.R:753</code>, <code>mod_edit_taxonomy_server.R:789</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-4">4. Shiny outputs<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Widget</th>
+<th>UI Source</th>
+<th>Server references</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>add_feedback</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:552</code></td>
+</tr>
+<tr>
+<td><code>asv_axis_info</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_edit_otu_ui.R:203</code></td>
+<td><code>mod_edit_otu_server.R:863</code></td>
+</tr>
+<tr>
+<td><code>export_meta_csv</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:215</code></td>
+<td><code>mod_dataedition_input_tables_server.R:116</code></td>
+</tr>
+<tr>
+<td><code>export_otu</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:219</code></td>
+<td><code>mod_dataedition_input_tables_server.R:162</code></td>
+</tr>
+<tr>
+<td><code>export_refseq_fasta</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:232</code></td>
+<td><code>mod_dataedition_input_tables_server.R:243</code></td>
+</tr>
+<tr>
+<td><code>export_tax</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:223</code></td>
+<td><code>mod_dataedition_input_tables_server.R:202</code></td>
+</tr>
+<tr>
+<td><code>export_tree_nwk</code></td>
+<td><code>downloadButton</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:236</code></td>
+<td><code>mod_dataedition_input_tables_server.R:272</code></td>
+</tr>
+<tr>
+<td><code>full_history_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_main_server.R:253</code></td>
+</tr>
+<tr>
+<td><code>global_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_main_server.R:263</code></td>
+</tr>
+<tr>
+<td><code>meta_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_edit_metadata_server.R:871</code></td>
+</tr>
+<tr>
+<td><code>meta_table_editable</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_edit_metadata_ui.R:257</code></td>
+<td><code>mod_edit_metadata_server.R:357</code></td>
+</tr>
+<tr>
+<td><code>otu_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_edit_otu_server.R:870</code></td>
+</tr>
+<tr>
+<td><code>otu_table_editable</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_edit_otu_ui.R:261</code></td>
+<td><code>mod_edit_otu_server.R:468</code></td>
+</tr>
+<tr>
+<td><code>remove_feedback</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_input_tables_server.R:782</code></td>
+</tr>
+<tr>
+<td><code>replace_preview_ui</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_edit_taxonomy_ui.R:249</code></td>
+<td><code>mod_edit_taxonomy_server.R:1009</code></td>
+</tr>
+<tr>
+<td><code>save_label_warning</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_main_server.R:273</code></td>
+</tr>
+<tr>
+<td><code>summary_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_dataedition_main_server.R:243</code></td>
+</tr>
+<tr>
+<td><code>tax_log</code></td>
+<td><code>rendered output</code></td>
+<td></td>
+<td><code>mod_edit_taxonomy_server.R:1107</code></td>
+</tr>
+<tr>
+<td><code>tax_table_editable</code></td>
+<td><code>DTOutput</code></td>
+<td><code>mod_edit_taxonomy_ui.R:310</code></td>
+<td><code>mod_edit_taxonomy_server.R:512</code></td>
+</tr>
+<tr>
+<td><code>ui_remove_tables</code></td>
+<td><code>uiOutput</code></td>
+<td><code>mod_dataedition_input_tables_ui.R:247</code></td>
+<td><code>mod_dataedition_input_tables_server.R:593</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-5">5. Validation और integrity guard<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Function</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active synchronization</td>
+<td><code>bcr_bind_active_picker()</code></td>
+<td>Data Edition picker को global active dataset से जोड़ता है।</td>
+</tr>
+<tr>
+<td>Immediate application</td>
+<td><code>apply_*()</code> functions</td>
+<td>हर action पर phyloseq component और datasets() पुनर्लिखे जाते हैं।</td>
+</tr>
+<tr>
+<td>Audit trail</td>
+<td><code>add_edit_log()</code></td>
+<td>Previous object का full snapshot रखे बिना descriptive entry जोड़ता है।</td>
+</tr>
+<tr>
+<td>Numeric OTU</td>
+<td>matrix/numeric conversion</td>
+<td>Non-convertible values NA बनते हैं और warning आती है।</td>
+</tr>
+<tr>
+<td>RefSeq / tree</td>
+<td>post-OTU realignment</td>
+<td>सभी taxa cover न होने पर component reorder या remove होता है।</td>
+</tr>
+<tr>
+<td>Full import</td>
+<td>fileInput handlers</td>
+<td>File चुनते ही selected slot replace होता है, general preview नहीं है।</td>
+</tr>
+<tr>
+<td>Registry save</td>
+<td><code>save_to_registry</code></td>
+<td>Registry entry copy/overwrite करता है; project disk पर persist नहीं करता।</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-6">6. आंतरिक functions<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<h3 id="section-6-1">6.1. General<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mod_dataedition_main_server()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>3</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>13</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>57</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>log_append()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>163</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mod_edit_metadata_server()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>1</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>9</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_issue_list()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>56</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>62</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect_meta_empty_issues()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>126</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>is_numeric_like()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>152</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>apply_meta()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>160</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect_delimiter()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>702</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>strip_quoted()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>714</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mode_value()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>719</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>score_one()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>724</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sep_label()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>758</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mod_edit_otu_server()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>1</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>8</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_issue_list()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>56</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>62</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>get_refseq_aligned()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>84</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect_delimiter()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>151</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>strip_quoted()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>161</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mode_value()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>166</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>score_one()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>171</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sep_label()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>191</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect_otu_issues()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>198</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>align_refseq_to_taxa()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>290</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>align_tree_to_taxa()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>319</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>apply_otu()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>350</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>asv_order_natural()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>460</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mod_edit_taxonomy_server()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>3</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>11</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_issue_list()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>61</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>67</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_report_table()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>88</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect_tax_issues()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>162</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>ensure_tax_edit_confirmed()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>176</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>rename_rows()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>393</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>apply_tax()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>451</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>extract_asv_num()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>497</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>order_asv_natural()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>502</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>mod_dataedition_input_tables_server()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>3</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>10</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>tr_tokens()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>15</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_code_chip_list()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>67</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>detect.sep()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>100</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>do_import()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>305</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_bind_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>30</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_follow_active_picker()</code></td>
+<td><code>modules/_shared/_active_dataset_sync.R</code></td>
+<td>51</td>
+<td>General layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_make_unique_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>35</td>
+<td>General layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-2">6.2. UI / rendering<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>28</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>50</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_log_line()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>68</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_full_history_html()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>111</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_summary_html()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>122</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>24</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>74</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>24</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>74</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>29</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>79</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>compute_replace_preview()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>215</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_replace_modal_body()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>293</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>build_modal_shell()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>35</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_modal_info_box()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>75</td>
+<td>UI / rendering layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-6-3">6.3. Validation / formatting<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Source</th>
+<th>पंक्ति</th>
+<th>भूमिका</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fmt_dim()</code></td>
+<td><code>modules/dataedition/mod_dataedition_main_server.R</code></td>
+<td>75</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sanitize_metadata()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>83</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>check_colname_compatibility()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>247</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_safe_name()</code></td>
+<td><code>modules/dataedition/edit_metadata/mod_edit_metadata_server.R</code></td>
+<td>271</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>check_colname_compatibility()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>107</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_safe_name()</code></td>
+<td><code>modules/dataedition/edit_otu/mod_edit_otu_server.R</code></td>
+<td>128</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>sanitize_metadata()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>108</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>check_colname_compatibility()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>119</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>make_safe_name()</code></td>
+<td><code>modules/dataedition/edit_taxonomy/mod_edit_taxonomy_server.R</code></td>
+<td>140</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>log_safe()</code></td>
+<td><code>modules/dataedition/input_tables/mod_dataedition_input_tables_server.R</code></td>
+<td>83</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+<tr>
+<td><code>bcr_clean_label()</code></td>
+<td><code>modules/_shared/_dataset_naming.R</code></td>
+<td>25</td>
+<td>Validation / formatting layer का internal helper।</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. स्रोत फ़ाइलें</a><a class="toc-l2" href="#section-2">2. आर्किटेक्चर और मुख्य डेटा प्रवाह</a><a class="toc-l3" href="#section-2-1">2.1. Reactive state और memory</a><a class="toc-l3" href="#section-2-2">2.2. Traceability chains</a><a class="toc-l2" href="#section-3">3. Shiny inputs</a><a class="toc-l2" href="#section-4">4. Shiny outputs</a><a class="toc-l2" href="#section-5">5. Validation और integrity guard</a><a class="toc-l2" href="#section-6">6. आंतरिक functions</a><a class="toc-l3" href="#section-6-1">6.1. General</a><a class="toc-l3" href="#section-6-2">6.2. UI / rendering</a><a class="toc-l3" href="#section-6-3">6.3. Validation / formatting</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · डेटा संपादन</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

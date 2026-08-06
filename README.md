@@ -38,6 +38,19 @@ Rscript scripts/generate_public_data_figures.R
 
 Required R packages: `phyloseq` and `ggplot2`.
 
+## Update the embedded BarCodeR documentation
+
+The website publishes the generated BarCodeR documentation from
+`public/documentation/`. Synchronize it after regenerating the documentation in
+the Shiny application:
+
+```powershell
+python scripts/sync_barcoder_documentation.py ../BarCodeR_app/www/documentation
+```
+
+The script validates the bundle, replaces the previous copy and adapts the
+embedded navigation without modifying the source documentation.
+
 ## Run the website locally
 
 ```powershell

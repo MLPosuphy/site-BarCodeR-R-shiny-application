@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>डेटासेट — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="datasets" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link active" href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">डेटासेट</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">डेटासेट — पद्धति संबंधी मार्गदर्शिकाएँ</h1>
+<h2 id="section-1">1. सामान्य परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Datasets</strong> टैब BarCodeR में दो अलग स्तरों का प्रबंधन करता है:</p>
+<ol>
+<li><strong>Memory में datasets</strong>: current session में उपलब्ध named <code>phyloseq</code> objects।</li>
+<li><strong>Persistent projects</strong>: disk पर सुरक्षित workspaces, जिनमें datasets, active dataset, interface state, figure histories और module files हो सकते हैं।</li>
+</ol>
+<p>Dataset actions से active object चुनना, rename करना, notes और tags जोड़ना, duplicate करना, order बदलना, export करना और memory से हटाना संभव है। Project actions से save, restore, create, open, rename, duplicate, export, import और delete किया जाता है।</p>
+<h2 id="section-2">2. आवश्यक परिभाषाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. Dataset<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>Dataset reactive named list की एक entry है:</p>
+<pre tabindex="0"><code class="language-r">datasets()
+</code></pre>
+<p>हर entry सामान्यतः एक <code>phyloseq</code> object होती है। उसका list name पूरी application में identifier के रूप में उपयोग होता है।</p>
+<h3 id="section-2-2">2.2. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>Active dataset अलग से यहाँ रखा जाता है:</p>
+<pre tabindex="0"><code class="language-r">active_ds()
+</code></pre>
+<p>यह global default के रूप में चुने गए object का केवल नाम है; object की अतिरिक्त copy नहीं।</p>
+<h3 id="section-2-3">2.3. Dataset registry<a aria-label="Permalink" class="heading-anchor" href="#section-2-3">#</a></h3>
+<p>Registry current in-memory list है, जिसमें names, order, attributes और active name शामिल हैं। यह disk पर last saved version से automatically synchronized नहीं रहती।</p>
+<h3 id="section-2-4">2.4. Session<a aria-label="Permalink" class="heading-anchor" href="#section-2-4">#</a></h3>
+<p>Session browser में application की current state है। Registry changes पहले memory में लागू होते हैं। Application बंद करने या पुरानी save restore करने पर unsaved changes खो सकते हैं।</p>
+<h3 id="section-2-5">2.5. Project<a aria-label="Permalink" class="heading-anchor" href="#section-2-5">#</a></h3>
+<p>Project यहाँ store होता है:</p>
+<pre tabindex="0"><code class="language-text">save/projects/&lt;internal-project-id&gt;/
+</code></pre>
+<p>इसमें <code>registry.rds</code>, <code>manifest.rds</code>, <code>ui_state.rds</code> और <code>barplot/</code>, <code>alpha_div/</code>, <code>Ordination/</code>, <code>DAA/</code>, <code>Analyse/</code>, <code>multiview/</code> जैसे module folders हो सकते हैं।</p>
+<h2 id="section-3">3. Dataset और project में अंतर<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>गुण</th>
+<th style="text-align:right">Dataset</th>
+<th style="text-align:right">Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>phyloseq object रखता है</td>
+<td style="text-align:right">हाँ</td>
+<td style="text-align:right">एक या कई</td>
+</tr>
+<tr>
+<td>Active हो सकता है</td>
+<td style="text-align:right">हाँ</td>
+<td style="text-align:right">हाँ, current project के रूप में</td>
+</tr>
+<tr>
+<td>Figure histories रखता है</td>
+<td style="text-align:right">नहीं</td>
+<td style="text-align:right">हाँ</td>
+</tr>
+<tr>
+<td>केवल memory से हटाया जा सकता है</td>
+<td style="text-align:right">हाँ</td>
+<td style="text-align:right">नहीं</td>
+</tr>
+<tr>
+<td>Disk से physically delete हो सकता है</td>
+<td style="text-align:right">Dataset delete action से नहीं</td>
+<td style="text-align:right">हाँ</td>
+</tr>
+</tbody>
+</table></div>
+<p>इसलिए dataset delete करना और project delete करना पूरी तरह अलग operations हैं।</p>
+<h2 id="section-4">4. टैब की संरचना<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>टैब में तीन मुख्य क्षेत्र हैं:</p>
+<ol>
+<li>global active dataset;</li>
+<li>dataset registry;</li>
+<li>projects।</li>
+</ol>
+<h2 id="section-5">5. Global active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Selector की भूमिका<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>चुना गया dataset Description, Data Edition, Filtration, Exploration और Analysis के लिए default working object बनता है।</p>
+<h3 id="section-5-2">5.2. Synchronization<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>Selector <code>active_ds()</code> और अन्य global dataset selectors के साथ synchronized रहता है।</p>
+<h3 id="section-5-3">5.3. Modules में local selection<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>कुछ modules अस्थायी रूप से कोई दूसरा dataset चुन सकते हैं। Operation चलाने से पहले global selector और module-specific selector दोनों जाँचें।</p>
+<h3 id="section-5-4">5.4. Active dataset बदलने का प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>यह बदलाव data edit, filter, copy या delete नहीं करता। केवल global reference बदलता है, लेकिन project को unsaved mark करता है क्योंकि active name project में persist होता है।</p>
+<h2 id="section-6">6. Memory में कोई dataset नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Registry empty होने पर Input data से object load करें, OpenMetaBar से phyloseq import करें, saved project खोलें, project archive import करें या previous registry restore करें।</p>
+<h2 id="section-7">7. Dataset registry<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Table <code>datasets()</code> में current memory की हर entry के लिए एक row दिखाती है। यह disk files को सीधे scan नहीं करती।</p>
+<h2 id="section-8">8. Registry columns<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. Active state<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>Star active dataset दिखाता है; circle inactive dataset। यह icon quality, filtration या save status नहीं बताता।</p>
+<h3 id="section-8-2">8.2. Name<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>Name selectors, reports, exports, histories, lineage attributes, legends और कुछ filenames में key के रूप में उपयोग होता है।</p>
+<h3 id="section-8-3">8.3. ASV<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>दिखाया गया value यहाँ से आता है:</p>
+<pre tabindex="0"><code class="language-r">phyloseq::ntaxa()
+</code></pre>
+<p>यह taxa की संख्या है। Source workflow के अनुसार units ASV, OTU, ZOTU या कोई अन्य unit हो सकती हैं।</p>
+<h3 id="section-8-4">8.4. Samples<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>दिखाया गया value यहाँ से आता है:</p>
+<pre tabindex="0"><code class="language-r">phyloseq::nsamples()
+</code></pre>
+<h3 id="section-8-5">8.5. Provenance<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<ul>
+<li><strong>Loaded</strong>: recognized filtration या OpenMetaBar provenance attribute नहीं।</li>
+<li><strong>OpenMetaBar</strong>: object में <code>openmetabar_run</code> है।</li>
+<li><strong>Filtered</strong>: <code>filtration_log</code> में named parent है।</li>
+</ul>
+<p>Filtered provenance की priority OpenMetaBar से अधिक है।</p>
+<h3 id="section-8-6">8.6. Parent<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>Parent name यहाँ से आता है:</p>
+<pre tabindex="0"><code class="language-r">filtration_log$parent_dataset
+</code></pre>
+<p>यह stored string है, live object link नहीं। Parent rename या delete होने पर BarCodeR recognized descendants में इसे update करता है।</p>
+<h3 id="section-8-7">8.7. Note और tags<a aria-label="Permalink" class="heading-anchor" href="#section-8-7">#</a></h3>
+<p>ये attribute में store होते हैं:</p>
+<pre tabindex="0"><code class="language-r">list(note = "...", tags = c("tag1", "tag2"))
+</code></pre>
+<p>Individual exports, duplicates और project saves में ये साथ रहते हैं।</p>
+<h3 id="section-8-8">8.8. Modified<a aria-label="Permalink" class="heading-anchor" href="#section-8-8">#</a></h3>
+<p>Date पहले latest <code>edit_log</code> entry से, फिर <code>filtration_log</code> से ली जाती है। Rename, notes, tags, order और active selection इस date को जरूरी नहीं update करें।</p>
+<h3 id="section-8-9">8.9. Actions<a aria-label="Permalink" class="heading-anchor" href="#section-8-9">#</a></h3>
+<p>हर row को activate, edit, duplicate, export, ऊपर/नीचे move या memory से delete किया जा सकता है।</p>
+<h2 id="section-9">9. Registry refresh करना<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><strong>Refresh</strong> current reactive objects से visible table rebuild करता है। यह <code>registry.rds</code> नहीं पढ़ता, projects scan नहीं करता और data restore नहीं करता।</p>
+<h2 id="section-10">10. Dataset को active बनाना<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Row activate करने से <code>active_ds()</code> update होता है, global selectors synchronize होते हैं और project modified mark होता है। Restart के बाद selection रखने के लिए project save करें।</p>
+<h2 id="section-11">11. Dataset edit करना<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Edit dialog में dataset name, free-text note और comma-separated tags होते हैं।</p>
+<h2 id="section-12">12. Dataset rename करना<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Name cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p><code>bcr_clean_label()</code> outer spaces हटाता है, unsafe characters को <code>_</code> से बदलता है, edge underscores हटाता है और empty result पर <code>dataset</code> उपयोग करता है।</p>
+<h3 id="section-12-2">12.2. Non-ASCII characters<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Cleaning partly R locale पर निर्भर है। Maximum portability के लिए ASCII letters, digits, <code>_</code> और <code>-</code> उपयोग करें।</p>
+<h3 id="section-12-3">12.3. Name collision<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>Name पहले से होने पर <code>_2</code>, <code>_3</code> जैसा suffix जुड़ता है। Existing object silently overwrite नहीं होता।</p>
+<h3 id="section-12-4">12.4. Active dataset update<a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>Renamed dataset active था तो <code>active_ds()</code> final name पर update होता है।</p>
+<h3 id="section-12-5">12.5. Filtered descendants<a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>Recognized descendants में <code>parent_dataset</code> नया parent name प्राप्त करता है।</p>
+<h3 id="section-12-6">12.6. क्या rename नहीं होता<a aria-label="Permalink" class="heading-anchor" href="#section-12-6">#</a></h3>
+<p>पहले exported files, source RDS, old figures, old reports, project name और project slug rename नहीं होते।</p>
+<h2 id="section-13">13. Note जोड़ना<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>Note processing, limitations, database version, validation status या intended use document कर सकती है। यह phyloseq object के अंदर store होती है। Note बदलने से Modified date जरूरी नहीं बदले।</p>
+<h2 id="section-14">14. Tags जोड़ना<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Tags comma पर split और trim होते हैं। Empty tags हटते हैं, लेकिन duplicates और capitalization differences बने रहते हैं। Consistent convention उपयोग करें।</p>
+<h2 id="section-15">15. <code>dataset_meta</code> attribute<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Edit save करते समय <code>dataset_meta</code> केवल <code>note</code> और <code>tags</code> वाली list से replace होता है। उस attribute में पहले से मौजूद अन्य custom fields खो सकते हैं।</p>
+<h2 id="section-16">16. Dataset duplicate करना<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<h3 id="section-16-1">16.1. Proposed name<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>Default name <code>&lt;name&gt;_copy</code> है, जरूरत पर numeric suffix जुड़ता है।</p>
+<h3 id="section-16-2">16.2. Copied content<a aria-label="Permalink" class="heading-anchor" href="#section-16-2">#</a></h3>
+<p>पूरा object copy होता है: abundance table, metadata, taxonomy, sequences, tree, logs, provenance, note, tags और अन्य attributes।</p>
+<h3 id="section-16-3">16.3. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-16-3">#</a></h3>
+<p>नई copy active बनती है।</p>
+<h3 id="section-16-4">16.4. बाद की independence<a aria-label="Permalink" class="heading-anchor" href="#section-16-4">#</a></h3>
+<p>इसके बाद दोनों registry entries independently edit होती हैं।</p>
+<h3 id="section-16-5">16.5. Provenance<a aria-label="Permalink" class="heading-anchor" href="#section-16-5">#</a></h3>
+<p>Duplication “copy” provenance नहीं बनाती। Copy source के provenance attributes और parent रखती है।</p>
+<h2 id="section-17">17. Dataset order बदलना<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Up/down arrows list order बदलते हैं। इससे selectors, multi-dataset operations और fallback selection प्रभावित हो सकते हैं। Order project save होने पर ही persistent होता है।</p>
+<h2 id="section-18">18. Individual dataset export करना<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Row export current phyloseq object को इस तरह के file में लिखता है:</p>
+<pre tabindex="0"><code class="language-text">dataset_&lt;name&gt;_&lt;timestamp&gt;.rds
+</code></pre>
+<p>इसमें object components और attributes होते हैं, लेकिन other datasets, project figures, module histories, raw FASTQ, OpenMetaBar remote run folders या original taxonomy database नहीं। इसे Input data से reimport करें।</p>
+<h2 id="section-19">19. Session से dataset हटाना<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. Immediate effects<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>Object <code>datasets()</code> से हटता है, selectors से गायब होता है और current session में unavailable हो जाता है। Project unsaved mark होता है।</p>
+<h3 id="section-19-2">19.2. Active dataset हटाना<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>पहला remaining dataset active बनता है; कोई dataset न बचे तो <code>active_ds()</code> empty होता है।</p>
+<h3 id="section-19-3">19.3. Filtered descendants<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>Deleted dataset parent था तो descendants का <code>parent_dataset</code> clear होता है। Filtered badge non-empty parent पर निर्भर होने के कारण visible provenance बदल सकती है।</p>
+<h3 id="section-19-4">19.4. केवल memory<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>Last saved registry तुरंत नहीं बदलता। Disk से restore करने पर dataset फिर आ सकता है।</p>
+<h3 id="section-19-5">19.5. Deletion persistent बनाना<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>Row delete करें, registry जाँचें और <strong>Save project</strong> करें।</p>
+<h3 id="section-19-6">19.6. Last dataset delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-19-6">#</a></h3>
+<p>Quick save empty registry को refuse करता है। इसलिए पुराना non-empty <code>registry.rds</code> disk पर रह सकता है। वास्तव में empty persistent workspace के लिए नया project बनाएँ।</p>
+<h2 id="section-20">20. Unsaved changes state<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p><code>datasets()</code> या <code>active_ds()</code> बदलने पर project modified mark होता है। यह indicator मुख्यतः registry और active name track करता है; सभी module files का complete audit नहीं।</p>
+<h2 id="section-21">21. Projects section<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Project manager current persistent workspace, save, restore, creation, exports, imports और project list नियंत्रित करता है।</p>
+<h2 id="section-22">22. Current project<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Current slug यहाँ store होता है:</p>
+<pre tabindex="0"><code class="language-text">save/projects/.current
+</code></pre>
+<p>Startup पर BarCodeR इसे reopen करने की कोशिश करता है। उपलब्ध न होने पर <code>sans-titre</code> उपयोग करता है।</p>
+<h2 id="section-23">23. Display name और internal slug<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Project का display name, ASCII-safe internal slug और disk folder होता है। Rename केवल display name बदलता है; slug और paths स्थिर रहते हैं।</p>
+<h2 id="section-24">24. Project disk structure<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<h3 id="section-24-1">24.1. <code>registry.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Datasets, order, active dataset और format metadata store करता है।</p>
+<h3 id="section-24-2">24.2. <code>manifest.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Display name, creation/modification dates और saved dataset count रखता है।</p>
+<h3 id="section-24-3">24.3. <code>ui_state.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Main tab, sub-tabs और restorable interface parameters रख सकता है।</p>
+<h3 id="section-24-4">24.4. Module folders<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>Modules अपने folders में figures, R objects, parameters और history metadata save कर सकते हैं।</p>
+<h2 id="section-25">25. Project में automatically क्या शामिल नहीं होता<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Project सभी scientific inputs की complete copy नहीं है। Raw FASTQ/BAM, reference FASTA, taxonomy databases, OpenMetaBar designs, remote results, external scripts और tool databases अलग archive करने चाहिए।</p>
+<h2 id="section-26">26. Project save करना<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<h3 id="section-26-1">26.1. Saved content<a aria-label="Permalink" class="heading-anchor" href="#section-26-1">#</a></h3>
+<p>Dataset list, order, complete objects/attributes, active dataset, manifest count और available UI state save होते हैं।</p>
+<h3 id="section-26-2">26.2. Figure histories<a aria-label="Permalink" class="heading-anchor" href="#section-26-2">#</a></h3>
+<p>Histories सामान्यतः modules सीधे लिखते हैं। Save action मुख्यतः dataset registry synchronize करता है।</p>
+<h3 id="section-26-3">26.3. Empty project<a aria-label="Permalink" class="heading-anchor" href="#section-26-3">#</a></h3>
+<p>कोई dataset न होने पर save refuse होता है।</p>
+<h3 id="section-26-4">26.4. Empty overwrite protection<a aria-label="Permalink" class="heading-anchor" href="#section-26-4">#</a></h3>
+<p>Non-empty saved registry को empty memory से overwrite होने से बचाया जाता है, जैसे failed load के बाद।</p>
+<h3 id="section-26-5">26.5. Success<a aria-label="Permalink" class="heading-anchor" href="#section-26-5">#</a></h3>
+<p>Successful save unsaved flag clear करता है और project metadata update करता है।</p>
+<h2 id="section-27">27. Available save status<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>दिखाया गया timestamp <code>registry.rds</code> modification time है; जरूरी नहीं कि यह last figure, analysis या history file का समय हो।</p>
+<h2 id="section-28">28. Disk से reload करना<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Reload current memory के सभी datasets को <code>registry.rds</code> से replace करता है; merge नहीं करता। Unsaved imports, edits, deletions, filters, notes, tags, order और active selection खो सकते हैं।</p>
+<h2 id="section-29">29. Save नहीं मिला<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p><code>registry.rds</code> न होने का अर्थ नया project, figures-only project, never-saved project, manually deleted file या partial import हो सकता है।</p>
+<h2 id="section-30">30. Unreadable save<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p><code>registry.rds</code> न पढ़ने पर project empty memory और warning के साथ खुल सकता है। BarCodeR unreadable file को empty registry से silently overwrite होने से बचाता है। Recovery से पहले project folder copy करें।</p>
+<h2 id="section-31">31. केवल data <code>.rds</code> में export करना<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Export versioned list में <code>datasets()</code> और <code>active_ds()</code> देता है। Figures, histories, manifest, display name, UI state और external files शामिल नहीं होते। इसे Input data से reimport करें।</p>
+<h2 id="section-32">32. Complete project <code>.zip</code> export करना<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>ZIP current project folder रखता है। BarCodeR पहले in-memory registry save करने की कोशिश करता है। Save fail होने पर archive में current memory के बजाय disk का last valid registry हो सकता है। Notifications पढ़ें।</p>
+<h2 id="section-33">33. Size warning<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>200 MB से ऊपर warning आती है। Size सभी project files शामिल करता है और थोड़े समय के लिए cached हो सकता है। Upload limit 500 MB है; इससे बड़ा ZIP export हो सकता है लेकिन interface से reimport नहीं।</p>
+<h2 id="section-34">34. Project <code>.zip</code> import करना<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>Archive हमेशा <strong>नए project</strong> के रूप में extract होता है और current project में merge नहीं होता। Import के बाद project list से खोलें। BarCodeR <code>registry.rds</code>, <code>manifest.rds</code> या known history folders पहचानता है; figures-only project zero datasets के साथ import हो सकता है।</p>
+<h2 id="section-35">35. नया project बनाना<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>Folder और manifest बनते हैं, current project normal save/switch workflow में जाता है, नया project current बनता है और application reload होती है। Empty या duplicate names refuse होते हैं।</p>
+<h2 id="section-36">36. दूसरा project खोलना<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<p>BarCodeR current project save करने की कोशिश करता है, नया slug <code>.current</code> में लिखता है, session reload करता है और modules को नए paths से initialize करता है। Save error हमेशा switch नहीं रोकता, इसलिए red notifications ignore न करें।</p>
+<h2 id="section-37">37. Multiple BarCodeR browser tabs<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Current project R process level पर shared है। Other tabs पुराने project paths रखकर files गलत जगह लिख सकते हैं। Project switch से पहले save करें और अन्य BarCodeR tabs बंद करें।</p>
+<h2 id="section-38">38. Current project rename करना<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<p>केवल display name बदलता है। Slug, directory, histories, datasets और active dataset नहीं बदलते। पहले से उपयोग name refuse होता है।</p>
+<h2 id="section-39">39. Project list<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<p>Projects manifest की latest modification date से sort होते हैं। Dataset count saved registry दिखाता है, जरूरी नहीं current unsaved memory।</p>
+<h2 id="section-40">40. Project duplicate करना<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>पूरा project folder copy होता है: registry, manifest, UI state, datasets, figures और histories। Current project duplicate करने से पहले manual save करें क्योंकि internal pre-save result strictly blocking नहीं।</p>
+<h2 id="section-41">41. Project delete करना<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>केवल closed project delete हो सकता है। पूरा <code>save/projects/&lt;slug&gt;/</code> permanently हटता है; internal trash नहीं। पहले ZIP export करें।</p>
+<h2 id="section-42">42. तीन exports का अंतर<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Content</th>
+<th style="text-align:right">Figures</th>
+<th>Reimport</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Individual dataset <code>.rds</code></td>
+<td>एक phyloseq</td>
+<td style="text-align:right">नहीं</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Project data <code>.rds</code></td>
+<td>Dataset list + active name</td>
+<td style="text-align:right">नहीं</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Complete project <code>.zip</code></td>
+<td>Project folder</td>
+<td style="text-align:right">हाँ</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-43">43. Projects और OpenMetaBar data<a aria-label="Permalink" class="heading-anchor" href="#section-43">#</a></h2>
+<p>Phyloseq import remote OpenMetaBar run directory copy नहीं करता। Raw reads, Nextflow logs, <code>work/</code>, containers, reference databases और cluster outputs अलग archive करें।</p>
+<h2 id="section-44">44. Projects और figure histories<a aria-label="Permalink" class="heading-anchor" href="#section-44">#</a></h2>
+<p>केवल module history में वास्तव में stored figures project में guaranteed हैं। केवल screen पर displayed plot archive नहीं हो सकता।</p>
+<h2 id="section-45">45. Physical location<a aria-label="Permalink" class="heading-anchor" href="#section-45">#</a></h2>
+<p>Projects <code>&lt;BarCodeR-working-directory&gt;/save/projects/</code> में हैं। Docker/server deployment में persistent storage जरूरी है। Shared installation में privacy permissions, authentication और deployment configuration पर निर्भर है।</p>
+<h2 id="section-46">46. Recommended daily workflow<a aria-label="Permalink" class="heading-anchor" href="#section-46">#</a></h2>
+<ol>
+<li>सही project खोलें या बनाएँ।</li>
+<li>Data load करें।</li>
+<li>Registry और active dataset जाँचें।</li>
+<li>उपयोगी notes और tags जोड़ें।</li>
+<li>Major edits से पहले duplicate करें।</li>
+<li>नियमित save करें।</li>
+<li>Critical datasets export करें।</li>
+<li>Complete ZIP को समय-समय पर BarCodeR के बाहर store करें।</li>
+</ol>
+<h2 id="section-47">47. Risky operation से पहले<a aria-label="Permalink" class="heading-anchor" href="#section-47">#</a></h2>
+<p>Filtering, mass editing, deleting, restoring, project switching या application upgrade से पहले project save करें, success verify करें, महत्वपूर्ण dataset export करें, जरूरत पर full project export करें और downloaded files जाँचें।</p>
+<h2 id="section-48">48. समस्या निवारण<a aria-label="Permalink" class="heading-anchor" href="#section-48">#</a></h2>
+<h3 id="section-48-1">48.1. Dataset registry में नहीं दिखता<a aria-label="Permalink" class="heading-anchor" href="#section-48-1">#</a></h3>
+<p>Import completion, current project, deletion और older registry restoration जाँचें।</p>
+<h3 id="section-48-2">48.2. Module गलत dataset उपयोग करता है<a aria-label="Permalink" class="heading-anchor" href="#section-48-2">#</a></h3>
+<p>Global और local selector दोनों जाँचें।</p>
+<h3 id="section-48-3">48.3. Active selection नहीं बचती<a aria-label="Permalink" class="heading-anchor" href="#section-48-3">#</a></h3>
+<p>बदलने के बाद project save करें।</p>
+<h3 id="section-48-4">48.4. Entered name बदल गया<a aria-label="Permalink" class="heading-anchor" href="#section-48-4">#</a></h3>
+<p>Unsafe characters normalize हुए।</p>
+<h3 id="section-48-5">48.5. <code>_2</code> जुड़ा<a aria-label="Permalink" class="heading-anchor" href="#section-48-5">#</a></h3>
+<p>Same final name पहले से था।</p>
+<h3 id="section-48-6">48.6. Modified date नहीं बदली<a aria-label="Permalink" class="heading-anchor" href="#section-48-6">#</a></h3>
+<p>Notes, tags और rename उस date source से नहीं आते।</p>
+<h3 id="section-48-7">48.7. Copy original provenance रखती है<a aria-label="Permalink" class="heading-anchor" href="#section-48-7">#</a></h3>
+<p>Duplication attributes copy करती है।</p>
+<h3 id="section-48-8">48.8. Filtered dataset filtered नहीं दिखता<a aria-label="Permalink" class="heading-anchor" href="#section-48-8">#</a></h3>
+<p>Parent delete हुआ हो सकता है। <code>attr(ps, "filtration_log")</code> देखें।</p>
+<h3 id="section-48-9">48.9. Deleted dataset वापस आया<a aria-label="Permalink" class="heading-anchor" href="#section-48-9">#</a></h3>
+<p>Deletion save नहीं हुई और old registry restore हुई।</p>
+<h3 id="section-48-10">48.10. Empty project save नहीं होता<a aria-label="Permalink" class="heading-anchor" href="#section-48-10">#</a></h3>
+<p>Quick save को कम से कम एक dataset चाहिए। नया project बनाएँ।</p>
+<h3 id="section-48-11">48.11. Reload ने changes हटाए<a aria-label="Permalink" class="heading-anchor" href="#section-48-11">#</a></h3>
+<p>Reload memory को saved registry से replace करता है।</p>
+<h3 id="section-48-12">48.12. Save file नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-48-12">#</a></h3>
+<p>Project ने अभी <code>registry.rds</code> नहीं लिखा।</p>
+<h3 id="section-48-13">48.13. Project empty खुला और registry error है<a aria-label="Permalink" class="heading-anchor" href="#section-48-13">#</a></h3>
+<p>Overwrite न करें। Folder copy करें और external <code>readRDS()</code> test करें।</p>
+<h3 id="section-48-14">48.14. New project name refuse हुआ<a aria-label="Permalink" class="heading-anchor" href="#section-48-14">#</a></h3>
+<p>Name empty या already used है, case/outer spaces ignore करके।</p>
+<h3 id="section-48-15">48.15. Rename के बाद folder पुराना name रखता है<a aria-label="Permalink" class="heading-anchor" href="#section-48-15">#</a></h3>
+<p>Design के अनुसार केवल display name बदलता है।</p>
+<h3 id="section-48-16">48.16. Project open करने पर app reload होती है<a aria-label="Permalink" class="heading-anchor" href="#section-48-16">#</a></h3>
+<p>Module paths reinitialize करने के लिए जरूरी है।</p>
+<h3 id="section-48-17">48.17. दूसरा project खोलते समय save error<a aria-label="Permalink" class="heading-anchor" href="#section-48-17">#</a></h3>
+<p>Switch फिर भी जारी हो सकता है। Previous project दोबारा खोलकर verify करें।</p>
+<h3 id="section-48-18">48.18. Multiple-tab warning<a aria-label="Permalink" class="heading-anchor" href="#section-48-18">#</a></h3>
+<p>Project switch से पहले other tabs बंद करें।</p>
+<h3 id="section-48-19">48.19. Duplicate में latest changes नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-48-19">#</a></h3>
+<p>Duplicate से पहले explicit save करें।</p>
+<h3 id="section-48-20">48.20. Current project delete नहीं होता<a aria-label="Permalink" class="heading-anchor" href="#section-48-20">#</a></h3>
+<p>पहले दूसरा project खोलें।</p>
+<h3 id="section-48-21">48.21. Project deletion fail<a aria-label="Permalink" class="heading-anchor" href="#section-48-21">#</a></h3>
+<p>Permissions, locks, disk errors और target directory जाँचें।</p>
+<h3 id="section-48-22">48.22. ZIP बहुत बड़ा है<a aria-label="Permalink" class="heading-anchor" href="#section-48-22">#</a></h3>
+<p>Unnecessary histories हटाएँ या data-only export करें।</p>
+<h3 id="section-48-23">48.23. ZIP 500 MB से बड़ा है<a aria-label="Permalink" class="heading-anchor" href="#section-48-23">#</a></h3>
+<p><code>shiny.maxRequestSize</code> बढ़ाएँ, archive घटाएँ, project folder सीधे copy करें या external storage उपयोग करें।</p>
+<h3 id="section-48-24">48.24. Imported project open नहीं हुआ<a aria-label="Permalink" class="heading-anchor" href="#section-48-24">#</a></h3>
+<p>List में चुनकर <strong>Open</strong> करें।</p>
+<h3 id="section-48-25">48.25. Archive invalid है<a aria-label="Permalink" class="heading-anchor" href="#section-48-25">#</a></h3>
+<p>ZIP integrity और recognized project markers जाँचें।</p>
+<h3 id="section-48-26">48.26. Imported project में zero datasets हैं<a aria-label="Permalink" class="heading-anchor" href="#section-48-26">#</a></h3>
+<p>इसमें केवल histories हो सकती हैं या registry missing/unreadable है।</p>
+<h3 id="section-48-27">48.27. ZIP में latest data नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-48-27">#</a></h3>
+<p>Pre-export save fail हुई हो सकती है; notifications देखें।</p>
+<h3 id="section-48-28">48.28. Project dataset count गलत लगता है<a aria-label="Permalink" class="heading-anchor" href="#section-48-28">#</a></h3>
+<p>Save और refresh करें; list persisted metadata दिखाती है।</p>
+<h3 id="section-48-29">48.29. Project size देर से update होती है<a aria-label="Permalink" class="heading-anchor" href="#section-48-29">#</a></h3>
+<p>Size calculation थोड़े समय के लिए cached है।</p>
+<h3 id="section-48-30">48.30. Redeployment के बाद projects गायब<a aria-label="Permalink" class="heading-anchor" href="#section-48-30">#</a></h3>
+<p><code>save/projects/</code> को persistent storage पर mount करें।</p>
+<h2 id="section-49">49. Save से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-49">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही project खुला है।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Expected datasets मौजूद हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सही dataset active है।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Names, notes और tags सही हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Deletions और duplicates intentional हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>कोई important operation pending नहीं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>कोई error notification नहीं।</li>
+</ul>
+<h2 id="section-50">50. Project switch से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-50">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Current project save करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Success message verify करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Critical datasets export करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Modals बंद करें और calculations finish करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Other BarCodeR tabs बंद करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Target project name verify करें।</li>
+</ul>
+<h2 id="section-51">51. Dataset delete से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-51">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Exact name और active status जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Filtered descendants जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>जरूरत पर export करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Project archive करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Delete करके नया active dataset verify करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Project save करें।</li>
+</ul>
+<h2 id="section-52">52. Project delete से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-52">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>सुनिश्चित करें कि यह current project नहीं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>ZIP export और verify करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Critical datasets अलग export करें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Raw data और OpenMetaBar outputs कहीं और archived हों।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>इन checks के बाद ही delete करें।</li>
+</ul>
+<h2 id="section-53">53. Recommended backup strategy<a aria-label="Permalink" class="heading-anchor" href="#section-53">#</a></h2>
+<p>कम से कम तीन layers रखें:</p>
+<ol>
+<li>नियमित <strong>Save project</strong>;</li>
+<li>critical datasets के individual RDS exports;</li>
+<li>BarCodeR installation से बाहर stored periodic complete ZIP archives।</li>
+</ol>
+<p>Internal storage अकेला disk loss, redeployment या server failure से सुरक्षा नहीं देता।</p>
+<h2 id="section-54">54. Traceability principles<a aria-label="Permalink" class="heading-anchor" href="#section-54">#</a></h2>
+<p>Explicit project/dataset names, consistent tags, meaningful notes, preserved provenance, major edits से पहले copies, frequent saves, reference exports, recorded BarCodeR versions और separate raw-data archives उपयोग करें।</p>
+<h2 id="section-55">55. Current limitations<a aria-label="Permalink" class="heading-anchor" href="#section-55">#</a></h2>
+<ul>
+<li>Dataset actions पहले memory में होती हैं और save के बाद persistent बनती हैं।</li>
+<li>Empty project quick-save नहीं हो सकता।</li>
+<li>Modified date incomplete है।</li>
+<li>Filtered provenance named parent पर निर्भर है।</li>
+<li>Duplication provenance attributes रखती है।</li>
+<li>Dataset names ASCII guaranteed नहीं।</li>
+<li>Project switching पूरी R instance पर global है।</li>
+<li>Save errors हमेशा switch या duplication नहीं रोकते।</li>
+<li>Save indicator मुख्यतः registry और active dataset track करता है।</li>
+<li>ZIP external scientific files शामिल नहीं करता।</li>
+<li>500 MB से बड़े archives interface से import न हो पाएँ।</li>
+<li><code>save/projects/</code> persistent storage पर होना चाहिए।</li>
+</ul>
+<h2 id="section">सत्यापित आंतरिक स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h2>
+<ol>
+<li><code>modules/datasets/mod_datasets_ui.R</code></li>
+<li><code>modules/datasets/mod_datasets_server.R</code></li>
+<li><code>modules/_shared/_dataset_naming.R</code></li>
+<li><code>modules/_shared/_project_store.R</code></li>
+<li><code>modules/_shared/_ui_state.R</code></li>
+<li><code>app.R</code></li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य परिचय</a><a class="toc-l2" href="#section-2">2. आवश्यक परिभाषाएँ</a><a class="toc-l3" href="#section-2-1">2.1. Dataset</a><a class="toc-l3" href="#section-2-2">2.2. Active dataset</a><a class="toc-l3" href="#section-2-3">2.3. Dataset registry</a><a class="toc-l3" href="#section-2-4">2.4. Session</a><a class="toc-l3" href="#section-2-5">2.5. Project</a><a class="toc-l2" href="#section-3">3. Dataset और project में अंतर</a><a class="toc-l2" href="#section-4">4. टैब की संरचना</a><a class="toc-l2" href="#section-5">5. Global active dataset</a><a class="toc-l3" href="#section-5-1">5.1. Selector की भूमिका</a><a class="toc-l3" href="#section-5-2">5.2. Synchronization</a><a class="toc-l3" href="#section-5-3">5.3. Modules में local selection</a><a class="toc-l3" href="#section-5-4">5.4. Active dataset बदलने का प्रभाव</a><a class="toc-l2" href="#section-6">6. Memory में कोई dataset नहीं</a><a class="toc-l2" href="#section-7">7. Dataset registry</a><a class="toc-l2" href="#section-8">8. Registry columns</a><a class="toc-l3" href="#section-8-1">8.1. Active state</a><a class="toc-l3" href="#section-8-2">8.2. Name</a><a class="toc-l3" href="#section-8-3">8.3. ASV</a><a class="toc-l3" href="#section-8-4">8.4. Samples</a><a class="toc-l3" href="#section-8-5">8.5. Provenance</a><a class="toc-l3" href="#section-8-6">8.6. Parent</a><a class="toc-l3" href="#section-8-7">8.7. Note और tags</a><a class="toc-l3" href="#section-8-8">8.8. Modified</a><a class="toc-l3" href="#section-8-9">8.9. Actions</a><a class="toc-l2" href="#section-9">9. Registry refresh करना</a><a class="toc-l2" href="#section-10">10. Dataset को active बनाना</a><a class="toc-l2" href="#section-11">11. Dataset edit करना</a><a class="toc-l2" href="#section-12">12. Dataset rename करना</a><a class="toc-l3" href="#section-12-1">12.1. Name cleaning</a><a class="toc-l3" href="#section-12-2">12.2. Non-ASCII characters</a><a class="toc-l3" href="#section-12-3">12.3. Name collision</a><a class="toc-l3" href="#section-12-4">12.4. Active dataset update</a><a class="toc-l3" href="#section-12-5">12.5. Filtered descendants</a><a class="toc-l3" href="#section-12-6">12.6. क्या rename नहीं होता</a><a class="toc-l2" href="#section-13">13. Note जोड़ना</a><a class="toc-l2" href="#section-14">14. Tags जोड़ना</a><a class="toc-l2" href="#section-15">15. dataset_meta attribute</a><a class="toc-l2" href="#section-16">16. Dataset duplicate करना</a><a class="toc-l3" href="#section-16-1">16.1. Proposed name</a><a class="toc-l3" href="#section-16-2">16.2. Copied content</a><a class="toc-l3" href="#section-16-3">16.3. Active dataset</a><a class="toc-l3" href="#section-16-4">16.4. बाद की independence</a><a class="toc-l3" href="#section-16-5">16.5. Provenance</a><a class="toc-l2" href="#section-17">17. Dataset order बदलना</a><a class="toc-l2" href="#section-18">18. Individual dataset export करना</a><a class="toc-l2" href="#section-19">19. Session से dataset हटाना</a><a class="toc-l3" href="#section-19-1">19.1. Immediate effects</a><a class="toc-l3" href="#section-19-2">19.2. Active dataset हटाना</a><a class="toc-l3" href="#section-19-3">19.3. Filtered descendants</a><a class="toc-l3" href="#section-19-4">19.4. केवल memory</a><a class="toc-l3" href="#section-19-5">19.5. Deletion persistent बनाना</a><a class="toc-l3" href="#section-19-6">19.6. Last dataset delete करना</a><a class="toc-l2" href="#section-20">20. Unsaved changes state</a><a class="toc-l2" href="#section-21">21. Projects section</a><a class="toc-l2" href="#section-22">22. Current project</a><a class="toc-l2" href="#section-23">23. Display name और internal slug</a><a class="toc-l2" href="#section-24">24. Project disk structure</a><a class="toc-l3" href="#section-24-1">24.1. registry.rds</a><a class="toc-l3" href="#section-24-2">24.2. manifest.rds</a><a class="toc-l3" href="#section-24-3">24.3. ui_state.rds</a><a class="toc-l3" href="#section-24-4">24.4. Module folders</a><a class="toc-l2" href="#section-25">25. Project में automatically क्या शामिल नहीं होता</a><a class="toc-l2" href="#section-26">26. Project save करना</a><a class="toc-l3" href="#section-26-1">26.1. Saved content</a><a class="toc-l3" href="#section-26-2">26.2. Figure histories</a><a class="toc-l3" href="#section-26-3">26.3. Empty project</a><a class="toc-l3" href="#section-26-4">26.4. Empty overwrite protection</a><a class="toc-l3" href="#section-26-5">26.5. Success</a><a class="toc-l2" href="#section-27">27. Available save status</a><a class="toc-l2" href="#section-28">28. Disk से reload करना</a><a class="toc-l2" href="#section-29">29. Save नहीं मिला</a><a class="toc-l2" href="#section-30">30. Unreadable save</a><a class="toc-l2" href="#section-31">31. केवल data .rds में export करना</a><a class="toc-l2" href="#section-32">32. Complete project .zip export करना</a><a class="toc-l2" href="#section-33">33. Size warning</a><a class="toc-l2" href="#section-34">34. Project .zip import करना</a><a class="toc-l2" href="#section-35">35. नया project बनाना</a><a class="toc-l2" href="#section-36">36. दूसरा project खोलना</a><a class="toc-l2" href="#section-37">37. Multiple BarCodeR browser tabs</a><a class="toc-l2" href="#section-38">38. Current project rename करना</a><a class="toc-l2" href="#section-39">39. Project list</a><a class="toc-l2" href="#section-40">40. Project duplicate करना</a><a class="toc-l2" href="#section-41">41. Project delete करना</a><a class="toc-l2" href="#section-42">42. तीन exports का अंतर</a><a class="toc-l2" href="#section-43">43. Projects और OpenMetaBar data</a><a class="toc-l2" href="#section-44">44. Projects और figure histories</a><a class="toc-l2" href="#section-45">45. Physical location</a><a class="toc-l2" href="#section-46">46. Recommended daily workflow</a><a class="toc-l2" href="#section-47">47. Risky operation से पहले</a><a class="toc-l2" href="#section-48">48. समस्या निवारण</a><a class="toc-l3" href="#section-48-1">48.1. Dataset registry में नहीं दिखता</a><a class="toc-l3" href="#section-48-2">48.2. Module गलत dataset उपयोग करता है</a><a class="toc-l3" href="#section-48-3">48.3. Active selection नहीं बचती</a><a class="toc-l3" href="#section-48-4">48.4. Entered name बदल गया</a><a class="toc-l3" href="#section-48-5">48.5. _2 जुड़ा</a><a class="toc-l3" href="#section-48-6">48.6. Modified date नहीं बदली</a><a class="toc-l3" href="#section-48-7">48.7. Copy original provenance रखती है</a><a class="toc-l3" href="#section-48-8">48.8. Filtered dataset filtered नहीं दिखता</a><a class="toc-l3" href="#section-48-9">48.9. Deleted dataset वापस आया</a><a class="toc-l3" href="#section-48-10">48.10. Empty project save नहीं होता</a><a class="toc-l3" href="#section-48-11">48.11. Reload ने changes हटाए</a><a class="toc-l3" href="#section-48-12">48.12. Save file नहीं है</a><a class="toc-l3" href="#section-48-13">48.13. Project empty खुला और registry error है</a><a class="toc-l3" href="#section-48-14">48.14. New project name refuse हुआ</a><a class="toc-l3" href="#section-48-15">48.15. Rename के बाद folder पुराना name रखता है</a><a class="toc-l3" href="#section-48-16">48.16. Project open करने पर app reload होती है</a><a class="toc-l3" href="#section-48-17">48.17. दूसरा project खोलते समय save error</a><a class="toc-l3" href="#section-48-18">48.18. Multiple-tab warning</a><a class="toc-l3" href="#section-48-19">48.19. Duplicate में latest changes नहीं</a><a class="toc-l3" href="#section-48-20">48.20. Current project delete नहीं होता</a><a class="toc-l3" href="#section-48-21">48.21. Project deletion fail</a><a class="toc-l3" href="#section-48-22">48.22. ZIP बहुत बड़ा है</a><a class="toc-l3" href="#section-48-23">48.23. ZIP 500 MB से बड़ा है</a><a class="toc-l3" href="#section-48-24">48.24. Imported project open नहीं हुआ</a><a class="toc-l3" href="#section-48-25">48.25. Archive invalid है</a><a class="toc-l3" href="#section-48-26">48.26. Imported project में zero datasets हैं</a><a class="toc-l3" href="#section-48-27">48.27. ZIP में latest data नहीं</a><a class="toc-l3" href="#section-48-28">48.28. Project dataset count गलत लगता है</a><a class="toc-l3" href="#section-48-29">48.29. Project size देर से update होती है</a><a class="toc-l3" href="#section-48-30">48.30. Redeployment के बाद projects गायब</a><a class="toc-l2" href="#section-49">49. Save से पहले checklist</a><a class="toc-l2" href="#section-50">50. Project switch से पहले checklist</a><a class="toc-l2" href="#section-51">51. Dataset delete से पहले checklist</a><a class="toc-l2" href="#section-52">52. Project delete से पहले checklist</a><a class="toc-l2" href="#section-53">53. Recommended backup strategy</a><a class="toc-l2" href="#section-54">54. Traceability principles</a><a class="toc-l2" href="#section-55">55. Current limitations</a><a class="toc-l2" href="#section">सत्यापित आंतरिक स्रोत</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · डेटासेट</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

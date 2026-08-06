@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>MultiView — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="multiview" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link active" href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">MultiView</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">MultiView — पद्धति संबंधी मार्गदर्शिका</h1>
+<h2 id="section-1">1. सामान्य भूमिका<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>MultiView BarCodeR के scientific modules में पहले से save की गई figures को खोजता, filter करता, favorite/tag करता और GridStack grid में move/resize करके composite PNG या layout composition बनाता है। यह <strong>कोई scientific recalculation नहीं करता</strong>, Plotly interactivity restore नहीं करता, axes synchronize नहीं करता और analysis parameters/colors नहीं बदलता। Analysis बदलने के लिए source module पर लौटें।</p>
+<h2 id="section-2">2. Figures का स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<p>Current project के <code>save/projects/&lt;project&gt;/</code> folders recursively scan होते हैं; MultiView का अपना folder exclude होता है। Type path से derive होता है और manually placed PNG भी दिख सकता है। हर folder के केवल <strong>100 सबसे हाल में modified PNG</strong> load होते हैं; pagination नहीं है और date filter cap से बाहर files वापस नहीं ला सकता।</p>
+<h2 id="section-3">3. PNG/RDS pairing<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>PNG केवल उसी exact basename वाले RDS से pair होता है। दोनों होने पर dataset, description, parameters और badges मिलते हैं; केवल PNG limited metadata के साथ दिखता है; केवल RDS नहीं दिखता। Reader datasets, transformation, distance, taxonomic rank, group, permutations और seed खोजता है; non-standard snapshots incomplete हो सकते हैं।</p>
+<h2 id="section-4">4. Loading और refresh<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>Scan MultiView खुलने पर ही शुरू होता है। Refresh manual rescan करता है; auto-refresh active tab में हर 10 seconds चलता है और network disk/large RDS पर महंगा हो सकता है। Displayed date PNG modification time है, analysis date नहीं।</p>
+<h2 id="section-5">5. Search, filters और sorting<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<p>Type, exact dataset label, date, favorites और tags से filter करें; multiple tags OR logic उपयोग करते हैं। Literal case-insensitive search key, dataset, description और parameters पर चलता है। Multi-dataset run combined label हो सकता है। KPI orphan favorites को भी count कर सकता है।</p>
+<h2 id="section-6">6. Gallery और table<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Gallery preview, type, filename, date, dataset, badges, tags और favorite दिखाती है। “Comparable” केवल same type + same dataset label है; transformation, distance, filtering, rank, groups, axes या method validate नहीं होते। Table selection open/replace actions से linked नहीं है, इसलिए multi-selection Gallery में करें।</p>
+<h2 id="section-7">7. Figure selection<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>Checkbox/Space select, click/Enter details, double-click या drag-drop grid में add, star favorite और Escape panel close करता है। Select All केवल visible cards चुनता है, पर filter बदलने के बाद hidden selection रह सकती है। नई comparison से पहले Clear selection करें। बहुत बड़ी selection browser को धीमा कर सकती है।</p>
+<h2 id="section-8">8. Details panel<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<p>Large image, type, date, dataset, key, main/technical parameters, tags, favorite, PNG download और grid opening दिखाता है। Scientific RDS download, source module खोलना, R code generate करना, analysis rerun करना या parameter sets auto-compare करना उपलब्ध नहीं है।</p>
+<h2 id="section-9">9. Favorites और tags<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p><code>save/projects/&lt;project&gt;/multiview/tags.rds</code> में तुरंत save होते हैं; पुराना <code>save/multiview/tags.rds</code> message obsolete है। Tags comma/semicolon accept करते हैं। Deleted PNG orphan references छोड़ते हैं। Same project की sessions state share करती हैं; user isolation और full concurrent locking नहीं है।</p>
+<h2 id="section-10">10. Open analyses grid<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Selection, double-click, drag-drop या details से figures add होती हैं; duplicate रोका जाता है। 12-column grid का default दो cards per row है (width 6, height 6)। <code>object-fit: contain</code> पूरा PNG रखता है पर whitespace हो सकता है; resize resolution नहीं बढ़ाता। Edit mode move/resize control करता है; card close करने से files delete नहीं होतीं।</p>
+<h2 id="section-11">11. Pin, replace और close<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>Pinned cards Replace और Close all से बचते हैं, लेकिन move/resize/individual close हो सकते हैं। Replace pins रखता, बाकी हटाता और current selection जोड़ता है।</p>
+<h2 id="section-12">12. Layout presets<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<p>1×2, 2×2, 1×3, 3×1 और Hero+2 उपलब्ध हैं। Slots से अधिक figures last position reuse करके overlap कर सकती हैं। Manually rearrange, दूसरा preset या कम figures चुनें। Reset default layout देता है, cards close नहीं करता।</p>
+<h2 id="section-13">13. Composite PNG export<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p><code>html-to-image</code> white background और pixelRatio 2 के साथ पूरे grid DOM को capture करता है, इसलिए titles, metadata और buttons भी आ सकते हैं। यह scientific PNGs की clean merge नहीं है। Output browser-side raster PNG है, history में नहीं जुड़ता और structured data नहीं रखता। PDF/SVG/TIFF/PowerPoint/interactive HTML नहीं है। Large grid, huge PNG, missing CDN या empty grid समस्या दे सकते हैं।</p>
+<h2 id="section-14">14. Composition save करना<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p><code>multiview/compositions/</code> का RDS name, description, date, figure keys, layout, dimensions, pins और filter values रखता है। यह PNG, scientific RDS, phyloseq, tables, tags या favorites copy <strong>नहीं</strong> करता; केवल layout recipe है। Load केवल existing figures, layout और pins restore करता है; saved filters reapply नहीं होते। Missing/renamed files omit हो जाती हैं।</p>
+<h2 id="section-15">15. Composition import/export<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<p>Export recipe RDS download करता है। Import मुख्यतः list में <code>tabs</code> verify करके current project में copy करता है, auto-load नहीं करता। Recipe अकेली portable नहीं है: target project में identical type+filename keys चाहिए। Sharing के लिए composite PNG या original PNG/RDS दें। External PNG direct import उपलब्ध नहीं है।</p>
+<h2 id="section-16">16. Figures सही तरह compare करना<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>Dataset, samples, filtering, transformation, normalization, rank, method, distance, groups, axes, limits, units, colors, categories, thresholds और data version verify करें। Top N/Other barplots बदल सकते हैं; independent ordinations rotate/invert हो सकती हैं और quantitative comparison के लिए Procrustes चाहिए; volcano plots की references/effect units अलग हो सकती हैं। MultiView organization/presentation tool है, statistical comparison नहीं।</p>
+<h2 id="section-17">17. Projects, sessions और multi-user<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Library, tags, favorites और compositions current project के साथ बदलते हैं। Live grid session-only है जब तक composition save न हो। कुछ settings restore होती हैं, पर dataset/tag/date filters, selection और unsaved layout नहीं। Static Shiny resources process-wide हैं; concurrent projects wrong resource दिखा सकते हैं। State user-isolated नहीं है, इसलिए concurrent multi-user deployment पूरी तरह सुरक्षित नहीं।</p>
+<h2 id="section-18">18. External dependencies और offline use<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>GridStack, SortableJS और html-to-image jsDelivr से load होते हैं। Offline browsing कुछ हद तक चलेगी, पर move, resize, drag-drop, presets या export fail हो सकते हैं। GridStack लगभग 6 seconds wait करके छोड़ देता है। Full offline के लिए libraries <code>www/</code> में bundle करें।</p>
+<h2 id="section-19">19. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>समस्या</th>
+<th>कारण</th>
+<th>समाधान</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>कोई figure नहीं</td>
+<td>Saved PNG नहीं</td>
+<td>Scientific module में save करें</td>
+</tr>
+<tr>
+<td>नई figure missing</td>
+<td>Rescan नहीं हुआ</td>
+<td>Refresh</td>
+</tr>
+<tr>
+<td>पुरानी figure missing</td>
+<td>100-file cap</td>
+<td>Folder inspect/archive करें</td>
+</tr>
+<tr>
+<td>Parameters missing</td>
+<td>RDS absent/mismatch</td>
+<td>Basename ठीक करें</td>
+</tr>
+<tr>
+<td>Table selection काम नहीं</td>
+<td>State से link नहीं</td>
+<td>Gallery उपयोग करें</td>
+</tr>
+<tr>
+<td>Cards overlap</td>
+<td>Preset slots कम</td>
+<td>Manually arrange करें</td>
+</tr>
+<tr>
+<td>Composition incomplete</td>
+<td>Source files missing</td>
+<td>Histories restore करें</td>
+</tr>
+<tr>
+<td>Filters restore नहीं</td>
+<td>Current loader behavior</td>
+<td>Manually set करें</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-20">20. Checklists<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Compose से पहले project, refresh, PNG/RDS pairs, parameters, old selection और card count जाँचें। Scientific comparison से पहले data, filters, methods, ranks, axes, units, colors और thresholds harmonize करें। Export से पहले overlap/resolution जाँचें और downloaded file खोलें। Save से पहले layout/pins, name/description, non-copied images और reload test समझें; portable PNG भी export करें।</p>
+<h2 id="section-21">21. मुख्य सीमाएँ<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>PNG-only library, lost interactivity, no recomputation/axis harmonization, 100-file cap, mtime dates, RDS-dependent metadata, Table-selection bug, weak comparable badge, orphan/shared tags, overlapping presets, controls सहित raster export, non-self-contained recipes, filters not restored, CDN dependence, multi-user fragility और unsaved grid loss।</p>
+<h2 id="section-22">22. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Source figures save करें; MultiView खोलकर refresh करें; filter और parameters inspect करें; tags/favorites जोड़ें; Gallery में select करें; grid खोलें; scientific comparability verify करें; preset और manual adjustment करें; key cards pin करें; PNG export/check करें; composition save/reload test करें; original histories रखें और conclusions के लिए statistical tables उपयोग करें।</p>
+<h2 id="section-23">23. सत्यापित आंतरिक स्रोत<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p><code>app.R</code>, <code>modules/multiview/mod_multiview_ui.R</code>, <code>modules/multiview/mod_multiview_server.R</code>, <code>modules/multiview/_shared/mod_multiview_helpers.R</code>, <code>modules/_shared/_project_store.R</code>, <code>.claude/architecture/16-multiview.md</code>।</p>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य भूमिका</a><a class="toc-l2" href="#section-2">2. Figures का स्रोत</a><a class="toc-l2" href="#section-3">3. PNG/RDS pairing</a><a class="toc-l2" href="#section-4">4. Loading और refresh</a><a class="toc-l2" href="#section-5">5. Search, filters और sorting</a><a class="toc-l2" href="#section-6">6. Gallery और table</a><a class="toc-l2" href="#section-7">7. Figure selection</a><a class="toc-l2" href="#section-8">8. Details panel</a><a class="toc-l2" href="#section-9">9. Favorites और tags</a><a class="toc-l2" href="#section-10">10. Open analyses grid</a><a class="toc-l2" href="#section-11">11. Pin, replace और close</a><a class="toc-l2" href="#section-12">12. Layout presets</a><a class="toc-l2" href="#section-13">13. Composite PNG export</a><a class="toc-l2" href="#section-14">14. Composition save करना</a><a class="toc-l2" href="#section-15">15. Composition import/export</a><a class="toc-l2" href="#section-16">16. Figures सही तरह compare करना</a><a class="toc-l2" href="#section-17">17. Projects, sessions और multi-user</a><a class="toc-l2" href="#section-18">18. External dependencies और offline use</a><a class="toc-l2" href="#section-19">19. Troubleshooting</a><a class="toc-l2" href="#section-20">20. Checklists</a><a class="toc-l2" href="#section-21">21. मुख्य सीमाएँ</a><a class="toc-l2" href="#section-22">22. Recommended workflow</a><a class="toc-l2" href="#section-23">23. सत्यापित आंतरिक स्रोत</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · MultiView</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

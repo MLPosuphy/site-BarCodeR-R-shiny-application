@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>इनपुट डेटा — पद्धति संबंधी मार्गदर्शिकाएँ — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="hi" data-kind="guide" data-module="input-data" data-no-result="इस पृष्ठ पर कोई परिणाम नहीं मिला।">
+<a class="skip-link" href="#doc-content">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR दस्तावेज़</strong><small>एम्बेडेड दस्तावेज़ — ऑफ़लाइन कार्य करता है</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>BarCodeR पर वापस जाएँ</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="hi" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" selected>हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">मॉड्यूल</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link active" href="../input-data/guides-methodologiques.html">इनपुट डेटा</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">पद्धति संबंधी मार्गदर्शिकाएँ</a>
+        <a class="" href="references-techniques.html">तकनीकी संदर्भ</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">डेटासेट</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">विवरण</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">डेटा संपादन</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">फ़िल्ट्रेशन</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">एक्सप्लोरेशन</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">विश्लेषण</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>दस्तावेज़ संस्करण</span><strong>1.8.0</strong><span>निर्माण तिथि 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">इनपुट डेटा</a><span>›</span><span>पद्धति संबंधी मार्गदर्शिकाएँ</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="इस पृष्ठ में खोजें…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>इस पृष्ठ पर कोई परिणाम नहीं मिला।</div>
+    <article class="doc-article"><h1 id="top">इनपुट डेटा — पद्धति संबंधी मार्गदर्शिकाएँ</h1>
+<h2 id="section-1">1. सामान्य परिचय<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Input data</strong> टैब BarCodeR में पहले से बनाए गए एक या कई <code>phyloseq</code> objects को import करता है।</p>
+<p>समर्थित serialized R formats हैं:</p>
+<ul>
+<li><code>.rds</code>;</li>
+<li><code>.RData</code>;</li>
+<li><code>.rda</code>;</li>
+<li><code>.rdata</code>।</li>
+</ul>
+<p>Application स्वतः पहचानता है कि file में:</p>
+<ol>
+<li>एक <code>phyloseq</code> dataset है;</li>
+<li>कई <code>phyloseq</code> datasets वाला project है;</li>
+<li>कई compatible objects हैं जिनमें से user को चुनना है;</li>
+<li>unsupported object है, जिसके कारण import रोका जाता है।</li>
+</ol>
+<p>यह टैब अलग-अलग tables से नया <code>phyloseq</code> नहीं बनाता। यह पहले से serialized R objects को load करता है।</p>
+<h2 id="section-2">2. BarCodeR में Input data की भूमिका<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>आवश्यकता</th>
+<th>उपयोग होने वाला टैब</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>मौजूदा <code>phyloseq</code> load करना</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td><code>.rds</code> project से कई phyloseq load करना</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>Cluster पर बना phyloseq प्राप्त करना</td>
+<td>OpenMetaBar</td>
+</tr>
+<tr>
+<td>अलग tables से phyloseq बनाना या पूरा करना</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>Dataset rename, duplicate, delete या export करना</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Figures और history सहित पूरा project import करना</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>Current project का internal backup restore करना</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-1">2.1. अब इस टैब में उपलब्ध नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>Current version में dataset delete, rename, duplicate, export और named BarCodeR projects की management सीधे Input data से नहीं होती। ये actions <strong>Datasets</strong> में centralized हैं।</p>
+<h2 id="section-3">3. Current interface<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>Input data में एक मुख्य panel है:</p>
+<blockquote>
+<p><strong>File load करें (.rds / .RData / .rda)</strong></p>
+</blockquote>
+<p>इसमें automatic detection की जानकारी, एक file selector, applied cleaning की जानकारी और Datasets टैब की ओर संकेत शामिल हैं।</p>
+<p>अब अलग dataset/project selectors, manual OTU orientation, metadata transpose, taxonomy correction या deletion box नहीं हैं।</p>
+<h2 id="section-4">4. File-size limit<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>File Shiny <code>fileInput</code> से upload होती है। Current global limit है:</p>
+<pre tabindex="0"><code class="language-text">500 MB
+</code></pre>
+<p>इससे बड़ी file सामान्यतः इस field से upload नहीं हो सकती।</p>
+<h3 id="section-4-1">4.1. Disk size और memory size<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<p><code>.rds</code> compressed हो सकती है। Memory में object का आकार disk file से बहुत बड़ा हो सकता है।</p>
+<p>Import के दौरान loaded object, पहले से मौजूद datasets और temporary copies एक साथ memory में रह सकते हैं। इसलिए पर्याप्त RAM आवश्यक है।</p>
+<h3 id="section-4-2">4.2. Remote server पर BarCodeR<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>Remote deployment में file Shiny server को भेजी जाती है। समय file size, network, server load और available memory पर निर्भर करता है।</p>
+<p>Reading और cleaning synchronous हैं, इसलिए बड़े object के दौरान UI कुछ समय के लिए freeze जैसी लग सकती है।</p>
+<h2 id="section-5">5. Accepted formats<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p><code>.rds</code> में एक R object होता है। BarCodeR <code>readRDS()</code> से पढ़कर object type पहचानता है।</p>
+<p>Suggested dataset label file name से extension हटाकर बनता है:</p>
+<pre tabindex="0"><code class="language-text">metabarcoding_coi.rds
+→ metabarcoding_coi
+</code></pre>
+<h3 id="section-5-2">5.2. <code>.RData</code> या <code>.rda</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p><code>.RData</code> में कई objects हो सकते हैं। BarCodeR:</p>
+<ol>
+<li>isolated temporary environment में file load करता है;</li>
+<li>प्रत्येक object inspect करता है;</li>
+<li>dataset/project के रूप में पहचाने objects रखता है;</li>
+<li>केवल एक compatible object होने पर auto-select करता है;</li>
+<li>कई objects होने पर user से चयन कराता है।</li>
+</ol>
+<p>Unsupported objects ignore कर दिए जाते हैं।</p>
+<h3 id="section-5-3">5.3. Unsupported extensions<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Input data सीधे <code>.csv</code>, <code>.tsv</code>, <code>.xlsx</code>, <code>.biom</code>, <code>.qza</code>, <code>.zip</code>, <code>.RDS.gz</code>, FASTA, FASTQ या Newick import नहीं करता।</p>
+<p>Independent tables के लिए <strong>Data Edition</strong> और complete <code>.zip</code> project के लिए <strong>Datasets</strong> का उपयोग करें।</p>
+<h2 id="section-6">6. Automatic content detection<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>Detection actual object structure पर आधारित है, केवल file name या extension पर नहीं।</p>
+<h3 id="section-6-1">6.1. Single dataset<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<p><code>phyloseq</code> class inherit करने वाला object dataset माना जाता है।</p>
+<h3 id="section-6-2">6.2. Project<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>Project तब पहचाना जाता है जब object:</p>
+<ul>
+<li><code>datasets</code> element वाली list हो;</li>
+<li>historical <code>ps_registry</code> list हो;</li>
+<li>non-empty list हो जिसके सभी elements <code>phyloseq</code> हों।</li>
+</ul>
+<h3 id="section-6-3">6.3. Structural detection<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>Version number, विशेष <code>format</code>, file name या dedicated class अनिवार्य नहीं हैं। इससे पुराने formats compatible रहते हैं, लेकिन किसी unrelated list में <code>datasets</code> होने पर वह project समझी जा सकती है।</p>
+<h2 id="section-7">7. Dataset और project का अंतर<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<h3 id="section-7-1">7.1. Dataset<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>एक dataset एक <code>phyloseq</code> object है। इसमें <code>otu_table</code>, <code>sample_data</code>, <code>tax_table</code>, phylogenetic tree और reference sequences हो सकती हैं।</p>
+<p>General registry में import के लिए OTU table वास्तव में अनिवार्य है।</p>
+<h3 id="section-7-2">7.2. Data-only <code>.rds</code> project<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Input data से load project में dataset list, active dataset name और optional save metadata होते हैं:</p>
+<pre tabindex="0"><code class="language-r">list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = ...,
+  datasets = ...,
+  active_ds = ...
+)
+</code></pre>
+<h3 id="section-7-3">7.3. Complete <code>.zip</code> project<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>Complete <code>.zip</code> में figures, histories, module files, parameters और manifest भी हो सकते हैं। इसे <strong>Datasets → Import project (.zip)</strong> से load करें।</p>
+<h3 id="section-7-4">7.4. Current BarCodeR project नहीं बदलता<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p>Input data से <code>.rds</code> project import करने पर नया named project नहीं बनता, current project auto-switch नहीं होता, figures/history/navigation restore नहीं होती। केवल current project memory में datasets add या replace होते हैं।</p>
+<h2 id="section-8">8. File load करना<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. File selection<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>एक बार में एक compatible file चुनें। Selection के बाद BarCodeR तुरंत content पढ़कर अगला workflow तय करता है।</p>
+<h3 id="section-8-2">8.2. Read error<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>Corrupted file, invalid R serialization, unavailable class/package, missing dependency या misleading content होने पर import रुक जाता है।</p>
+<p>File input reset होता है, जिससे correction के बाद वही file फिर चुनी जा सके।</p>
+<h2 id="section-9">9. कई objects वाली <code>.RData</code><a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>कई compatible objects मिलने पर <strong>Load करने के लिए object चुनें</strong> modal खुलता है।</p>
+<pre tabindex="0"><code class="language-text">ps_coi       (dataset)
+ps_16s       (dataset)
+my_project   (project)
+</code></pre>
+<h3 id="section-9-1">9.1. Selected object उपयोग करना<a aria-label="Permalink" class="heading-anchor" href="#section-9-1">#</a></h3>
+<p><strong>Use this object</strong> संबंधित dataset या project workflow जारी रखता है।</p>
+<h3 id="section-9-2">9.2. Cancel<a aria-label="Permalink" class="heading-anchor" href="#section-9-2">#</a></h3>
+<p><strong>Cancel</strong> modal बंद करता है, file selector साफ़ करता है और temporary pending object हटाता है।</p>
+<h3 id="section-9-3">9.3. ऊपर की cross से बंद करना<a aria-label="Permalink" class="heading-anchor" href="#section-9-3">#</a></h3>
+<p>Current implementation में top cross वही cleanup नहीं करती जो Cancel करता है। उसी file का event फिर trigger न हो सकता है। Import छोड़ते समय <strong>Cancel</strong> बेहतर है।</p>
+<h2 id="section-10">10. Single phyloseq dataset load करना<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>Dataset detect होने पर <strong>Prepare dataset loading</strong> modal खुलता है।</p>
+<p>इसमें label, add/replace mode और automatic cleaning की जानकारी होती है।</p>
+<h2 id="section-11">11. Dataset label<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<h3 id="section-11-1">11.1. Suggested label<a aria-label="Permalink" class="heading-anchor" href="#section-11-1">#</a></h3>
+<p><code>.rds</code> के लिए file name और <code>.RData</code> के लिए R object name प्राथमिक होता है।</p>
+<h3 id="section-11-2">11.2. Label cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-11-2">#</a></h3>
+<p>Leading/trailing spaces हटाए जाते हैं, unsupported characters <code>_</code> से replace होते हैं, edge underscores हटते हैं और empty result पर <code>dataset</code> उपयोग होता है।</p>
+<p>मुख्यतः alphanumeric characters, <code>_</code> और <code>-</code> रखे जाते हैं। Non-ASCII behavior R locale पर भी निर्भर है।</p>
+<h3 id="section-11-3">11.3. Existing label collision<a aria-label="Permalink" class="heading-anchor" href="#section-11-3">#</a></h3>
+<p>Add mode में suffix लगाया जाता है:</p>
+<pre tabindex="0"><code class="language-text">COI
+COI_2
+COI_3
+</code></pre>
+<p>Existing dataset silently overwrite नहीं होता।</p>
+<h2 id="section-12">12. Add या replace<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Current session में add<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Default mode current datasets रखता है, नया dataset add करता है, label unique बनाता है और उसे active करता है।</p>
+<h3 id="section-12-2">12.2. Current memory replace करना<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>सभी current in-memory datasets हटते हैं, केवल नया dataset रहता है और active बनता है।</p>
+<blockquote>
+<p><strong>सावधानी:</strong> Disk पर source files delete नहीं होतीं, लेकिन unsaved datasets खो सकते हैं। Replace से पहले project save करें।</p>
+</blockquote>
+<h3 id="section-12-3">12.3. Empty session<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>कोई dataset न होने पर add/replace choice नहीं दिखती। Loading empty list replacement की तरह होती है।</p>
+<h2 id="section-13">13. Phyloseq पर actual cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>BarCodeR पूरा object rebuild नहीं करता और tables को auto-transpose नहीं करता।</p>
+<p>मुख्य operations:</p>
+<ol>
+<li>OTU table में sample axis पहचानना;</li>
+<li>sample names standardize करना;</li>
+<li>metadata से synchronize करना;</li>
+<li>blank metadata cells को <code>NA</code> बनाना;</li>
+<li>selected identifiers की consistency जाँचना।</li>
+</ol>
+<h2 id="section-14">14. OTU-table orientation<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>BarCodeR existing orientation रखता है और <code>taxa_are_rows()</code> उपयोग करता है।</p>
+<h3 id="section-14-1">14.1. Taxa rows में<a aria-label="Permalink" class="heading-anchor" href="#section-14-1">#</a></h3>
+<p><code>taxa_are_rows(ps) == TRUE</code> पर samples columns में होते हैं और column names साफ़ होते हैं।</p>
+<h3 id="section-14-2">14.2. Taxa columns में<a aria-label="Permalink" class="heading-anchor" href="#section-14-2">#</a></h3>
+<p><code>taxa_are_rows(ps) == FALSE</code> पर samples rows में होते हैं और row names साफ़ होते हैं।</p>
+<h3 id="section-14-3">14.3. कोई transposition नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-14-3">#</a></h3>
+<p>App ASV rows, samples columns या common orientation force नहीं करता। पुरानी orientation-selection documentation अब लागू नहीं है।</p>
+<h2 id="section-15">15. Sample-name standardization<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. Transformations<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>Accent transliteration की कोशिश, outer spaces trim, internal spaces/unsafe characters को <code>_</code>, repeated underscores collapse, edge underscores remove, empty names fill और duplicate suffixes add किए जाते हैं।</p>
+<h3 id="section-15-2">15.2. Examples<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Before</th>
+<th>Possible result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Station 01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Station-01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Échantillon A</code></td>
+<td><code>Echantillon_A</code></td>
+</tr>
+<tr>
+<td><code>sample/1</code></td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td><code>sample</code></td>
+</tr>
+<tr>
+<td>empty</td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td>two <code>sample</code></td>
+<td><code>sample</code>, <code>sample_1</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-15-3">15.3. Cleaning क्यों होती है<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>Complex identifiers statistical formulas, joins, R packages, file names, plots, exports और Shiny selectors में समस्या कर सकते हैं।</p>
+<h3 id="section-15-4">15.4. Cleaning हमेशा लागू नहीं रहती<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>OTU renaming तभी रखी जाती है जब metadata alignment सुरक्षित रहे।</p>
+<p>Safe correspondence न बनने पर BarCodeR OTU renaming rollback कर सकता है, original names रखता है और report में warning देता है। Consistency cosmetic cleaning से अधिक महत्वपूर्ण है।</p>
+<h2 id="section-16">16. Metadata processing<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><code>sample_data</code> optional है। Metadata के बिना import संभव है, लेकिन sample variables वाले analyses unavailable रहेंगे।</p>
+<h3 id="section-16-1">16.1. Rownames alignment<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>Original OTU names से match होने पर metadata और OTU पर वही transformations लगती हैं।</p>
+<p>Direct match साबित न होने पर metadata अलग से clean होती है और केवल compatible रहने पर apply होती है। Uncertain match पर original names रखे जाते हैं और warning दी जाती है।</p>
+<h2 id="section-17">17. Blank metadata cells<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>Empty strings या केवल spaces वाली strings वास्तविक <code>NA</code> से replace होती हैं।</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Original</th>
+<th>Imported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>""</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"   "</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"0"</code></td>
+<td><code>"0"</code></td>
+</tr>
+<tr>
+<td><code>"NA"</code></td>
+<td><code>"NA"</code></td>
+</tr>
+<tr>
+<td>real <code>NA</code></td>
+<td><code>NA</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Literal <code>"NA"</code> automatically missing value नहीं बनती।</p>
+<h3 id="section-17-1">17.1. Column types पर प्रभाव<a aria-label="Permalink" class="heading-anchor" href="#section-17-1">#</a></h3>
+<p>Current implementation blank replacement से पहले हर metadata column को character बनाती है। Numeric, integer, logical, factor और date columns character हो सकती हैं।</p>
+<p>Import के बाद Description, Data Edition या R में types verify करें। यह वास्तविक data transformation है।</p>
+<h2 id="section-18">18. जो components modify नहीं होते<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Input data OTU abundances, orientation, ASV names, taxonomy values/ranks, reference sequences, tree, zeros, empty taxa/samples, negative/decimal values या OTU <code>NA</code> को सीधे modify नहीं करता।</p>
+<p>यह पूर्ण scientific validation नहीं है।</p>
+<h2 id="section-19">19. Single dataset integrity check<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. Phyloseq class<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>Object वास्तविक <code>phyloseq</code> होना चाहिए।</p>
+<h3 id="section-19-2">19.2. OTU table required<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p><code>otu_table</code> होना अनिवार्य है।</p>
+<h3 id="section-19-3">19.3. Sample identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p><code>sample_data</code> मौजूद हो तो उसके rownames सभी sample names से set-wise match करने चाहिए। Partial metadata reject होती है।</p>
+<h3 id="section-19-4">19.4. Taxon identifiers<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p><code>tax_table</code> मौजूद हो तो उसके rownames सभी OTU taxa names से match करने चाहिए।</p>
+<h3 id="section-19-5">19.5. Guard क्या नहीं जाँचता<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p><code>refseq</code>/tree coverage, sequence validity, integer/non-negative counts, biological taxonomy coherence, duplicates और minimum depth सीधे नहीं जाँचे जाते।</p>
+<h2 id="section-20">20. Inconsistency पर import reject<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>Identifiers mismatch, missing OTU table या non-phyloseq object पर dataset add नहीं होता और original file modify नहीं होती।</p>
+<h2 id="section-21">21. Dataset import report<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Success पर <strong>Dataset loaded and checked</strong> modal दिखता है।</p>
+<p>इसमें final label, samples, taxa/ASV, actions count, source file/object, add/replace mode, total datasets, OTU/metadata before-after tables, blank replacements, warnings और notes होते हैं।</p>
+<p>केवल पहले दस renames दिखते हैं, total count बना रहता है।</p>
+<h2 id="section-22">22. <code>.rds</code> project load करना<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>BarCodeR project के <code>phyloseq</code> datasets extract करता है।</p>
+<h3 id="section-22-1">22.1. Empty session<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>Project सीधे replace mode में load होता है और restoration report दिखती है।</p>
+<h3 id="section-22-2">22.2. Existing datasets<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p><strong>Load a project</strong> modal current names, incoming names और add/replace choice दिखाता है।</p>
+<h2 id="section-23">23. Project datasets add करना<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Current datasets रखे जाते हैं, imported phyloseq add होते हैं, name collisions resolve होती हैं और active dataset update होता है।</p>
+<h3 id="section-23-1">23.1. Collision<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>Existing <code>COI</code> के साथ incoming <code>COI</code> <code>COI_2</code> बन सकता है।</p>
+<h3 id="section-23-2">23.2. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>Valid <code>active_ds</code> होने पर corresponding imported dataset active होता है। Collision से name बदलने पर final name उपयोग होता है। अन्यथा पहला imported dataset active होता है।</p>
+<h2 id="section-24">24. Project से replace करना<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Current in-memory datasets हटते हैं, imported list load होती है और valid <code>active_ds</code> restore होता है; अन्यथा पहला dataset चुना जाता है।</p>
+<p>Disk files delete नहीं होतीं, लेकिन unsaved session datasets खो सकते हैं।</p>
+<h2 id="section-25">25. Project dataset names<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Valid list names रखे जाते हैं। Missing, blank या partially missing names पर generic names बनते हैं:</p>
+<pre tabindex="0"><code class="language-text">dataset_1
+dataset_2
+dataset_3
+</code></pre>
+<p>Current behavior में एक missing name पूरी list के names regenerate करा सकता है।</p>
+<h2 id="section-26">26. Project में non-phyloseq content<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p><code>datasets</code> या <code>ps_registry</code> structure में केवल वास्तविक <code>phyloseq</code> items अंततः रखे जाते हैं। अन्य items ignore होते हैं।</p>
+<p>Pre-import list actual loaded count से बड़ी हो सकती है। Final report source of truth है।</p>
+<p>Valid phyloseq के बिना structurally recognized project replace mode में registry empty कर सकता है।</p>
+<h2 id="section-27">27. Project datasets cleaning<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>हर phyloseq पर वही sample-name, metadata-name और blank-cell cleaning होती है।</p>
+<p>Report प्रति dataset sample count, taxon count, OTU renames, metadata renames और blank replacements summarize करता है।</p>
+<h2 id="section-28">28. Dataset और project validation में अंतर<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>Single dataset insertion से पहले explicit <code>bcr_guard_ps()</code> से गुजरता है।</p>
+<p>Project items clean होते हैं, लेकिन entire project insert से पहले प्रत्येक item पर guard explicitly नहीं चलता।</p>
+<p>Active dataset change पर global check होता है। Project import के बाद हर महत्वपूर्ण dataset को Description में verify करें।</p>
+<h2 id="section-29">29. Session memory<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>Datasets <code>datasets()</code> reactive registry में और active name <code>active_ds()</code> में रहता है।</p>
+<p>Import के बाद registry बदलती है, downstream modules नया content देखते हैं और project modified/unsaved हो जाता है।</p>
+<h3 id="section-29-1">29.1. Import save नहीं है<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>Close करने से पहले <strong>Datasets → Save project</strong> उपयोग करें।</p>
+<h2 id="section-30">30. Active dataset<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Single imported dataset active हो जाता है। Project saved <code>active_ds</code> restore करता है या पहला dataset चुनता है।</p>
+<p>बाद में global control, Datasets या synchronized modules से बदला जा सकता है।</p>
+<h2 id="section-31">31. Scientific guarantees नहीं मिलतीं<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Successful import मुख्यतः object readability, phyloseq class, OTU table और selected ID consistency बताता है।</p>
+<p>यह raw counts, no prior transformation, empty taxa/sample removal, valid taxonomy, rank order, sequence/tree coverage, experimental design, पर्याप्त replicates, preserved metadata types या सभी statistical analyses के लिए suitability guarantee नहीं करता।</p>
+<h2 id="section-32">32. Import के बाद recommended checks<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p><strong>Description</strong> खोलकर samples, taxa, total reads, available components, identifiers, metadata types/missing values, OTU orientation/values, taxonomy ranks और tree/reference coverage जाँचें।</p>
+<h2 id="section-33">33. बाद की dataset management<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p><strong>Datasets</strong> में active selection, rename, duplicate, delete, export, save, restore और project switching करें।</p>
+<h2 id="section-34">34. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<h3 id="section-34-1">34.1. File selector में file नहीं दिखती<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>Extension और extra compression जाँचें।</p>
+<h3 id="section-34-2">34.2. File 500 MB से बड़ी है<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>Object छोटा करें, unnecessary components हटाएँ, datasets split करें, एक-एक export करें या controlled deployment में limit बदलें।</p>
+<h3 id="section-34-3">34.3. छोटी file अधिक memory लेती है<a aria-label="Permalink" class="heading-anchor" href="#section-34-3">#</a></h3>
+<p>Serialized object memory में expand होता है। RAM खाली करें।</p>
+<h3 id="section-34-4">34.4. <code>.rds</code> read error<a aria-label="Permalink" class="heading-anchor" href="#section-34-4">#</a></h3>
+<pre tabindex="0"><code class="language-r">obj &lt;- readRDS("file.rds")
+class(obj)
+</code></pre>
+<h3 id="section-34-5">34.5. <code>.RData</code> में compatible object नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-34-5">#</a></h3>
+<pre tabindex="0"><code class="language-r">load("file.RData")
+ls()
+class(object_name)
+</code></pre>
+<h3 id="section-34-6">34.6. कई objects दिखते हैं<a aria-label="Permalink" class="heading-anchor" href="#section-34-6">#</a></h3>
+<p>यह normal है; सही object चुनें।</p>
+<h3 id="section-34-7">34.7. गलत project detection<a aria-label="Permalink" class="heading-anchor" href="#section-34-7">#</a></h3>
+<p>Object में <code>datasets</code> या <code>ps_registry</code> हो सकता है। Target phyloseq सीधे save करें:</p>
+<pre tabindex="0"><code class="language-r">saveRDS(my_phyloseq, "dataset.rds")
+</code></pre>
+<h3 id="section-34-8">34.8. OTU table missing<a aria-label="Permalink" class="heading-anchor" href="#section-34-8">#</a></h3>
+<pre tabindex="0"><code class="language-r">phyloseq::otu_table(ps)
+</code></pre>
+<h3 id="section-34-9">34.9. Sample IDs inconsistent<a aria-label="Permalink" class="heading-anchor" href="#section-34-9">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::sample_names(ps),
+  rownames(as.data.frame(phyloseq::sample_data(ps)))
+)
+</code></pre>
+<p>Expected result <code>TRUE</code> है।</p>
+<h3 id="section-34-10">34.10. Taxon IDs inconsistent<a aria-label="Permalink" class="heading-anchor" href="#section-34-10">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::taxa_names(ps),
+  rownames(as(phyloseq::tax_table(ps), "matrix"))
+)
+</code></pre>
+<h3 id="section-34-11">34.11. Partial metadata reject होती है<a aria-label="Permalink" class="heading-anchor" href="#section-34-11">#</a></h3>
+<p>Missing samples पूरा करें, undocumented samples consistently हटाएँ या aligned object rebuild करें।</p>
+<h3 id="section-34-12">34.12. Sample names बदल गए<a aria-label="Permalink" class="heading-anchor" href="#section-34-12">#</a></h3>
+<p>Before/after report देखें।</p>
+<h3 id="section-34-13">34.13. Names clean नहीं हुए<a aria-label="Permalink" class="heading-anchor" href="#section-34-13">#</a></h3>
+<p>Metadata alignment बचाने के लिए OTU rename rollback हुआ हो सकता है।</p>
+<h3 id="section-34-14">34.14. Numeric column text बन गई<a aria-label="Permalink" class="heading-anchor" href="#section-34-14">#</a></h3>
+<pre tabindex="0"><code class="language-r">str(as.data.frame(phyloseq::sample_data(ps)))
+metadata$Depth &lt;- as.numeric(metadata$Depth)
+</code></pre>
+<p>Conversion से पहले values जाँचें।</p>
+<h3 id="section-34-15">34.15. Literal <code>"NA"</code> missing नहीं<a aria-label="Permalink" class="heading-anchor" href="#section-34-15">#</a></h3>
+<pre tabindex="0"><code class="language-r">metadata[metadata == "NA"] &lt;- NA
+</code></pre>
+<p>Legitimate category होने पर सावधानी रखें।</p>
+<h3 id="section-34-16">34.16. अपेक्षा से कम datasets load हुए<a aria-label="Permalink" class="heading-anchor" href="#section-34-16">#</a></h3>
+<p>कुछ items phyloseq नहीं थे या ignore हुए। Final report देखें।</p>
+<h3 id="section-34-17">34.17. सभी names <code>dataset_1</code> आदि बन गए<a aria-label="Permalink" class="heading-anchor" href="#section-34-17">#</a></h3>
+<pre tabindex="0"><code class="language-r">names(project$datasets) &lt;- c("COI", "16S", "ITS")
+</code></pre>
+<h3 id="section-34-18">34.18. <code>_2</code> suffix<a aria-label="Permalink" class="heading-anchor" href="#section-34-18">#</a></h3>
+<p>Add mode में existing label protect हुआ।</p>
+<h3 id="section-34-19">34.19. पुराने datasets गायब<a aria-label="Permalink" class="heading-anchor" href="#section-34-19">#</a></h3>
+<p>Replace mode confirm हुआ। Saved project या source files से restore करें।</p>
+<h3 id="section-34-20">34.20. Figures restore नहीं हुईं<a aria-label="Permalink" class="heading-anchor" href="#section-34-20">#</a></h3>
+<p>Input data <code>.rds</code> data-only project है। Complete <code>.zip</code> Datasets में import करें।</p>
+<h3 id="section-34-21">34.21. वही file दुबारा trigger नहीं करती<a aria-label="Permalink" class="heading-anchor" href="#section-34-21">#</a></h3>
+<p>Previous modal cross से बंद हुई हो सकती है। Temporary दूसरी file चुनें, field reset करें या tab reload करें।</p>
+<h3 id="section-34-22">34.22. Metadata absent<a aria-label="Permalink" class="heading-anchor" href="#section-34-22">#</a></h3>
+<p>Import संभव है, लेकिन sample-variable analyses unavailable रहेंगी।</p>
+<h3 id="section-34-23">34.23. Taxonomy absent<a aria-label="Permalink" class="heading-anchor" href="#section-34-23">#</a></h3>
+<p><code>tax_table</code> dependent analyses unavailable रहेंगी।</p>
+<h3 id="section-34-24">34.24. Tree absent<a aria-label="Permalink" class="heading-anchor" href="#section-34-24">#</a></h3>
+<p>कुछ UniFrac जैसी tree-dependent methods unavailable रहेंगी।</p>
+<h3 id="section-34-25">34.25. Reference sequences absent<a aria-label="Permalink" class="heading-anchor" href="#section-34-25">#</a></h3>
+<p>Sequence-dependent analyses unavailable रहेंगी।</p>
+<h2 id="section-35">35. Import से पहले checklist<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<h3 id="file">File<a aria-label="Permalink" class="heading-anchor" href="#file">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/><code>.rds</code>, <code>.RData</code> या <code>.rda</code> format।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>500 MB से छोटा।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>पर्याप्त memory।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>R में readable।</li>
+</ul>
+<h3 id="phyloseq">Phyloseq<a aria-label="Permalink" class="heading-anchor" href="#phyloseq">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>OTU table मौजूद।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sample IDs unique।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Taxon IDs unique।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Metadata सभी samples cover करती है।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Taxonomy सभी taxa cover करती है।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sequences/tree coherent हैं।</li>
+</ul>
+<h3 id="metadata">Metadata<a aria-label="Permalink" class="heading-anchor" href="#metadata">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Missing values पहचाने गए।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Numeric columns ज्ञात हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ordered factors और dates documented हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sample names OTU table से aligned हैं।</li>
+</ul>
+<h3 id="session">Session<a aria-label="Permalink" class="heading-anchor" href="#session">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Existing datasets saved हैं।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Add/replace समझा गया है।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Name collisions anticipated हैं।</li>
+</ul>
+<h2 id="section-36">36. Import के बाद checklist<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>पूरा cleaning report पढ़ें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sample renaming जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Samples/taxa counts जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Metadata types जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/><code>NA</code> replacements जाँचें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Description खोलें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>OTU table और taxonomy देखें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Sequences और tree देखें।</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Datasets में project save करें।</li>
+</ul>
+<h2 id="section-37">37. Current limitations<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<ol>
+<li>Exhaustive scientific validation नहीं।</li>
+<li>Metadata columns character बन सकती हैं।</li>
+<li>Auto-transposition नहीं।</li>
+<li>Taxonomy cleaning नहीं।</li>
+<li>Project validation single dataset से कम strict है।</li>
+<li>Project recognition structural है।</li>
+<li>Cross से closing pending state छोड़ सकती है।</li>
+<li>Maximum upload 500 MB है।</li>
+</ol>
+<h2 id="section-38">38. Recommended workflow<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<ol>
+<li>R में phyloseq बनाएँ और verify करें।</li>
+<li><code>saveRDS()</code> से save करें।</li>
+<li>Input data खोलें।</li>
+<li>File चुनें।</li>
+<li>Add या replace चुनें।</li>
+<li>Label जाँचें।</li>
+<li>Confirm करें।</li>
+<li>Report पढ़ें।</li>
+<li>Description खोलें।</li>
+<li>Dimensions/components जाँचें।</li>
+<li>Metadata types जाँचें।</li>
+<li>Datasets में project save करें।</li>
+</ol>
+<h2 id="section-39">39. Single dataset तैयार करने का उदाहरण<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<pre tabindex="0"><code class="language-r">library(phyloseq)
+
+stopifnot(inherits(ps, "phyloseq"))
+stopifnot(!is.null(otu_table(ps)))
+
+if (!is.null(sample_data(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    sample_names(ps),
+    rownames(as.data.frame(sample_data(ps)))
+  ))
+}
+
+if (!is.null(tax_table(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    taxa_names(ps),
+    rownames(as(tax_table(ps), "matrix"))
+  ))
+}
+
+saveRDS(ps, "dataset_phyloseq.rds")
+</code></pre>
+<h2 id="section-40">40. Compatible data-only project<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<pre tabindex="0"><code class="language-r">project &lt;- list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = Sys.time(),
+  datasets = list(
+    COI = ps_coi,
+    `16S` = ps_16s
+  ),
+  active_ds = "COI"
+)
+
+saveRDS(project, "project_data_only.rds")
+</code></pre>
+<p>यह Input data से load हो सकता है, लेकिन figures और module histories जरूरी नहीं कि शामिल हों।</p>
+<h2 id="section-41">41. Traceability principles<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>Original source file रखें, पुराने exports overwrite न करें, export date और object name दर्ज करें, cleaning report देखें, automatic renames document करें, metadata types verify करें, BarCodeR project save करें और source object को cleaned in-memory object से अलग मानें।</p>
+<p>BarCodeR object sample-name cleaning, metadata synchronization, blank replacement और column conversion के कारण source file से अलग हो सकता है।</p>
+<h2 id="internal-sources">सत्यापित internal sources<a aria-label="Permalink" class="heading-anchor" href="#internal-sources">#</a></h2>
+<ol>
+<li><code>modules/data/mod_data_loader_ui.R</code> — current interface और accepted extensions।</li>
+<li><code>modules/data/mod_data_loader_server.R</code> — pending state, detection, cleaning, modals, insertion और reports।</li>
+<li><code>modules/_shared/_dataset_naming.R</code> — safe और unique dataset labels।</li>
+<li><code>modules/_shared/_ps_guard.R</code> — phyloseq class, OTU table और identifier checks।</li>
+<li><code>modules/datasets/mod_datasets_server.R</code> तथा <code>mod_datasets_ui.R</code> — data-only और complete project formats।</li>
+<li><code>app.R</code> — 500 MB limit, <code>datasets()</code> registry, active dataset और unsaved state।</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="इस पृष्ठ पर">
+    <div class="toc-title">इस पृष्ठ पर</div>
+    <nav><a class="toc-l2" href="#section-1">1. सामान्य परिचय</a><a class="toc-l2" href="#section-2">2. BarCodeR में Input data की भूमिका</a><a class="toc-l3" href="#section-2-1">2.1. अब इस टैब में उपलब्ध नहीं</a><a class="toc-l2" href="#section-3">3. Current interface</a><a class="toc-l2" href="#section-4">4. File-size limit</a><a class="toc-l3" href="#section-4-1">4.1. Disk size और memory size</a><a class="toc-l3" href="#section-4-2">4.2. Remote server पर BarCodeR</a><a class="toc-l2" href="#section-5">5. Accepted formats</a><a class="toc-l3" href="#section-5-1">5.1. .rds</a><a class="toc-l3" href="#section-5-2">5.2. .RData या .rda</a><a class="toc-l3" href="#section-5-3">5.3. Unsupported extensions</a><a class="toc-l2" href="#section-6">6. Automatic content detection</a><a class="toc-l3" href="#section-6-1">6.1. Single dataset</a><a class="toc-l3" href="#section-6-2">6.2. Project</a><a class="toc-l3" href="#section-6-3">6.3. Structural detection</a><a class="toc-l2" href="#section-7">7. Dataset और project का अंतर</a><a class="toc-l3" href="#section-7-1">7.1. Dataset</a><a class="toc-l3" href="#section-7-2">7.2. Data-only .rds project</a><a class="toc-l3" href="#section-7-3">7.3. Complete .zip project</a><a class="toc-l3" href="#section-7-4">7.4. Current BarCodeR project नहीं बदलता</a><a class="toc-l2" href="#section-8">8. File load करना</a><a class="toc-l3" href="#section-8-1">8.1. File selection</a><a class="toc-l3" href="#section-8-2">8.2. Read error</a><a class="toc-l2" href="#section-9">9. कई objects वाली .RData</a><a class="toc-l3" href="#section-9-1">9.1. Selected object उपयोग करना</a><a class="toc-l3" href="#section-9-2">9.2. Cancel</a><a class="toc-l3" href="#section-9-3">9.3. ऊपर की cross से बंद करना</a><a class="toc-l2" href="#section-10">10. Single phyloseq dataset load करना</a><a class="toc-l2" href="#section-11">11. Dataset label</a><a class="toc-l3" href="#section-11-1">11.1. Suggested label</a><a class="toc-l3" href="#section-11-2">11.2. Label cleaning</a><a class="toc-l3" href="#section-11-3">11.3. Existing label collision</a><a class="toc-l2" href="#section-12">12. Add या replace</a><a class="toc-l3" href="#section-12-1">12.1. Current session में add</a><a class="toc-l3" href="#section-12-2">12.2. Current memory replace करना</a><a class="toc-l3" href="#section-12-3">12.3. Empty session</a><a class="toc-l2" href="#section-13">13. Phyloseq पर actual cleaning</a><a class="toc-l2" href="#section-14">14. OTU-table orientation</a><a class="toc-l3" href="#section-14-1">14.1. Taxa rows में</a><a class="toc-l3" href="#section-14-2">14.2. Taxa columns में</a><a class="toc-l3" href="#section-14-3">14.3. कोई transposition नहीं</a><a class="toc-l2" href="#section-15">15. Sample-name standardization</a><a class="toc-l3" href="#section-15-1">15.1. Transformations</a><a class="toc-l3" href="#section-15-2">15.2. Examples</a><a class="toc-l3" href="#section-15-3">15.3. Cleaning क्यों होती है</a><a class="toc-l3" href="#section-15-4">15.4. Cleaning हमेशा लागू नहीं रहती</a><a class="toc-l2" href="#section-16">16. Metadata processing</a><a class="toc-l3" href="#section-16-1">16.1. Rownames alignment</a><a class="toc-l2" href="#section-17">17. Blank metadata cells</a><a class="toc-l3" href="#section-17-1">17.1. Column types पर प्रभाव</a><a class="toc-l2" href="#section-18">18. जो components modify नहीं होते</a><a class="toc-l2" href="#section-19">19. Single dataset integrity check</a><a class="toc-l3" href="#section-19-1">19.1. Phyloseq class</a><a class="toc-l3" href="#section-19-2">19.2. OTU table required</a><a class="toc-l3" href="#section-19-3">19.3. Sample identifiers</a><a class="toc-l3" href="#section-19-4">19.4. Taxon identifiers</a><a class="toc-l3" href="#section-19-5">19.5. Guard क्या नहीं जाँचता</a><a class="toc-l2" href="#section-20">20. Inconsistency पर import reject</a><a class="toc-l2" href="#section-21">21. Dataset import report</a><a class="toc-l2" href="#section-22">22. .rds project load करना</a><a class="toc-l3" href="#section-22-1">22.1. Empty session</a><a class="toc-l3" href="#section-22-2">22.2. Existing datasets</a><a class="toc-l2" href="#section-23">23. Project datasets add करना</a><a class="toc-l3" href="#section-23-1">23.1. Collision</a><a class="toc-l3" href="#section-23-2">23.2. Active dataset</a><a class="toc-l2" href="#section-24">24. Project से replace करना</a><a class="toc-l2" href="#section-25">25. Project dataset names</a><a class="toc-l2" href="#section-26">26. Project में non-phyloseq content</a><a class="toc-l2" href="#section-27">27. Project datasets cleaning</a><a class="toc-l2" href="#section-28">28. Dataset और project validation में अंतर</a><a class="toc-l2" href="#section-29">29. Session memory</a><a class="toc-l3" href="#section-29-1">29.1. Import save नहीं है</a><a class="toc-l2" href="#section-30">30. Active dataset</a><a class="toc-l2" href="#section-31">31. Scientific guarantees नहीं मिलतीं</a><a class="toc-l2" href="#section-32">32. Import के बाद recommended checks</a><a class="toc-l2" href="#section-33">33. बाद की dataset management</a><a class="toc-l2" href="#section-34">34. Troubleshooting</a><a class="toc-l3" href="#section-34-1">34.1. File selector में file नहीं दिखती</a><a class="toc-l3" href="#section-34-2">34.2. File 500 MB से बड़ी है</a><a class="toc-l3" href="#section-34-3">34.3. छोटी file अधिक memory लेती है</a><a class="toc-l3" href="#section-34-4">34.4. .rds read error</a><a class="toc-l3" href="#section-34-5">34.5. .RData में compatible object नहीं</a><a class="toc-l3" href="#section-34-6">34.6. कई objects दिखते हैं</a><a class="toc-l3" href="#section-34-7">34.7. गलत project detection</a><a class="toc-l3" href="#section-34-8">34.8. OTU table missing</a><a class="toc-l3" href="#section-34-9">34.9. Sample IDs inconsistent</a><a class="toc-l3" href="#section-34-10">34.10. Taxon IDs inconsistent</a><a class="toc-l3" href="#section-34-11">34.11. Partial metadata reject होती है</a><a class="toc-l3" href="#section-34-12">34.12. Sample names बदल गए</a><a class="toc-l3" href="#section-34-13">34.13. Names clean नहीं हुए</a><a class="toc-l3" href="#section-34-14">34.14. Numeric column text बन गई</a><a class="toc-l3" href="#section-34-15">34.15. Literal "NA" missing नहीं</a><a class="toc-l3" href="#section-34-16">34.16. अपेक्षा से कम datasets load हुए</a><a class="toc-l3" href="#section-34-17">34.17. सभी names dataset_1 आदि बन गए</a><a class="toc-l3" href="#section-34-18">34.18. _2 suffix</a><a class="toc-l3" href="#section-34-19">34.19. पुराने datasets गायब</a><a class="toc-l3" href="#section-34-20">34.20. Figures restore नहीं हुईं</a><a class="toc-l3" href="#section-34-21">34.21. वही file दुबारा trigger नहीं करती</a><a class="toc-l3" href="#section-34-22">34.22. Metadata absent</a><a class="toc-l3" href="#section-34-23">34.23. Taxonomy absent</a><a class="toc-l3" href="#section-34-24">34.24. Tree absent</a><a class="toc-l3" href="#section-34-25">34.25. Reference sequences absent</a><a class="toc-l2" href="#section-35">35. Import से पहले checklist</a><a class="toc-l3" href="#file">File</a><a class="toc-l3" href="#phyloseq">Phyloseq</a><a class="toc-l3" href="#metadata">Metadata</a><a class="toc-l3" href="#session">Session</a><a class="toc-l2" href="#section-36">36. Import के बाद checklist</a><a class="toc-l2" href="#section-37">37. Current limitations</a><a class="toc-l2" href="#section-38">38. Recommended workflow</a><a class="toc-l2" href="#section-39">39. Single dataset तैयार करने का उदाहरण</a><a class="toc-l2" href="#section-40">40. Compatible data-only project</a><a class="toc-l2" href="#section-41">41. Traceability principles</a><a class="toc-l2" href="#internal-sources">सत्यापित internal sources</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · इनपुट डेटा</span><span>दस्तावेज़ संस्करण 1.8.0</span></footer>
+</body>
+</html>

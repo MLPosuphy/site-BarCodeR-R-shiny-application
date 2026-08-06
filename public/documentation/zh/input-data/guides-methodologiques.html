@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>输入数据 — 方法指南 — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="zh" data-kind="guide" data-module="input-data" data-no-result="本页未找到结果。">
+<a class="skip-link" href="#doc-content">方法指南</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR 文档</strong><small>内置文档 — 可离线使用</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>返回 BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="zh" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" >English</option><option value="es" >Español</option><option value="zh" selected>中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">模块</div>
+    
+      <a class="module-link " href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+    
+      <a class="module-link active" href="../input-data/guides-methodologiques.html">输入数据</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">方法指南</a>
+        <a class="" href="references-techniques.html">技术参考</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">数据集</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">描述</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">数据编辑</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">过滤</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">探索</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">分析</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>文档版本</span><strong>1.8.0</strong><span>生成日期 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">输入数据</a><span>›</span><span>方法指南</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="在本页搜索…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>本页未找到结果。</div>
+    <article class="doc-article"><h1 id="top">输入数据 — 方法指南</h1>
+<h2 id="section-1">1. 概述<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p><strong>Input data</strong> 选项卡用于把一个或多个已经构建好的 <code>phyloseq</code> 对象导入 BarCodeR。</p>
+<p>支持以下 R 序列化格式：</p>
+<ul>
+<li><code>.rds</code>；</li>
+<li><code>.RData</code>；</li>
+<li><code>.rda</code>；</li>
+<li><code>.rdata</code>。</li>
+</ul>
+<p>应用会自动判断文件中包含：</p>
+<ol>
+<li>一个 <code>phyloseq</code> 数据集；</li>
+<li>一个包含多个 <code>phyloseq</code> 数据集的项目；</li>
+<li>多个兼容对象，需要用户选择；</li>
+<li>不支持的对象，此时拒绝导入。</li>
+</ol>
+<p>Input data 不会根据独立表格重新构建 <code>phyloseq</code>，而是读取已经序列化的 R 对象。</p>
+<h2 id="section-2">2. Input data 在 BarCodeR 中的位置<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>使用的选项卡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加载已有 <code>phyloseq</code></td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>加载 <code>.rds</code> 项目中的多个 phyloseq</td>
+<td>Input data</td>
+</tr>
+<tr>
+<td>获取集群上生成的 phyloseq</td>
+<td>OpenMetaBar</td>
+</tr>
+<tr>
+<td>从独立表格构建或补全 phyloseq</td>
+<td>Data Edition</td>
+</tr>
+<tr>
+<td>重命名、复制、删除或导出数据集</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>导入含图形和历史记录的完整项目</td>
+<td>Datasets</td>
+</tr>
+<tr>
+<td>恢复当前项目的内部备份</td>
+<td>Datasets</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-2-1">2.1. 当前不再由 Input data 处理的操作<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>当前版本不再直接提供删除、重命名、复制、导出数据集或管理命名项目的功能。这些操作集中在 <strong>Datasets</strong> 中。</p>
+<h2 id="section-3">3. 当前界面<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>界面只有一个主要区域：</p>
+<blockquote>
+<p><strong>加载文件（.rds / .RData / .rda）</strong></p>
+</blockquote>
+<p>其中包括自动检测说明、文件选择器、清理规则说明，以及数据集管理位于 Datasets 的提示。</p>
+<p>当前不再提供独立的“加载数据集/加载项目”选择器、OTU table 方向选择、metadata 转置、分类表修正或删除区域。</p>
+<h2 id="section-4">4. 文件大小限制<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>文件通过 Shiny <code>fileInput</code> 上传。BarCodeR 当前全局限制为：</p>
+<pre tabindex="0"><code class="language-text">500 MB
+</code></pre>
+<p>大于此限制的文件通常无法通过该字段上传。</p>
+<h3 id="section-4-1">4.1. 磁盘大小与内存大小<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<p><code>.rds</code> 可能被压缩。磁盘上的文件可能远小于加载后的 R 对象。</p>
+<p>导入时需要同时容纳已加载对象、当前已有数据集以及清理过程产生的临时副本，因此实际内存需求可能远高于文件大小。</p>
+<h3 id="section-4-2">4.2. 远程服务器上的 BarCodeR<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>当应用运行在远程机器上时，文件会发送到 Shiny 服务器。耗时取决于文件大小、网络速度、服务器负载和可用内存。</p>
+<p>读取和清理是同步执行的，大对象导入期间界面可能暂时无响应。</p>
+<h2 id="section-5">5. 支持的文件格式<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. <code>.rds</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p><code>.rds</code> 保存一个 R 对象。BarCodeR 使用 <code>readRDS()</code> 读取并判断对象类型。</p>
+<p>默认数据集名称来自去掉扩展名的文件名：</p>
+<pre tabindex="0"><code class="language-text">metabarcoding_coi.rds
+→ metabarcoding_coi
+</code></pre>
+<h3 id="section-5-2">5.2. <code>.RData</code> 或 <code>.rda</code><a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p><code>.RData</code> 可包含多个 R 对象。BarCodeR 会：</p>
+<ol>
+<li>在隔离的临时环境中加载文件；</li>
+<li>检查每个对象；</li>
+<li>只保留被识别为数据集或项目的对象；</li>
+<li>若只有一个兼容对象则自动选择；</li>
+<li>若有多个则要求用户选择。</li>
+</ol>
+<p>不兼容对象会被忽略。</p>
+<h3 id="section-5-3">5.3. 不支持的扩展名<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>Input data 不直接导入 <code>.csv</code>、<code>.tsv</code>、<code>.xlsx</code>、<code>.biom</code>、<code>.qza</code>、<code>.zip</code>、<code>.RDS.gz</code>、FASTA、FASTQ 或 Newick。</p>
+<p>独立表格应在 <strong>Data Edition</strong> 中处理；完整 BarCodeR <code>.zip</code> 项目应在 <strong>Datasets</strong> 中导入。</p>
+<h2 id="section-6">6. 自动内容检测<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>检测基于对象真实结构，而不是只看文件名或扩展名。</p>
+<h3 id="section-6-1">6.1. 单个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<p>继承 <code>phyloseq</code> 类的对象被识别为数据集。</p>
+<h3 id="section-6-2">6.2. 项目<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>以下对象会被识别为项目：</p>
+<ul>
+<li>包含 <code>datasets</code> 元素的列表；</li>
+<li>包含历史字段 <code>ps_registry</code> 的列表；</li>
+<li>非空且所有元素都是 <code>phyloseq</code> 的列表。</li>
+</ul>
+<h3 id="section-6-3">6.3. 结构式识别<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>项目识别不一定依赖版本号、<code>format</code> 字段、文件名或专用类。这有利于兼容旧格式，但任意带有 <code>datasets</code> 元素的列表也可能被误判为项目。</p>
+<h2 id="section-7">7. 数据集与项目的区别<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<h3 id="section-7-1">7.1. 数据集<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<p>一个数据集对应一个 <code>phyloseq</code> 对象，可包含 <code>otu_table</code>、<code>sample_data</code>、<code>tax_table</code>、系统发育树和参考序列。</p>
+<p>导入到通用注册表时，真正必需的是 OTU table。</p>
+<h3 id="section-7-2">7.2. 数据型 <code>.rds</code> 项目<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>Input data 加载的 <code>.rds</code> 项目主要包含数据集列表、活动数据集名称和可选保存信息：</p>
+<pre tabindex="0"><code class="language-r">list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = ...,
+  datasets = ...,
+  active_ds = ...
+)
+</code></pre>
+<h3 id="section-7-3">7.3. 完整 <code>.zip</code> 项目<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p>完整 <code>.zip</code> 还可包含图形历史、模块文件、参数和项目清单。请使用 <strong>Datasets → 导入项目（.zip）</strong>。</p>
+<h3 id="section-7-4">7.4. 导入 <code>.rds</code> 不会切换当前 BarCodeR 项目<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p>它不会创建新的命名项目、自动切换当前项目、恢复图形或模块历史，也不会恢复全部导航状态。它只在当前项目内存中添加或替换数据集。</p>
+<h2 id="section-8">8. 加载文件<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. 选择文件<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>一次只能选择一个兼容文件。选择后 BarCodeR 立即读取并决定后续流程。</p>
+<h3 id="section-8-2">8.2. 读取错误<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>文件损坏、并非有效 R 序列化、依赖缺失、类不可用或内容与扩展名不符时，导入会停止。</p>
+<p>文件字段会被重置，以便修复后重新选择同一文件。</p>
+<h2 id="section-9">9. 含多个对象的 <code>.RData</code><a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>检测到多个兼容对象时，会显示 <strong>选择要加载的对象</strong>。</p>
+<p>每个选项显示 R 对象名称和检测类型：</p>
+<pre tabindex="0"><code class="language-text">ps_coi       (dataset)
+ps_16s       (dataset)
+my_project   (project)
+</code></pre>
+<h3 id="section-9-1">9.1. 使用所选对象<a aria-label="Permalink" class="heading-anchor" href="#section-9-1">#</a></h3>
+<p>点击 <strong>使用此对象</strong> 进入对应的数据集或项目流程。</p>
+<h3 id="section-9-2">9.2. 取消<a aria-label="Permalink" class="heading-anchor" href="#section-9-2">#</a></h3>
+<p><strong>取消</strong> 会关闭窗口、清空文件选择器并删除临时待处理对象。</p>
+<h3 id="section-9-3">9.3. 使用右上角关闭按钮<a aria-label="Permalink" class="heading-anchor" href="#section-9-3">#</a></h3>
+<p>当前实现中，右上角关闭按钮与“取消”执行的清理并不完全相同。同一文件可能无法立即再次触发导入。放弃导入时优先使用 <strong>取消</strong>。</p>
+<h2 id="section-10">10. 加载单个 phyloseq 数据集<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<p>检测到单个数据集后，BarCodeR 显示 <strong>准备加载数据集</strong>。</p>
+<p>该窗口用于设置名称、选择“添加”或“替换”，并说明将执行的自动清理。</p>
+<h2 id="section-11">11. 数据集名称<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<h3 id="section-11-1">11.1. 建议名称<a aria-label="Permalink" class="heading-anchor" href="#section-11-1">#</a></h3>
+<p><code>.rds</code> 通常使用文件名；<code>.RData</code> 优先使用 R 对象名。</p>
+<h3 id="section-11-2">11.2. 名称清理<a aria-label="Permalink" class="heading-anchor" href="#section-11-2">#</a></h3>
+<p>确认时会去除首尾空格、将不支持字符替换为 <code>_</code>、移除首尾 <code>_</code>，结果为空时使用 <code>dataset</code>。</p>
+<p>注册表主要保留字母数字、<code>_</code> 和 <code>-</code>。非 ASCII 字符的处理也受 R locale 影响。</p>
+<h3 id="section-11-3">11.3. 名称冲突<a aria-label="Permalink" class="heading-anchor" href="#section-11-3">#</a></h3>
+<p>“添加”模式下，已有名称会通过后缀保护：</p>
+<pre tabindex="0"><code class="language-text">COI
+COI_2
+COI_3
+</code></pre>
+<p>原对象不会被静默覆盖。</p>
+<h2 id="section-12">12. 添加或替换<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. 添加到当前会话<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>默认模式。保留当前所有数据集，添加新对象，必要时使名称唯一，并把新对象设为活动数据集。</p>
+<h3 id="section-12-2">12.2. 替换当前内存数据<a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>清除当前内存中的所有数据集，只保留新数据集并设为活动。</p>
+<blockquote>
+<p><strong>注意：</strong> 磁盘源文件不会被删除，但尚未保存的数据集可能丢失。替换前应在 Datasets 中保存项目。</p>
+</blockquote>
+<h3 id="section-12-3">12.3. 空会话<a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>当前没有数据集时，不显示添加/替换选择，相当于替换一个空列表。</p>
+<h2 id="section-13">13. 实际执行的 phyloseq 清理<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<p>清理是有限且有针对性的。BarCodeR 不会重建整个对象，也不会自动转置表格。</p>
+<p>主要操作：</p>
+<ol>
+<li>确定 OTU table 中样本所在轴；</li>
+<li>必要时规范样本名称；</li>
+<li>与 metadata 同步；</li>
+<li>将 metadata 空白单元格替换为 <code>NA</code>；</li>
+<li>检查部分标识符一致性。</li>
+</ol>
+<h2 id="section-14">14. OTU table 方向<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>BarCodeR 保留原方向，并使用 <code>taxa_are_rows()</code> 判断样本轴。</p>
+<h3 id="section-14-1">14.1. 分类单元在行<a aria-label="Permalink" class="heading-anchor" href="#section-14-1">#</a></h3>
+<p><code>taxa_are_rows(ps) == TRUE</code> 时，样本位于列，因此处理列名。</p>
+<h3 id="section-14-2">14.2. 分类单元在列<a aria-label="Permalink" class="heading-anchor" href="#section-14-2">#</a></h3>
+<p><code>taxa_are_rows(ps) == FALSE</code> 时，样本位于行，因此处理行名。</p>
+<h3 id="section-14-3">14.3. 不自动转置<a aria-label="Permalink" class="heading-anchor" href="#section-14-3">#</a></h3>
+<p>应用不会强制 ASV 在行、样本在列或所有数据集方向一致。旧文档中“选择方向”的弹窗已不再适用。</p>
+<h2 id="section-15">15. 样本名称规范化<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. 转换规则<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>会尝试音译重音字符、去除首尾空格、将内部空格和不安全字符替换为 <code>_</code>、合并连续 <code>_</code>、移除首尾 <code>_</code>、补充空名称并为重复项添加后缀。</p>
+<h3 id="section-15-2">15.2. 示例<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>原始名称</th>
+<th>可能结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Station 01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Station-01</code></td>
+<td><code>Station_01</code></td>
+</tr>
+<tr>
+<td><code>Échantillon A</code></td>
+<td><code>Echantillon_A</code></td>
+</tr>
+<tr>
+<td><code>sample/1</code></td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td><code>sample</code></td>
+</tr>
+<tr>
+<td>空名称</td>
+<td><code>sample_1</code></td>
+</tr>
+<tr>
+<td>两个 <code>sample</code></td>
+<td><code>sample</code>, <code>sample_1</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="section-15-3">15.3. 为什么要清理<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>复杂名称可能在统计公式、表连接、R 包、文件名、图形、导出和 Shiny 选择器中引发问题。</p>
+<h3 id="section-15-4">15.4. 并非所有情况下都保留清理结果<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>只有 metadata 仍能正确对齐时，OTU table 的重命名才会保留。</p>
+<p>如果无法安全匹配，BarCodeR 会撤销 OTU 重命名，保留原始名称并在报告中警告。表间一致性优先于外观清理。</p>
+<h2 id="section-16">16. Metadata 处理<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p><code>sample_data</code> 可缺失。没有 metadata 的 phyloseq 可以导入，但需要样本变量的分析不可用。</p>
+<h3 id="section-16-1">16.1. 行名对齐<a aria-label="Permalink" class="heading-anchor" href="#section-16-1">#</a></h3>
+<p>如果 metadata 行名与 OTU 原始样本名一致，会对二者应用相同转换。</p>
+<p>若无法直接证明匹配，会单独尝试清理 metadata，只有仍与 OTU 兼容时才应用。</p>
+<p>匹配不确定时保留原名称，并在报告中给出警告。</p>
+<h2 id="section-17">17. Metadata 空白单元格<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>空字符串和只含空格的字符串会替换为真正的 <code>NA</code>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>原值</th>
+<th>导入后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>""</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"   "</code></td>
+<td><code>NA</code></td>
+</tr>
+<tr>
+<td><code>"0"</code></td>
+<td><code>"0"</code></td>
+</tr>
+<tr>
+<td><code>"NA"</code></td>
+<td><code>"NA"</code></td>
+</tr>
+<tr>
+<td>真正 <code>NA</code></td>
+<td><code>NA</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>文本 <code>"NA"</code> 不会自动变成缺失值。</p>
+<h3 id="section-17-1">17.1. 列类型影响<a aria-label="Permalink" class="heading-anchor" href="#section-17-1">#</a></h3>
+<p>当前实现会先把每个 metadata 列转为字符，再替换空白。</p>
+<p>因此 numeric、integer、logical、factor、Date 等列可能变成 character。导入后必须在 Description、Data Edition 或 R 中检查列类型。</p>
+<p>这是数据的真实转换，不只是显示变化。</p>
+<h2 id="section-18">18. 不会被修改的 phyloseq 内容<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>Input data 不直接修改 OTU 丰度、方向、ASV 名称、分类值与等级名、参考序列、系统发育树、零值、零丰度分类单元、零深度样本、负值/小数或 OTU table 中的 <code>NA</code>。</p>
+<p>因此它不等于完整科学验证。</p>
+<h2 id="section-19">19. 单数据集一致性检查<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<h3 id="section-19-1">19.1. Phyloseq 类<a aria-label="Permalink" class="heading-anchor" href="#section-19-1">#</a></h3>
+<p>对象必须是真正的 <code>phyloseq</code>。</p>
+<h3 id="section-19-2">19.2. 必需的 OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-19-2">#</a></h3>
+<p>必须包含 <code>otu_table</code>。</p>
+<h3 id="section-19-3">19.3. 样本标识符<a aria-label="Permalink" class="heading-anchor" href="#section-19-3">#</a></h3>
+<p>如果存在 <code>sample_data</code>，其行名必须覆盖全部样本。顺序可不同，但集合必须一致。部分 metadata 会被拒绝。</p>
+<h3 id="section-19-4">19.4. 分类单元标识符<a aria-label="Permalink" class="heading-anchor" href="#section-19-4">#</a></h3>
+<p>如果存在 <code>tax_table</code>，其行名必须覆盖 OTU table 中全部分类单元。</p>
+<h3 id="section-19-5">19.5. 未检查内容<a aria-label="Permalink" class="heading-anchor" href="#section-19-5">#</a></h3>
+<p>通用 guard 不直接检查 <code>refseq</code>/树覆盖、序列有效性、计数是否为整数、是否非负、分类生物学合理性、分类重复或最小测序深度。</p>
+<h2 id="section-20">20. 因不一致而拒绝导入<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<p>样本或分类标识符不一致、缺少 OTU table 或对象不是 phyloseq 时，单数据集导入会被拒绝。</p>
+<p>不会向会话添加数据集，原始文件也不会被修改。</p>
+<h2 id="section-21">21. 单数据集导入报告<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>成功后显示 <strong>数据集已加载并检查</strong>。</p>
+<p>报告包含最终名称、样本数、分类单元/ASV 数、操作总数、源文件、R 对象名、添加/替换模式、内存中数据集总数、OTU 与 metadata 名称的“之前 → 之后”表、空白单元格数量以及警告和备注。</p>
+<p>只展示前十项名称变化，但总数仍会显示。</p>
+<h2 id="section-22">22. 加载 <code>.rds</code> 项目<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>BarCodeR 会提取项目中的 <code>phyloseq</code> 数据集。</p>
+<h3 id="section-22-1">22.1. 空会话<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>没有现有数据集时，直接以替换模式加载，并显示恢复报告。</p>
+<h3 id="section-22-2">22.2. 已有数据集<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p><strong>加载项目</strong> 窗口显示当前名称、项目中的名称以及添加/替换选择。</p>
+<h2 id="section-23">23. 添加项目数据集<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>添加模式保留当前数据集、逐个添加 phyloseq、解决名称冲突并设置活动数据集。</p>
+<h3 id="section-23-1">23.1. 名称冲突<a aria-label="Permalink" class="heading-anchor" href="#section-23-1">#</a></h3>
+<p>已有 <code>COI</code> 时，导入的 <code>COI</code> 可变为 <code>COI_2</code>。</p>
+<h3 id="section-23-2">23.2. 导入后的活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-23-2">#</a></h3>
+<p>如果项目含有效 <code>active_ds</code>，对应数据集通常会被激活；若因冲突改名，则使用新名称。否则激活第一个导入数据集。</p>
+<h2 id="section-24">24. 用项目替换<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>替换模式清除内存中现有数据集，加载项目列表，并在有效时恢复 <code>active_ds</code>，否则选择第一个数据集。</p>
+<p>它不会删除磁盘文件，但未保存的当前数据集可能丢失。</p>
+<h2 id="section-25">25. 项目中的数据集名称<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>有效名称会保留，并在添加模式下处理冲突。</p>
+<p>若名称缺失、为空或部分缺失，会生成：</p>
+<pre tabindex="0"><code class="language-text">dataset_1
+dataset_2
+dataset_3
+</code></pre>
+<p>当前实现中，一个缺失名称可能导致整组名称重新生成。</p>
+<h2 id="section-26">26. 项目中的非 phyloseq 内容<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>对于包含 <code>datasets</code> 或 <code>ps_registry</code> 的结构，最终只保留真正继承 <code>phyloseq</code> 的元素，其余忽略。</p>
+<p>预览中的名称可能多于实际加载数量，应以最终报告为准。</p>
+<p>结构上被识别但不含有效 phyloseq 的项目，在替换模式下可能得到空注册表。</p>
+<h2 id="section-27">27. 项目数据集清理<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>每个 phyloseq 都执行相同的样本名、metadata 行名和空白单元格清理。</p>
+<p>项目报告按数据集汇总样本数、分类单元数、OTU 名称变化、metadata 名称变化和空白单元格数，但不会显示每个对象的全部前后对照表。</p>
+<h2 id="section-28">28. 单数据集与项目的验证差异<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<p>单个数据集在插入前明确经过 <code>bcr_guard_ps()</code>。</p>
+<p>项目中的每个 phyloseq 会被清理，但当前不会在整组插入前逐个显式运行同一 guard。</p>
+<p>活动数据集切换时会进行全局检查。因此导入项目后，应逐个检查重要数据集的警告、维度、组件和标识符。</p>
+<h2 id="section-29">29. 会话内存<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>数据集存储在反应式注册表 <code>datasets()</code> 中，活动名称存储在 <code>active_ds()</code> 中。</p>
+<p>导入后注册表发生变化，下游模块可见新内容，当前项目被标记为已修改且未保存。</p>
+<h3 id="section-29-1">29.1. 导入不等于保存<a aria-label="Permalink" class="heading-anchor" href="#section-29-1">#</a></h3>
+<p>关闭前应使用 <strong>Datasets → 保存项目</strong>。</p>
+<h2 id="section-30">30. 活动数据集<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>单个新数据集导入后会成为活动数据集。项目会尝试恢复保存的 <code>active_ds</code>，否则选择第一个数据集。</p>
+<p>之后可通过全局控件、Datasets 或同步模块更改活动数据集。</p>
+<h2 id="section-31">31. 导入不提供的科学保证<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>成功导入主要表示对象可读、属于 phyloseq、具有 OTU table，并通过部分标识符检查。</p>
+<p>它不保证原始计数、未经过转换、已移除空样本/分类单元、分类正确、等级顺序正确、序列/树覆盖完整、实验设计有效、重复足够、metadata 类型保持不变或适合所有统计分析。</p>
+<h2 id="section-32">32. 导入后建议检查<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<p>打开 <strong>Description</strong>，至少检查：</p>
+<ul>
+<li>样本数、分类单元数、总 reads；</li>
+<li>OTU、metadata、taxonomy、tree、reference sequence 是否存在；</li>
+<li>样本和 ASV 名称及自动重命名；</li>
+<li>metadata 列类型、缺失值、数值变量、因子和日期；</li>
+<li>OTU 方向、负值、小数、<code>NA</code>、零深度样本和零丰度分类单元；</li>
+<li>分类等级、列名、未分类值和 ASV 对应；</li>
+<li>树与参考序列覆盖。</li>
+</ul>
+<h2 id="section-33">33. 后续数据集管理<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<p>在 <strong>Datasets</strong> 中选择活动数据集、重命名、复制、删除、导出、保存项目、恢复内部备份或切换项目。</p>
+<h2 id="section-34">34. 故障排除<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<h3 id="section-34-1">34.1. 文件未显示<a aria-label="Permalink" class="heading-anchor" href="#section-34-1">#</a></h3>
+<p>检查扩展名是否为 <code>.rds</code>、<code>.RData</code>、<code>.rda</code> 或 <code>.rdata</code>，以及是否额外压缩。</p>
+<h3 id="section-34-2">34.2. 超过 500 MB<a aria-label="Permalink" class="heading-anchor" href="#section-34-2">#</a></h3>
+<p>缩小对象、移除不必要组件、拆分数据集、逐个导出，或在受控部署中调整限制。</p>
+<h3 id="section-34-3">34.3. 小文件占用大量内存<a aria-label="Permalink" class="heading-anchor" href="#section-34-3">#</a></h3>
+<p>序列化文件在内存中展开。释放内存并避免同时保留多个大副本。</p>
+<h3 id="section-34-4">34.4. <code>.rds</code> 读取错误<a aria-label="Permalink" class="heading-anchor" href="#section-34-4">#</a></h3>
+<pre tabindex="0"><code class="language-r">obj &lt;- readRDS("file.rds")
+class(obj)
+</code></pre>
+<p>检查文件损坏、传输不完整、类缺失或扩展名错误。</p>
+<h3 id="section-34-5">34.5. <code>.RData</code> 中没有兼容对象<a aria-label="Permalink" class="heading-anchor" href="#section-34-5">#</a></h3>
+<pre tabindex="0"><code class="language-r">load("file.RData")
+ls()
+class(object_name)
+</code></pre>
+<h3 id="section-34-6">34.6. 出现多个对象<a aria-label="Permalink" class="heading-anchor" href="#section-34-6">#</a></h3>
+<p>这是正常情况，选择目标对象。</p>
+<h3 id="section-34-7">34.7. 普通列表被识别为项目<a aria-label="Permalink" class="heading-anchor" href="#section-34-7">#</a></h3>
+<p>它可能含 <code>datasets</code> 或 <code>ps_registry</code>。直接保存目标 phyloseq：</p>
+<pre tabindex="0"><code class="language-r">saveRDS(my_phyloseq, "dataset.rds")
+</code></pre>
+<h3 id="section-34-8">34.8. 缺少 OTU table<a aria-label="Permalink" class="heading-anchor" href="#section-34-8">#</a></h3>
+<pre tabindex="0"><code class="language-r">phyloseq::otu_table(ps)
+</code></pre>
+<h3 id="section-34-9">34.9. 样本 ID 不一致<a aria-label="Permalink" class="heading-anchor" href="#section-34-9">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::sample_names(ps),
+  rownames(as.data.frame(phyloseq::sample_data(ps)))
+)
+</code></pre>
+<p>应返回 <code>TRUE</code>。</p>
+<h3 id="section-34-10">34.10. 分类单元 ID 不一致<a aria-label="Permalink" class="heading-anchor" href="#section-34-10">#</a></h3>
+<pre tabindex="0"><code class="language-r">setequal(
+  phyloseq::taxa_names(ps),
+  rownames(as(phyloseq::tax_table(ps), "matrix"))
+)
+</code></pre>
+<h3 id="section-34-11">34.11. 部分 metadata 被拒绝<a aria-label="Permalink" class="heading-anchor" href="#section-34-11">#</a></h3>
+<p>补齐缺失样本、一致地移除未记录样本，或重新构建对齐对象。</p>
+<h3 id="section-34-12">34.12. 样本名称变化<a aria-label="Permalink" class="heading-anchor" href="#section-34-12">#</a></h3>
+<p>查看导入报告中的“之前 → 之后”。</p>
+<h3 id="section-34-13">34.13. 名称未被清理<a aria-label="Permalink" class="heading-anchor" href="#section-34-13">#</a></h3>
+<p>可能为了保持 metadata 对齐而撤销了 OTU 重命名。</p>
+<h3 id="section-34-14">34.14. 数值列变成文本<a aria-label="Permalink" class="heading-anchor" href="#section-34-14">#</a></h3>
+<pre tabindex="0"><code class="language-r">str(as.data.frame(phyloseq::sample_data(ps)))
+metadata$Depth &lt;- as.numeric(metadata$Depth)
+</code></pre>
+<p>转换前先检查内容。</p>
+<h3 id="section-34-15">34.15. 文本 <code>"NA"</code> 不是缺失值<a aria-label="Permalink" class="heading-anchor" href="#section-34-15">#</a></h3>
+<pre tabindex="0"><code class="language-r">metadata[metadata == "NA"] &lt;- NA
+</code></pre>
+<p>若 <code>"NA"</code> 是合法类别，应谨慎处理。</p>
+<h3 id="section-34-16">34.16. 项目加载的数据集少于预期<a aria-label="Permalink" class="heading-anchor" href="#section-34-16">#</a></h3>
+<p>某些元素可能不是 phyloseq 或被忽略。以最终报告为准。</p>
+<h3 id="section-34-17">34.17. 名称全部变为 <code>dataset_1</code> 等<a aria-label="Permalink" class="heading-anchor" href="#section-34-17">#</a></h3>
+<p>至少有一个列表名称缺失或为空：</p>
+<pre tabindex="0"><code class="language-r">names(project$datasets) &lt;- c("COI", "16S", "ITS")
+</code></pre>
+<h3 id="section-34-18">34.18. 名称出现 <code>_2</code><a aria-label="Permalink" class="heading-anchor" href="#section-34-18">#</a></h3>
+<p>添加模式保护了已有名称。</p>
+<h3 id="section-34-19">34.19. 原数据集消失<a aria-label="Permalink" class="heading-anchor" href="#section-34-19">#</a></h3>
+<p>可能确认了替换模式。请从保存项目、<code>.rds</code>、<code>.zip</code> 或原始文件恢复。</p>
+<h3 id="section-34-20">34.20. <code>.rds</code> 项目没有恢复图形<a aria-label="Permalink" class="heading-anchor" href="#section-34-20">#</a></h3>
+<p>Input data 只加载数据型项目。完整图形和历史应通过 Datasets 导入 <code>.zip</code>。</p>
+<h3 id="section-34-21">34.21. 同一文件无法再次触发<a aria-label="Permalink" class="heading-anchor" href="#section-34-21">#</a></h3>
+<p>上一次可能用右上角关闭按钮结束。临时选择其他文件、重置字段或重新加载选项卡。</p>
+<h3 id="section-34-22">34.22. 没有 metadata<a aria-label="Permalink" class="heading-anchor" href="#section-34-22">#</a></h3>
+<p>导入仍可成功，但依赖样本变量的分析不可用。</p>
+<h3 id="section-34-23">34.23. 没有 taxonomy<a aria-label="Permalink" class="heading-anchor" href="#section-34-23">#</a></h3>
+<p>依赖 <code>tax_table</code> 的分析与可视化不可用。</p>
+<h3 id="section-34-24">34.24. 没有 tree<a aria-label="Permalink" class="heading-anchor" href="#section-34-24">#</a></h3>
+<p>部分 UniFrac 等依赖树的方法不可用。</p>
+<h3 id="section-34-25">34.25. 没有参考序列<a aria-label="Permalink" class="heading-anchor" href="#section-34-25">#</a></h3>
+<p>直接使用序列的分析不可用。</p>
+<h2 id="section-35">35. 导入前检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<h3 id="section">文件<a aria-label="Permalink" class="heading-anchor" href="#section">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>格式为 <code>.rds</code>、<code>.RData</code> 或 <code>.rda</code>。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>小于 500 MB。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>内存足够。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>可在 R 中读取。</li>
+</ul>
+<h3 id="phyloseq">Phyloseq<a aria-label="Permalink" class="heading-anchor" href="#phyloseq">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>存在 OTU table。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>样本 ID 唯一。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>分类单元 ID 唯一。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>metadata 覆盖全部样本。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>taxonomy 覆盖全部分类单元。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>tree 与 sequences 在存在时保持一致。</li>
+</ul>
+<h3 id="metadata">Metadata<a aria-label="Permalink" class="heading-anchor" href="#metadata">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>缺失值已识别。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>数值列已明确。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>有序因子和日期已记录。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>样本名与 OTU table 对齐。</li>
+</ul>
+<h3 id="section-36">当前会话<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>已保存现有数据集。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>理解添加/替换差异。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>已考虑名称冲突。</li>
+</ul>
+<h2 id="section-36-2">36. 导入后检查清单<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>阅读完整清理报告。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查样本重命名。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查样本和分类单元数量。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查 metadata 列类型。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查转换为 <code>NA</code> 的单元格。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>打开 Description。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查 OTU table 与 taxonomy。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>检查 sequences 与 tree。</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>在 Datasets 中保存项目。</li>
+</ul>
+<h2 id="section-37">37. 当前限制<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<ol>
+<li>不进行完整科学验证。</li>
+<li>Metadata 列可能转为 character。</li>
+<li>不自动转置。</li>
+<li>不清理 taxonomy。</li>
+<li>项目验证弱于单数据集。</li>
+<li>项目识别是结构式的。</li>
+<li>使用关闭按钮可能残留临时状态。</li>
+<li>上传上限为 500 MB。</li>
+</ol>
+<h2 id="section-38">38. 推荐流程<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<ol>
+<li>在 R 中构建并检查 phyloseq。</li>
+<li>使用 <code>saveRDS()</code> 保存。</li>
+<li>打开 Input data。</li>
+<li>选择文件。</li>
+<li>选择添加或替换。</li>
+<li>检查名称。</li>
+<li>确认导入。</li>
+<li>阅读报告。</li>
+<li>打开 Description。</li>
+<li>检查维度和组件。</li>
+<li>检查 metadata 类型。</li>
+<li>在 Datasets 中保存项目。</li>
+</ol>
+<h2 id="section-39">39. 准备单个数据集<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<pre tabindex="0"><code class="language-r">library(phyloseq)
+
+stopifnot(inherits(ps, "phyloseq"))
+stopifnot(!is.null(otu_table(ps)))
+
+if (!is.null(sample_data(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    sample_names(ps),
+    rownames(as.data.frame(sample_data(ps)))
+  ))
+}
+
+if (!is.null(tax_table(ps, errorIfNULL = FALSE))) {
+  stopifnot(setequal(
+    taxa_names(ps),
+    rownames(as(tax_table(ps), "matrix"))
+  ))
+}
+
+saveRDS(ps, "dataset_phyloseq.rds")
+</code></pre>
+<h2 id="section-40">40. 兼容的数据型项目<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<pre tabindex="0"><code class="language-r">project &lt;- list(
+  version = 2,
+  format = "version_ok_project",
+  saved_at = Sys.time(),
+  datasets = list(
+    COI = ps_coi,
+    `16S` = ps_16s
+  ),
+  active_ds = "COI"
+)
+
+saveRDS(project, "project_data_only.rds")
+</code></pre>
+<p>该文件可由 Input data 加载，但不一定包含 BarCodeR 图形和模块历史。</p>
+<h2 id="section-41">41. 可追溯性原则<a aria-label="Permalink" class="heading-anchor" href="#section-41">#</a></h2>
+<p>保留原始文件，不覆盖旧导出，记录导出日期，保留原对象名，检查清理报告，记录自动重命名，检查 metadata 类型，保存 BarCodeR 项目，并区分源对象与内存中的清理对象。</p>
+<p>BarCodeR 中的对象可能因样本名清理、metadata 同步、空白替换和列类型转换而与源文件不同。</p>
+<h2 id="section-42">已核实的内部来源<a aria-label="Permalink" class="heading-anchor" href="#section-42">#</a></h2>
+<ol>
+<li><code>modules/data/mod_data_loader_ui.R</code> — 当前界面与支持的扩展名。</li>
+<li><code>modules/data/mod_data_loader_server.R</code> — 临时状态、检测、清理、弹窗、插入与报告。</li>
+<li><code>modules/_shared/_dataset_naming.R</code> — 安全且唯一的数据集名称。</li>
+<li><code>modules/_shared/_ps_guard.R</code> — phyloseq 类、OTU table 与标识符一致性。</li>
+<li><code>modules/datasets/mod_datasets_server.R</code> 与 <code>mod_datasets_ui.R</code> — 数据型和完整项目格式。</li>
+<li><code>app.R</code> — 500 MB 限制、<code>datasets()</code> 注册表、活动数据集与未保存状态。</li>
+</ol>
+</article>
+  </main>
+  <aside class="toc" aria-label="本页目录">
+    <div class="toc-title">本页目录</div>
+    <nav><a class="toc-l2" href="#section-1">1. 概述</a><a class="toc-l2" href="#section-2">2. Input data 在 BarCodeR 中的位置</a><a class="toc-l3" href="#section-2-1">2.1. 当前不再由 Input data 处理的操作</a><a class="toc-l2" href="#section-3">3. 当前界面</a><a class="toc-l2" href="#section-4">4. 文件大小限制</a><a class="toc-l3" href="#section-4-1">4.1. 磁盘大小与内存大小</a><a class="toc-l3" href="#section-4-2">4.2. 远程服务器上的 BarCodeR</a><a class="toc-l2" href="#section-5">5. 支持的文件格式</a><a class="toc-l3" href="#section-5-1">5.1. .rds</a><a class="toc-l3" href="#section-5-2">5.2. .RData 或 .rda</a><a class="toc-l3" href="#section-5-3">5.3. 不支持的扩展名</a><a class="toc-l2" href="#section-6">6. 自动内容检测</a><a class="toc-l3" href="#section-6-1">6.1. 单个数据集</a><a class="toc-l3" href="#section-6-2">6.2. 项目</a><a class="toc-l3" href="#section-6-3">6.3. 结构式识别</a><a class="toc-l2" href="#section-7">7. 数据集与项目的区别</a><a class="toc-l3" href="#section-7-1">7.1. 数据集</a><a class="toc-l3" href="#section-7-2">7.2. 数据型 .rds 项目</a><a class="toc-l3" href="#section-7-3">7.3. 完整 .zip 项目</a><a class="toc-l3" href="#section-7-4">7.4. 导入 .rds 不会切换当前 BarCodeR 项目</a><a class="toc-l2" href="#section-8">8. 加载文件</a><a class="toc-l3" href="#section-8-1">8.1. 选择文件</a><a class="toc-l3" href="#section-8-2">8.2. 读取错误</a><a class="toc-l2" href="#section-9">9. 含多个对象的 .RData</a><a class="toc-l3" href="#section-9-1">9.1. 使用所选对象</a><a class="toc-l3" href="#section-9-2">9.2. 取消</a><a class="toc-l3" href="#section-9-3">9.3. 使用右上角关闭按钮</a><a class="toc-l2" href="#section-10">10. 加载单个 phyloseq 数据集</a><a class="toc-l2" href="#section-11">11. 数据集名称</a><a class="toc-l3" href="#section-11-1">11.1. 建议名称</a><a class="toc-l3" href="#section-11-2">11.2. 名称清理</a><a class="toc-l3" href="#section-11-3">11.3. 名称冲突</a><a class="toc-l2" href="#section-12">12. 添加或替换</a><a class="toc-l3" href="#section-12-1">12.1. 添加到当前会话</a><a class="toc-l3" href="#section-12-2">12.2. 替换当前内存数据</a><a class="toc-l3" href="#section-12-3">12.3. 空会话</a><a class="toc-l2" href="#section-13">13. 实际执行的 phyloseq 清理</a><a class="toc-l2" href="#section-14">14. OTU table 方向</a><a class="toc-l3" href="#section-14-1">14.1. 分类单元在行</a><a class="toc-l3" href="#section-14-2">14.2. 分类单元在列</a><a class="toc-l3" href="#section-14-3">14.3. 不自动转置</a><a class="toc-l2" href="#section-15">15. 样本名称规范化</a><a class="toc-l3" href="#section-15-1">15.1. 转换规则</a><a class="toc-l3" href="#section-15-2">15.2. 示例</a><a class="toc-l3" href="#section-15-3">15.3. 为什么要清理</a><a class="toc-l3" href="#section-15-4">15.4. 并非所有情况下都保留清理结果</a><a class="toc-l2" href="#section-16">16. Metadata 处理</a><a class="toc-l3" href="#section-16-1">16.1. 行名对齐</a><a class="toc-l2" href="#section-17">17. Metadata 空白单元格</a><a class="toc-l3" href="#section-17-1">17.1. 列类型影响</a><a class="toc-l2" href="#section-18">18. 不会被修改的 phyloseq 内容</a><a class="toc-l2" href="#section-19">19. 单数据集一致性检查</a><a class="toc-l3" href="#section-19-1">19.1. Phyloseq 类</a><a class="toc-l3" href="#section-19-2">19.2. 必需的 OTU table</a><a class="toc-l3" href="#section-19-3">19.3. 样本标识符</a><a class="toc-l3" href="#section-19-4">19.4. 分类单元标识符</a><a class="toc-l3" href="#section-19-5">19.5. 未检查内容</a><a class="toc-l2" href="#section-20">20. 因不一致而拒绝导入</a><a class="toc-l2" href="#section-21">21. 单数据集导入报告</a><a class="toc-l2" href="#section-22">22. 加载 .rds 项目</a><a class="toc-l3" href="#section-22-1">22.1. 空会话</a><a class="toc-l3" href="#section-22-2">22.2. 已有数据集</a><a class="toc-l2" href="#section-23">23. 添加项目数据集</a><a class="toc-l3" href="#section-23-1">23.1. 名称冲突</a><a class="toc-l3" href="#section-23-2">23.2. 导入后的活动数据集</a><a class="toc-l2" href="#section-24">24. 用项目替换</a><a class="toc-l2" href="#section-25">25. 项目中的数据集名称</a><a class="toc-l2" href="#section-26">26. 项目中的非 phyloseq 内容</a><a class="toc-l2" href="#section-27">27. 项目数据集清理</a><a class="toc-l2" href="#section-28">28. 单数据集与项目的验证差异</a><a class="toc-l2" href="#section-29">29. 会话内存</a><a class="toc-l3" href="#section-29-1">29.1. 导入不等于保存</a><a class="toc-l2" href="#section-30">30. 活动数据集</a><a class="toc-l2" href="#section-31">31. 导入不提供的科学保证</a><a class="toc-l2" href="#section-32">32. 导入后建议检查</a><a class="toc-l2" href="#section-33">33. 后续数据集管理</a><a class="toc-l2" href="#section-34">34. 故障排除</a><a class="toc-l3" href="#section-34-1">34.1. 文件未显示</a><a class="toc-l3" href="#section-34-2">34.2. 超过 500 MB</a><a class="toc-l3" href="#section-34-3">34.3. 小文件占用大量内存</a><a class="toc-l3" href="#section-34-4">34.4. .rds 读取错误</a><a class="toc-l3" href="#section-34-5">34.5. .RData 中没有兼容对象</a><a class="toc-l3" href="#section-34-6">34.6. 出现多个对象</a><a class="toc-l3" href="#section-34-7">34.7. 普通列表被识别为项目</a><a class="toc-l3" href="#section-34-8">34.8. 缺少 OTU table</a><a class="toc-l3" href="#section-34-9">34.9. 样本 ID 不一致</a><a class="toc-l3" href="#section-34-10">34.10. 分类单元 ID 不一致</a><a class="toc-l3" href="#section-34-11">34.11. 部分 metadata 被拒绝</a><a class="toc-l3" href="#section-34-12">34.12. 样本名称变化</a><a class="toc-l3" href="#section-34-13">34.13. 名称未被清理</a><a class="toc-l3" href="#section-34-14">34.14. 数值列变成文本</a><a class="toc-l3" href="#section-34-15">34.15. 文本 "NA" 不是缺失值</a><a class="toc-l3" href="#section-34-16">34.16. 项目加载的数据集少于预期</a><a class="toc-l3" href="#section-34-17">34.17. 名称全部变为 dataset_1 等</a><a class="toc-l3" href="#section-34-18">34.18. 名称出现 _2</a><a class="toc-l3" href="#section-34-19">34.19. 原数据集消失</a><a class="toc-l3" href="#section-34-20">34.20. .rds 项目没有恢复图形</a><a class="toc-l3" href="#section-34-21">34.21. 同一文件无法再次触发</a><a class="toc-l3" href="#section-34-22">34.22. 没有 metadata</a><a class="toc-l3" href="#section-34-23">34.23. 没有 taxonomy</a><a class="toc-l3" href="#section-34-24">34.24. 没有 tree</a><a class="toc-l3" href="#section-34-25">34.25. 没有参考序列</a><a class="toc-l2" href="#section-35">35. 导入前检查清单</a><a class="toc-l3" href="#section">文件</a><a class="toc-l3" href="#phyloseq">Phyloseq</a><a class="toc-l3" href="#metadata">Metadata</a><a class="toc-l3" href="#section-36">当前会话</a><a class="toc-l2" href="#section-36-2">36. 导入后检查清单</a><a class="toc-l2" href="#section-37">37. 当前限制</a><a class="toc-l2" href="#section-38">38. 推荐流程</a><a class="toc-l2" href="#section-39">39. 准备单个数据集</a><a class="toc-l2" href="#section-40">40. 兼容的数据型项目</a><a class="toc-l2" href="#section-41">41. 可追溯性原则</a><a class="toc-l2" href="#section-42">已核实的内部来源</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · 输入数据</span><span>文档版本 1.8.0</span></footer>
+</body>
+</html>

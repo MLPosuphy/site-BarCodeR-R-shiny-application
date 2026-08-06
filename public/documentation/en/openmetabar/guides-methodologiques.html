@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>OpenMetaBar — Methodological guides — BarCodeR</title>
+  <link rel="stylesheet" href="../../assets/documentation.css">
+  <script defer src="../../assets/documentation.js"></script>
+</head>
+<body data-lang="en" data-kind="guide" data-module="openmetabar" data-no-result="No result found on this page.">
+<a class="skip-link" href="#doc-content">Methodological guides</a>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">B</span><div><strong>BarCodeR documentation</strong><small>Embedded documentation — works offline</small></div></div>
+  <div class="top-actions">
+    <button id="back-to-app" type="button" class="back-to-app">↩ <span>Back to BarCodeR</span></button>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" data-current-lang="en" aria-label="Language">
+    <option value="fr" >Français</option><option value="en" selected>English</option><option value="es" >Español</option><option value="zh" >中文</option><option value="hi" >हिन्दी</option>
+    </select>
+    <button id="theme-toggle" type="button" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation navigation">
+    <div class="module-label">Modules</div>
+    
+      <a class="module-link active" href="../openmetabar/guides-methodologiques.html">OpenMetaBar</a>
+      
+      <nav class="level-nav">
+        <a class="active" href="guides-methodologiques.html">Methodological guides</a>
+        <a class="" href="references-techniques.html">Technical reference</a>
+      </nav>
+      
+    
+      <a class="module-link " href="../input-data/guides-methodologiques.html">Input data</a>
+      
+    
+      <a class="module-link " href="../datasets/guides-methodologiques.html">Datasets</a>
+      
+    
+      <a class="module-link " href="../description/guides-methodologiques.html">Description</a>
+      
+    
+      <a class="module-link " href="../data-edition/guides-methodologiques.html">Data Edition</a>
+      
+    
+      <a class="module-link " href="../filtration/guides-methodologiques.html">Filtration</a>
+      
+    
+      <a class="module-link " href="../exploration/guides-methodologiques.html">Exploration</a>
+      
+    
+      <a class="module-link " href="../analyse/guides-methodologiques.html">Analysis</a>
+      
+    
+      <a class="module-link " href="../multiview/guides-methodologiques.html">MultiView</a>
+      
+    
+    <div class="version-block"><span>Documentation version</span><strong>1.8.0</strong><span>Generated on 2026-08-05</span></div>
+  </aside>
+  <main id="doc-content" class="content">
+    <div class="content-toolbar">
+      <div class="breadcrumbs"><a href="guides-methodologiques.html">OpenMetaBar</a><span>›</span><span>Methodological guides</span></div>
+      <div class="search-wrap"><input id="doc-search" type="search" placeholder="Search this page…" autocomplete="off"><kbd>/</kbd></div>
+    </div>
+    <div id="search-empty" class="search-empty" hidden>No result found on this page.</div>
+    <article class="doc-article"><h1 id="top">OpenMetaBar — Methodological Guides</h1>
+<h2 id="section-1">1. General overview<a aria-label="Permalink" class="heading-anchor" href="#section-1">#</a></h2>
+<p>The <strong>OpenMetaBar</strong> tab lets users launch and monitor a complete metabarcoding data-processing pipeline from FASTQ files.</p>
+<p>The analysis is not executed directly inside the application. BarCodeR acts as a preparation, submission and monitoring interface:</p>
+<ol>
+<li>the user chooses the biological and technical context of the analysis;</li>
+<li>FASTQ files, the experimental design and the reference database are selected;</li>
+<li>BarCodeR checks the files and prepares their transfer;</li>
+<li>the user configures cluster resources and pipeline parameters;</li>
+<li>BarCodeR creates an isolated directory for the run;</li>
+<li>the OpenMetaBar pipeline embedded in the application is copied to the cluster;</li>
+<li>the required Singularity images are checked or installed;</li>
+<li>a Slurm job is submitted;</li>
+<li>the application monitors execution and detects generated files;</li>
+<li>a phyloseq object can then be imported into BarCodeR.</li>
+</ol>
+<p>OpenMetaBar supports several technologies and analysis routes:</p>
+<ul>
+<li>Oxford Nanopore Technologies, or ONT;</li>
+<li>PacBio;</li>
+<li>Illumina;</li>
+<li>LotuS3;</li>
+<li>NextITS;</li>
+<li>the IDMABIO reporting route.</li>
+</ul>
+<h2 id="section-2">2. What OpenMetaBar does and does not do<a aria-label="Permalink" class="heading-anchor" href="#section-2">#</a></h2>
+<h3 id="section-2-1">2.1. What OpenMetaBar automates<a aria-label="Permalink" class="heading-anchor" href="#section-2-1">#</a></h3>
+<p>OpenMetaBar automates, among other things:</p>
+<ul>
+<li>preparation of the working directory;</li>
+<li>initial file validation;</li>
+<li>transfer of local files;</li>
+<li>rewriting FASTQ paths in the design file;</li>
+<li>generation of the Nextflow configuration;</li>
+<li>preparation of Slurm resources;</li>
+<li>pipeline deployment;</li>
+<li>management of Singularity images;</li>
+<li>job submission;</li>
+<li>monitoring of Slurm status;</li>
+<li>detection of results;</li>
+<li>import of a phyloseq object.</li>
+</ul>
+<h3 id="section-2-2">2.2. What remains the user's responsibility<a aria-label="Permalink" class="heading-anchor" href="#section-2-2">#</a></h3>
+<p>The application cannot automatically determine:</p>
+<ul>
+<li>whether the selected marker truly matches the primers used;</li>
+<li>whether the entered expected length is biologically relevant;</li>
+<li>whether a reference database is appropriate for the marker and organisms studied;</li>
+<li>whether quality thresholds suit the sequencing technology;</li>
+<li>whether the coding-sequence filter is relevant;</li>
+<li>whether the chosen clustering or denoising method fits the study objective;</li>
+<li>whether taxonomic parameters provide sufficiently reliable identification;</li>
+<li>whether the requested Slurm resources are appropriate for the data volume.</li>
+</ul>
+<blockquote>
+<p><strong>Important principle —</strong> A default value proposed by the application is not necessarily a universal recommendation.</p>
+</blockquote>
+<h2 id="section-3">3. Workflow overview<a aria-label="Permalink" class="heading-anchor" href="#section-3">#</a></h2>
+<p>The recommended workflow is:</p>
+<ol>
+<li><strong>Check or establish the cluster connection.</strong></li>
+<li><strong>Define the analysis context.</strong></li>
+<li><strong>Validate the context.</strong></li>
+<li><strong>Choose FASTQ files, the design file and the reference database.</strong></li>
+<li><strong>Correct or create the design file if necessary.</strong></li>
+<li><strong>Validate the files and prepare their transfer.</strong></li>
+<li><strong>Configure the run and Slurm resources.</strong></li>
+<li><strong>Validate the general configuration.</strong></li>
+<li><strong>Configure parameters specific to the selected route.</strong></li>
+<li><strong>Review the optional previews.</strong></li>
+<li><strong>Launch the analysis.</strong></li>
+<li><strong>Monitor the steps and execution logs.</strong></li>
+<li><strong>Review the results.</strong></li>
+<li><strong>Import the phyloseq object into BarCodeR.</strong></li>
+<li><strong>Manage the run from the history.</strong></li>
+</ol>
+<p>The context can be validated without connecting to the cluster. A connection is nevertheless required to browse remote files, validate and transfer files, check the remote directory, detect Slurm partitions, prepare containers, submit the run, monitor execution and inspect previous runs.</p>
+<h2 id="section-4">4. Choosing the analysis route<a aria-label="Permalink" class="heading-anchor" href="#section-4">#</a></h2>
+<p>The combination <strong>technology + marker + engine</strong> determines which sub-pipeline is executed.</p>
+<h3 id="section-4-1">4.1. Available routes<a aria-label="Permalink" class="heading-anchor" href="#section-4-1">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Marker</th>
+<th>Available engine</th>
+<th>Main route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ONT</td>
+<td>COI</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S</td>
+<td>LotuS3</td>
+<td>Standard ONT</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>COI-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>16S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>ONT</td>
+<td>18S-idmabio</td>
+<td>LotuS3 + IDMABIO</td>
+<td>ONT IDMABIO</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>PacBio 16S</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>ITS</td>
+<td>LotuS3 or NextITS</td>
+<td>PacBio ITS</td>
+</tr>
+<tr>
+<td>PacBio</td>
+<td>LSU</td>
+<td>LotuS3 or NextITS</td>
+<td>PacBio LSU</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>16S</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>ITS</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+<tr>
+<td>Illumina</td>
+<td>LSU</td>
+<td>LotuS3</td>
+<td>Illumina</td>
+</tr>
+</tbody>
+</table></div>
+<p>The <code>-idmabio</code> variants are proposed only when the application recognises a compatible connection to the biglogin cluster.</p>
+<h3 id="section-4-2">4.2. Consequences of the selected route<a aria-label="Permalink" class="heading-anchor" href="#section-4-2">#</a></h3>
+<p>The context determines:</p>
+<ul>
+<li>whether MiniBar is available;</li>
+<li>whether the NextITS engine can be used;</li>
+<li>which parameters are displayed;</li>
+<li>which Singularity images are mandatory;</li>
+<li>which pipeline steps are executed;</li>
+<li>which outputs can be produced.</li>
+</ul>
+<p>Changing the technology, marker or engine after validation invalidates the context. Dependent steps must then be checked again.</p>
+<h2 id="section-5">5. Connecting to the cluster<a aria-label="Permalink" class="heading-anchor" href="#section-5">#</a></h2>
+<h3 id="section-5-1">5.1. Opening the connection window<a aria-label="Permalink" class="heading-anchor" href="#section-5-1">#</a></h3>
+<p>The button at the top of the tab shows the connection status:</p>
+<ul>
+<li><strong>Cluster not connected</strong>: no active SSH connection;</li>
+<li><strong>Active connection to check</strong>: SSH is open, but some cluster prerequisites have not been confirmed;</li>
+<li><strong>Cluster connected</strong>: the connection and the main required commands have been detected.</li>
+</ul>
+<p>Click the button to open the connection window.</p>
+<h3 id="section-5-2">5.2. Information to provide<a aria-label="Permalink" class="heading-anchor" href="#section-5-2">#</a></h3>
+<p>The connection uses the server address, SSH port, username and, when required, a password. The password may be left empty when key-based SSH authentication is already configured and working.</p>
+<h3 id="section-5-3">5.3. Checks performed<a aria-label="Permalink" class="heading-anchor" href="#section-5-3">#</a></h3>
+<p>After connection, BarCodeR checks the availability of Bash, <code>find</code>, <code>tar</code>, <code>sbatch</code>, <code>squeue</code>, <code>sacct</code>, <code>scancel</code>, <code>sinfo</code>, Rscript, accessible Slurm partitions and some limits on time, memory and processors.</p>
+<p>An SSH connection may therefore be open while the cluster is not yet considered ready to run OpenMetaBar.</p>
+<h3 id="section-5-4">5.4. The biglogin cluster case<a aria-label="Permalink" class="heading-anchor" href="#section-5-4">#</a></h3>
+<p>On the supported infrastructure, the connection can be made directly or through a bigm9 relay when a direct connection is unavailable. This mechanism is managed automatically.</p>
+<h3 id="section-5-5">5.5. Disconnection during a run<a aria-label="Permalink" class="heading-anchor" href="#section-5-5">#</a></h3>
+<p>Disconnecting the application does not cancel the Slurm job. Once submitted, the computation continues on the cluster. The run can be recovered from the history after reconnecting to the same cluster, using a compatible root directory and having the required permissions.</p>
+<h2 id="section-6">6. Defining the analysis context<a aria-label="Permalink" class="heading-anchor" href="#section-6">#</a></h2>
+<p>The first configuration card contains the parameters that determine the pipeline route.</p>
+<h3 id="section-6-1">6.1. Sequencing technology<a aria-label="Permalink" class="heading-anchor" href="#section-6-1">#</a></h3>
+<h4>Oxford Nanopore Technologies</h4>
+<p>Selecting <strong>ONT</strong> displays COI, 16S and 18S markers, may expose IDMABIO variants, displays MiniBar demultiplexing and uses the ONT route with LotuS3.</p>
+<h4>PacBio</h4>
+<p>Selecting <strong>PacBio</strong> displays 16S, ITS and LSU markers, enables the LotuS3/NextITS choice for ITS and LSU, hides MiniBar and uses a dedicated PacBio route.</p>
+<h4>Illumina</h4>
+<p>Selecting <strong>Illumina</strong> displays 16S, ITS and LSU markers, uses LotuS3, hides MiniBar and supports single-end or paired-end files according to the design file.</p>
+<h3 id="section-6-2">6.2. Marker or target<a aria-label="Permalink" class="heading-anchor" href="#section-6-2">#</a></h3>
+<p>The marker is used to choose the route, suggest a database type, suggest a NextITS region, identify IDMABIO variants and adapt visible parameters. It does not verify that the primers in the design actually target that marker.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Suggested database type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COI</td>
+<td>BOLD</td>
+</tr>
+<tr>
+<td>16S</td>
+<td>SILVA</td>
+</tr>
+<tr>
+<td>18S</td>
+<td>PR2</td>
+</tr>
+<tr>
+<td>ITS</td>
+<td>UNITE</td>
+</tr>
+<tr>
+<td>LSU</td>
+<td>SILVA</td>
+</tr>
+</tbody>
+</table></div>
+<p>This suggestion changes the <strong>declared database type</strong>, but does not automatically select a different FASTA file.</p>
+<h3 id="section-6-3">6.3. Reference database type<a aria-label="Permalink" class="heading-anchor" href="#section-6-3">#</a></h3>
+<p>Available values are BOLD, SILVA, PR2, UNITE, NCBI nt and custom. The declared type mainly tells the pipeline how to interpret FASTA headers and build the taxonomy mapping.</p>
+<p>The declared database type and the selected FASTA file are separate. They must be consistent. Declaring a personal FASTA as BOLD does not turn it into a BOLD database.</p>
+<h3 id="section-6-4">6.4. Analysis engine<a aria-label="Permalink" class="heading-anchor" href="#section-6-4">#</a></h3>
+<p>The engine selector appears only for PacBio + ITS and PacBio + LSU. Choices are <strong>LotuS3</strong> and <strong>NextITS</strong>. In all other contexts, the selector is hidden and does not affect the route.</p>
+<h3 id="section-6-5">6.5. Validating the context<a aria-label="Permalink" class="heading-anchor" href="#section-6-5">#</a></h3>
+<p>Click <strong>Validate context</strong> to unlock file selection. Changing the technology, marker or engine afterwards locks this step again.</p>
+<h2 id="section-7">7. Choosing run files<a aria-label="Permalink" class="heading-anchor" href="#section-7">#</a></h2>
+<p>After the context has been validated, the <strong>Choose run files</strong> button becomes available. Three file categories must be defined: FASTQ files, the design file and the reference database. An additional chimera database is required for NextITS.</p>
+<h3 id="section-7-1">7.1. Choosing FASTQ files<a aria-label="Permalink" class="heading-anchor" href="#section-7-1">#</a></h3>
+<h4>Local source</h4>
+<p>Local FASTQ files are selected using the application's file browser. They are not uploaded through a standard web upload: BarCodeR uses their real path and then transfers them to the cluster.</p>
+<p>Consequently, the usual Shiny upload size limit does not apply, but the files must remain accessible until the transfer is complete.</p>
+<h4>Cluster source</h4>
+<p>FASTQ files may already be present on the cluster. They can be selected by entering a path or through the remote browser. An active SSH connection is required.</p>
+<h4>One or more FASTQ files</h4>
+<p>The application accepts multiple files and keeps them separate. They are not concatenated automatically. The basename is preserved, so two files from different directories with the same name cause a collision.</p>
+<p>Problematic example:</p>
+<pre tabindex="0"><code class="language-text">/run1/sample.fastq.gz
+/run2/sample.fastq.gz
+</code></pre>
+<p>Expected extensions are <code>.fastq</code>, <code>.fastq.gz</code>, <code>.fq</code> or <code>.fq.gz</code>.</p>
+<h4>Already demultiplexed FASTQ files</h4>
+<p>When each file already represents one sample, disable MiniBar for ONT, use one sample per design row and map each row to the correct FASTQ file.</p>
+<h4>Non-demultiplexed FASTQ files</h4>
+<p>When one file contains several samples identified by barcodes, enable MiniBar and enter the barcodes and primers for every sample. Several design rows may point to the same FASTQ file.</p>
+<h3 id="section-7-2">7.2. Choosing the design file<a aria-label="Permalink" class="heading-anchor" href="#section-7-2">#</a></h3>
+<p>The design file may be local, remote, or created/edited in the integrated editor. TSV and CSV formats are accepted.</p>
+<h4>Columns required by the pipeline</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sample_ID</code></td>
+<td>Unique sample identifier</td>
+</tr>
+<tr>
+<td><code>fastq_path</code></td>
+<td>Path to one or more FASTQ files</td>
+</tr>
+<tr>
+<td><code>barcodeF</code></td>
+<td>Forward barcode</td>
+</tr>
+<tr>
+<td><code>barcodeR</code></td>
+<td>Reverse barcode</td>
+</tr>
+<tr>
+<td><code>primerF</code></td>
+<td>Forward primer</td>
+</tr>
+<tr>
+<td><code>primerR</code></td>
+<td>Reverse primer</td>
+</tr>
+</tbody>
+</table></div>
+<p>The columns must exist even when barcodes are not used. An explicit value such as <code>NA</code> may be preferable to an empty cell depending on the expected pipeline behaviour.</p>
+<blockquote>
+<p><strong>Warning —</strong> The integrated editor may consider a two-column table editable, while the full pipeline validation requires the six exact columns. A design described as “consistent” by the editor can still be rejected at launch.</p>
+</blockquote>
+<h4>Sample identifiers</h4>
+<p>Identifiers must be present, unique and preferably restricted to <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, <code>.</code>, <code>-</code> and <code>_</code>.</p>
+<p>Automatic correction transliterates accents, replaces invalid characters, cleans leading or trailing separators and adds suffixes to duplicates. Letter case is preserved.</p>
+<h4>Path column</h4>
+<p>The second column must be recognised as a path column. Accepted names include <code>path</code>, <code>fastq_path</code>, <code>filepath</code>, <code>file_path</code>, <code>input_dir</code>, <code>directory</code>, <code>dir</code> and <code>folder</code>. Use <code>fastq_path</code> directly to avoid ambiguity.</p>
+<p>Before launch, this column is renamed <code>fastq_path</code> and paths are rewritten for the remote run directory.</p>
+<h4>Paired-end files</h4>
+<p>For an Illumina pair, <code>fastq_path</code> may contain two comma-separated files:</p>
+<pre tabindex="0"><code class="language-text">sample_R1.fastq.gz,sample_R2.fastq.gz
+</code></pre>
+<p>Both files must have been selected and their names must match exactly.</p>
+<h4>Matching the design and FASTQ files</h4>
+<p>Every referenced file must match a selected filename. Differences in extension, case, suffix or a typing error may trigger an error.</p>
+<h4>Single FASTQ case</h4>
+<p>When every row refers to the same raw file, the application can rewrite paths so every sample uses that remote FASTQ, notably before MiniBar demultiplexing.</p>
+<h3 id="section-7-3">7.3. Primers in the design file<a aria-label="Permalink" class="heading-anchor" href="#section-7-3">#</a></h3>
+<p><code>primerF</code> and <code>primerR</code> are used for orientation. Enter them 5′ to 3′, with valid IUPAC nucleotide characters and no spaces. Degenerate bases are supported.</p>
+<p>When orientation is enabled, the pipeline expects one unique primer pair per FASTQ file. It raises an error when no pair is found, several different pairs map to the same FASTQ, or a primer contains invalid characters.</p>
+<h3 id="section-7-4">7.4. Barcodes in the design file<a aria-label="Permalink" class="heading-anchor" href="#section-7-4">#</a></h3>
+<p><code>barcodeF</code> and <code>barcodeR</code> are used by MiniBar. Barcodes that are too similar, combined with high error tolerance, increase the risk of incorrect sample assignment.</p>
+<h3 id="section-7-5">7.5. Choosing the reference database<a aria-label="Permalink" class="heading-anchor" href="#section-7-5">#</a></h3>
+<p>The database may be local or remote and must be a compatible FASTA (<code>.fa</code>, <code>.fna</code>, <code>.fasta</code>, <code>.fas</code>, optionally gzip-compressed).</p>
+<p>It is used to create a cleaned FASTA, extract a taxonomic table from headers and perform taxonomic assignment.</p>
+<p>Check that the file matches the marker, uses the correct alphabet, contains unique identifiers, has usable taxonomy in its headers, matches the declared type and is readable on the cluster.</p>
+<h2 id="section-8">8. Using the design editor<a aria-label="Permalink" class="heading-anchor" href="#section-8">#</a></h2>
+<h3 id="section-8-1">8.1. Editing cells<a aria-label="Permalink" class="heading-anchor" href="#section-8-1">#</a></h3>
+<p>Cells can be edited directly. After each change, the application reassesses the minimum structure, the path column, sample identifiers and matching with selected FASTQ files.</p>
+<h3 id="section-8-2">8.2. Adding or deleting rows<a aria-label="Permalink" class="heading-anchor" href="#section-8-2">#</a></h3>
+<p>A row can be added and several rows can be deleted. Completely empty rows are ignored when saving but produce a warning.</p>
+<h3 id="section-8-3">8.3. Adding, renaming or deleting a column<a aria-label="Permalink" class="heading-anchor" href="#section-8-3">#</a></h3>
+<p>The editor supports all three operations. At least two columns must remain. A complete design must contain exactly <code>Sample_ID</code>, <code>fastq_path</code>, <code>barcodeF</code>, <code>barcodeR</code>, <code>primerF</code>, <code>primerR</code>.</p>
+<h3 id="section-8-4">8.4. Correcting sample names<a aria-label="Permalink" class="heading-anchor" href="#section-8-4">#</a></h3>
+<p>The correction button cleans characters, prevents empty identifiers and makes names unique. Review changes because these identifiers will appear in results and the phyloseq object.</p>
+<h3 id="section-8-5">8.5. Generating a design from FASTQ files<a aria-label="Permalink" class="heading-anchor" href="#section-8-5">#</a></h3>
+<p>This option is available only when MiniBar is disabled. The application initially creates <code>SampleID</code> and <code>path</code>.</p>
+<p>This is not yet a complete design. Rename the columns to <code>Sample_ID</code> and <code>fastq_path</code>, add <code>barcodeF</code>, <code>barcodeR</code>, <code>primerF</code>, <code>primerR</code>, then fill the required values.</p>
+<h3 id="section-8-6">8.6. Saving the design<a aria-label="Permalink" class="heading-anchor" href="#section-8-6">#</a></h3>
+<p>Saving is blocked while the editor detects a structural error. It replaces the current selection with a temporary local file named <code>design_edite.tsv</code>. Full pipeline validation occurs later at launch.</p>
+<h2 id="section-9">9. Validating and preparing files<a aria-label="Permalink" class="heading-anchor" href="#section-9">#</a></h2>
+<p>The <strong>Validate and transfer</strong> button requires an active connection. This step checks selections, file existence, the beginning of FASTQ files, some design issues, sample names and remote disk space. It transfers local files to a staging area and keeps paths for files already on the cluster.</p>
+<p>The disk-space check is preventive and may be approximate depending on the remote system. When complete, the main button displays <strong>Files ready</strong>.</p>
+<h2 id="section-10">10. Configuring the run and cluster<a aria-label="Permalink" class="heading-anchor" href="#section-10">#</a></h2>
+<h3 id="section-10-1">10.1. Run root directory<a aria-label="Permalink" class="heading-anchor" href="#section-10-1">#</a></h3>
+<p>A unique subdirectory is created under this root for each run. The user needs permission to create, write, execute, read and clean files. The embedded pipeline is copied into the run directory and later removed according to the cleanup logic.</p>
+<h3 id="section-10-2">10.2. Slurm partition<a aria-label="Permalink" class="heading-anchor" href="#section-10-2">#</a></h3>
+<p>When <code>sinfo</code> is available, detected partitions are proposed. The partition affects resources, maximum duration, priority and account restrictions. A visible partition is not necessarily authorised for the current user.</p>
+<h3 id="section-10-3">10.3. Memory for LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-10-3">#</a></h3>
+<p>Memory must include a unit, such as <code>16G</code>, <code>70G</code> or <code>120G</code>. Do not enter only <code>70</code>, which Slurm may interpret as approximately 70 MB.</p>
+<p>Too little memory may cause <code>OUT_OF_MEMORY</code>; excessive memory may increase queue time.</p>
+<h3 id="section-10-4">10.4. Cores for LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-10-4">#</a></h3>
+<p>The core count defines Slurm CPUs, LotuS3 threads and some resources for child processes. Requesting more cores does not guarantee proportional speed-up and may make the job harder to schedule.</p>
+<h3 id="section-10-5">10.5. Container module<a aria-label="Permalink" class="heading-anchor" href="#section-10-5">#</a></h3>
+<p>This field must exactly match the module providing Singularity or Singularity-CE, for example <code>singularity-ce/4.1.0</code>.</p>
+<h3 id="section-10-6">10.6. Nextflow module<a aria-label="Permalink" class="heading-anchor" href="#section-10-6">#</a></h3>
+<p>This field specifies the Nextflow version, for example <code>nextflow/25.10.4</code>. A missing or incompatible module prevents launch.</p>
+<h3 id="section-10-7">10.7. Run name<a aria-label="Permalink" class="heading-anchor" href="#section-10-7">#</a></h3>
+<p>The name helps identify the directory, Slurm job and history entry. The application automatically adds a date, session identifier and random suffix. Avoid very long names, special characters and sensitive information.</p>
+<h3 id="section-10-8">10.8. Keeping intermediate files<a aria-label="Permalink" class="heading-anchor" href="#section-10-8">#</a></h3>
+<p>The debug option keeps <code>work/</code> after success. This directory helps inspect commands and diagnose issues but can be very large. Intermediate files are already retained after failure. <code>work/</code> can later be removed from the history.</p>
+<h2 id="section-11">11. Understanding initial values<a aria-label="Permalink" class="heading-anchor" href="#section-11">#</a></h2>
+<p>The application starts with settings initially suited to <strong>ONT + COI</strong>: orientation enabled, length filter enabled, expected length 658, minimum quality 20, coding filter enabled and translation table 5.</p>
+<p>These values do not automatically suit 16S, 18S, ITS or LSU. For those markers, review at least the coding filter, expected length, genetic code, amplicon type and taxonomic group.</p>
+<p>The first change to some parameters displays a warning that the initial value is optimised. This only means a controlled initial value exists, not that it is optimal for every protocol.</p>
+<h2 id="section-12">12. MiniBar demultiplexing — ONT routes<a aria-label="Permalink" class="heading-anchor" href="#section-12">#</a></h2>
+<h3 id="section-12-1">12.1. Enabling or disabling MiniBar<a aria-label="Permalink" class="heading-anchor" href="#section-12-1">#</a></h3>
+<p>Enable MiniBar when one FASTQ contains several barcode-labelled samples and the design contains the required information. MiniBar produces per-sample FASTQ files and metrics for demultiplexed and retained reads. Unknown or ambiguous reads are not published as assigned samples.</p>
+<p>Disable MiniBar when FASTQ files are already separated by sample or demultiplexing was performed upstream.</p>
+<h3 id="section-12-2">12.2. Identification method — <code>M</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-2">#</a></h3>
+<p>Methods 1, 2 and 3 are passed directly to MiniBar with <code>-M</code>. They alter the internal assignment strategy based on barcodes and primers.</p>
+<p>The application does not explain the algorithmic differences. Keep the method validated for the protocol, avoid changing it between comparable batches without justification, and review demultiplexing metrics after any change.</p>
+<h3 id="section-12-3">12.3. Maximum barcode errors — <code>e</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-3">#</a></h3>
+<p>A low value increases specificity but may lose noisy reads. A high value recovers more altered barcodes but increases the risk of confusing similar barcodes. <code>0</code> requires an exact match.</p>
+<h3 id="section-12-4">12.4. Maximum primer errors — <code>E</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-4">#</a></h3>
+<p>A higher tolerance recovers more noisy reads but may increase non-specific matches. A lower tolerance strengthens specificity but can remove valid reads.</p>
+<h3 id="section-12-5">12.5. MiniBar parameter — <code>l</code><a aria-label="Permalink" class="heading-anchor" href="#section-12-5">#</a></h3>
+<p>The interface describes it as a <strong>search window</strong>, whereas the pipeline schema describes it as a <strong>minimum read length</strong>. The value is passed directly to <code>-l</code>.</p>
+<p>Because of this discrepancy, leave the field blank unless a value has been validated, do not assign it an arbitrary interpretation, and compare metrics before and after any change.</p>
+<h2 id="section-13">13. Amplicon orientation<a aria-label="Permalink" class="heading-anchor" href="#section-13">#</a></h2>
+<h3 id="section-13-1">13.1. Single-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-1">#</a></h3>
+<p>For a single FASTQ, the pipeline finds primers, detects both orientations, places sequences in the <code>primerF → primerR</code> direction, removes primers and retains the internal region. Reads without a complete primer pair are discarded.</p>
+<h3 id="section-13-2">13.2. Non-degenerate and degenerate primers<a aria-label="Permalink" class="heading-anchor" href="#section-13-2">#</a></h3>
+<p>With primers containing only A/C/G/T, the step currently allows up to one mismatch. With degenerate IUPAC codes, degenerate-pattern matching is used without enabling that additional mismatch mode.</p>
+<h3 id="section-13-3">13.3. Paired-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-13-3">#</a></h3>
+<p>For a FASTQ pair, the orientation step is skipped and reports <code>SKIPPED_PAIRED_END</code>. Reads are therefore not reoriented and primers are not removed by this process.</p>
+<h3 id="section-13-4">13.4. NextITS route<a aria-label="Permalink" class="heading-anchor" href="#section-13-4">#</a></h3>
+<p>NextITS has its own processing for ITS regions and primers; this general orientation step does not apply in the same way.</p>
+<h3 id="section-13-5">13.5. When to disable orientation<a aria-label="Permalink" class="heading-anchor" href="#section-13-5">#</a></h3>
+<p>Disable it when primers have already been removed, all sequences are already consistently oriented or upstream processing guarantees this preparation.</p>
+<h2 id="section-14">14. Filter order<a aria-label="Permalink" class="heading-anchor" href="#section-14">#</a></h2>
+<p>Filters are cumulative and applied in this order: quality, length, coding. Each filter receives only reads retained by the previous one. Several moderately strict settings may therefore become highly restrictive. The pipeline stops if no reads remain.</p>
+<h2 id="section-15">15. Length filter<a aria-label="Permalink" class="heading-anchor" href="#section-15">#</a></h2>
+<h3 id="section-15-1">15.1. Activation and input<a aria-label="Permalink" class="heading-anchor" href="#section-15-1">#</a></h3>
+<p>When disabled, the entered length is ignored. When enabled, provide one or more comma-separated integers, for example <code>480</code> or <code>450,550</code>.</p>
+<h3 id="section-15-2">15.2. Actual interval used<a aria-label="Permalink" class="heading-anchor" href="#section-15-2">#</a></h3>
+<p>The pipeline applies a <strong>±100 nucleotide</strong> margin around each expected length.</p>
+<p>For <code>658</code>, the interval is <code>558–758</code>. For <code>500,800</code>, the intervals are <code>400–600</code> and <code>700–900</code>.</p>
+<h3 id="section-15-3">15.3. Choosing a length<a aria-label="Permalink" class="heading-anchor" href="#section-15-3">#</a></h3>
+<p>The value depends on the region between primers, whether primers are still present at filtering time, biological variability, technology and target groups. <code>658</code> belongs to the initial COI context and must not be retained automatically.</p>
+<h3 id="section-15-4">15.4. Empty or invalid field<a aria-label="Permalink" class="heading-anchor" href="#section-15-4">#</a></h3>
+<p>In the current implementation, an empty or unparsable value may silently be replaced with <code>658</code>. If the filter is enabled, do not leave the field blank unless that value is genuinely intended.</p>
+<h3 id="section-15-5">15.5. Paired-end reads<a aria-label="Permalink" class="heading-anchor" href="#section-15-5">#</a></h3>
+<p>The filter is applied separately to R1 and R2 before resynchronisation. It evaluates each read, not the merged amplicon. For 250-nt reads, an expected length of 658 would remove both mates.</p>
+<h3 id="section-15-6">15.6. Resynchronisation<a aria-label="Permalink" class="heading-anchor" href="#section-15-6">#</a></h3>
+<p>After filtering, pairs are matched again by identifier. Reads without a retained mate become orphans. Only complete pairs continue.</p>
+<h2 id="section-16">16. Quality filter<a aria-label="Permalink" class="heading-anchor" href="#section-16">#</a></h2>
+<p>The minimum threshold is passed to SeqKit. A higher value increases stringency and reduces read count; a lower value preserves depth but also more noise. The choice depends on the technology, sequencing generation and upstream preprocessing.</p>
+<p>For paired-end data, filtering is applied separately to R1 and R2, followed by resynchronisation. If only one mate is removed, the other becomes an orphan.</p>
+<h2 id="section-17">17. Coding-sequence filter<a aria-label="Permalink" class="heading-anchor" href="#section-17">#</a></h2>
+<p>The filter retains reads with at least one reading frame that can be translated without an internal stop codon according to the selected genetic code. It tests the three frames in the supplied orientation.</p>
+<p>It is mainly relevant for a coding region such as COI and is generally unsuitable for 16S, 18S, ITS and LSU. If orientation is disabled, coding sequences in reverse orientation may be rejected.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Genetic code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Standard code</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Vertebrate mitochondrial</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Invertebrate mitochondrial</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Bacterial, archaeal and plastid</td>
+</tr>
+</tbody>
+</table></div>
+<p>Table 5 is proposed for invertebrate mitochondrial COI, but is not suitable for every COI sequence or for other markers.</p>
+<p>For paired-end data, the filter is applied separately to both reads before resynchronisation. Interpret this cautiously when each read covers only part of the coding region.</p>
+<h2 id="section-18">18. LotuS3 — clustering and assignment<a aria-label="Permalink" class="heading-anchor" href="#section-18">#</a></h2>
+<p>LotuS3 parameters are shown for all routes except PacBio ITS/LSU when NextITS is the main engine.</p>
+<h3 id="section-18-1">18.1. Platform<a aria-label="Permalink" class="heading-anchor" href="#section-18-1">#</a></h3>
+<p>Choices: auto, PacBio, 454, miSeq, hiSeq. In auto mode, BarCodeR does not force a value. An explicit value changes internal strategies and must remain consistent with the technology and preprocessing.</p>
+<h3 id="section-18-2">18.2. Amplicon type<a aria-label="Permalink" class="heading-anchor" href="#section-18-2">#</a></h3>
+<p>Choices: SSU, LSU, ITS, ITS1, ITS2, custom. It must match the region actually amplified, not merely the project's broad marker name.</p>
+<h3 id="section-18-3">18.3. Taxonomic group<a aria-label="Permalink" class="heading-anchor" href="#section-18-3">#</a></h3>
+<p>Choices: auto, bacteria, fungi, eukarya. An explicit value guides some taxonomic decisions. Auto is preferable for heterogeneous contexts or when no value has been validated.</p>
+<h3 id="section-18-4">18.4. Clustering or denoising<a aria-label="Permalink" class="heading-anchor" href="#section-18-4">#</a></h3>
+<p>Choices: UPARSE, Swarm, CD-HIT, UNOISE, DADA2, VSEARCH. These methods do not necessarily produce the same biological units. They may change the number of units, abundances, sensitivity to rare sequences and error treatment. Results from different methods should not be treated as directly equivalent.</p>
+<h3 id="section-18-5">18.5. Taxonomic assignment tool<a aria-label="Permalink" class="heading-anchor" href="#section-18-5">#</a></h3>
+<p>Choices: RDP classifier, BLAST, Lambda, UTAX, SINTAX, VSEARCH, USEARCH. The choice affects the algorithm, speed, sensitivity, handling of distant sequences and available scores.</p>
+<h3 id="section-18-6">18.6. RDP confidence threshold<a aria-label="Permalink" class="heading-anchor" href="#section-18-6">#</a></h3>
+<p>Visible only with <code>RDP_classifier</code>. A high value is more stringent and produces more unassigned sequences; a lower value increases assignments but may reduce robustness.</p>
+<h3 id="section-18-7">18.7. Keeping unclassified units<a aria-label="Permalink" class="heading-anchor" href="#section-18-7">#</a></h3>
+<p><code>0</code> removes unclassified units; <code>1</code> keeps them. Keeping them supports investigation of unknown diversity and later reassignment, but requires explicit handling in analyses.</p>
+<h3 id="section-18-8">18.8. Taxonomic exclusion<a aria-label="Permalink" class="heading-anchor" href="#section-18-8">#</a></h3>
+<p>The entered pattern excludes taxa. A broad expression may remove many assignments. Check database vocabulary, test the pattern and document the exclusion.</p>
+<h2 id="section-19">19. Saving demultiplexed reads<a aria-label="Permalink" class="heading-anchor" href="#section-19">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Do not publish specific demultiplexed FASTQ files</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Keep all unfiltered demultiplexed reads</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Keep demultiplexed reads and stop the pipeline</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Keep quality-filtered demultiplexed reads</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mode 2 must not be used when a phyloseq object or a complete analysis is expected. Modes 1 and 3 increase disk usage but make read-level checking and reuse easier.</p>
+<h2 id="section-20">20. LCA and advanced assignment<a aria-label="Permalink" class="heading-anchor" href="#section-20">#</a></h2>
+<h3 id="section-20-1">20.1. Assignment mode<a aria-label="Permalink" class="heading-anchor" href="#section-20-1">#</a></h3>
+<p>Counter-intuitive convention: <code>0</code> enables LCA; <code>1</code> uses the best BLAST hit.</p>
+<p>LCA seeks a common ancestor shared by compatible hits and often gives a more conservative assignment. Best hit may appear more precise but is more sensitive to erroneous references, imbalanced databases or nearly equivalent hits.</p>
+<h3 id="section-20-2">20.2. Minimum coverage<a aria-label="Permalink" class="heading-anchor" href="#section-20-2">#</a></h3>
+<p>A value between 0 and 1. High coverage requires most of the sequence to align; low coverage accepts partial matches. High identity over a short fragment is not equivalent to high identity over the whole amplicon.</p>
+<h3 id="section-20-3">20.3. Rank-specific identity thresholds<a aria-label="Permalink" class="heading-anchor" href="#section-20-3">#</a></h3>
+<p>Initial example: <code>97,95,93,91,88,78</code>. These thresholds are not universal mappings between identity and taxonomic rank. Divergence depends on marker, group, database and region length. Changing them directly changes the accepted taxonomic depth.</p>
+<h3 id="section-20-4">20.4. Agreement fraction<a aria-label="Permalink" class="heading-anchor" href="#section-20-4">#</a></h3>
+<p>A high value requires stronger consensus and may return a higher taxonomic rank. A low value accepts decisions with less agreement and may increase conflicts.</p>
+<h3 id="section-20-5">20.5. Phylogenetic tree<a aria-label="Permalink" class="heading-anchor" href="#section-20-5">#</a></h3>
+<p><code>0</code>: no tree; <code>1</code>: FastTree; <code>2</code>: IQ-TREE 2. Tree building adds computation and requires a usable alignment. IQ-TREE 2 is generally more expensive.</p>
+<h3 id="section-20-6">20.6. Maximum read overlap<a aria-label="Permalink" class="heading-anchor" href="#section-20-6">#</a></h3>
+<p>This parameter mainly concerns paired short reads. It must be consistent with read length, amplicon length and the expected overlap between R1 and R2.</p>
+<h2 id="section-21">21. Standard ONT route<a aria-label="Permalink" class="heading-anchor" href="#section-21">#</a></h2>
+<p>Contexts: ONT + COI, 16S or 18S.</p>
+<p>Depending on settings, the route performs design validation, optional MiniBar, per-sample FASTQ recovery, orientation, filters, mapping preparation, LotuS3, assignment and reports.</p>
+<p>For COI, check actual length, primer presence, target organism, genetic code, coding filter and database. For 16S/18S, normally disable the coding filter, replace or disable 658, choose the amplicon type, group and a compatible database.</p>
+<h2 id="section-22">22. ONT IDMABIO route<a aria-label="Permalink" class="heading-anchor" href="#section-22">#</a></h2>
+<p>Contexts: <code>COI-idmabio</code>, <code>16S-idmabio</code>, <code>18S-idmabio</code>. These options appear only on a recognised compatible cluster. The route is triggered by the marker suffix, not the engine selector.</p>
+<p>It repeats the ONT steps and adds ZOTU-hit validation, IDMABIO outputs, MAFFT alignments and a Word report.</p>
+<h3 id="section-22-1">22.1. Gene type<a aria-label="Permalink" class="heading-anchor" href="#section-22-1">#</a></h3>
+<p>Choices: auto, coding, non-coding. In auto mode, COI is treated as coding and the other markers as non-coding. An explicit value overrides this inference.</p>
+<h3 id="section-22-2">22.2. Retained BLAST hits<a aria-label="Permalink" class="heading-anchor" href="#section-22-2">#</a></h3>
+<p>Defines the maximum number of retained hits. A high value increases information, file size and potentially processing time; a low value may hide informative secondary hits.</p>
+<h3 id="section-22-3">22.3. Alignments per sample<a aria-label="Permalink" class="heading-anchor" href="#section-22-3">#</a></h3>
+<p>Controls how many alignments are displayed in the outputs. It is not the same as the total number of retained hits.</p>
+<h3 id="section-22-4">22.4. Report language<a aria-label="Permalink" class="heading-anchor" href="#section-22-4">#</a></h3>
+<p>Choices: French or English. This controls the generated Word report.</p>
+<h2 id="section-23">23. PacBio route with LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-23">#</a></h2>
+<p>Contexts: PacBio + 16S, or PacBio + ITS/LSU with LotuS3. MiniBar is not used.</p>
+<p>Check that reads still contain primers if orientation is enabled, that expected length matches the provided reads, that the coding filter is disabled for 16S/ITS/LSU and that the quality threshold suits corrected PacBio reads.</p>
+<p>Then configure the platform, amplicon type, group, clustering method, taxonomic tool and LCA options.</p>
+<h2 id="section-24">24. PacBio route with NextITS<a aria-label="Permalink" class="heading-anchor" href="#section-24">#</a></h2>
+<p>Available only for PacBio + ITS or LSU with the NextITS engine.</p>
+<p>The route performs validation, enabled prefilters, NextITS, ITSx, correction and clustering, chimera detection, dedicated LotuS3 assignment, phyloseq generation and summaries.</p>
+<h3 id="section-24-1">24.1. ITS region<a aria-label="Permalink" class="heading-anchor" href="#section-24-1">#</a></h3>
+<p>Choices: ITS1, ITS2, LSU, SSU, ALL. LSU suggests LSU and ITS initially suggests ITS1, but this does not validate the region actually amplified.</p>
+<h3 id="section-24-2">24.2. ITSx group<a aria-label="Permalink" class="heading-anchor" href="#section-24-2">#</a></h3>
+<p>Choices: all, fungi, tracheophyta, metazoa. A group that is too restrictive may be unsuitable for heterogeneous environmental samples.</p>
+<h3 id="section-24-3">24.3. NextITS clustering<a aria-label="Permalink" class="heading-anchor" href="#section-24-3">#</a></h3>
+<p>Choices: UNOISE, VSEARCH, Swarm. The choice changes clustering or denoising. Outputs from different methods are not directly identical.</p>
+<h3 id="section-24-4">24.4. UNOISE option<a aria-label="Permalink" class="heading-anchor" href="#section-24-4">#</a></h3>
+<p>This checkbox enables a UNOISE denoising step. It is distinct from the general method selector.</p>
+<h3 id="section-24-5">24.5. Homopolymer correction<a aria-label="Permalink" class="heading-anchor" href="#section-24-5">#</a></h3>
+<p>Enables homopolymer polishing. This modifies sequences and should remain consistent across runs intended for comparison.</p>
+<h3 id="section-24-6">24.6. Chimera database<a aria-label="Permalink" class="heading-anchor" href="#section-24-6">#</a></h3>
+<p>It may be local or remote and must exist, be readable, have the expected format and match the group and region. The initially suggested path may belong to the development environment; select the database explicitly.</p>
+<h3 id="section-24-7">24.7. Primer consistency<a aria-label="Permalink" class="heading-anchor" href="#section-24-7">#</a></h3>
+<p>The route expects a consistent primer pair. Different pairs in one run may trigger an error or unwanted behaviour.</p>
+<h2 id="section-25">25. Illumina route with LotuS3<a aria-label="Permalink" class="heading-anchor" href="#section-25">#</a></h2>
+<p>Contexts: Illumina + 16S, ITS or LSU.</p>
+<p>The design specifies one file for single-end data or two comma-separated files for a pair. Orientation is skipped for pairs, so primers are not removed by that step.</p>
+<p>Quality, length and coding filters are applied separately to R1 and R2, followed by resynchronisation. The length filter does not operate on a merged amplicon. A read whose mate is removed becomes an orphan.</p>
+<p>For 16S/ITS/LSU, normally disable the coding filter, replace or disable 658, and check the amplicon type, group and database.</p>
+<h2 id="section-26">26. Design and destination preview<a aria-label="Permalink" class="heading-anchor" href="#section-26">#</a></h2>
+<p>Previews are optional and initially disabled. The design/destination preview shows the run name, an example Run ID, the design, future directory, FASTQ destinations, rewritten design path, configuration, technology, marker, database type and path, partition, resources and Singularity cache.</p>
+<p>The design preview shows the initial content; paths are only rewritten at launch.</p>
+<h2 id="section-27">27. Generated configuration preview<a aria-label="Permalink" class="heading-anchor" href="#section-27">#</a></h2>
+<p>This preview displays the Nextflow overlay built from the form: paths, enabled parameters, numerical values, LotuS3, IDMABIO and NextITS parameters, and the Singularity directory.</p>
+<p>The file may contain parameters for other routes; their presence does not mean they will all be used. <code>nf-schema</code> nevertheless validates emitted values, so an invalid value may block the run before any process starts.</p>
+<h2 id="section-28">28. Pre-launch checks<a aria-label="Permalink" class="heading-anchor" href="#section-28">#</a></h2>
+<h3 id="context">Context<a aria-label="Permalink" class="heading-anchor" href="#context">#</a></h3>
+<ul>
+<li>correct technology;</li>
+<li>marker consistent with primers;</li>
+<li>correct engine;</li>
+<li>database type consistent with FASTA.</li>
+</ul>
+<h3 id="fastq-files">FASTQ files<a aria-label="Permalink" class="heading-anchor" href="#fastq-files">#</a></h3>
+<ul>
+<li>all files selected;</li>
+<li>no duplicate basenames;</li>
+<li>correct extensions;</li>
+<li>correct R1/R2 order.</li>
+</ul>
+<h3 id="design">Design<a aria-label="Permalink" class="heading-anchor" href="#design">#</a></h3>
+<ul>
+<li>six required columns;</li>
+<li>unique identifiers;</li>
+<li>exact paths;</li>
+<li>primers entered 5′ to 3′;</li>
+<li>barcodes present when MiniBar is enabled;</li>
+<li>consistent primer pairs.</li>
+</ul>
+<h3 id="filters">Filters<a aria-label="Permalink" class="heading-anchor" href="#filters">#</a></h3>
+<ul>
+<li>appropriate expected length;</li>
+<li>relevant coding filter;</li>
+<li>correct genetic code;</li>
+<li>suitable quality threshold;</li>
+<li>compatible orientation setting.</li>
+</ul>
+<h3 id="cluster">Cluster<a aria-label="Permalink" class="heading-anchor" href="#cluster">#</a></h3>
+<ul>
+<li>green connection status;</li>
+<li>accessible directory;</li>
+<li>authorised partition;</li>
+<li>memory with a unit;</li>
+<li>existing modules;</li>
+<li>sufficient space.</li>
+</ul>
+<h3 id="nextits">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits">#</a></h3>
+<ul>
+<li>existing chimera database;</li>
+<li>correct region;</li>
+<li>suitable ITSx group;</li>
+<li>consistent primers.</li>
+</ul>
+<h2 id="section-29">29. What happens at launch<a aria-label="Permalink" class="heading-anchor" href="#section-29">#</a></h2>
+<p>BarCodeR rereads the context, checks FASTQ files, blocks duplicate names, rereads and checks the design, validates identifiers and databases, creates a Run ID, creates <code>results/</code>, <code>work/</code> and <code>meta/</code>, rewrites the design, gathers FASTQ files, transfers files, prepares images, extracts the pipeline, generates the configuration and Slurm script, writes metadata, submits with <code>sbatch</code>, retrieves the Job ID and starts monitoring.</p>
+<p>If another run is already being monitored in the session, confirmation is requested. The new submission does not automatically cancel the previous run.</p>
+<h2 id="section-30">30. Singularity images<a aria-label="Permalink" class="heading-anchor" href="#section-30">#</a></h2>
+<p>Depending on the route, OpenMetaBar uses images for SeqKit, LotuS3, reports, MiniBar, MAFFT, phyloseq and NextITS. They are managed under <code>&lt;remote_root&gt;/_barcoder_singularity</code>.</p>
+<p>The application attempts to use or copy a shared image, prepare or download a missing image, and then verify its presence and size. Not every image is required for every route: MiniBar for ONT, MAFFT for IDMABIO, and NextITS plus the phyloseq environment for NextITS. A missing mandatory image blocks launch.</p>
+<h2 id="section-31">31. Reading the run timeline<a aria-label="Permalink" class="heading-anchor" href="#section-31">#</a></h2>
+<p>Displayed steps are: FASTQ selected, connection, design ready, remote directory, transfers, Singularity images, pipeline deployment, <code>sbatch</code> submission and Slurm monitoring.</p>
+<p>The timeline combines local actions, SSH operations, submission status, Slurm status and file detection. Pending, running, success, warning and error states must be interpreted for the specific step.</p>
+<h2 id="section-32">32. Understanding Slurm states<a aria-label="Permalink" class="heading-anchor" href="#section-32">#</a></h2>
+<h3 id="pending">PENDING<a aria-label="Permalink" class="heading-anchor" href="#pending">#</a></h3>
+<p>The job is waiting for resources. Possible causes include unavailable resources, priority, a busy partition, high memory/core requests, account limits or dependencies. Read the Slurm reason before changing the configuration.</p>
+<h3 id="running">RUNNING<a aria-label="Permalink" class="heading-anchor" href="#running">#</a></h3>
+<p>The job is executing. A temporary lack of new files does not necessarily indicate a stall.</p>
+<h3 id="completed">COMPLETED<a aria-label="Permalink" class="heading-anchor" href="#completed">#</a></h3>
+<p>The Slurm script finished successfully. Still check the Nextflow exit code, results, phyloseq object and reports.</p>
+<h3 id="failed">FAILED<a aria-label="Permalink" class="heading-anchor" href="#failed">#</a></h3>
+<p>Inspect the error log, Slurm outputs, <code>.nextflow.log</code>, the report and the run history.</p>
+<h3 id="out-of-memory">OUT_OF_MEMORY<a aria-label="Permalink" class="heading-anchor" href="#out-of-memory">#</a></h3>
+<p>Memory was exceeded. Identify whether the issue concerns global memory, a specific process, LotuS3, report generation or NextITS before increasing a value.</p>
+<h3 id="timeout">TIMEOUT<a aria-label="Permalink" class="heading-anchor" href="#timeout">#</a></h3>
+<p>The maximum duration was reached. Choose a more suitable partition, reduce complexity or request a higher limit.</p>
+<h3 id="cancelled">CANCELLED<a aria-label="Permalink" class="heading-anchor" href="#cancelled">#</a></h3>
+<p>The job was cancelled manually, by an administrator, by a rule or by a dependency.</p>
+<h3 id="unknown-state-or-missing-job">Unknown state or missing job<a aria-label="Permalink" class="heading-anchor" href="#unknown-state-or-missing-job">#</a></h3>
+<p>A job no longer shown by <code>squeue</code> may still have a final state in <code>sacct</code>. BarCodeR queries both when possible.</p>
+<h2 id="section-33">33. Execution log<a aria-label="Permalink" class="heading-anchor" href="#section-33">#</a></h2>
+<h3 id="section-33-1">33.1. Local operations<a aria-label="Permalink" class="heading-anchor" href="#section-33-1">#</a></h3>
+<p>Contains BarCodeR actions: selection, validation, connection, directory creation, transfer, preparation, launch and file detection.</p>
+<h3 id="section-33-2">33.2. Monitoring<a aria-label="Permalink" class="heading-anchor" href="#section-33-2">#</a></h3>
+<p>Contains the Job ID, Slurm status, detected progress, new outputs, run completion and phyloseq presence.</p>
+<h3 id="section-33-3">33.3. Standard output and standard error<a aria-label="Permalink" class="heading-anchor" href="#section-33-3">#</a></h3>
+<p>They are not the two main tabs of the current log, but remain accessible in historical details, run files, error previews and downloads.</p>
+<h3 id="section-33-4">33.4. <code>.nextflow.log</code><a aria-label="Permalink" class="heading-anchor" href="#section-33-4">#</a></h3>
+<p>This file details processes, commands, errors, resumes, work files and validation. It is a primary diagnostic source.</p>
+<h2 id="section-34">34. Produced results<a aria-label="Permalink" class="heading-anchor" href="#section-34">#</a></h2>
+<p>Depending on the route, results may be organised in:</p>
+<ul>
+<li><code>Steps/files</code>: preparatory files and published inputs;</li>
+<li><code>Steps/demultiplexing_files</code>: demultiplexing and metrics;</li>
+<li><code>Steps/filters</code>: orientation, quality, length, coding and orphan files;</li>
+<li><code>Steps/lotus3</code>: LotuS3 outputs;</li>
+<li><code>Steps/nextITS</code>: NextITS outputs;</li>
+<li><code>Steps/lotus3_taxo</code>: taxonomy associated with NextITS;</li>
+<li><code>Steps/phyloseq</code>: generation or storage of the NextITS phyloseq object;</li>
+<li><code>Steps/tax_db</code>: cleaned database and extracted taxonomy;</li>
+<li><code>OMB_logs</code>: summaries, reports, timeline, trace, graph, versions and parameters;</li>
+<li><code>final_table/idmabio_outputs</code>: IDMABIO tables, alignments and report.</li>
+</ul>
+<p>The exact structure depends on the route and options.</p>
+<h2 id="section-35">35. Importing a phyloseq object<a aria-label="Permalink" class="heading-anchor" href="#section-35">#</a></h2>
+<p>BarCodeR searches for <code>.rds</code>, <code>.rda</code> or <code>.RData</code> files that may contain a phyloseq object. A suggestive filename does not guarantee a valid object.</p>
+<p>During import, the application temporarily downloads the file, opens it, searches for phyloseq objects, checks compatibility, offers a choice when needed and adds the selected object.</p>
+<p>A unique name is built from the run, file and possibly object name. Run parameters may be attached to preserve provenance.</p>
+<p>A phyloseq object may be detected after a failed run. It may be partial or have been created before the failing step. Review logs and content before use.</p>
+<h2 id="section-36">36. Actions after submission<a aria-label="Permalink" class="heading-anchor" href="#section-36">#</a></h2>
+<h3 id="section-36-1">36.1. Relaunch with adjustments<a aria-label="Permalink" class="heading-anchor" href="#section-36-1">#</a></h3>
+<p>Keeps files and parameters, allows edits and prepares a new submission. The previous run is not cancelled.</p>
+<h3 id="section-36-2">36.2. New analysis — start from scratch<a aria-label="Permalink" class="heading-anchor" href="#section-36-2">#</a></h3>
+<p>Resets files, context, analysis parameters and the timeline. Keeps the connection and several cluster settings. The submitted job continues and remains in history.</p>
+<h3 id="section-36-3">36.3. Do not relaunch<a aria-label="Permalink" class="heading-anchor" href="#section-36-3">#</a></h3>
+<p>Closes the panel without cancelling or changing monitoring. It can be reopened later.</p>
+<h2 id="section-37">37. Analysis history<a aria-label="Permalink" class="heading-anchor" href="#section-37">#</a></h2>
+<p>Scanning searches for runs under the configured root directory. Results depend on the path, permissions, metadata, files and Slurm availability.</p>
+<p>History may show Run ID, directory, Job ID, state, dates, duration, FASTQ and sample counts, size, memory, CPU, phyloseq presence and cleanup status.</p>
+<h3 id="section-37-1">37.1. Details and resume monitoring<a aria-label="Permalink" class="heading-anchor" href="#section-37-1">#</a></h3>
+<p>Details show parameters, paths, exit codes, Slurm information, files and errors. Resuming monitoring reconnects the interface to the run without relaunching computation.</p>
+<h3 id="section-37-2">37.2. Browsing files<a aria-label="Permalink" class="heading-anchor" href="#section-37-2">#</a></h3>
+<p>Supports search, opening groups, previewing the last 200 lines of text files, downloading and importing a phyloseq object.</p>
+<h3 id="section-37-3">37.3. Cancelling a job<a aria-label="Permalink" class="heading-anchor" href="#section-37-3">#</a></h3>
+<p>Uses Slurm to cancel the main job and identifiable child jobs. The directory and files already produced remain present.</p>
+<h3 id="section-37-4">37.4. Cleaning a run<a aria-label="Permalink" class="heading-anchor" href="#section-37-4">#</a></h3>
+<p>Deletes intermediate files while normally preserving <code>results/</code> and <code>meta/</code>. This irreversible action frees space but removes resume cache and diagnostic material.</p>
+<h3 id="section-37-5">37.5. Deleting a run<a aria-label="Permalink" class="heading-anchor" href="#section-37-5">#</a></h3>
+<p>Deletes the entire remote directory, including results, metadata, logs, intermediate files and phyloseq objects. Save required files first.</p>
+<h2 id="section-38">38. Troubleshooting<a aria-label="Permalink" class="heading-anchor" href="#section-38">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Check / correction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File button remains locked</td>
+<td>Context not validated or changed</td>
+<td>Validate technology, marker and engine again</td>
+</tr>
+<tr>
+<td>Connection is yellow</td>
+<td>SSH open but prerequisites incomplete</td>
+<td>Check Slurm, <code>tar</code>, modules, permissions and root directory</td>
+</tr>
+<tr>
+<td>SSH connection refused</td>
+<td>Incorrect host, port, user, key or relay</td>
+<td>Test the same settings outside BarCodeR</td>
+</tr>
+<tr>
+<td>Local files cannot be found</td>
+<td>Files moved or mount disconnected</td>
+<td>Select them again and repeat transfer</td>
+</tr>
+<tr>
+<td>Two FASTQ files have the same name</td>
+<td>Basename collision</td>
+<td>Rename files before selection</td>
+</tr>
+<tr>
+<td>Design accepted then rejected</td>
+<td>Only two editor columns were valid</td>
+<td>Provide all six exact columns</td>
+</tr>
+<tr>
+<td>Design FASTQ reported missing</td>
+<td>Different name, extension, case or path</td>
+<td>Compare basenames exactly</td>
+</tr>
+<tr>
+<td>Sample names rejected</td>
+<td>Spaces, accents, characters or duplicates</td>
+<td>Apply automatic correction and review</td>
+</tr>
+<tr>
+<td>Orientation finds no primer</td>
+<td>Primers missing, reversed, already removed or incorrect</td>
+<td>Check FASTQ content and 5′→3′ sequences</td>
+</tr>
+<tr>
+<td>No reads retained</td>
+<td>Filters too strict or inconsistent</td>
+<td>Find the first metric that falls to zero</td>
+</tr>
+<tr>
+<td>Length removes Illumina data</td>
+<td>Amplicon length applied to R1/R2 reads</td>
+<td>Use individual-read length or disable filter</td>
+</tr>
+<tr>
+<td><code>nf-schema</code> error</td>
+<td>Invalid value or file</td>
+<td>Read the log and <code>.nextflow.log</code> message</td>
+</tr>
+<tr>
+<td>Singularity image missing</td>
+<td>Cache, download, module, space or permissions</td>
+<td>Check <code>_barcoder_singularity</code> and resources</td>
+</tr>
+<tr>
+<td>Job remains PENDING</td>
+<td>Resources, priority, partition or account</td>
+<td>Read the Slurm reason before changing requests</td>
+</tr>
+<tr>
+<td>OUT_OF_MEMORY</td>
+<td>Insufficient global or process memory</td>
+<td>Identify the failing process in traces and logs</td>
+</tr>
+<tr>
+<td>COMPLETED without phyloseq</td>
+<td>Step not run, file elsewhere or incomplete</td>
+<td>Inspect <code>results/</code>, <code>Steps/</code> and Nextflow exit code</td>
+</tr>
+<tr>
+<td>Phyloseq after failure</td>
+<td>Object produced before the error</td>
+<td>Check dimensions, reads, taxonomy and completed steps</td>
+</tr>
+<tr>
+<td>Empty history</td>
+<td>Wrong root, cluster or permissions</td>
+<td>Correct the root and scan again</td>
+</tr>
+<tr>
+<td>Resume impossible after cleanup</td>
+<td><code>work/</code> cache deleted</td>
+<td>Use final results or submit a new run</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-39">39. Final checklist<a aria-label="Permalink" class="heading-anchor" href="#section-39">#</a></h2>
+<h3 id="context-2">Context<a aria-label="Permalink" class="heading-anchor" href="#context-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct technology, marker and route.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Consistent database type and file.</li>
+</ul>
+<h3 id="design-2">Design<a aria-label="Permalink" class="heading-anchor" href="#design-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Six required columns.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Unique, safe identifiers.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>FASTQ files correctly referenced.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct barcodes and primers.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Consistent primer pairs.</li>
+</ul>
+<h3 id="parameters">Parameters<a aria-label="Permalink" class="heading-anchor" href="#parameters">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>MiniBar enabled only when needed.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Error tolerances justified.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Orientation compatible.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Appropriate length and non-empty field when enabled.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Suitable quality threshold.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Relevant coding filter and genetic code.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct amplicon type and group.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Clustering and taxonomic modes documented.</li>
+</ul>
+<h3 id="nextits-2">NextITS<a aria-label="Permalink" class="heading-anchor" href="#nextits-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct region, ITSx group and chimera database.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Homogeneous primers.</li>
+</ul>
+<h3 id="cluster-2">Cluster<a aria-label="Permalink" class="heading-anchor" href="#cluster-2">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Green connection.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Accessible root.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Correct partition.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Memory with unit and realistic core count.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Valid modules and sufficient space.</li>
+</ul>
+<h3 id="traceability">Traceability<a aria-label="Permalink" class="heading-anchor" href="#traceability">#</a></h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Informative run name.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Design preview checked.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Generated configuration checked.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Parameters stored with the project.</li>
+</ul>
+<h2 id="section-40">40. Interpretation and reproducibility principles<a aria-label="Permalink" class="heading-anchor" href="#section-40">#</a></h2>
+<p>Results depend simultaneously on raw files, demultiplexing, primers, filters, clustering method, database, taxonomic algorithm and thresholds. Runs using different parameters should not be compared without accounting for these differences.</p>
+<p>To ensure reproducibility:</p>
+<ul>
+<li>keep the design file;</li>
+<li>keep the database or its version;</li>
+<li>keep run parameters;</li>
+<li>keep Nextflow reports;</li>
+<li>document every change from initial values;</li>
+<li>retain software versions;</li>
+<li>retain metrics from every step;</li>
+<li>do not interpret only the final phyloseq object.</li>
+</ul>
+</article>
+  </main>
+  <aside class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <nav><a class="toc-l2" href="#section-1">1. General overview</a><a class="toc-l2" href="#section-2">2. What OpenMetaBar does and does not do</a><a class="toc-l3" href="#section-2-1">2.1. What OpenMetaBar automates</a><a class="toc-l3" href="#section-2-2">2.2. What remains the user's responsibility</a><a class="toc-l2" href="#section-3">3. Workflow overview</a><a class="toc-l2" href="#section-4">4. Choosing the analysis route</a><a class="toc-l3" href="#section-4-1">4.1. Available routes</a><a class="toc-l3" href="#section-4-2">4.2. Consequences of the selected route</a><a class="toc-l2" href="#section-5">5. Connecting to the cluster</a><a class="toc-l3" href="#section-5-1">5.1. Opening the connection window</a><a class="toc-l3" href="#section-5-2">5.2. Information to provide</a><a class="toc-l3" href="#section-5-3">5.3. Checks performed</a><a class="toc-l3" href="#section-5-4">5.4. The biglogin cluster case</a><a class="toc-l3" href="#section-5-5">5.5. Disconnection during a run</a><a class="toc-l2" href="#section-6">6. Defining the analysis context</a><a class="toc-l3" href="#section-6-1">6.1. Sequencing technology</a><a class="toc-l3" href="#section-6-2">6.2. Marker or target</a><a class="toc-l3" href="#section-6-3">6.3. Reference database type</a><a class="toc-l3" href="#section-6-4">6.4. Analysis engine</a><a class="toc-l3" href="#section-6-5">6.5. Validating the context</a><a class="toc-l2" href="#section-7">7. Choosing run files</a><a class="toc-l3" href="#section-7-1">7.1. Choosing FASTQ files</a><a class="toc-l3" href="#section-7-2">7.2. Choosing the design file</a><a class="toc-l3" href="#section-7-3">7.3. Primers in the design file</a><a class="toc-l3" href="#section-7-4">7.4. Barcodes in the design file</a><a class="toc-l3" href="#section-7-5">7.5. Choosing the reference database</a><a class="toc-l2" href="#section-8">8. Using the design editor</a><a class="toc-l3" href="#section-8-1">8.1. Editing cells</a><a class="toc-l3" href="#section-8-2">8.2. Adding or deleting rows</a><a class="toc-l3" href="#section-8-3">8.3. Adding, renaming or deleting a column</a><a class="toc-l3" href="#section-8-4">8.4. Correcting sample names</a><a class="toc-l3" href="#section-8-5">8.5. Generating a design from FASTQ files</a><a class="toc-l3" href="#section-8-6">8.6. Saving the design</a><a class="toc-l2" href="#section-9">9. Validating and preparing files</a><a class="toc-l2" href="#section-10">10. Configuring the run and cluster</a><a class="toc-l3" href="#section-10-1">10.1. Run root directory</a><a class="toc-l3" href="#section-10-2">10.2. Slurm partition</a><a class="toc-l3" href="#section-10-3">10.3. Memory for LotuS3</a><a class="toc-l3" href="#section-10-4">10.4. Cores for LotuS3</a><a class="toc-l3" href="#section-10-5">10.5. Container module</a><a class="toc-l3" href="#section-10-6">10.6. Nextflow module</a><a class="toc-l3" href="#section-10-7">10.7. Run name</a><a class="toc-l3" href="#section-10-8">10.8. Keeping intermediate files</a><a class="toc-l2" href="#section-11">11. Understanding initial values</a><a class="toc-l2" href="#section-12">12. MiniBar demultiplexing — ONT routes</a><a class="toc-l3" href="#section-12-1">12.1. Enabling or disabling MiniBar</a><a class="toc-l3" href="#section-12-2">12.2. Identification method — M</a><a class="toc-l3" href="#section-12-3">12.3. Maximum barcode errors — e</a><a class="toc-l3" href="#section-12-4">12.4. Maximum primer errors — E</a><a class="toc-l3" href="#section-12-5">12.5. MiniBar parameter — l</a><a class="toc-l2" href="#section-13">13. Amplicon orientation</a><a class="toc-l3" href="#section-13-1">13.1. Single-end reads</a><a class="toc-l3" href="#section-13-2">13.2. Non-degenerate and degenerate primers</a><a class="toc-l3" href="#section-13-3">13.3. Paired-end reads</a><a class="toc-l3" href="#section-13-4">13.4. NextITS route</a><a class="toc-l3" href="#section-13-5">13.5. When to disable orientation</a><a class="toc-l2" href="#section-14">14. Filter order</a><a class="toc-l2" href="#section-15">15. Length filter</a><a class="toc-l3" href="#section-15-1">15.1. Activation and input</a><a class="toc-l3" href="#section-15-2">15.2. Actual interval used</a><a class="toc-l3" href="#section-15-3">15.3. Choosing a length</a><a class="toc-l3" href="#section-15-4">15.4. Empty or invalid field</a><a class="toc-l3" href="#section-15-5">15.5. Paired-end reads</a><a class="toc-l3" href="#section-15-6">15.6. Resynchronisation</a><a class="toc-l2" href="#section-16">16. Quality filter</a><a class="toc-l2" href="#section-17">17. Coding-sequence filter</a><a class="toc-l2" href="#section-18">18. LotuS3 — clustering and assignment</a><a class="toc-l3" href="#section-18-1">18.1. Platform</a><a class="toc-l3" href="#section-18-2">18.2. Amplicon type</a><a class="toc-l3" href="#section-18-3">18.3. Taxonomic group</a><a class="toc-l3" href="#section-18-4">18.4. Clustering or denoising</a><a class="toc-l3" href="#section-18-5">18.5. Taxonomic assignment tool</a><a class="toc-l3" href="#section-18-6">18.6. RDP confidence threshold</a><a class="toc-l3" href="#section-18-7">18.7. Keeping unclassified units</a><a class="toc-l3" href="#section-18-8">18.8. Taxonomic exclusion</a><a class="toc-l2" href="#section-19">19. Saving demultiplexed reads</a><a class="toc-l2" href="#section-20">20. LCA and advanced assignment</a><a class="toc-l3" href="#section-20-1">20.1. Assignment mode</a><a class="toc-l3" href="#section-20-2">20.2. Minimum coverage</a><a class="toc-l3" href="#section-20-3">20.3. Rank-specific identity thresholds</a><a class="toc-l3" href="#section-20-4">20.4. Agreement fraction</a><a class="toc-l3" href="#section-20-5">20.5. Phylogenetic tree</a><a class="toc-l3" href="#section-20-6">20.6. Maximum read overlap</a><a class="toc-l2" href="#section-21">21. Standard ONT route</a><a class="toc-l2" href="#section-22">22. ONT IDMABIO route</a><a class="toc-l3" href="#section-22-1">22.1. Gene type</a><a class="toc-l3" href="#section-22-2">22.2. Retained BLAST hits</a><a class="toc-l3" href="#section-22-3">22.3. Alignments per sample</a><a class="toc-l3" href="#section-22-4">22.4. Report language</a><a class="toc-l2" href="#section-23">23. PacBio route with LotuS3</a><a class="toc-l2" href="#section-24">24. PacBio route with NextITS</a><a class="toc-l3" href="#section-24-1">24.1. ITS region</a><a class="toc-l3" href="#section-24-2">24.2. ITSx group</a><a class="toc-l3" href="#section-24-3">24.3. NextITS clustering</a><a class="toc-l3" href="#section-24-4">24.4. UNOISE option</a><a class="toc-l3" href="#section-24-5">24.5. Homopolymer correction</a><a class="toc-l3" href="#section-24-6">24.6. Chimera database</a><a class="toc-l3" href="#section-24-7">24.7. Primer consistency</a><a class="toc-l2" href="#section-25">25. Illumina route with LotuS3</a><a class="toc-l2" href="#section-26">26. Design and destination preview</a><a class="toc-l2" href="#section-27">27. Generated configuration preview</a><a class="toc-l2" href="#section-28">28. Pre-launch checks</a><a class="toc-l3" href="#context">Context</a><a class="toc-l3" href="#fastq-files">FASTQ files</a><a class="toc-l3" href="#design">Design</a><a class="toc-l3" href="#filters">Filters</a><a class="toc-l3" href="#cluster">Cluster</a><a class="toc-l3" href="#nextits">NextITS</a><a class="toc-l2" href="#section-29">29. What happens at launch</a><a class="toc-l2" href="#section-30">30. Singularity images</a><a class="toc-l2" href="#section-31">31. Reading the run timeline</a><a class="toc-l2" href="#section-32">32. Understanding Slurm states</a><a class="toc-l3" href="#pending">PENDING</a><a class="toc-l3" href="#running">RUNNING</a><a class="toc-l3" href="#completed">COMPLETED</a><a class="toc-l3" href="#failed">FAILED</a><a class="toc-l3" href="#out-of-memory">OUT_OF_MEMORY</a><a class="toc-l3" href="#timeout">TIMEOUT</a><a class="toc-l3" href="#cancelled">CANCELLED</a><a class="toc-l3" href="#unknown-state-or-missing-job">Unknown state or missing job</a><a class="toc-l2" href="#section-33">33. Execution log</a><a class="toc-l3" href="#section-33-1">33.1. Local operations</a><a class="toc-l3" href="#section-33-2">33.2. Monitoring</a><a class="toc-l3" href="#section-33-3">33.3. Standard output and standard error</a><a class="toc-l3" href="#section-33-4">33.4. .nextflow.log</a><a class="toc-l2" href="#section-34">34. Produced results</a><a class="toc-l2" href="#section-35">35. Importing a phyloseq object</a><a class="toc-l2" href="#section-36">36. Actions after submission</a><a class="toc-l3" href="#section-36-1">36.1. Relaunch with adjustments</a><a class="toc-l3" href="#section-36-2">36.2. New analysis — start from scratch</a><a class="toc-l3" href="#section-36-3">36.3. Do not relaunch</a><a class="toc-l2" href="#section-37">37. Analysis history</a><a class="toc-l3" href="#section-37-1">37.1. Details and resume monitoring</a><a class="toc-l3" href="#section-37-2">37.2. Browsing files</a><a class="toc-l3" href="#section-37-3">37.3. Cancelling a job</a><a class="toc-l3" href="#section-37-4">37.4. Cleaning a run</a><a class="toc-l3" href="#section-37-5">37.5. Deleting a run</a><a class="toc-l2" href="#section-38">38. Troubleshooting</a><a class="toc-l2" href="#section-39">39. Final checklist</a><a class="toc-l3" href="#context-2">Context</a><a class="toc-l3" href="#design-2">Design</a><a class="toc-l3" href="#parameters">Parameters</a><a class="toc-l3" href="#nextits-2">NextITS</a><a class="toc-l3" href="#cluster-2">Cluster</a><a class="toc-l3" href="#traceability">Traceability</a><a class="toc-l2" href="#section-40">40. Interpretation and reproducibility principles</a></nav>
+  </aside>
+</div>
+<footer><span>BarCodeR · OpenMetaBar</span><span>Documentation version 1.8.0</span></footer>
+</body>
+</html>
