@@ -132,48 +132,231 @@ function Workflow({ language, compact = false }: { language: Language; compact?:
 
 function Landing({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    badge: "Métabarcoding intégré · du calcul HPC à l’analyse interactive",
-    title: <>Du read à la figure,<br /><em>sans perdre le fil scientifique.</em></>,
-    intro: "OpenMetaBar orchestre le traitement reproductible des séquences sur cluster HPC. Les objets phyloseq générés sont ensuite récupérés dans BarCodeR pour contrôler, explorer et analyser les résultats au sein d’une interface guidée, tout en conservant la traçabilité des choix et des calculs.",
-    explore: "Découvrir le processus analytique", proof: "Voir les tutoriels et datasets tests", version: "Versions actuelles : BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
-    numbers: [["13", "onglets documentés"], ["12", "modules d’exploration et d’analyse"], ["14", "familles de sorties avec code R"], ["5", "langues dans l’application"]],
-    workflowK: "Le parcours analytique de vos données", workflowT: "Deux outils en symbiose pour servir un objectif commun.", workflowP: "Depuis BarCodeR, vous pouvez lancer vos analyses de métabarcoding sur votre propre cluster de calcul avec OpenMetaBar, récupérer les objets phyloseq générés, puis explorer et analyser les résultats au sein de la même application, sans avoir à écrire une seule ligne de code.",
-    workflowNote: "Les deux outils restent également disponibles indépendamment : BarCodeR peut analyser des objets phyloseq déjà constitués, tandis qu’OpenMetaBar peut être exécuté directement sur un cluster de calcul à partir de fichiers FASTQ.",
-    modulesK: "Dans l’application", modulesT: "Chaque onglet de l’application correspond à une étape du flux analytique de vos données.", modulesP: "Les pages ci-dessous décrivent les entrées, les opérations, les sorties et les points de vigilance observés directement dans le code.",
-    audienceK: "Publics visés", audienceT: "Une même application pour relier expertise biologique et analyse bioinformatique.", audienceP: "BarCodeR × OpenMetaBar s’adresse aux personnes qui produisent, accompagnent ou interprètent des données de métabarcoding, qu’elles programment quotidiennement ou non.",
-    audienceExeT: "Une application Windows prête à lancer",
-    audienceExeP: "La distribution autonome au format .exe réduit la barrière d’installation : l’utilisateur accède à l’interface BarCodeR sans devoir préparer lui-même un environnement R. Le traitement des reads avec OpenMetaBar reste confié à un cluster HPC configuré ; un objet phyloseq existant peut aussi être analysé directement.",
-    audienceCards: [["Biologistes & écologues", "Explorer leurs données, tester des hypothèses et produire des figures sans écrire de code pour les analyses courantes."], ["Bioinformaticiens & plateformes", "Standardiser le passage des FASTQ aux objets phyloseq, conserver les paramètres et transmettre des résultats prêts à interpréter."], ["Équipes de recherche", "Partager un cadre commun entre profils techniques et thématiques, documenter les choix et faciliter la reprise d’un projet."]],
-    citationK: "Science ouverte · communauté", citationT: "Merci de faire vivre l’écosystème BarCodeR × OpenMetaBar.", citationP: "Si BarCodeR ou OpenMetaBar contribue à vos analyses, à vos résultats ou à vos publications, merci de citer les outils concernés. Chaque citation soutient leur visibilité, leur maintenance et leur développement au service de la communauté scientifique."
+    badge: "Métabarcoding reproductible · traitement, contrôle et analyse",
+    title: <>Du FASTQ à la figure,<br /><em>dans un workflow traçable.</em></>,
+    intro: "OpenMetaBar prépare et suit le traitement de vos séquences sur cluster HPC. BarCodeR contrôle ensuite les objets phyloseq, guide les choix analytiques et produit des figures, tableaux et scripts R sans masquer les paramètres utilisés.",
+    workflowAction: "Découvrir le workflow",
+    analysesAction: "Explorer les analyses",
+    downloadAction: "Télécharger BarCodeR",
+    version: "Versions présentées : BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
+    metrics: [
+      ["3", "technologies de séquençage", "Illumina · PacBio · Oxford Nanopore"],
+      ["5", "moteurs différentiels", "ANCOM-BC · ANCOM-BC2 · ALDEx2 · LinDA · corncob"],
+      ["6", "familles d’ordination", "PCA · PCoA · NMDS · RDA · CCA · CAP"],
+      ["R", "code exportable", "Commencer dans l’interface, poursuivre dans R"]
+    ],
+    journeysK: "Deux points d’entrée",
+    journeysT: "Commencez avec les données dont vous disposez déjà.",
+    journeysP: "OpenMetaBar et BarCodeR forment un continuum, mais restent indépendants. Le cluster n’est nécessaire que pour le traitement distant des séquences.",
+    fastqTitle: "Je pars de fichiers FASTQ",
+    fastqTag: "Parcours complet",
+    fastqText: "Préparez le design, configurez le pipeline, soumettez le calcul sur Slurm et récupérez automatiquement l’objet phyloseq dans BarCodeR.",
+    fastqSteps: ["FASTQ", "OpenMetaBar", "Nextflow / Slurm", "phyloseq", "BarCodeR"],
+    fastqAction: "Voir le parcours FASTQ",
+    phyloseqTitle: "J’ai déjà un objet phyloseq",
+    phyloseqTag: "Accès direct",
+    phyloseqText: "Importez votre objet ou ses composants, contrôlez sa structure, créez des versions filtrées puis explorez et testez vos hypothèses.",
+    phyloseqSteps: ["Import", "Diagnostic", "Filtration", "Analyses", "MultiView"],
+    phyloseqAction: "Voir le parcours phyloseq",
+    questionsK: "Partir de la question scientifique",
+    questionsT: "L’interface ne vous demande pas d’apprendre treize onglets avant de commencer.",
+    questionsP: "Choisissez d’abord ce que vous cherchez à comprendre. BarCodeR vous oriente ensuite vers les données requises, les méthodes compatibles et les diagnostics à vérifier.",
+    questions: [
+      ["Composition", "Quels taxons structurent mes communautés ?", "Barplots, analyses ciblées et niveaux taxonomiques."],
+      ["Diversité", "La diversité diffère-t-elle entre mes groupes ?", "Richesse, Shannon, Simpson, Faith PD et tests associés."],
+      ["Structure", "Comment mes échantillons s’organisent-ils ?", "Ordinations, distances, stress et robustesse."],
+      ["Hypothèses", "Une variable explique-t-elle les différences ?", "PERMANOVA accompagnée du contrôle de dispersion."],
+      ["Taxons", "Quels taxons sont associés à une condition ?", "Cinq moteurs différentiels et comparaison de concordance."],
+      ["Matrices", "Deux marqueurs racontent-ils la même histoire ?", "Mantel, Procrustes, RV, co-inertie et STATIS."]
+    ],
+    questionsAction: "Parcourir toutes les analyses",
+    strengthsK: "Ce que BarCodeR ajoute aux calculs",
+    strengthsT: "Une interface guidée, sans transformer les méthodes en boîte noire.",
+    strengths: [
+      ["01", "Diagnostiquer avant d’analyser", "Profondeur, sparsité, complétude taxonomique, métadonnées, séquences, raréfaction et échantillons atypiques sont examinés avant les tests."],
+      ["02", "Conserver la lignée des datasets", "L’édition corrige l’objet ; la filtration crée une version dérivée. Le dataset original et les transformations restent identifiables."],
+      ["03", "Vérifier les hypothèses", "Stress, dispersion, stabilité, tailles d’effet et diagnostics complètent les représentations graphiques et les p-values."],
+      ["04", "Continuer hors de l’interface", "Figures, tableaux, historiques et code R permettent de relire, partager ou prolonger une analyse dans un workflow personnalisé."]
+    ],
+    proofK: "De l’analyse à la restitution",
+    proofT: "Vos résultats restent associés à leur contexte.",
+    proofP: "MultiView rassemble les figures sauvegardées, leurs paramètres et leur provenance pour construire une planche réutilisable. L’objectif n’est pas seulement de générer une image, mais de pouvoir expliquer comment elle a été obtenue.",
+    proofAction: "Découvrir MultiView",
+    audienceK: "Quatre usages, un même socle",
+    audienceT: "Un point de rencontre entre expertise biologique, statistiques et bioinformatique.",
+    audienceP: "Chaque profil peut entrer par le niveau qui lui convient, tout en partageant les mêmes objets, paramètres et résultats.",
+    audiences: [
+      ["Biologistes & écologues", "Explorer un dataset, tester une hypothèse et produire des figures sans programmer les analyses courantes.", "Tester avec un exemple", "#/tutorials"],
+      ["Bioinformaticiens", "Inspecter les objets phyloseq, les transformations, les paramètres et le code R généré.", "Explorer les méthodes", "#/analyses"],
+      ["Plateformes", "Standardiser les parcours, connecter un cluster et remettre des projets documentés aux utilisateurs.", "Comprendre le fonctionnement", "#/functioning"],
+      ["Équipes de recherche", "Partager des datasets dérivés, reprendre une analyse et composer les résultats dans un cadre commun.", "Consulter la documentation", "#/documentation"]
+    ],
+    finalK: "Commencer",
+    finalT: "Testez d’abord le parcours qui correspond à vos données.",
+    finalP: "Utilisez un dataset public pour découvrir l’interface, consultez les méthodes avant de lancer un test ou installez BarCodeR pour travailler sur vos propres objets phyloseq.",
+    finalTutorial: "Ouvrir les tutoriels",
+    finalDocs: "Consulter la documentation",
+    finalDownload: "Télécharger BarCodeR",
+    citationK: "Science ouverte · communauté",
+    citationT: "Une analyse reproductible doit aussi être identifiable et citable.",
+    citationP: "Les versions, le code source, les conditions de disponibilité et les informations de citation sont regroupés dans l’espace de téléchargement et de science ouverte."
   } : {
-    badge: "Integrated metabarcoding · from HPC computing to interactive analysis",
-    title: <>From reads to figures,<br /><em>without losing the scientific thread.</em></>,
-    intro: "OpenMetaBar orchestrates reproducible sequence processing on an HPC cluster. The resulting phyloseq objects are then retrieved in BarCodeR to check, explore and analyse results through a guided interface while preserving the traceability of choices and computations.",
-    explore: "Explore the analytical process", proof: "View tutorials and test datasets", version: "Current versions: BarCodeR v2.12.8 / OpenMetaBar v1.0.0",
-    numbers: [["13", "documented tabs"], ["12", "exploration and analysis modules"], ["14", "output families with R code"], ["5", "languages in the application"]],
-    workflowK: "The analytical journey of your data", workflowT: "Two tools working in symbiosis towards one common goal.", workflowP: "From BarCodeR, you can launch metabarcoding analyses on your own computing cluster with OpenMetaBar, retrieve the generated phyloseq objects, then explore and analyse the results within the same application without writing a single line of code.",
-    workflowNote: "Both tools also remain available independently: BarCodeR can analyse previously created phyloseq objects, while OpenMetaBar can run directly on a computing cluster from FASTQ files.",
-    modulesK: "Inside the application", modulesT: "Each application tab represents a step in the analytical workflow of your data.", modulesP: "The pages below describe inputs, operations, outputs and cautions observed directly in the code.",
-    audienceK: "Intended users", audienceT: "One application connecting biological expertise and bioinformatics analysis.", audienceP: "BarCodeR × OpenMetaBar is designed for people who produce, support or interpret metabarcoding data, whether or not they program every day.",
-    audienceExeT: "A ready-to-launch Windows application",
-    audienceExeP: "The standalone .exe distribution lowers the installation barrier: users can access the BarCodeR interface without preparing an R environment themselves. Read processing with OpenMetaBar still relies on a configured HPC cluster; existing phyloseq objects can also be analysed directly.",
-    audienceCards: [["Biologists & ecologists", "Explore data, test hypotheses and produce figures without writing code for routine analyses."], ["Bioinformaticians & core facilities", "Standardise the path from FASTQ files to phyloseq objects, retain parameters and deliver results ready for interpretation."], ["Research teams", "Share a common framework across technical and domain profiles, document choices and make projects easier to resume."]],
-    citationK: "Open science · community", citationT: "Thank you for supporting the BarCodeR × OpenMetaBar ecosystem.", citationP: "If BarCodeR or OpenMetaBar contributes to your analyses, results or publications, please cite the tools you use. Each citation supports their visibility, maintenance and continued development for the scientific community."
+    badge: "Reproducible metabarcoding · processing, checking and analysis",
+    title: <>From FASTQ to figures,<br /><em>in a traceable workflow.</em></>,
+    intro: "OpenMetaBar prepares and monitors sequence processing on an HPC cluster. BarCodeR then checks phyloseq objects, guides analytical choices and produces figures, tables and R scripts without hiding the parameters used.",
+    workflowAction: "Explore the workflow",
+    analysesAction: "Explore analyses",
+    downloadAction: "Download BarCodeR",
+    version: "Versions presented: BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
+    metrics: [
+      ["3", "sequencing technologies", "Illumina · PacBio · Oxford Nanopore"],
+      ["5", "differential engines", "ANCOM-BC · ANCOM-BC2 · ALDEx2 · LinDA · corncob"],
+      ["6", "ordination families", "PCA · PCoA · NMDS · RDA · CCA · CAP"],
+      ["R", "exportable code", "Start in the interface, continue in R"]
+    ],
+    journeysK: "Two entry points",
+    journeysT: "Start with the data you already have.",
+    journeysP: "OpenMetaBar and BarCodeR form a continuum but remain independent. A cluster is required only for remote sequence processing.",
+    fastqTitle: "I have FASTQ files",
+    fastqTag: "Complete journey",
+    fastqText: "Prepare the design, configure the pipeline, submit the computation to Slurm and automatically retrieve the phyloseq object in BarCodeR.",
+    fastqSteps: ["FASTQ", "OpenMetaBar", "Nextflow / Slurm", "phyloseq", "BarCodeR"],
+    fastqAction: "View the FASTQ journey",
+    phyloseqTitle: "I already have a phyloseq object",
+    phyloseqTag: "Direct access",
+    phyloseqText: "Import your object or its components, check its structure, create filtered versions, then explore and test your hypotheses.",
+    phyloseqSteps: ["Import", "Diagnosis", "Filtering", "Analyses", "MultiView"],
+    phyloseqAction: "View the phyloseq journey",
+    questionsK: "Start from the scientific question",
+    questionsT: "The interface does not require you to learn thirteen tabs before you begin.",
+    questionsP: "First choose what you need to understand. BarCodeR then points you to the required data, compatible methods and diagnostics to check.",
+    questions: [
+      ["Composition", "Which taxa structure my communities?", "Bar plots, targeted analyses and taxonomic levels."],
+      ["Diversity", "Does diversity differ among groups?", "Richness, Shannon, Simpson, Faith PD and associated tests."],
+      ["Structure", "How are my samples organised?", "Ordinations, distances, stress and robustness."],
+      ["Hypotheses", "Does a variable explain the differences?", "PERMANOVA accompanied by a dispersion check."],
+      ["Taxa", "Which taxa are associated with a condition?", "Five differential engines and concordance comparison."],
+      ["Matrices", "Do two markers tell the same story?", "Mantel, Procrustes, RV, co-inertia and STATIS."]
+    ],
+    questionsAction: "Browse all analyses",
+    strengthsK: "What BarCodeR adds to computations",
+    strengthsT: "A guided interface without turning methods into a black box.",
+    strengths: [
+      ["01", "Diagnose before analysing", "Depth, sparsity, taxonomic completeness, metadata, sequences, rarefaction and atypical samples are examined before testing."],
+      ["02", "Retain dataset lineage", "Editing corrects the object; filtering creates a derived version. The original dataset and transformations remain identifiable."],
+      ["03", "Check assumptions", "Stress, dispersion, stability, effect sizes and diagnostics complement graphical representations and p-values."],
+      ["04", "Continue outside the interface", "Figures, tables, histories and R code support review, sharing or extension in a customised workflow."]
+    ],
+    proofK: "From analysis to reporting",
+    proofT: "Your results remain linked to their context.",
+    proofP: "MultiView brings together saved figures, their parameters and provenance to build a reusable panel. The aim is not only to generate an image, but to explain how it was obtained.",
+    proofAction: "Discover MultiView",
+    audienceK: "Four uses, one shared foundation",
+    audienceT: "A meeting point for biological expertise, statistics and bioinformatics.",
+    audienceP: "Each profile can enter at the appropriate level while sharing the same objects, parameters and results.",
+    audiences: [
+      ["Biologists & ecologists", "Explore a dataset, test a hypothesis and produce figures without programming routine analyses.", "Try an example", "#/tutorials"],
+      ["Bioinformaticians", "Inspect phyloseq objects, transformations, parameters and generated R code.", "Explore methods", "#/analyses"],
+      ["Core facilities", "Standardise journeys, connect a cluster and deliver documented projects to users.", "Understand the workflow", "#/functioning"],
+      ["Research teams", "Share derived datasets, resume analyses and compose results in a common framework.", "Read the documentation", "#/documentation"]
+    ],
+    finalK: "Get started",
+    finalT: "First test the journey that matches your data.",
+    finalP: "Use a public dataset to discover the interface, review methods before running a test or install BarCodeR to work with your own phyloseq objects.",
+    finalTutorial: "Open tutorials",
+    finalDocs: "Read the documentation",
+    finalDownload: "Download BarCodeR",
+    citationK: "Open science · community",
+    citationT: "A reproducible analysis must also be identifiable and citable.",
+    citationP: "Versions, source code, availability conditions and citation information are grouped in the download and open-science area."
   };
 
   return <main>
-    <section className="hero page-width">
-      <div className="hero-copy reveal"><Eyebrow>{c.badge}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.intro}</p><div className="hero-actions"><a className="button primary" href="#/application">{c.explore}<span>→</span></a><a className="button secondary" href="#/evidence">{c.proof}<span>↘</span></a></div><p className="version-line"><span />{c.version}</p></div>
-      <div className="hero-media reveal delay-1"><div className="ambient-ring" /><HomeApplicationVisual language={language} /><div className="signal-card signal-one"><span>R</span><div><b>{language === "fr" ? "Application R/Shiny" : "R/Shiny application"}</b><small>{language === "fr" ? "Analyse interactive" : "Interactive analysis"}</small></div></div><div className="signal-card signal-two"><span>HPC</span><div><b>{language === "fr" ? "Calcul sur cluster HPC" : "HPC cluster computing"}</b><small>OpenMetaBar · Nextflow</small></div></div><div className="signal-card signal-three"><span>✓</span><div><b>{language === "fr" ? "Traçabilité complète" : "Complete traceability"}</b><small>{language === "fr" ? "Du run à la figure" : "From run to figure"}</small></div></div></div>
+    <section className="hero home-hero page-width">
+      <div className="hero-copy reveal">
+        <Eyebrow>{c.badge}</Eyebrow>
+        <h1>{c.title}</h1>
+        <p className="lead">{c.intro}</p>
+        <div className="hero-actions">
+          <a className="button primary" href="#/functioning">{c.workflowAction}<span>→</span></a>
+          <a className="button secondary" href="#/analyses">{c.analysesAction}<span>↘</span></a>
+          <a className="button tertiary" href="#/download">{c.downloadAction}<span>↓</span></a>
+        </div>
+        <p className="version-line"><span />{c.version}</p>
+      </div>
+      <div className="hero-media reveal delay-1">
+        <div className="ambient-ring" />
+        <HomeApplicationVisual language={language} />
+        <div className="signal-card signal-one"><span>PS</span><div><b>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</b><small>{language === "fr" ? "Entrée standardisée" : "Standardised input"}</small></div></div>
+        <div className="signal-card signal-two"><span>HPC</span><div><b>{language === "fr" ? "Calcul distant optionnel" : "Optional remote computing"}</b><small>OpenMetaBar · Nextflow · Slurm</small></div></div>
+        <div className="signal-card signal-three"><span>R</span><div><b>{language === "fr" ? "Code R prolongeable" : "Extensible R code"}</b><small>{language === "fr" ? "Paramètres visibles" : "Visible parameters"}</small></div></div>
+      </div>
     </section>
-    <section className="numbers-band"><div className="page-width numbers-grid">{c.numbers.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
-    <section className="section page-width reveal"><div className="section-intro"><Eyebrow>{c.workflowK}</Eyebrow><h2>{c.workflowT}</h2><p>{c.workflowP}</p></div><Workflow language={language} /><p className="workflow-independence"><span>↗</span>{c.workflowNote}</p></section>
-    <section className="section section-tint"><div className="page-width"><div className="section-intro reveal"><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2><p>{c.modulesP}</p></div><ModuleGrid language={language} limit={13} /></div></section>
-    <section className="section audience-section"><div className="page-width audience-frame reveal"><div className="audience-intro"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div><div className="audience-executable"><span>.exe</span><div><h3>{c.audienceExeT}</h3><p>{c.audienceExeP}</p></div></div><div className="audience-grid">{c.audienceCards.map(([title, text], index) => <article style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
-    <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">×</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p></div></div></section>
+
+    <section className="home-metrics-band">
+      <div className="page-width home-metrics-grid">
+        {c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}
+      </div>
+    </section>
+
+    <section className="section home-journeys page-width reveal">
+      <div className="section-intro home-section-intro"><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2><p>{c.journeysP}</p></div>
+      <div className="journey-grid">
+        <article className="journey-card openmetabar-journey">
+          <div className="journey-card-head"><span>01</span><small>{c.fastqTag}</small></div>
+          <h3>{c.fastqTitle}</h3><p>{c.fastqText}</p>
+          <div className="journey-chain">{c.fastqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.fastqSteps.length - 1 && <span>→</span>}</div>)}</div>
+          <a href="#/functioning">{c.fastqAction}<span>↗</span></a>
+        </article>
+        <article className="journey-card barcoder-journey">
+          <div className="journey-card-head"><span>02</span><small>{c.phyloseqTag}</small></div>
+          <h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p>
+          <div className="journey-chain">{c.phyloseqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.phyloseqSteps.length - 1 && <span>→</span>}</div>)}</div>
+          <a href="#/functioning">{c.phyloseqAction}<span>↗</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section className="section section-tint home-questions">
+      <div className="page-width">
+        <div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div>
+        <div className="question-grid">
+          {c.questions.map(([label, question, detail], index) => <a className="question-card reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} href="#/analyses" key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><b>→</b></a>)}
+        </div>
+        <div className="section-action"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div>
+      </div>
+    </section>
+
+    <section className="section home-strengths page-width">
+      <div className="section-intro home-section-intro reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div>
+      <div className="strength-grid">
+        {c.strengths.map(([number, title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}
+      </div>
+    </section>
+
+    <section className="home-proof-section">
+      <div className="page-width home-proof-grid reveal">
+        <div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /><div className="proof-chip proof-chip-one">Barplot</div><div className="proof-chip proof-chip-two">Ordination</div><div className="proof-chip proof-chip-three">Differential</div></div>
+        <div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a></div>
+      </div>
+    </section>
+
+    <section className="section audience-section home-audiences">
+      <div className="page-width">
+        <div className="section-intro home-section-intro reveal"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div>
+        <div className="profile-grid">
+          {c.audiences.map(([title, text, action, href], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><a href={href}>{action}<b>→</b></a></article>)}
+        </div>
+      </div>
+    </section>
+
+    <section className="home-start-band">
+      <div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div>
+    </section>
+
+    <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">×</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p><a className="citation-link" href="#/download">{language === "fr" ? "Versions, code et citation" : "Versions, code and citation"}<span>→</span></a></div></div></section>
   </main>;
 }
-
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
   return <div className="module-grid">{modules.slice(0, limit).map((module, index) => <a href={moduleHref(module.key)} className="module-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Ouvrir la page" : "Open page"}<span>↗</span></b></a>)}</div>;
 }
