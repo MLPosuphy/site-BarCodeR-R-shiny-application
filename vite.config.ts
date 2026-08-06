@@ -3,5 +3,6 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/site-BarCodeR-R-shiny-application/",
+  // Cloudflare Pages serves the site from the domain root.
+  base: "/",
 });

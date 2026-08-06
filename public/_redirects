@@ -1,0 +1,3 @@
+# Compatibility with the former GitHub Pages subpath.
+/site-BarCodeR-R-shiny-application / 301
+/site-BarCodeR-R-shiny-application/* /:splat 301
