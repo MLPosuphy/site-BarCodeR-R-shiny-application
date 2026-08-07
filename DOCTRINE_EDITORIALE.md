@@ -174,3 +174,37 @@ Une fonctionnalité ou ressource non disponible n'est pas affichée comme une fo
 6. Aider les utilisateurs existants.
 7. Servir de support de discussion avec des plateformes ou institutions.
 8. Valoriser le travail de l'équipe sans en faire le message principal.
+
+## Passe UX — 7 août 2026
+
+### Hiérarchie des pages publiques
+- Une page ne doit pas répéter la même promesse sous plusieurs formes successives.
+- L'accueil suit cinq temps : comprendre BarCodeR → choisir son entrée → identifier sa question → comprendre la valeur → agir.
+- Les profils utilisateurs ne nécessitent pas un bloc dédié sur l'accueil : le produit doit être compréhensible sans segmenter artificiellement les visiteurs.
+- Les métriques décoratives ne doivent pas occuper une section entière si elles n'apportent pas une preuve supplémentaire.
+
+### Fonctionnement
+- Le modèle mental public est : **un projet → deux entrées possibles → un parcours BarCodeR commun**.
+- Ne jamais dupliquer tout le parcours pour FASTQ et phyloseq : OpenMetaBar ne change que l'étape d'entrée des données.
+- Le parcours commun à mettre en avant est : Description → Édition → Filtration → Exploration / Analyses → MultiView → Export.
+- Ce parcours est une représentation du fonctionnement, pas un assistant rigide ni un ordre obligatoire.
+
+### Analyses
+- Un seul mécanisme d'orientation par question scientifique doit être visible sur la page Analyses.
+- Ne pas répéter ensuite une seconde liste de questions équivalentes.
+- Les méthodes sont des informations de second niveau ; leur fonctionnement détaillé appartient à la documentation.
+
+### Pages d'onglets
+- Éviter de présenter deux fois les mêmes actions.
+- La lecture prioritaire est : **vous partez de → vous pouvez → vous obtenez**.
+- Les sous-fonctionnalités, points de vigilance et liens vers la documentation viennent ensuite.
+
+### Installation
+- Distinguer les modes d'utilisation (local / serveur partagé) du canal de distribution des sources.
+- Ne jamais présenter un dépôt ou un téléchargement comme disponible tant que le lien public n'est pas fonctionnel.
+- Éviter de répéter plusieurs blocs « aide / commencer » contenant les mêmes destinations.
+
+### Rythme visuel
+- Préférer des sections de 90–100 px de respiration verticale sur desktop plutôt que 110+ px lorsque plusieurs sections s'enchaînent.
+- Réserver les grands aplats sombres aux messages réellement structurants.
+- Un CTA principal par intention ; les liens secondaires doivent être visuellement moins dominants.

@@ -60,7 +60,7 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
         <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
         <a className={route === "/documentation" ? "active" : ""} href="#/documentation">{c.documentation}</a>
-        <a className={route === "/download" || route === "/availability" ? "active" : ""} href="#/download">{c.download}</a>
+        <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
           <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
           <button className={language === "en" ? "active" : ""} onClick={() => { setLanguage("en"); setOpen(false); }}>EN</button>
@@ -261,40 +261,38 @@ function Landing({ language }: { language: Language }) {
         <div className="hero-actions">
           <a className="button primary" href="#/functioning">{c.workflowAction}<span>→</span></a>
           <a className="button secondary" href="#/analyses">{c.analysesAction}<span>↘</span></a>
-          <a className="button tertiary" href="#/download">{c.downloadAction}<span>↓</span></a>
         </div>
-        <p className="version-line"><span />{c.version}</p>
+        <div className="hero-meta-row"><p className="version-line"><span />{c.version}</p><a href="#/download">{c.downloadAction}<b>→</b></a></div>
       </div>
       <div className="hero-media reveal delay-1">
         <div className="ambient-ring" />
         <HomeApplicationVisual language={language} />
         <div className="signal-card signal-one"><span>PS</span><div><b>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</b><small>{language === "fr" ? "Complet ou partiel" : "Complete or partial"}</small></div></div>
-        <div className="signal-card signal-two"><span>FQ</span><div><b>FASTQ</b><small>{language === "fr" ? "via le module OpenMetaBar" : "through the OpenMetaBar module"}</small></div></div>
-        <div className="signal-card signal-three"><span>R</span><div><b>{language === "fr" ? "Code reproductible" : "Reproducible code"}</b><small>{language === "fr" ? "Pour prolonger l’analyse" : "To extend the analysis"}</small></div></div>
+        <div className="signal-card signal-two"><span>FQ</span><div><b>FASTQ</b><small>{language === "fr" ? "via OpenMetaBar" : "through OpenMetaBar"}</small></div></div>
+        <div className="signal-card signal-three"><span>R</span><div><b>{language === "fr" ? "Code R" : "R code"}</b><small>{language === "fr" ? "Pour reproduire et prolonger" : "To reproduce and extend"}</small></div></div>
       </div>
+      <div className="home-trust-row reveal delay-1">{c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}</div>
     </section>
 
-    <section className="home-metrics-band"><div className="page-width home-metrics-grid">{c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}</div></section>
-
     <section className="section home-journeys page-width reveal">
-      <div className="section-intro home-section-intro"><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2><p>{c.journeysP}</p></div>
-      <div className="journey-grid">
-        <article className="journey-card barcoder-journey"><div className="journey-card-head"><span>01</span><small>{c.phyloseqTag}</small></div><h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p><div className="journey-chain">{c.phyloseqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.phyloseqSteps.length - 1 && <span>→</span>}</div>)}</div><a href="#/application/input-data">{c.phyloseqAction}<span>↗</span></a></article>
-        <article className="journey-card components-journey"><div className="journey-card-head"><span>02</span><small>{c.componentsTag}</small></div><h3>{c.componentsTitle}</h3><p>{c.componentsText}</p><div className="journey-chain">{c.componentsSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.componentsSteps.length - 1 && <span>→</span>}</div>)}</div><a href="#/application/openmetabar">{c.componentsAction}<span>↗</span></a></article>
+      <div className="section-heading home-journey-heading"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><p>{c.journeysP}</p></div>
+      <div className="journey-grid journey-grid-compact">
+        <article className="journey-card barcoder-journey"><div className="journey-card-head"><span>01</span><small>{c.phyloseqTag}</small></div><h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p><a href="#/application/input-data">{c.phyloseqAction}<span>↗</span></a></article>
+        <article className="journey-card components-journey"><div className="journey-card-head"><span>02</span><small>{c.componentsTag}</small></div><h3>{c.componentsTitle}</h3><p>{c.componentsText}</p><a href="#/application/openmetabar">{c.componentsAction}<span>↗</span></a></article>
+      </div>
+      <div className="home-common-flow" aria-label={language === "fr" ? "Parcours commun dans BarCodeR" : "Shared BarCodeR workflow"}>
+        {(language === "fr" ? ["Projet", "Description", "Édition / Filtration", "Exploration / Analyses", "MultiView", "Export"] : ["Project", "Description", "Editing / Filtering", "Exploration / Analyses", "MultiView", "Export"]).map((step, index, steps) => <div key={step}><span>{String(index + 1).padStart(2, "0")}</span><b>{step}</b>{index < steps.length - 1 && <i>→</i>}</div>)}
       </div>
     </section>
 
     <section className="section section-tint home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div><div className="question-grid">{c.questions.map(([label, question, detail], index) => <a className="question-card reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} href="#/analyses" key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><b>→</b></a>)}</div><div className="section-action"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div></div></section>
 
-    <section className="section home-strengths page-width"><div className="section-intro home-section-intro reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div><div className="strength-grid">{c.strengths.map(([number, title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
-
-    <section className="home-proof-section"><div className="page-width home-proof-grid reveal"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /><div className="proof-chip proof-chip-one">Barplot</div><div className="proof-chip proof-chip-two">Ordination</div><div className="proof-chip proof-chip-three">Differential</div></div><div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="button tertiary" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div></div></section>
-
-    <section className="section audience-section home-audiences"><div className="page-width"><div className="section-intro home-section-intro reveal"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div><div className="profile-grid">{c.audiences.map(([title, text, action, href], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><a href={href}>{action}<b>→</b></a></article>)}</div></div></section>
+    <section className="home-value-section"><div className="page-width home-value-grid">
+      <div className="home-value-copy reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2><div className="home-value-list">{c.strengths.map(([number, title, text]) => <article key={title}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></div>
+      <div className="home-value-proof reveal delay-1"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="inline-link" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
+    </div></section>
 
     <section className="home-start-band"><div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div></section>
-
-    <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">B|R</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p><a className="citation-link" href="#/download">{language === "fr" ? "Version, installation et citation" : "Version, installation and citation"}<span>→</span></a></div></div></section>
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
@@ -424,20 +422,40 @@ function ApplicationIndex({ language }: { language: Language }) {
     discover: "Discover"
   };
 
-  const renderPath = (label: string, title: string, intro: string, steps: string[][], variant: "components" | "barcoder") => (
-    <article className={`function-path function-path-${variant} reveal`}><div className="function-path-heading"><span>{label}</span><h3>{title}</h3><p>{intro}</p></div><ol>{steps.map(([number, stepTitle, detail]) => <li key={number}><span>{number}</span><div><b>{stepTitle}</b><p>{detail}</p></div></li>)}</ol></article>
-  );
+  const commonFlow = language === "fr" ? [
+    ["01", "Description", "Obtenir une vue d’ensemble du dataset avant d’entrer dans les analyses approfondies."],
+    ["02", "Édition", "Corriger ou enrichir les informations du dataset lorsque le projet le nécessite."],
+    ["03", "Filtration", "Préparer une version des données adaptée à la question scientifique étudiée."],
+    ["04", "Exploration & analyses", "Visualiser les données, comparer les groupes et tester les hypothèses pertinentes."],
+    ["05", "MultiView", "Retrouver et comparer les figures sauvegardées dans un espace commun."],
+    ["06", "Export", "Récupérer figures, tableaux et code R depuis les modules concernés."]
+  ] : [
+    ["01", "Description", "Get an overview of the dataset before moving into deeper analyses."],
+    ["02", "Editing", "Correct or enrich dataset information when the project requires it."],
+    ["03", "Filtering", "Prepare a version of the data suited to the scientific question."],
+    ["04", "Exploration & analyses", "Visualise data, compare groups and test relevant hypotheses."],
+    ["05", "MultiView", "Find and compare saved figures in a shared workspace."],
+    ["06", "Export", "Recover figures, tables and R code from the relevant modules."]
+  ];
 
   return <main className="functioning-page">
-    <section className="functioning-hero"><div className="page-width functioning-hero-grid"><div className="functioning-hero-copy reveal"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("function-paths")?.scrollIntoView({ behavior: "smooth" })}>{c.primary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("function-modules")?.scrollIntoView({ behavior: "smooth" })}>{c.secondary}<span>→</span></button></div></div><div className="reveal delay-1"><AppPreview language={language} /></div></div></section>
+    <section className="functioning-hero"><div className="page-width functioning-hero-grid"><div className="functioning-hero-copy reveal"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("function-entry")?.scrollIntoView({ behavior: "smooth" })}>{c.primary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("function-modules")?.scrollIntoView({ behavior: "smooth" })}>{c.secondary}<span>→</span></button></div></div><div className="reveal delay-1"><AppPreview language={language} /></div></div></section>
 
-    <section className="section page-width function-products"><div className="section-heading reveal"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div></div><div className="product-role-grid"><article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>phyloseq</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-input-data.png")} alt={c.phyloseqRole} /></figure></article><article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>FASTQ</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-openmetabar.png")} alt={c.componentsRole} /></figure></article></div></section>
+    <section className="section page-width function-entry-section" id="function-entry">
+      <div className="section-heading reveal"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div><p>{language === "fr" ? "Le projet est le point commun. Seule la manière d’y faire entrer les données change." : "The project is the shared starting point. Only the way data enter it changes."}</p></div>
+      <div className="function-project-start reveal"><span>01</span><div><small>{language === "fr" ? "Point de départ" : "Starting point"}</small><h3>{language === "fr" ? "Créer ou ouvrir un projet" : "Create or open a project"}</h3><p>{language === "fr" ? "Le projet regroupe les datasets, les historiques et les résultats produits au cours du travail." : "The project brings together datasets, histories and results produced throughout the work."}</p></div></div>
+      <div className="product-role-grid function-entry-grid">
+        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>phyloseq</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/input-data">{language === "fr" ? "Voir l’import" : "View import"}<span>→</span></a></article>
+        <article className="product-role openmetabar-entry-card reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>{language === "fr" ? "Option FASTQ" : "FASTQ option"}</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/openmetabar">{language === "fr" ? "Voir OpenMetaBar" : "View OpenMetaBar"}<span>→</span></a></article>
+      </div>
+      <div className="function-converge reveal"><span>↓</span><b>{language === "fr" ? "Une fois un objet phyloseq présent dans le projet, le parcours est commun." : "Once a phyloseq object is present in the project, the workflow is shared."}</b></div>
+    </section>
 
-    <section className="section section-tint function-paths-section" id="function-paths"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.pathsK}</Eyebrow><h2>{c.pathsT}</h2></div><p>{c.pathsP}</p></div><div className="function-path-grid">{renderPath(c.objectLabel, c.objectTitle, c.objectIntro, c.objectSteps, "barcoder")}{renderPath(c.componentLabel, c.componentTitle, c.componentIntro, c.componentSteps, "components")}</div></div></section>
+    <section className="section section-tint function-common-section" id="function-paths"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.pathsK}</Eyebrow><h2>{language === "fr" ? "Un parcours commun, à utiliser librement." : "One shared workflow, used freely."}</h2></div><p>{c.pathsP}</p></div><div className="function-common-flow">{commonFlow.map(([number, title, detail], index) => <article className="reveal" style={{ "--delay": `${index * 40}ms` } as React.CSSProperties} key={number}><span>{number}</span><div><h3>{title}</h3><p>{detail}</p></div>{index < commonFlow.length - 1 && <i>→</i>}</article>)}</div></div></section>
 
     <section className="dataset-lineage-section"><div className="page-width dataset-lineage-grid"><div className="dataset-lineage-copy reveal"><Eyebrow>{c.lineageK}</Eyebrow><h2>{c.lineageT}</h2><p>{c.lineageP}</p><div className="edition-filtering"><article><span>✎</span><div><b>{c.editTitle}</b><p>{c.editP}</p></div></article><article><span>⌁</span><div><b>{c.filterTitle}</b><p>{c.filterP}</p></div></article></div></div><div className="lineage-tree reveal">{c.lineageNodes.map(([title, value], index) => <article className={`lineage-node lineage-node-${index}`} key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><b>{title}</b><small>{value}</small></div></article>)}</div></div></section>
 
-    <section className="section page-width responsibility-section"><div className="section-intro reveal"><Eyebrow>{c.responsibilityK}</Eyebrow><h2>{c.responsibilityT}</h2></div><div className="responsibility-grid"><article className="responsibility-provided reveal"><span>✓</span><h3>{c.guaranteeTitle}</h3><ul>{c.guarantees.map(item => <li key={item}>{item}</li>)}</ul></article><article className="responsibility-science reveal"><span>!</span><h3>{c.responsibilityTitle}</h3><ul>{c.responsibilities.map(item => <li key={item}>{item}</li>)}</ul></article></div></section>
+    <section className="section page-width responsibility-section"><div className="section-heading reveal"><div><Eyebrow>{c.responsibilityK}</Eyebrow><h2>{c.responsibilityT}</h2></div></div><div className="responsibility-grid"><article className="responsibility-provided reveal"><span>✓</span><h3>{c.guaranteeTitle}</h3><ul>{c.guarantees.map(item => <li key={item}>{item}</li>)}</ul></article><article className="responsibility-science reveal"><span>!</span><h3>{c.responsibilityTitle}</h3><ul>{c.responsibilities.map(item => <li key={item}>{item}</li>)}</ul></article></div></section>
 
     <section className="section section-tint process-section" id="function-modules"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2></div><p>{c.modulesP}</p></div>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{c.discover}<span>→</span></b></a>)}</div></div>)}</div></section>
   </main>;
@@ -728,7 +746,7 @@ function AnalysesPage({ language }: { language: Language }) {
         <Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p>
         <div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("analysis-orientation")?.scrollIntoView({ behavior: "smooth", block: "start" })}>{c.heroPrimary}<span>↓</span></button><a className="button secondary" href="#/documentation">{c.heroSecondary}<span>→</span></a></div>
       </div>
-      <div className="analysis-hero-metrics reveal delay-1">{c.metrics.map(([number, label]) => <article key={number}><b>{number}</b><span>{label}</span></article>)}</div>
+      <div className="analyses-hero-note reveal delay-1"><span>?</span><div><b>{language === "fr" ? "Le site vous oriente par question scientifique" : "The website guides you through scientific questions"}</b><p>{language === "fr" ? "Les méthodes, paramètres et hypothèses sont détaillés uniquement dans la documentation." : "Methods, parameters and assumptions are detailed only in the documentation."}</p></div></div>
     </section>
 
     <section className="section section-tint analysis-orientation" id="analysis-orientation"><div className="page-width"><div className="section-heading analysis-orientation-heading reveal"><div><Eyebrow>{c.orientK}</Eyebrow><h2>{c.orientT}</h2></div><p>{c.orientP}</p></div><div className="analysis-question-selector">{c.families.slice(1).map(([id, title, text], index) => <button type="button" className={activeFamily === id ? "active" : ""} onClick={() => selectFamily(id as AnalysisFamily)} aria-pressed={activeFamily === id} key={id}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p><i>→</i></button>)}</div></div></section>
@@ -745,7 +763,6 @@ function AnalysesPage({ language }: { language: Language }) {
 
     <section className="analysis-compatibility-section"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.supportK}</Eyebrow><h2>{c.supportT}</h2></div><p>{c.supportP}</p></div><div className="analysis-limit-grid">{c.support.map(([number, title, text]) => <article className="reveal" key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 
-    <section className="section page-width analysis-workflow-section"><div className="section-intro reveal"><Eyebrow>{c.examplesK}</Eyebrow><h2>{c.examplesT}</h2></div><div className="analysis-workflow-list">{c.examples.map(([title, text], index) => <article className="reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></section>
 
     <section className="analysis-final-band"><div className="page-width"><div><Eyebrow>{c.k}</Eyebrow><h2>{c.finalTitle}</h2><p>{c.finalP}</p></div><div><a className="button primary" href="#/application/analyse">{c.finalModule}<span>→</span></a><a className="button secondary" href="#/documentation">{c.finalDocs}<span>→</span></a></div></div></section>
   </main>;
@@ -768,7 +785,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   const c = language === "fr" ? {
     app: "Fonctionnement de BarCodeR",
     what: "Ce que cet onglet permet de faire",
-    io: "Sa place dans le projet",
+    io: "Entrées, actions et résultats",
     inputs: "Vous partez de",
     operations: "Vous pouvez",
     outputs: "Vous obtenez",
@@ -786,7 +803,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   } : {
     app: "How BarCodeR works",
     what: "What this tab lets you do",
-    io: "Its place in the project",
+    io: "Inputs, actions and results",
     inputs: "You start from",
     operations: "You can",
     outputs: "You obtain",
@@ -809,7 +826,6 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
       <div className="reveal delay-1"><ModuleVisual module={module} language={language} /></div>
     </section>
 
-    <section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{module.order}</Eyebrow><h2>{c.what}</h2></div><p>{tx(module.question, language)}</p></div><div className="action-grid">{module.actions.map((action, i) => <article className="action-card reveal" style={{ "--delay": `${(i % 3) * 60}ms` } as React.CSSProperties} key={action.fr}><span>{String(i + 1).padStart(2, "0")}</span><p>{tx(action, language)}</p></article>)}</div></div></section>
 
     <section className="section page-width"><div className="section-intro"><Eyebrow>{c.io}</Eyebrow><h2>{c.io}</h2></div><div className="io-grid"><InfoColumn number="01" title={c.inputs} items={module.inputs} language={language} /><InfoColumn number="02" title={c.operations} items={module.actions.slice(0, 4)} language={language} accent /><InfoColumn number="03" title={c.outputs} items={module.outputs} language={language} /></div></section>
 
@@ -1886,7 +1902,7 @@ function DownloadPage({ language }: { language: Language }) {
 
     <section className="section page-width" id="download-modes">
       <div className="section-heading"><div><Eyebrow>{c.k}</Eyebrow><h2>{language === "fr" ? "Deux façons d’utiliser la même application." : "Two ways to use the same application."}</h2></div></div>
-      <div className="download-mode-grid">
+      <div className="download-mode-grid download-mode-grid-two">
         <article className="download-mode-card featured">
           <header><span>R</span><b>{language === "fr" ? "Local" : "Local"}</b></header>
           <h3>{c.localTitle}</h3><p>{c.localP}</p>
@@ -1899,12 +1915,8 @@ function DownloadPage({ language }: { language: Language }) {
           <ul>{c.sharedItems.map((item) => <li key={item}>{item}</li>)}</ul>
           <a href="#/functioning">{c.sharedAction}<span>→</span></a>
         </article>
-        <article className="download-mode-card">
-          <header><span>↓</span><b>{language === "fr" ? "Distribution" : "Distribution"}</b></header>
-          <h3>{c.distributionTitle}</h3><p>{c.distributionP}</p>
-          <a href="#/documentation">{c.distributionAction}<span>→</span></a>
-        </article>
       </div>
+      <div className="download-distribution-note"><span>↓</span><div><small>{language === "fr" ? "Accès aux sources" : "Source access"}</small><h3>{c.distributionTitle}</h3><p>{c.distributionP}</p></div><a href="#/documentation">{c.distributionAction}<span>→</span></a></div>
     </section>
 
     <section className="section section-tint" id="download-start">
@@ -1932,10 +1944,7 @@ function DownloadPage({ language }: { language: Language }) {
       </div>
     </section>
 
-    <section className="section page-width download-help-section">
-      <div className="section-heading"><div><Eyebrow>{c.helpK}</Eyebrow><h2>{c.helpT}</h2></div></div>
-      <div className="download-help-grid">{c.helpItems.map(([title, description, href], index) => <a href={href} key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{description}</p><b>→</b></a>)}</div>
-    </section>
+
   </main>;
 }
 
