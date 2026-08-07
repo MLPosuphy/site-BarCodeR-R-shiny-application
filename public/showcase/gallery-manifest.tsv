@@ -1,7 +1,7 @@
 id	category	asset	origin	module
 composition	exploration	figures/globalpatterns-composition.png	reproducible-public-figure	exploration
 ordination	analysis	figures/globalpatterns-ordination.png	reproducible-public-figure	analyse
-alpha	analysis	figures/globalpatterns-alpha-diversity.png	reproducible-public-figure	exploration
+alpha	exploration	figures/globalpatterns-alpha-diversity.png	reproducible-public-figure	exploration
 quality	quality	app-previews/qualite_assignation_taxonomique.png	application-preview	exploration
 heat-tree	exploration	app-previews/heat_tree.png	application-preview	exploration
 venn	exploration	app-previews/diagramme_venn.png	application-preview	exploration

@@ -1126,11 +1126,9 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .tutorial-filters button.active { background: var(--ink); color: #fff; }
 .journey-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .journey-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; display: flex; flex-direction: column; min-width: 0; padding: 28px; scroll-margin-top: 105px; }
-.journey-card.planned { background: linear-gradient(150deg, #fff 0%, #faf9ff 100%); border-style: dashed; }
 .journey-card-head { align-items: center; display: flex; justify-content: space-between; }
 .journey-status { border-radius: 999px; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 7px 10px; text-transform: uppercase; }
 .journey-status.published { background: #e8f7ef; color: #176b43; }
-.journey-status.planned { background: #f1eefc; color: var(--violet-dark); }
 .journey-duration { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
 .journey-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 25px; }
 .journey-tags span { border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-family: var(--font-mono); font-size: 10px; padding: 6px 9px; text-transform: uppercase; }
@@ -1163,22 +1161,13 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .journey-links > div a { background: var(--violet-pale); border-radius: 999px; color: var(--violet-dark); font-size: 11px; padding: 6px 9px; }
 .journey-doc-link { align-items: center; color: var(--ink); display: flex; flex: 0 0 auto; font-family: var(--font-display); font-size: 12px; font-weight: 700; gap: 7px; }
 .tutorial-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); padding: 30px; text-align: center; }
-.tutorial-format-section { overflow: hidden; }
-.tutorial-format-grid { border-bottom: 1px solid var(--line-dark); border-left: 1px solid var(--line-dark); display: grid; grid-template-columns: repeat(4, 1fr); }
-.tutorial-format-grid article { border-right: 1px solid var(--line-dark); border-top: 1px solid var(--line-dark); min-height: 235px; padding: 25px; }
-.tutorial-format-grid article > span { color: var(--violet); font-family: var(--font-mono); font-size: 11px; }
-.tutorial-format-grid h3 { font-size: 21px; margin-top: 36px; }
-.tutorial-format-grid p { color: var(--muted); font-size: 13px; line-height: 1.55; margin-top: 11px; }
-.tutorial-format-grid article:last-child { background: var(--violet-pale); grid-column: span 2; }
 .dataset-library-section { padding-block: 100px; }
-.dataset-library-grid { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.dataset-library-card { background: #171a2c; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; display: flex; flex-direction: column; min-height: 430px; padding: 25px; }
+.dataset-library-grid { display: grid; gap: 14px; grid-template-columns: minmax(0, 760px); }
+.dataset-library-card { background: #171a2c; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; display: flex; flex-direction: column; min-height: 340px; padding: 25px; }
 .dataset-library-card.available { background: linear-gradient(150deg, #241d50 0%, #171a2c 70%); border-color: rgba(176,158,255,.6); }
-.dataset-library-card.specified { border-style: dashed; }
 .dataset-library-head { align-items: center; display: flex; justify-content: space-between; }
 .dataset-library-head span { background: rgba(255,255,255,.09); border-radius: 999px; color: #e6e4f2; font-family: var(--font-mono); font-size: 9px; letter-spacing: .04em; padding: 7px 9px; text-transform: uppercase; }
 .dataset-library-card.available .dataset-library-head span { background: #dff7e9; color: #176b43; }
-.dataset-library-card.specified .dataset-library-head span { background: #eee9ff; color: #4b378c; }
 .dataset-library-head i { color: rgba(255,255,255,.38); font-family: var(--font-mono); font-size: 11px; font-style: normal; }
 .dataset-library-card h3 { color: #fff; font-size: 25px; margin-top: 35px; }
 .dataset-library-card > small, .dataset-library-card > div > small { color: rgba(255,255,255,.45); font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; margin-top: 19px; text-transform: uppercase; }
@@ -1212,9 +1201,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .tutorial-start-grid { grid-template-columns: 1fr; }
   .tutorial-start-card { min-height: 230px; }
   .journey-grid { grid-template-columns: 1fr; }
-  .tutorial-format-grid { grid-template-columns: repeat(2, 1fr); }
-  .tutorial-format-grid article:last-child { grid-column: span 2; }
-  .tutorial-resources-v2 .evidence-links { justify-content: flex-start; }
+      .tutorial-resources-v2 .evidence-links { justify-content: flex-start; }
 }
 
 @media (max-width: 620px) {
@@ -1230,9 +1217,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .journey-meta > div + div { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
   .journey-outputs ul { grid-template-columns: 1fr; }
   .journey-links { align-items: flex-start; flex-direction: column; }
-  .tutorial-format-grid { grid-template-columns: 1fr; }
-  .tutorial-format-grid article, .tutorial-format-grid article:last-child { grid-column: span 1; min-height: 190px; }
-  .dataset-library-grid { grid-template-columns: 1fr; }
+      .dataset-library-grid { grid-template-columns: 1fr; }
   .dataset-library-card { min-height: 390px; }
   .tutorial-resources-v2 .button { min-width: 0; }
 }

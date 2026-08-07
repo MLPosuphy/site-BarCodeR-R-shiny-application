@@ -871,20 +871,16 @@ function InfoColumn({ number, title, items, language, accent = false }: { number
 }
 
 const publicFigures = [
-  { file: "globalpatterns-composition.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, method: { fr: "Abondances relatives · agrégation au phylum · moyenne par environnement", en: "Relative abundance · phylum aggregation · mean by environment" } },
-  { file: "globalpatterns-ordination.png", title: { fr: "Structure inter-échantillons", en: "Between-sample structure" }, method: { fr: "Bray–Curtis sur abondances relatives · PCoA", en: "Bray–Curtis on relative abundances · PCoA" } },
-  { file: "globalpatterns-alpha-diversity.png", title: { fr: "Diversité intra-échantillon", en: "Within-sample diversity" }, method: { fr: "Richesse observée et Shannon sur les comptes", en: "Observed richness and Shannon on counts" } }
+  { file: "globalpatterns-composition.png", title: { fr: "Composition des communautés", en: "Community composition" }, method: { fr: "Répartition des principaux groupes taxonomiques selon les environnements.", en: "Distribution of the main taxonomic groups across environments." } },
+  { file: "globalpatterns-ordination.png", title: { fr: "Organisation des échantillons", en: "Sample organisation" }, method: { fr: "Position relative des échantillons selon la composition de leurs communautés.", en: "Relative position of samples according to community composition." } },
+  { file: "globalpatterns-alpha-diversity.png", title: { fr: "Diversité au sein des échantillons", en: "Within-sample diversity" }, method: { fr: "Comparaison de la richesse et de la diversité entre environnements.", en: "Comparison of richness and diversity across environments." } }
 ];
 
-type TutorialCategory = "start" | "prepare" | "analyse" | "advanced";
-type TutorialLevel = "beginner" | "intermediate" | "advanced";
-type TutorialStatus = "published" | "planned";
+type TutorialCategory = "start" | "prepare" | "analyse";
 
 type TutorialJourney = {
   id: string;
   category: TutorialCategory;
-  level: TutorialLevel;
-  status: TutorialStatus;
   duration: string;
   title: Localized;
   summary: Localized;
@@ -898,230 +894,172 @@ type TutorialJourney = {
 
 type TestDataset = {
   id: string;
-  status: "available" | "specified" | "planned";
   title: Localized;
   input: Localized;
   purpose: Localized;
   coverage: Localized[];
-  note: Localized;
 };
 
 const tutorialJourneys: TutorialJourney[] = [
   {
-    id: "discover-globalpatterns", category: "start", level: "beginner", status: "published", duration: "15 min",
+    id: "discover-globalpatterns", category: "start", duration: "15 min",
     title: { fr: "Découvrir BarCodeR avec GlobalPatterns", en: "Discover BarCodeR with GlobalPatterns" },
-    summary: { fr: "Parcourir le cycle complet, de l’import d’un phyloseq public à une première planche de résultats.", en: "Walk through the complete cycle, from importing a public phyloseq object to a first results panel." },
+    summary: { fr: "Suivre un premier projet, de l’import d’un objet phyloseq public jusqu’à une synthèse de plusieurs résultats.", en: "Follow a first project from importing a public phyloseq object to a synthesis of several results." },
     dataset: { fr: "GlobalPatterns · phyloseq public", en: "GlobalPatterns · public phyloseq" },
-    goal: { fr: "Comprendre où charger, contrôler, explorer, analyser et sauvegarder un résultat.", en: "Understand where to load, check, explore, analyse and save a result." },
+    goal: { fr: "Comprendre où importer, contrôler, explorer, analyser, sauvegarder et comparer les résultats.", en: "Understand where to import, check, explore, analyse, save and compare results." },
     outputs: [
-      { fr: "un diagnostic rapide du dataset", en: "a rapid dataset diagnosis" },
-      { fr: "un barplot au niveau Phylum", en: "a phylum-level bar plot" },
-      { fr: "une PCoA Bray–Curtis", en: "a Bray–Curtis PCoA" },
+      { fr: "une vue d’ensemble du dataset", en: "an overview of the dataset" },
+      { fr: "une visualisation de la composition", en: "a composition visualisation" },
+      { fr: "une représentation des différences entre échantillons", en: "a representation of differences among samples" },
       { fr: "une composition MultiView", en: "a MultiView composition" }
     ],
     steps: [
       { fr: "Créer un projet de démonstration puis importer l’objet GlobalPatterns.", en: "Create a demonstration project and import the GlobalPatterns object." },
-      { fr: "Ouvrir Description et vérifier dimensions, profondeur, taxonomie et métadonnées.", en: "Open Description and check dimensions, depth, taxonomy and metadata." },
-      { fr: "Produire une composition taxonomique en abondances relatives au niveau Phylum.", en: "Produce a relative-abundance taxonomic composition at phylum level." },
-      { fr: "Calculer Observed et Shannon puis comparer les environnements.", en: "Compute Observed and Shannon, then compare environments." },
-      { fr: "Construire une PCoA fondée sur Bray–Curtis et colorée par environnement.", en: "Build a Bray–Curtis PCoA coloured by environment." },
-      { fr: "Sauvegarder les figures et les réunir dans MultiView.", en: "Save the figures and combine them in MultiView." }
+      { fr: "Ouvrir Description pour vérifier la structure générale et les informations disponibles.", en: "Open Description to review the overall structure and available information." },
+      { fr: "Explorer la composition des communautés et leur diversité.", en: "Explore community composition and diversity." },
+      { fr: "Visualiser l’organisation des échantillons selon leur composition.", en: "Visualise how samples are organised according to community composition." },
+      { fr: "Sauvegarder plusieurs figures utiles au projet.", en: "Save several figures useful to the project." },
+      { fr: "Retrouver ces figures dans MultiView et les réunir dans une même composition.", en: "Find these figures in MultiView and combine them into one composition." }
     ],
     modules: ["input-data", "description", "exploration", "analyse", "multiview"],
-    caution: { fr: "Ce parcours sert à comprendre l’interface ; il ne constitue pas une analyse écologique complète de GlobalPatterns.", en: "This journey explains the interface; it is not a complete ecological analysis of GlobalPatterns." }
+    caution: { fr: "Ce parcours sert à découvrir l’application. Il ne constitue pas une analyse écologique complète de GlobalPatterns.", en: "This journey is designed to discover the application. It is not a complete ecological analysis of GlobalPatterns." }
   },
   {
-    id: "audit-phyloseq", category: "prepare", level: "beginner", status: "published", duration: "20 min",
-    title: { fr: "Auditer un phyloseq avant toute analyse", en: "Audit a phyloseq object before analysis" },
-    summary: { fr: "Vérifier la structure de l’objet, les profondeurs, la sparsité, la taxonomie et les métadonnées avant de choisir une méthode.", en: "Check object structure, depths, sparsity, taxonomy and metadata before choosing a method." },
+    id: "audit-phyloseq", category: "prepare", duration: "20 min",
+    title: { fr: "Contrôler un phyloseq avant l’analyse", en: "Check a phyloseq object before analysis" },
+    summary: { fr: "Examiner la structure, les échantillons, la taxonomie et les métadonnées afin d’identifier les points à corriger ou à surveiller.", en: "Review structure, samples, taxonomy and metadata to identify points that need correction or attention." },
     dataset: { fr: "GlobalPatterns ou votre propre phyloseq", en: "GlobalPatterns or your own phyloseq" },
-    goal: { fr: "Décider si le dataset est analysable et identifier les points nécessitant une correction ou une justification.", en: "Decide whether the dataset is ready for analysis and identify issues requiring correction or justification." },
+    goal: { fr: "Savoir ce que contient réellement le dataset avant de commencer les analyses.", en: "Know what the dataset actually contains before starting analyses." },
     outputs: [
-      { fr: "une checklist de structure", en: "a structure checklist" },
-      { fr: "un bilan de profondeur et de sparsité", en: "a depth and sparsity assessment" },
+      { fr: "un contrôle de la structure de l’objet", en: "a check of the object structure" },
+      { fr: "un bilan des échantillons", en: "a sample assessment" },
       { fr: "un bilan taxonomique", en: "a taxonomy assessment" },
-      { fr: "une liste d’échantillons à examiner", en: "a list of samples to inspect" }
+      { fr: "une liste de points à examiner avant l’analyse", en: "a list of points to review before analysis" }
     ],
     steps: [
-      { fr: "Contrôler la présence et l’orientation des tables OTU, taxonomie et métadonnées.", en: "Check the presence and orientation of OTU, taxonomy and metadata tables." },
-      { fr: "Vérifier la concordance des identifiants entre les composants.", en: "Check identifier consistency across components." },
-      { fr: "Examiner profondeur, richesse, dominance et sparsité par échantillon.", en: "Inspect depth, richness, dominance and sparsity by sample." },
-      { fr: "Mesurer la complétude taxonomique à chaque rang.", en: "Assess taxonomic completeness at each rank." },
-      { fr: "Repérer les valeurs manquantes et les variables de métadonnées non exploitables.", en: "Identify missing values and unusable metadata variables." },
-      { fr: "Examiner les courbes de raréfaction et les échantillons atypiques sans les exclure automatiquement.", en: "Inspect rarefaction curves and atypical samples without excluding them automatically." }
+      { fr: "Importer l’objet et vérifier que ses composants sont reconnus et cohérents.", en: "Import the object and check that its components are recognised and consistent." },
+      { fr: "Examiner la quantité d’information disponible pour chaque échantillon.", en: "Review the amount of information available for each sample." },
+      { fr: "Observer la richesse, la dominance et la présence de nombreux zéros.", en: "Review richness, dominance and the presence of many zeros." },
+      { fr: "Examiner jusqu’où les taxons sont identifiés.", en: "Review how far taxa are identified." },
+      { fr: "Repérer les valeurs manquantes ou les métadonnées difficiles à exploiter.", en: "Identify missing values or metadata that may be difficult to use." },
+      { fr: "Repérer les échantillons atypiques sans les exclure automatiquement.", en: "Identify atypical samples without excluding them automatically." }
     ],
     modules: ["description", "data-edition"],
-    caution: { fr: "Un échantillon atypique n’est pas nécessairement erroné. Toute exclusion doit être documentée et biologiquement justifiée.", en: "An atypical sample is not necessarily erroneous. Any exclusion must be documented and biologically justified." }
+    caution: { fr: "Un échantillon atypique n’est pas nécessairement erroné. Toute exclusion doit être justifiée par le contexte biologique ou expérimental.", en: "An atypical sample is not necessarily erroneous. Any exclusion should be justified by the biological or experimental context." }
   },
   {
-    id: "filter-provenance", category: "prepare", level: "intermediate", status: "published", duration: "25 min",
-    title: { fr: "Filtrer sans perdre la provenance", en: "Filter without losing provenance" },
-    summary: { fr: "Créer plusieurs branches analytiques à partir d’un même objet et comparer leur impact sans écraser l’original.", en: "Create several analytical branches from the same object and compare their impact without overwriting the original." },
+    id: "filter-provenance", category: "prepare", duration: "25 min",
+    title: { fr: "Préparer un dataset sans perdre l’original", en: "Prepare a dataset without losing the original" },
+    summary: { fr: "Tester plusieurs niveaux de filtration, observer leur impact et conserver une version adaptée à la question étudiée.", en: "Try several filtering levels, review their impact and keep a version suited to the question being studied." },
     dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
-    goal: { fr: "Comprendre la différence entre corriger un objet et produire un dataset filtré dérivé.", en: "Understand the difference between correcting an object and producing a derived filtered dataset." },
+    goal: { fr: "Comprendre comment préparer les données tout en gardant une trace des choix réalisés.", en: "Understand how to prepare data while retaining a record of the choices made." },
     outputs: [
-      { fr: "trois datasets dérivés", en: "three derived datasets" },
+      { fr: "plusieurs versions comparables du dataset", en: "several comparable dataset versions" },
       { fr: "un bilan avant/après", en: "a before/after assessment" },
-      { fr: "un historique des filtres", en: "a filtering history" },
-      { fr: "une décision de seuil argumentée", en: "a justified threshold decision" }
+      { fr: "un historique des filtres appliqués", en: "a history of applied filters" },
+      { fr: "une version retenue pour la suite du projet", en: "a version retained for the rest of the project" }
     ],
     steps: [
-      { fr: "Dupliquer le dataset original et nommer clairement la branche de travail.", en: "Duplicate the original dataset and clearly name the working branch." },
-      { fr: "Créer une filtration faible fondée sur la prévalence.", en: "Create a light prevalence-based filtering branch." },
-      { fr: "Créer une filtration standard combinant prévalence et abondance minimale.", en: "Create a standard branch combining prevalence and minimum abundance." },
-      { fr: "Créer une filtration stricte uniquement pour tester la sensibilité des résultats.", en: "Create a strict branch solely to test result sensitivity." },
-      { fr: "Comparer le nombre de taxons, les reads conservés et la distribution des profondeurs.", en: "Compare retained taxa, reads and depth distributions." },
-      { fr: "Conserver la branche la plus défendable et documenter pourquoi les autres ne sont pas retenues.", en: "Keep the most defensible branch and document why the others are not retained." }
+      { fr: "Conserver une version de référence du dataset initial.", en: "Keep a reference version of the initial dataset." },
+      { fr: "Appliquer une première filtration légère et observer ce qui change.", en: "Apply a first light filtering step and review what changes." },
+      { fr: "Tester une filtration plus sélective lorsque la question le justifie.", en: "Try a more selective filter when the question justifies it." },
+      { fr: "Comparer les taxons et échantillons conservés entre les versions.", en: "Compare retained taxa and samples across versions." },
+      { fr: "Vérifier que la filtration ne supprime pas un signal utile au projet.", en: "Check that filtering does not remove a signal useful to the project." },
+      { fr: "Enregistrer la version retenue avec un nom qui permette de comprendre son rôle.", en: "Save the retained version with a name that makes its role clear." }
     ],
     modules: ["datasets", "filtration", "description"],
-    caution: { fr: "Un seuil plus strict n’est pas automatiquement meilleur. Il peut supprimer un signal rare mais biologiquement pertinent.", en: "A stricter threshold is not automatically better. It can remove a rare but biologically relevant signal." }
+    caution: { fr: "Une filtration plus stricte n’est pas automatiquement meilleure. Elle doit rester cohérente avec la question scientifique.", en: "Stricter filtering is not automatically better. It should remain consistent with the scientific question." }
   },
   {
-    id: "composition-alpha", category: "analyse", level: "beginner", status: "published", duration: "25 min",
-    title: { fr: "Comparer composition et diversité alpha", en: "Compare composition and alpha diversity" },
-    summary: { fr: "Décrire les communautés, choisir un rang taxonomique et comparer plusieurs indices de diversité intra-échantillon.", en: "Describe communities, choose a taxonomic rank and compare several within-sample diversity indices." },
+    id: "composition-alpha", category: "analyse", duration: "25 min",
+    title: { fr: "Décrire et comparer les communautés", en: "Describe and compare communities" },
+    summary: { fr: "Observer quels groupes taxonomiques dominent et comparer plusieurs dimensions de la diversité entre échantillons ou conditions.", en: "Review which taxonomic groups dominate and compare several dimensions of diversity across samples or conditions." },
     dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
-    goal: { fr: "Produire une description lisible des groupes sans confondre abondance relative, richesse et équitabilité.", en: "Produce a readable group description without confusing relative abundance, richness and evenness." },
+    goal: { fr: "Produire une première lecture biologique des communautés avant d’aller vers des analyses plus ciblées.", en: "Produce a first biological reading of communities before moving to more targeted analyses." },
     outputs: [
-      { fr: "un barplot taxonomique", en: "a taxonomic bar plot" },
+      { fr: "une visualisation de la composition taxonomique", en: "a taxonomic composition visualisation" },
       { fr: "un tableau de composition", en: "a composition table" },
-      { fr: "Observed, Shannon et Simpson", en: "Observed, Shannon and Simpson" },
-      { fr: "une comparaison statistique documentée", en: "a documented statistical comparison" }
+      { fr: "plusieurs indicateurs de diversité", en: "several diversity indicators" },
+      { fr: "une comparaison entre groupes lorsque cela est pertinent", en: "a group comparison when relevant" }
     ],
     steps: [
-      { fr: "Choisir le rang Phylum et examiner la proportion de taxons non assignés.", en: "Choose phylum rank and inspect the proportion of unassigned taxa." },
-      { fr: "Définir un top N et regrouper explicitement les taxons restants.", en: "Define a top N and explicitly group remaining taxa." },
-      { fr: "Comparer profils par échantillon puis moyenne par environnement.", en: "Compare sample profiles, then means by environment." },
-      { fr: "Calculer plusieurs indices de diversité alpha sur les comptes adaptés.", en: "Compute several alpha-diversity indices on suitable counts." },
-      { fr: "Vérifier distributions et tailles de groupes avant de choisir le test.", en: "Check distributions and group sizes before choosing the test." },
-      { fr: "Interpréter séparément composition, richesse et équitabilité.", en: "Interpret composition, richness and evenness separately." }
+      { fr: "Choisir le niveau taxonomique adapté à la lecture recherchée.", en: "Choose the taxonomic level suited to the intended interpretation." },
+      { fr: "Observer les groupes dominants et la part des taxons moins bien identifiés.", en: "Review dominant groups and the share of less well identified taxa." },
+      { fr: "Comparer les profils entre échantillons ou groupes.", en: "Compare profiles across samples or groups." },
+      { fr: "Examiner plusieurs dimensions de la diversité au sein des échantillons.", en: "Review several dimensions of within-sample diversity." },
+      { fr: "Comparer les groupes lorsque les données et le plan d’étude le permettent.", en: "Compare groups when the data and study design allow it." },
+      { fr: "Interpréter séparément composition et diversité.", en: "Interpret composition and diversity separately." }
     ],
     modules: ["exploration", "analyse"],
-    caution: { fr: "Une différence d’abondance relative ne signifie pas nécessairement une différence d’abondance absolue.", en: "A difference in relative abundance does not necessarily imply a difference in absolute abundance." }
+    caution: { fr: "Une différence de proportion ne signifie pas nécessairement qu’un groupe contient davantage d’organismes en valeur absolue.", en: "A difference in proportion does not necessarily mean that a group contains more organisms in absolute terms." }
   },
   {
-    id: "beta-permanova", category: "analyse", level: "intermediate", status: "published", duration: "35 min",
-    title: { fr: "Construire une bêta-diversité complète", en: "Build a complete beta-diversity analysis" },
-    summary: { fr: "Associer transformation, distance, ordination, PERMANOVA et contrôle de dispersion dans un même raisonnement.", en: "Combine transformation, distance, ordination, PERMANOVA and dispersion control in one reasoning workflow." },
+    id: "beta-permanova", category: "analyse", duration: "35 min",
+    title: { fr: "Tester si les communautés diffèrent entre groupes", en: "Test whether communities differ among groups" },
+    summary: { fr: "Visualiser l’organisation des échantillons puis tester si les différences observées entre groupes sont soutenues par l’analyse.", en: "Visualise sample organisation and then test whether observed differences among groups are supported by the analysis." },
     dataset: { fr: "GlobalPatterns", en: "GlobalPatterns" },
-    goal: { fr: "Tester une structuration entre groupes sans conclure à partir de la seule séparation visuelle des points.", en: "Test group structuring without drawing conclusions from visual point separation alone." },
+    goal: { fr: "Ne pas conclure à partir de la seule séparation visuelle des échantillons.", en: "Avoid drawing conclusions from visual sample separation alone." },
     outputs: [
-      { fr: "une PCoA Bray–Curtis", en: "a Bray–Curtis PCoA" },
-      { fr: "un diagnostic d’ordination", en: "an ordination diagnosis" },
-      { fr: "une PERMANOVA", en: "a PERMANOVA" },
-      { fr: "un test de dispersion multivariée", en: "a multivariate dispersion test" }
+      { fr: "une représentation de l’organisation des échantillons", en: "a representation of sample organisation" },
+      { fr: "un résultat de comparaison entre groupes", en: "a result comparing groups" },
+      { fr: "un contrôle de l’hétérogénéité entre groupes", en: "a check of heterogeneity among groups" },
+      { fr: "une lecture conjointe du graphique et des résultats statistiques", en: "a joint interpretation of the plot and statistical results" }
     ],
     steps: [
-      { fr: "Formuler la variable explicative et vérifier la taille des groupes.", en: "Define the explanatory variable and check group sizes." },
-      { fr: "Choisir une transformation cohérente avec la distance Bray–Curtis.", en: "Choose a transformation consistent with Bray–Curtis distance." },
-      { fr: "Construire la matrice de distance puis la PCoA.", en: "Build the distance matrix and then the PCoA." },
-      { fr: "Examiner variance expliquée, points atypiques et stabilité de la représentation.", en: "Inspect explained variance, atypical points and representation stability." },
-      { fr: "Lancer la PERMANOVA avec un nombre de permutations adapté.", en: "Run PERMANOVA with an appropriate number of permutations." },
-      { fr: "Contrôler PERMDISP avant d’attribuer la différence aux centroïdes des groupes.", en: "Check PERMDISP before attributing the difference to group centroids." },
-      { fr: "Présenter conjointement taille d’effet, p-value, dispersion et graphique.", en: "Report effect size, p-value, dispersion and plot together." }
+      { fr: "Définir clairement la variable ou les groupes à comparer.", en: "Clearly define the variable or groups to compare." },
+      { fr: "Choisir dans BarCodeR une représentation adaptée à la question.", en: "Choose a representation in BarCodeR that is suited to the question." },
+      { fr: "Observer la structure générale et les échantillons atypiques.", en: "Review the overall structure and atypical samples." },
+      { fr: "Lancer le test de comparaison proposé dans le module Analyse.", en: "Run the comparison test provided in the Analysis module." },
+      { fr: "Examiner le diagnostic de dispersion fourni avec le résultat.", en: "Review the dispersion diagnostic provided with the result." },
+      { fr: "Interpréter ensemble la visualisation, l’intensité de l’effet et l’incertitude.", en: "Interpret the visualisation, effect strength and uncertainty together." }
     ],
     modules: ["analyse"],
-    caution: { fr: "Une PERMANOVA significative avec dispersion hétérogène demande une interprétation prudente.", en: "A significant PERMANOVA with heterogeneous dispersion requires cautious interpretation." }
+    caution: { fr: "Une séparation visuelle entre groupes ne suffit pas à démontrer une différence, et un résultat significatif doit être interprété avec ses diagnostics.", en: "Visual separation among groups is not enough to demonstrate a difference, and a significant result should be interpreted together with its diagnostics." }
   },
   {
-    id: "multiview-report", category: "start", level: "beginner", status: "published", duration: "20 min",
+    id: "multiview-report", category: "start", duration: "20 min",
     title: { fr: "Construire une planche de résultats avec MultiView", en: "Build a results panel with MultiView" },
-    summary: { fr: "Retrouver les figures sauvegardées, les organiser, les annoter et exporter une composition cohérente.", en: "Retrieve saved figures, arrange and annotate them, then export a coherent composition." },
-    dataset: { fr: "Tout projet contenant plusieurs figures", en: "Any project containing several figures" },
-    goal: { fr: "Passer d’une succession de graphiques isolés à une restitution structurée et traçable.", en: "Move from isolated plots to a structured and traceable report." },
+    summary: { fr: "Retrouver les figures sauvegardées, sélectionner celles qui répondent au projet et les organiser dans une composition commune.", en: "Retrieve saved figures, select those relevant to the project and arrange them in a shared composition." },
+    dataset: { fr: "Tout projet contenant plusieurs figures sauvegardées", en: "Any project containing several saved figures" },
+    goal: { fr: "Passer d’une succession de graphiques isolés à une synthèse visuelle organisée.", en: "Move from isolated plots to an organised visual synthesis." },
     outputs: [
-      { fr: "une bibliothèque filtrée", en: "a filtered library" },
-      { fr: "une sélection de figures", en: "a figure selection" },
-      { fr: "une grille MultiView", en: "a MultiView grid" },
+      { fr: "une bibliothèque de figures organisée", en: "an organised figure library" },
+      { fr: "une sélection de résultats", en: "a selection of results" },
+      { fr: "une composition MultiView", en: "a MultiView composition" },
       { fr: "une image composite exportée", en: "an exported composite image" }
     ],
     steps: [
-      { fr: "Sauvegarder au moins trois figures issues de modules différents.", en: "Save at least three figures from different modules." },
-      { fr: "Filtrer la bibliothèque par dataset, module ou recherche textuelle.", en: "Filter the library by dataset, module or text search." },
-      { fr: "Ajouter favoris et tags pour distinguer les résultats retenus.", en: "Add favourites and tags to distinguish selected results." },
-      { fr: "Choisir une disposition puis glisser les figures dans les emplacements.", en: "Choose a layout and drag figures into the slots." },
-      { fr: "Vérifier lisibilité, ordre narratif et cohérence des légendes.", en: "Check readability, narrative order and legend consistency." },
+      { fr: "Sauvegarder plusieurs figures utiles depuis les différents onglets.", en: "Save several useful figures from the different tabs." },
+      { fr: "Retrouver et filtrer ces figures dans MultiView.", en: "Find and filter these figures in MultiView." },
+      { fr: "Utiliser tags et favoris pour identifier les résultats retenus.", en: "Use tags and favourites to identify retained results." },
+      { fr: "Choisir une disposition et organiser les figures dans la grille.", en: "Choose a layout and arrange figures in the grid." },
+      { fr: "Vérifier la lisibilité et l’ordre dans lequel les résultats sont présentés.", en: "Check readability and the order in which results are presented." },
       { fr: "Exporter la composition et sauvegarder sa configuration.", en: "Export the composition and save its configuration." }
     ],
     modules: ["multiview"],
-    caution: { fr: "Une planche visuellement homogène ne corrige pas des méthodes ou des échelles incompatibles entre figures.", en: "A visually consistent panel does not correct incompatible methods or scales across figures." }
-  },
-  {
-    id: "differential-consensus", category: "advanced", level: "advanced", status: "planned", duration: "45–60 min",
-    title: { fr: "Comparer plusieurs moteurs différentiels", en: "Compare several differential-analysis engines" },
-    summary: { fr: "Mettre en parallèle ANCOM-BC2, LinDA, ALDEx2, corncob et MaAsLin 3 sur un signal contrôlé.", en: "Compare ANCOM-BC2, LinDA, ALDEx2, corncob and MaAsLin 3 on a controlled signal." },
-    dataset: { fr: "Benchmark différentiel simulé · à produire", en: "Simulated differential benchmark · to produce" },
-    goal: { fr: "Distinguer résultats spécifiques à une méthode et signaux concordants entre modèles.", en: "Distinguish method-specific findings from signals shared across models." },
-    outputs: [{ fr: "cinq résultats comparables", en: "five comparable results" }, { fr: "une matrice de concordance", en: "a concordance matrix" }, { fr: "une sélection robuste de taxons", en: "a robust taxon selection" }],
-    steps: [
-      { fr: "Construire un dataset simulé avec vrais positifs, absence d’effet et structure de groupes connue.", en: "Build a simulated dataset with known true positives, null effects and group structure." },
-      { fr: "Fixer la même population, le même contraste et les mêmes règles de correction multiple.", en: "Use the same population, contrast and multiple-testing rules." },
-      { fr: "Comparer signes, tailles d’effet, significativité et rangs taxonomiques.", en: "Compare signs, effect sizes, significance and taxonomic ranks." },
-      { fr: "Documenter les divergences plutôt que de sélectionner uniquement la méthode la plus favorable.", en: "Document disagreements rather than selecting only the most favourable method." }
-    ],
-    modules: ["analyse"],
-    caution: { fr: "Ce tutoriel sera publié avec un dataset dont le signal attendu est connu afin d’éviter une comparaison circulaire sur un cas réel.", en: "This tutorial will be published with a dataset whose expected signal is known, avoiding circular comparison on a real case." }
-  },
-  {
-    id: "compare-markers", category: "advanced", level: "advanced", status: "planned", duration: "45 min",
-    title: { fr: "Comparer plusieurs marqueurs ou matrices", en: "Compare several markers or matrices" },
-    summary: { fr: "Harmoniser les échantillons puis comparer plusieurs représentations avec Mantel, Procrustes, PROTEST, co-inertie et MCOA.", en: "Harmonise samples and compare representations using Mantel, Procrustes, PROTEST, co-inertia and MCOA." },
-    dataset: { fr: "Projet multi-marqueurs · à produire", en: "Multi-marker project · to produce" },
-    goal: { fr: "Évaluer si plusieurs marqueurs décrivent une organisation écologique cohérente.", en: "Assess whether several markers describe a coherent ecological organisation." },
-    outputs: [{ fr: "des matrices harmonisées", en: "harmonised matrices" }, { fr: "plusieurs tests de concordance", en: "several concordance tests" }, { fr: "une synthèse multi-tableaux", en: "a multi-table synthesis" }],
-    steps: [
-      { fr: "Identifier l’intersection exacte des échantillons et variables comparables.", en: "Identify the exact intersection of comparable samples and variables." },
-      { fr: "Appliquer des transformations et distances défendables dans chaque matrice.", en: "Apply defensible transformations and distances to each matrix." },
-      { fr: "Comparer les structures par plusieurs méthodes complémentaires.", en: "Compare structures using several complementary methods." },
-      { fr: "Séparer concordance globale, alignement des ordinations et contribution des tables.", en: "Separate global concordance, ordination alignment and table contribution." }
-    ],
-    modules: ["analyse"],
-    caution: { fr: "La concordance dépend fortement de l’intersection des échantillons et des choix de prétraitement.", en: "Concordance strongly depends on sample intersection and preprocessing choices." }
-  },
+    caution: { fr: "Une composition visuellement cohérente ne remplace pas l’interprétation de chaque résultat dans son propre contexte.", en: "A visually coherent composition does not replace interpretation of each result in its own context." }
+  }
 ];
 
 const testDatasets: TestDataset[] = [
   {
-    id: "globalpatterns", status: "available", title: { fr: "GlobalPatterns", en: "GlobalPatterns" },
+    id: "globalpatterns", title: { fr: "GlobalPatterns", en: "GlobalPatterns" },
     input: { fr: "Objet phyloseq public", en: "Public phyloseq object" },
-    purpose: { fr: "Découvrir l’application et reproduire composition, diversité alpha, ordination, PERMANOVA, filtration et MultiView.", en: "Discover the application and reproduce composition, alpha diversity, ordination, PERMANOVA, filtering and MultiView." },
-    coverage: [{ fr: "26 échantillons", en: "26 samples" }, { fr: "9 environnements", en: "9 environments" }, { fr: "figures de référence", en: "reference figures" }],
-    note: { fr: "Disponible dans le package phyloseq ; les figures publiques du site sont générées par le script versionné.", en: "Available in the phyloseq package; the public site figures are generated by the versioned script." }
-  },
-  {
-    id: "diagnostic-challenge", status: "specified", title: { fr: "Diagnostic Challenge", en: "Diagnostic Challenge" },
-    input: { fr: "Phyloseq volontairement problématique", en: "Deliberately problematic phyloseq" },
-    purpose: { fr: "S’entraîner à repérer identifiants incohérents, métadonnées manquantes, taxonomie partielle, profondeur variable et échantillons atypiques.", en: "Practise identifying inconsistent identifiers, missing metadata, partial taxonomy, variable depth and atypical samples." },
-    coverage: [{ fr: "structure", en: "structure" }, { fr: "qualité", en: "quality" }, { fr: "corrections", en: "corrections" }],
-    note: { fr: "Spécification pédagogique définie ; fichier redistribuable encore à générer et valider.", en: "Educational specification defined; redistributable file still needs to be generated and validated." }
-  },
-  {
-    id: "differential-benchmark", status: "planned", title: { fr: "Differential Benchmark", en: "Differential Benchmark" },
-    input: { fr: "Comptes simulés avec signal connu", en: "Simulated counts with known signal" },
-    purpose: { fr: "Comparer équitablement les cinq moteurs différentiels et mesurer concordance, vrais positifs et faux positifs.", en: "Fairly compare the five differential engines and assess concordance, true positives and false positives." },
-    coverage: [{ fr: "5 moteurs", en: "5 engines" }, { fr: "effets connus", en: "known effects" }, { fr: "benchmark", en: "benchmark" }],
-    note: { fr: "À produire avec une graine, un modèle de simulation et des réponses attendues versionnés.", en: "To be produced with a versioned seed, simulation model and expected answers." }
-  },
-  {
-    id: "multi-marker", status: "planned", title: { fr: "Multi-marker Project", en: "Multi-marker Project" },
-    input: { fr: "Plusieurs phyloseq partageant les mêmes échantillons", en: "Several phyloseq objects sharing the same samples" },
-    purpose: { fr: "Tester Mantel, Procrustes, PROTEST, co-inertie et MCOA dans un cas où l’intersection des échantillons est contrôlée.", en: "Test Mantel, Procrustes, PROTEST, co-inertia and MCOA with a controlled sample intersection." },
-    coverage: [{ fr: "multi-datasets", en: "multiple datasets" }, { fr: "concordance", en: "concordance" }, { fr: "MCOA", en: "MCOA" }],
-    note: { fr: "À construire à partir de matrices distribuables et d’une question écologique simple.", en: "To be built from redistributable matrices and a simple ecological question." }
-  },
+    purpose: { fr: "Découvrir le fonctionnement de BarCodeR avec des données publiques et retrouver plusieurs types de résultats dans un même projet.", en: "Discover how BarCodeR works using public data and explore several types of results within one project." },
+    coverage: [{ fr: "26 échantillons", en: "26 samples" }, { fr: "9 environnements", en: "9 environments" }, { fr: "plusieurs étapes du parcours BarCodeR", en: "several stages of the BarCodeR workflow" }]
+  }
 ];
 
 function EvidencePage({ language }: { language: Language }) {
-  const [filter, setFilter] = useState<"all" | TutorialLevel>("all");
-  const publishedTutorials = tutorialJourneys.filter(tutorial => tutorial.status === "published");
-  const filteredTutorials = useMemo(() => publishedTutorials.filter(tutorial => filter === "all" || tutorial.level === filter), [filter, language]);
-  const availableDatasets = testDatasets.filter(dataset => dataset.status === "available");
+  const [filter, setFilter] = useState<"all" | TutorialCategory>("all");
+  const filteredTutorials = useMemo(() => tutorialJourneys.filter(tutorial => filter === "all" || tutorial.category === filter), [filter, language]);
+  const availableDatasets = testDatasets;
 
   const c = language === "fr" ? {
     k: "Tutoriels",
     title: "Découvrir BarCodeR avec des parcours guidés.",
     p: "Les tutoriels partent d’un objectif concret et montrent comment enchaîner les étapes utiles dans l’application. Ils sont là pour apprendre le fonctionnement de BarCodeR ; la documentation reste la référence pour les paramètres et les détails méthodologiques.",
-    published: "parcours disponibles",
+    published: "parcours guidés",
     publicDataset: "dataset public de démonstration",
     referenceOutputs: "figures de référence",
     startK: "Par où commencer ?",
@@ -1134,10 +1072,9 @@ function EvidencePage({ language }: { language: Language }) {
     libraryK: "Parcours disponibles",
     libraryT: "Des exemples courts reliés aux vrais onglets de BarCodeR.",
     libraryP: "Chaque parcours relie un objectif concret aux onglets réellement utilisés dans BarCodeR, avec les résultats attendus et les points de vigilance utiles.",
-    filters: [["all", "Tous"], ["beginner", "Débutant"], ["intermediate", "Intermédiaire"], ["advanced", "Avancé"]],
-    statusPublished: "Disponible",
-    level: { beginner: "Débutant", intermediate: "Intermédiaire", advanced: "Avancé" },
-    category: { start: "Prise en main", prepare: "Préparation", analyse: "Analyse", advanced: "Avancé" },
+    filters: [["all", "Tous"], ["start", "Prise en main"], ["prepare", "Préparer les données"], ["analyse", "Explorer et analyser"]],
+    statusPublished: "Parcours disponible",
+    category: { start: "Prise en main", prepare: "Préparation", analyse: "Exploration et analyse" },
     dataset: "Dataset",
     objective: "Ce que vous allez faire",
     outputs: "À la fin du parcours",
@@ -1155,18 +1092,18 @@ function EvidencePage({ language }: { language: Language }) {
     demo: "Exemple reproductible",
     demoT: "Quelques résultats obtenus à partir du même objet public.",
     demoP: "Ces figures servent à montrer le type de sorties que BarCodeR peut produire. Elles ne constituent pas une démonstration interactive de l’application, mais un point de repère pour suivre les tutoriels.",
-    method: "Illustration",
+    method: "Ce que montre la figure",
     facts: [["26", "échantillons"], ["9", "types d’environnements"], ["1", "objet phyloseq public"]],
     resourcesK: "Continuer",
     resourcesT: "Passer du tutoriel à l’utilisation de BarCodeR.",
-    workbook: "Télécharger le carnet de parcours",
+    showcase: "Voir les cas d’usage",
     docs: "Consulter la documentation",
     install: "Installer BarCodeR"
   } : {
     k: "Tutorials",
     title: "Discover BarCodeR through guided journeys.",
     p: "Tutorials start from a concrete objective and show how to connect the useful steps in the application. They are designed to teach the BarCodeR workflow; the documentation remains the reference for parameters and methodological details.",
-    published: "available journeys",
+    published: "guided journeys",
     publicDataset: "public demonstration dataset",
     referenceOutputs: "reference figures",
     startK: "Where should you start?",
@@ -1179,10 +1116,9 @@ function EvidencePage({ language }: { language: Language }) {
     libraryK: "Available journeys",
     libraryT: "Short examples linked to the actual BarCodeR tabs.",
     libraryP: "Each journey connects a concrete objective to the BarCodeR tabs actually used, together with expected outputs and useful points of attention.",
-    filters: [["all", "All"], ["beginner", "Beginner"], ["intermediate", "Intermediate"], ["advanced", "Advanced"]],
-    statusPublished: "Available",
-    level: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
-    category: { start: "Getting started", prepare: "Preparation", analyse: "Analysis", advanced: "Advanced" },
+    filters: [["all", "All"], ["start", "Getting started"], ["prepare", "Prepare data"], ["analyse", "Explore and analyse"]],
+    statusPublished: "Available journey",
+    category: { start: "Getting started", prepare: "Preparation", analyse: "Exploration and analysis" },
     dataset: "Dataset",
     objective: "What you will do",
     outputs: "By the end of the journey",
@@ -1200,11 +1136,11 @@ function EvidencePage({ language }: { language: Language }) {
     demo: "Reproducible example",
     demoT: "A few results generated from the same public object.",
     demoP: "These figures illustrate the kinds of outputs BarCodeR can produce. They are not an interactive application demo, but a reference point for following the tutorials.",
-    method: "Illustration",
+    method: "What the figure shows",
     facts: [["26", "samples"], ["9", "environment types"], ["1", "public phyloseq object"]],
     resourcesK: "Continue",
     resourcesT: "Move from the tutorial to using BarCodeR.",
-    workbook: "Download journey workbook",
+    showcase: "View use cases",
     docs: "Read documentation",
     install: "Install BarCodeR"
   };
@@ -1214,13 +1150,13 @@ function EvidencePage({ language }: { language: Language }) {
   return <main className="tutorial-page">
     <section className="page-hero page-width tutorial-hero tutorial-hero-v2">
       <Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p>
-      <div className="tutorial-summary tutorial-summary-v2"><div><b>{publishedTutorials.length}</b><span>{c.published}</span></div><div><b>{availableDatasets.length}</b><span>{c.publicDataset}</span></div><div><b>{publicFigures.length}</b><span>{c.referenceOutputs}</span></div></div>
+      <div className="tutorial-summary tutorial-summary-v2"><div><b>{tutorialJourneys.length}</b><span>{c.published}</span></div><div><b>{availableDatasets.length}</b><span>{c.publicDataset}</span></div><div><b>{publicFigures.length}</b><span>{c.referenceOutputs}</span></div></div>
     </section>
 
     <section className="section tutorial-start-section"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.startK}</Eyebrow><h2>{c.startT}</h2></div></div><div className="tutorial-start-grid">{c.startRoutes.map(([title, text, id, action], index) => <article className="tutorial-start-card reveal" style={{ "--delay": `${index * 65}ms` } as React.CSSProperties} key={id}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><button type="button" onClick={() => scrollToTutorial(id)}>{action}<i>↓</i></button></article>)}</div></div></section>
 
-    <section className="section section-tint tutorial-library-section"><div className="page-width"><div className="tutorial-library-header"><div><Eyebrow>{c.libraryK}</Eyebrow><h2>{c.libraryT}</h2><p>{c.libraryP}</p></div><div className="tutorial-filters" role="group" aria-label={language === "fr" ? "Filtrer les tutoriels par niveau" : "Filter tutorials by level"}>{c.filters.map(([value, label]) => <button type="button" className={filter === value ? "active" : ""} aria-pressed={filter === value} onClick={() => setFilter(value as "all" | TutorialLevel)} key={value}>{label}</button>)}</div></div>
-      <div className="journey-grid">{filteredTutorials.map((tutorial, index) => <article id={`tutorial-${tutorial.id}`} className="journey-card published" style={{ "--delay": `${(index % 3) * 55}ms` } as React.CSSProperties} key={tutorial.id}><div className="journey-card-head"><span className="journey-status published">{c.statusPublished}</span><span className="journey-duration">{tutorial.duration}</span></div><div className="journey-tags"><span>{c.category[tutorial.category]}</span><span>{c.level[tutorial.level]}</span></div><h3>{tx(tutorial.title, language)}</h3><p className="journey-summary">{tx(tutorial.summary, language)}</p><dl className="journey-meta"><div><dt>{c.dataset}</dt><dd>{tx(tutorial.dataset, language)}</dd></div><div><dt>{c.objective}</dt><dd>{tx(tutorial.goal, language)}</dd></div></dl><div className="journey-outputs"><b>{c.outputs}</b><ul>{tutorial.outputs.map(output => <li key={output.fr}>{tx(output, language)}</li>)}</ul></div><details className="journey-details"><summary>{c.steps}<span>+</span></summary><ol>{tutorial.steps.map(step => <li key={step.fr}>{tx(step, language)}</li>)}</ol><div className="journey-caution"><span>!</span><div><b>{c.caution}</b><p>{tx(tutorial.caution, language)}</p></div></div></details><div className="journey-links"><div><small>{c.modules}</small>{tutorial.modules.map(key => { const module = modules.find(item => item.key === key); return module ? <a href={moduleHref(key)} key={key}>{tx(module.title, language)}</a> : null; })}</div><a className="journey-doc-link" href="#/documentation">{c.documentation}<span>→</span></a></div></article>)}</div>
+    <section className="section section-tint tutorial-library-section"><div className="page-width"><div className="tutorial-library-header"><div><Eyebrow>{c.libraryK}</Eyebrow><h2>{c.libraryT}</h2><p>{c.libraryP}</p></div><div className="tutorial-filters" role="group" aria-label={language === "fr" ? "Filtrer les tutoriels par objectif" : "Filter tutorials by goal"}>{c.filters.map(([value, label]) => <button type="button" className={filter === value ? "active" : ""} aria-pressed={filter === value} onClick={() => setFilter(value as "all" | TutorialCategory)} key={value}>{label}</button>)}</div></div>
+      <div className="journey-grid">{filteredTutorials.map((tutorial, index) => <article id={`tutorial-${tutorial.id}`} className="journey-card published" style={{ "--delay": `${(index % 3) * 55}ms` } as React.CSSProperties} key={tutorial.id}><div className="journey-card-head"><span className="journey-status published">{c.statusPublished}</span><span className="journey-duration">{tutorial.duration}</span></div><div className="journey-tags"><span>{c.category[tutorial.category]}</span></div><h3>{tx(tutorial.title, language)}</h3><p className="journey-summary">{tx(tutorial.summary, language)}</p><dl className="journey-meta"><div><dt>{c.dataset}</dt><dd>{tx(tutorial.dataset, language)}</dd></div><div><dt>{c.objective}</dt><dd>{tx(tutorial.goal, language)}</dd></div></dl><div className="journey-outputs"><b>{c.outputs}</b><ul>{tutorial.outputs.map(output => <li key={output.fr}>{tx(output, language)}</li>)}</ul></div><details className="journey-details"><summary>{c.steps}<span>+</span></summary><ol>{tutorial.steps.map(step => <li key={step.fr}>{tx(step, language)}</li>)}</ol><div className="journey-caution"><span>!</span><div><b>{c.caution}</b><p>{tx(tutorial.caution, language)}</p></div></div></details><div className="journey-links"><div><small>{c.modules}</small>{tutorial.modules.map(key => { const module = modules.find(item => item.key === key); return module ? <a href={moduleHref(key)} key={key}>{tx(module.title, language)}</a> : null; })}</div><a className="journey-doc-link" href="#/documentation">{c.documentation}<span>→</span></a></div></article>)}</div>
       {filteredTutorials.length === 0 && <p className="tutorial-empty">{c.noResult}</p>}
     </div></section>
 
@@ -1229,7 +1165,7 @@ function EvidencePage({ language }: { language: Language }) {
     <section className="section page-width tutorial-demo-section"><div className="dataset-demo dataset-demo-v2"><div><Eyebrow>{c.demo}</Eyebrow><h2>{c.demoT}</h2><p>{c.demoP}</p></div><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></div></section>
     <section className="figure-gallery page-width tutorial-figure-gallery">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section>
 
-    <section className="section section-tint tutorial-resources-section"><div className="page-width tutorial-resources tutorial-resources-v2"><div><Eyebrow>{c.resourcesK}</Eyebrow><h2>{c.resourcesT}</h2></div><div className="evidence-links"><a className="button primary" href="#/download">{c.install}<span>→</span></a><a className="button secondary" href={asset(`tutorials/barcoder-tutorial-workbook-${language}.md`)} download>{c.workbook}<span>↓</span></a><a className="button secondary" href="#/documentation">{c.docs}<span>→</span></a></div></div></section>
+    <section className="section section-tint tutorial-resources-section"><div className="page-width tutorial-resources tutorial-resources-v2"><div><Eyebrow>{c.resourcesK}</Eyebrow><h2>{c.resourcesT}</h2></div><div className="evidence-links"><a className="button primary" href="#/download">{c.install}<span>→</span></a><a className="button secondary" href="#/showcase">{c.showcase}<span>→</span></a><a className="button secondary" href="#/documentation">{c.docs}<span>→</span></a></div></div></section>
   </main>;
 }
 
@@ -1594,7 +1530,6 @@ function DocumentationPage({ language }: { language: Language }) {
 
 
 type ShowcaseCategory = "all" | "quality" | "exploration" | "analysis" | "report";
-type ProvenanceKey = "composition" | "ordination" | "alpha";
 
 function ShowcasePage({ language }: { language: Language }) {
   const [category, setCategory] = useState<ShowcaseCategory>("all");
@@ -1606,7 +1541,6 @@ function ShowcasePage({ language }: { language: Language }) {
     heroP: "Trois situations montrent comment les différents onglets s’enchaînent pour décrire des communautés, comparer des conditions ou mettre plusieurs datasets en regard. Les réglages techniques restent dans la documentation.",
     heroPrimary: "Voir les cas d’usage",
     heroSecondary: "Parcourir les résultats",
-    metrics: [["3", "situations scientifiques illustrées"], ["11", "familles de sorties visibles"], ["3", "figures publiques reproductibles"]],
     casesK: "Exemples de parcours",
     casesT: "Une question scientifique mobilise souvent plusieurs onglets.",
     casesP: "Les exemples ci-dessous montrent comment BarCodeR peut organiser un raisonnement analytique. Ils ne constituent pas des recettes obligatoires : le parcours dépend des données et de la question étudiée.",
@@ -1619,21 +1553,21 @@ function ShowcasePage({ language }: { language: Language }) {
         number: "01", title: "Suivi environnemental", question: "Les communautés évoluent-elles entre sites, campagnes ou saisons ?",
         audience: "Écologie · biodiversité · surveillance", input: "Un objet phyloseq accompagné de métadonnées environnementales.",
         steps: ["Obtenir une vue d’ensemble", "Préparer le dataset", "Explorer composition et diversité", "Visualiser la structure globale", "Tester les différences", "Réunir les résultats dans MultiView"],
-        outputs: ["profils taxonomiques", "indicateurs de diversité", "ordinations interactives", "tests multivariés", "planche de synthèse"],
+        outputs: ["profils taxonomiques", "indicateurs de diversité", "visualisation de la structure des communautés", "résultats de comparaison entre groupes", "planche de synthèse"],
         image: "app-previews/ordinations.png", href: "#/analyses"
       },
       {
         number: "02", title: "Comparer des conditions", question: "Quels taxons ou caractéristiques sont associés à une condition étudiée ?",
         audience: "Expérimentation · biomonitoring · comparaison de groupes", input: "Un dataset préparé avec une variable d’intérêt clairement définie.",
         steps: ["Contrôler le dataset", "Appliquer une filtration justifiée", "Choisir la comparaison", "Lancer plusieurs approches si utile", "Comparer les résultats", "Exporter les tableaux et figures"],
-        outputs: ["taxons associés", "estimations d’effet", "résultats comparés entre méthodes", "figures interactives", "tableaux exportables"],
+        outputs: ["taxons associés à la condition", "importance et direction des associations", "résultats croisés entre approches", "figures interactives", "tableaux exportables"],
         image: "app-previews/analyses_differentielles.png", href: "#/analyses"
       },
       {
         number: "03", title: "Comparer plusieurs marqueurs", question: "Plusieurs datasets décrivent-ils une organisation biologique cohérente ?",
         audience: "Multi-marqueurs · multi-domaines · intercomparaison", input: "Plusieurs objets phyloseq partageant des échantillons ou des informations comparables.",
         steps: ["Identifier les données communes", "Explorer chaque dataset", "Comparer leurs structures", "Repérer accords et divergences", "Examiner les échantillons atypiques", "Composer les résultats"],
-        outputs: ["comparaisons de structures", "superpositions visuelles", "mesures de concordance", "échantillons divergents", "synthèse multi-datasets"],
+        outputs: ["comparaisons de structures", "superpositions visuelles", "niveau de concordance entre datasets", "échantillons divergents", "synthèse multi-datasets"],
         image: "app-previews/comparaison_matrices.png", href: "#/analyses"
       }
     ],
@@ -1669,7 +1603,6 @@ function ShowcasePage({ language }: { language: Language }) {
     heroP: "Three situations show how the different tabs connect to describe communities, compare conditions or bring several datasets together. Technical settings remain in the documentation.",
     heroPrimary: "View use cases",
     heroSecondary: "Browse results",
-    metrics: [["3", "illustrated scientific situations"], ["11", "visible output families"], ["3", "reproducible public figures"]],
     casesK: "Example workflows",
     casesT: "A scientific question often uses several tabs.",
     casesP: "The examples below show how BarCodeR can organise an analytical reasoning process. They are not mandatory recipes: the workflow depends on the data and the question being studied.",
@@ -1678,9 +1611,9 @@ function ShowcasePage({ language }: { language: Language }) {
     openAnalysis: "Explore analyses",
     openTutorials: "View a tutorial",
     cases: [
-      { number: "01", title: "Environmental monitoring", question: "Do communities change among sites, campaigns or seasons?", audience: "Ecology · biodiversity · monitoring", input: "A phyloseq object with environmental metadata.", steps: ["Get an overview", "Prepare the dataset", "Explore composition and diversity", "Visualise overall structure", "Test differences", "Bring results into MultiView"], outputs: ["taxonomic profiles", "diversity indicators", "interactive ordinations", "multivariate tests", "summary panel"], image: "app-previews/ordinations.png", href: "#/analyses" },
-      { number: "02", title: "Compare conditions", question: "Which taxa or features are associated with a studied condition?", audience: "Experiments · biomonitoring · group comparison", input: "A prepared dataset with a clearly defined variable of interest.", steps: ["Check the dataset", "Apply justified filtering", "Choose the comparison", "Run several approaches when useful", "Compare results", "Export tables and figures"], outputs: ["associated taxa", "effect estimates", "results compared across methods", "interactive figures", "exportable tables"], image: "app-previews/analyses_differentielles.png", href: "#/analyses" },
-      { number: "03", title: "Compare several markers", question: "Do several datasets describe a coherent biological organisation?", audience: "Multi-marker · multi-domain · intercomparison", input: "Several phyloseq objects sharing samples or comparable information.", steps: ["Identify shared data", "Explore each dataset", "Compare their structures", "Find agreements and disagreements", "Review atypical samples", "Compose the results"], outputs: ["structural comparisons", "visual overlays", "concordance measures", "divergent samples", "multi-dataset synthesis"], image: "app-previews/comparaison_matrices.png", href: "#/analyses" }
+      { number: "01", title: "Environmental monitoring", question: "Do communities change among sites, campaigns or seasons?", audience: "Ecology · biodiversity · monitoring", input: "A phyloseq object with environmental metadata.", steps: ["Get an overview", "Prepare the dataset", "Explore composition and diversity", "Visualise overall structure", "Test differences", "Bring results into MultiView"], outputs: ["taxonomic profiles", "diversity indicators", "community-structure visualisation", "group-comparison results", "summary panel"], image: "app-previews/ordinations.png", href: "#/analyses" },
+      { number: "02", title: "Compare conditions", question: "Which taxa or features are associated with a studied condition?", audience: "Experiments · biomonitoring · group comparison", input: "A prepared dataset with a clearly defined variable of interest.", steps: ["Check the dataset", "Apply justified filtering", "Choose the comparison", "Run several approaches when useful", "Compare results", "Export tables and figures"], outputs: ["taxa associated with the condition", "strength and direction of associations", "results compared across approaches", "interactive figures", "exportable tables"], image: "app-previews/analyses_differentielles.png", href: "#/analyses" },
+      { number: "03", title: "Compare several markers", question: "Do several datasets describe a coherent biological organisation?", audience: "Multi-marker · multi-domain · intercomparison", input: "Several phyloseq objects sharing samples or comparable information.", steps: ["Identify shared data", "Explore each dataset", "Compare their structures", "Find agreements and disagreements", "Review atypical samples", "Compose the results"], outputs: ["structural comparisons", "visual overlays", "level of concordance across datasets", "divergent samples", "multi-dataset synthesis"], image: "app-previews/comparaison_matrices.png", href: "#/analyses" }
     ],
     galleryK: "Result gallery",
     galleryT: "Outputs from the different application modules.",
@@ -1711,17 +1644,17 @@ function ShowcasePage({ language }: { language: Language }) {
   };
 
   const gallery = [
-    { id: "composition", category: "exploration" as ShowcaseCategory, image: "figures/globalpatterns-composition.png", title: { fr: "Composition taxonomique", en: "Taxonomic composition" }, method: { fr: "Abondance relative agrégée au phylum ; huit phyla dominants.", en: "Relative abundance aggregated at phylum level; eight dominant phyla." }, use: { fr: "Comparer les profils dominants entre types d’environnement.", en: "Compare dominant profiles across environment types." }, needs: { fr: "OTU, taxonomie et variable de groupe.", en: "OTU table, taxonomy and grouping variable." }, source: "reproducible", href: "#/application/exploration" },
-    { id: "ordination", category: "analysis" as ShowcaseCategory, image: "figures/globalpatterns-ordination.png", title: { fr: "PCoA Bray-Curtis", en: "Bray-Curtis PCoA" }, method: { fr: "PCoA calculée sur les abondances relatives et la dissimilarité de Bray-Curtis.", en: "PCoA computed from relative abundances and Bray-Curtis dissimilarity." }, use: { fr: "Visualiser la structure entre échantillons avant les tests multivariés.", en: "Visualise between-sample structure before multivariate testing." }, needs: { fr: "OTU et métadonnées ; transformation et distance explicites.", en: "OTU and metadata; explicit transformation and distance." }, source: "reproducible", href: "#/application/analyse" },
-    { id: "alpha", category: "analysis" as ShowcaseCategory, image: "figures/globalpatterns-alpha-diversity.png", title: { fr: "Diversité alpha", en: "Alpha diversity" }, method: { fr: "Richesse observée et indice de Shannon sur les comptes non nuls.", en: "Observed richness and Shannon index on non-zero counts." }, use: { fr: "Décrire la diversité au sein de chaque échantillon et comparer des groupes.", en: "Describe within-sample diversity and compare groups." }, needs: { fr: "OTU ; profondeur et effort d’échantillonnage à contrôler.", en: "OTU table; depth and sampling effort must be checked." }, source: "reproducible", href: "#/application/exploration" },
-    { id: "quality", category: "quality" as ShowcaseCategory, image: "app-previews/qualite_assignation_taxonomique.png", title: { fr: "Qualité des assignations", en: "Assignment quality" }, method: { fr: "Synthèse des rangs atteints et de la complétude taxonomique.", en: "Summary of reached ranks and taxonomic completeness." }, use: { fr: "Repérer les niveaux interprétables et les zones de taxonomie incomplète.", en: "Identify interpretable ranks and incomplete taxonomy." }, needs: { fr: "Table taxonomique structurée.", en: "Structured taxonomy table." }, source: "interface", href: "#/application/exploration" },
-    { id: "heat-tree", category: "exploration" as ShowcaseCategory, image: "app-previews/heat_tree.png", title: { fr: "Heat Tree", en: "Heat Tree" }, method: { fr: "Arbre taxonomique coloré et dimensionné par une métrique d’abondance ou de contraste.", en: "Taxonomic tree coloured and sized by an abundance or contrast metric." }, use: { fr: "Localiser visuellement les différences dans la hiérarchie taxonomique.", en: "Locate differences within the taxonomic hierarchy." }, needs: { fr: "Taxonomie multi-rangs et abondances.", en: "Multi-rank taxonomy and abundances." }, source: "interface", href: "#/application/exploration" },
-    { id: "venn", category: "exploration" as ShowcaseCategory, image: "app-previews/diagramme_venn.png", title: { fr: "Taxons partagés", en: "Shared taxa" }, method: { fr: "Diagramme de Venn ou UpSet selon le nombre de groupes.", en: "Venn or UpSet diagram depending on the number of groups." }, use: { fr: "Décrire les taxons communs et spécifiques aux groupes.", en: "Describe shared and group-specific taxa." }, needs: { fr: "OTU et variable de groupe ; seuil de présence explicite.", en: "OTU and grouping variable; explicit presence threshold." }, source: "interface", href: "#/application/exploration" },
-    { id: "differential", category: "analysis" as ShowcaseCategory, image: "app-previews/analyses_differentielles.png", title: { fr: "Analyse différentielle", en: "Differential analysis" }, method: { fr: "Effets, incertitudes et significativité issus de plusieurs moteurs compatibles avec les comptes.", en: "Effects, uncertainty and significance from several count-compatible engines." }, use: { fr: "Identifier les taxons associés à une condition et comparer la concordance.", en: "Identify taxa associated with a condition and compare concordance." }, needs: { fr: "Comptes bruts, modèle et contrastes documentés.", en: "Raw counts, documented model and contrasts." }, source: "interface", href: "#/application/analyse" },
-    { id: "permanova", category: "analysis" as ShowcaseCategory, image: "app-previews/permanova_dispersion.png", title: { fr: "PERMANOVA et dispersion", en: "PERMANOVA and dispersion" }, method: { fr: "Test de structure multivariée accompagné de PERMDISP.", en: "Multivariate structure test accompanied by PERMDISP." }, use: { fr: "Distinguer un effet de localisation d’une différence de dispersion.", en: "Distinguish a location effect from a dispersion difference." }, needs: { fr: "Matrice de distance, formule et permutations adaptées au design.", en: "Distance matrix, formula and permutations suited to the design." }, source: "interface", href: "#/application/analyse" },
-    { id: "matrices", category: "analysis" as ShowcaseCategory, image: "app-previews/comparaison_matrices.png", title: { fr: "Comparaison de matrices", en: "Matrix comparison" }, method: { fr: "Mantel, Procrustes, PROTEST, co-inertie et MCOA.", en: "Mantel, Procrustes, PROTEST, co-inertia and MCOA." }, use: { fr: "Évaluer la cohérence entre marqueurs, domaines ou représentations.", en: "Assess coherence across markers, domains or representations." }, needs: { fr: "Plusieurs matrices harmonisées sur les mêmes échantillons.", en: "Several matrices harmonised on the same samples." }, source: "interface", href: "#/application/analyse" },
-    { id: "clustering", category: "analysis" as ShowcaseCategory, image: "app-previews/clustering.png", title: { fr: "Clustering et stabilité", en: "Clustering and stability" }, method: { fr: "Dendrogrammes, silhouette, Dunn et diagnostics de stabilité.", en: "Dendrograms, silhouette, Dunn and stability diagnostics." }, use: { fr: "Explorer des regroupements naturels sans les confondre avec des groupes connus.", en: "Explore natural groupings without conflating them with known groups." }, needs: { fr: "Matrice transformée ou distance cohérente avec la question.", en: "Transformed matrix or distance consistent with the question." }, source: "interface", href: "#/application/analyse" },
-    { id: "multiview", category: "report" as ShowcaseCategory, image: "app-previews/screen-multiview.png", title: { fr: "Composition MultiView", en: "MultiView composition" }, method: { fr: "Bibliothèque, sélection, glisser-déposer et export de planches.", en: "Library, selection, drag-and-drop and panel export." }, use: { fr: "Assembler plusieurs résultats sans perdre leur dataset ni leurs paramètres.", en: "Assemble several results without losing their dataset or parameters." }, needs: { fr: "Figures préalablement sauvegardées dans le projet.", en: "Figures previously saved in the project." }, source: "interface", href: "#/application/multiview" }
+    { id: "composition", category: "exploration" as ShowcaseCategory, image: "figures/globalpatterns-composition.png", title: { fr: "Composition des communautés", en: "Community composition" }, use: { fr: "Comparer quels groupes taxonomiques dominent selon les environnements ou conditions.", en: "Compare which taxonomic groups dominate across environments or conditions." }, source: "reproducible", href: "#/application/exploration" },
+    { id: "ordination", category: "analysis" as ShowcaseCategory, image: "figures/globalpatterns-ordination.png", title: { fr: "Organisation des échantillons", en: "Sample organisation" }, use: { fr: "Visualiser quels échantillons présentent des communautés proches ou différentes avant d’approfondir l’analyse.", en: "Visualise which samples contain similar or different communities before investigating further." }, source: "reproducible", href: "#/application/analyse" },
+    { id: "alpha", category: "exploration" as ShowcaseCategory, image: "figures/globalpatterns-alpha-diversity.png", title: { fr: "Diversité des échantillons", en: "Sample diversity" }, use: { fr: "Comparer la richesse et la diversité observées au sein des échantillons ou des groupes.", en: "Compare richness and diversity observed within samples or groups." }, source: "reproducible", href: "#/application/exploration" },
+    { id: "quality", category: "quality" as ShowcaseCategory, image: "app-previews/qualite_assignation_taxonomique.png", title: { fr: "Qualité des assignations taxonomiques", en: "Taxonomic assignment quality" }, use: { fr: "Voir jusqu’à quel niveau les organismes sont identifiés et repérer les parties moins bien résolues.", en: "See how far organisms are identified and locate less resolved parts of the taxonomy." }, source: "interface", href: "#/application/exploration" },
+    { id: "heat-tree", category: "exploration" as ShowcaseCategory, image: "app-previews/heat_tree.png", title: { fr: "Structure taxonomique", en: "Taxonomic structure" }, use: { fr: "Repérer visuellement où se concentrent les groupes dominants ou les différences dans la hiérarchie taxonomique.", en: "Locate dominant groups or differences within the taxonomic hierarchy." }, source: "interface", href: "#/application/exploration" },
+    { id: "venn", category: "exploration" as ShowcaseCategory, image: "app-previews/diagramme_venn.png", title: { fr: "Taxons partagés et spécifiques", en: "Shared and specific taxa" }, use: { fr: "Identifier quels taxons sont communs à plusieurs groupes et lesquels leur sont spécifiques.", en: "Identify taxa shared across groups and those specific to particular groups." }, source: "interface", href: "#/application/exploration" },
+    { id: "differential", category: "analysis" as ShowcaseCategory, image: "app-previews/analyses_differentielles.png", title: { fr: "Taxons associés à une condition", en: "Taxa associated with a condition" }, use: { fr: "Identifier les taxons dont le comportement est associé à une condition et confronter plusieurs approches lorsque cela est utile.", en: "Identify taxa whose behaviour is associated with a condition and compare several approaches when useful." }, source: "interface", href: "#/application/analyse" },
+    { id: "permanova", category: "analysis" as ShowcaseCategory, image: "app-previews/permanova_dispersion.png", title: { fr: "Différences entre groupes", en: "Differences among groups" }, use: { fr: "Tester si la composition des communautés diffère entre groupes tout en examinant les diagnostics nécessaires à l’interprétation.", en: "Test whether community composition differs among groups while reviewing the diagnostics needed for interpretation." }, source: "interface", href: "#/application/analyse" },
+    { id: "matrices", category: "analysis" as ShowcaseCategory, image: "app-previews/comparaison_matrices.png", title: { fr: "Concordance entre datasets", en: "Concordance across datasets" }, use: { fr: "Évaluer si plusieurs marqueurs, domaines ou représentations décrivent une organisation comparable.", en: "Assess whether several markers, domains or representations describe a comparable organisation." }, source: "interface", href: "#/application/analyse" },
+    { id: "clustering", category: "analysis" as ShowcaseCategory, image: "app-previews/clustering.png", title: { fr: "Regroupements d’échantillons", en: "Sample groupings" }, use: { fr: "Explorer si les échantillons forment naturellement des ensembles et examiner la stabilité de ces regroupements.", en: "Explore whether samples naturally form groups and review the stability of those groupings." }, source: "interface", href: "#/application/analyse" },
+    { id: "multiview", category: "report" as ShowcaseCategory, image: "app-previews/screen-multiview.png", title: { fr: "Composition de résultats", en: "Result composition" }, use: { fr: "Réunir plusieurs figures sauvegardées dans une même planche pour les comparer ou les présenter ensemble.", en: "Bring several saved figures into one panel for comparison or presentation." }, source: "interface", href: "#/application/multiview" }
   ];
 
   const filteredGallery = category === "all" ? gallery : gallery.filter(item => item.category === category);
