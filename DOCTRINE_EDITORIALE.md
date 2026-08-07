@@ -208,3 +208,27 @@ Une fonctionnalité ou ressource non disponible n'est pas affichée comme une fo
 - Préférer des sections de 90–100 px de respiration verticale sur desktop plutôt que 110+ px lorsque plusieurs sections s'enchaînent.
 - Réserver les grands aplats sombres aux messages réellement structurants.
 - Un CTA principal par intention ; les liens secondaires doivent être visuellement moins dominants.
+
+## Passe produit — 7 août 2026
+
+### Identité publique
+- Le shell public (header, footer, SEO, cartes sociales) doit afficher **BarCodeR** uniquement.
+- L'ancien wordmark « BarCodeRShiny » présent dans certains assets de l'application ne doit pas être exposé comme identité du site.
+- Tant que les captures de l'application conservent cet ancien wordmark, les aperçus publics peuvent être recadrés pour privilégier le contenu fonctionnel de l'écran.
+- Ne jamais réutiliser une ancienne image Open Graph co-marquée BarCodeR + OpenMetaBar.
+
+### Preuves visuelles
+- L'accueil privilégie un aperçu cohérent avec le positionnement actuel plutôt qu'une capture datée montrant une ancienne identité.
+- Les captures réelles restent utiles sur les pages d'onglets et la galerie, mais elles doivent servir à montrer une fonction précise, pas toute la navigation de l'application.
+- Les visuels de démonstration doivent être identifiés comme tels ; ne pas présenter une capture statique comme une démo interactive.
+
+### Micro-copy et CTA
+- Une carte de module doit d'abord répondre à une question utilisateur, pas recopier une description fonctionnelle longue.
+- Préférer des CTA spécifiques : « Découvrir l'onglet », « Commencer avec GlobalPatterns », « Ouvrir le guide ».
+- Lorsqu'un guide dédié existe, le CTA Documentation d'une page d'onglet doit pointer directement vers ce guide plutôt que vers le hub générique.
+- Les indicateurs chiffrés décoratifs sont retirés lorsqu'ils n'aident pas à prendre une décision ou à comprendre le produit.
+
+### Installation
+- Les commandes affichées doivent être vérifiées contre le code de l'application.
+- Pour la version 2.12.8, la commande de lancement de référence est `shiny::runApp()` depuis le dossier `BarCodeR_app` contenant `app.R` et `modules/`.
+- Ne pas afficher une commande de lancement simplement plausible si l'application impose un dossier de travail particulier.

@@ -8,7 +8,7 @@ const moduleHref = (key: string) => `#/application/${key}`;
 // Main BarCodeR application screenshot displayed on the overview page.
 // Replacing this file in `public/app-previews/` updates the visual without
 // changing the page component.
-const HOME_SCREENSHOT_PATH: string | null = "app-previews/barcoder-home-real.png";
+const HOME_SCREENSHOT_PATH: string | null = null;
 
 const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
@@ -32,7 +32,7 @@ function useHashRoute() {
 function Brand({ language }: { language: Language }) {
   return (
     <a className="brand" href="#/" aria-label={language === "fr" ? "BarCodeR — accueil du site" : "BarCodeR — website home"}>
-      <img className="brand-barcoder" src={asset("app-previews/barcoder-logo.png")} alt="" />
+      <span className="brand-mark" style={{ backgroundImage: `url(${asset("app-previews/barcoder-logo.png")})` }} aria-hidden="true" />
       <span className="brand-wordmark"><strong>BarCodeR</strong></span>
     </a>
   );
@@ -111,18 +111,18 @@ function HomeApplicationVisual({ language }: { language: Language }) {
 
 function Landing({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    badge: "Plateforme R/Shiny pour l’analyse du métabarcoding",
+    badge: "Analyse interactive du métabarcoding",
     title: <>Analysez vos données de métabarcoding,<br /><em>sans perdre la maîtrise de vos méthodes.</em></>,
-    intro: "BarCodeR réunit dans une même application la préparation des datasets, l’exploration interactive, les analyses statistiques guidées, la comparaison des résultats et l’export reproductible. Vous pouvez commencer avec un objet phyloseq complet ou partiel, ou partir de fichiers FASTQ grâce au module OpenMetaBar.",
+    intro: "BarCodeR centralise la préparation des données, leur exploration, les analyses statistiques guidées et la comparaison des résultats dans une même application. Importez directement un objet phyloseq complet ou partiel, ou partez de fichiers FASTQ via le module OpenMetaBar.",
     workflowAction: "Découvrir le parcours",
     analysesAction: "Voir les questions scientifiques",
     downloadAction: "Installer BarCodeR",
     version: "Version présentée : BarCodeR v2.12.8",
     metrics: [
-      ["2", "points d’entrée", "Objet phyloseq ou fichiers FASTQ"],
-      ["R", "code reproductible", "Retrouver et prolonger une analyse hors de l’interface"],
-      ["↗", "résultats interactifs", "Explorer avant d’exporter"],
-      ["LOCAL", "données sous contrôle", "Les analyses BarCodeR s’exécutent sur votre installation"]
+      ["PS", "phyloseq", "Import direct d’un objet complet ou partiel"],
+      ["FQ", "FASTQ", "Traitement en amont via OpenMetaBar"],
+      ["R", "code exportable", "Reproduire ou prolonger une analyse hors de l’interface"],
+      ["LOCAL", "données sous contrôle", "Les analyses s’exécutent sur votre installation"]
     ],
     journeysK: "Commencer avec vos données",
     journeysT: "Deux points d’entrée, puis un même environnement d’analyse.",
@@ -181,18 +181,18 @@ function Landing({ language }: { language: Language }) {
     citationT: "BarCodeR est conçu pour être utilisé, compris et cité.",
     citationP: "La version utilisée, les modalités d’installation et les informations de citation sont regroupées dans l’espace de téléchargement."
   } : {
-    badge: "R/Shiny platform for metabarcoding analysis",
+    badge: "Interactive metabarcoding analysis",
     title: <>Analyse your metabarcoding data,<br /><em>without losing control of your methods.</em></>,
-    intro: "BarCodeR brings dataset preparation, interactive exploration, guided statistical analyses, result comparison and reproducible export into one application. Start from a complete or partial phyloseq object, or from FASTQ files through the OpenMetaBar module.",
+    intro: "BarCodeR centralises data preparation, exploration, guided statistical analyses and result comparison in one application. Import a complete or partial phyloseq object directly, or start from FASTQ files through the OpenMetaBar module.",
     workflowAction: "Discover the workflow",
     analysesAction: "View scientific questions",
     downloadAction: "Install BarCodeR",
     version: "Version presented: BarCodeR v2.12.8",
     metrics: [
-      ["2", "entry points", "Phyloseq object or FASTQ files"],
-      ["R", "reproducible code", "Recover and extend analyses outside the interface"],
-      ["↗", "interactive results", "Explore before exporting"],
-      ["LOCAL", "data under control", "BarCodeR analyses run on your installation"]
+      ["PS", "phyloseq", "Direct import of a complete or partial object"],
+      ["FQ", "FASTQ", "Upstream processing through OpenMetaBar"],
+      ["R", "exportable code", "Reproduce or extend an analysis outside the interface"],
+      ["LOCAL", "data under control", "Analyses run on your installation"]
     ],
     journeysK: "Start with your data",
     journeysT: "Two entry points, then one analysis environment.",
@@ -296,7 +296,7 @@ function Landing({ language }: { language: Language }) {
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
-  return <div className="module-grid">{modules.slice(0, limit).map((module, index) => <a href={moduleHref(module.key)} className="module-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{language === "fr" ? "Ouvrir la page" : "Open page"}<span>↗</span></b></a>)}</div>;
+  return <div className="module-grid">{modules.slice(0, limit).map((module, index) => <a href={moduleHref(module.key)} className="module-card reveal" style={{ "--delay": `${(index % 4) * 45}ms` } as React.CSSProperties} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><small>{tx(groups[module.group], language)}</small><h3>{tx(module.title, language)}</h3><p>{tx(module.question, language)}</p><b>{language === "fr" ? "Découvrir l’onglet" : "Discover the tab"}<span>↗</span></b></a>)}</div>;
 }
 
 function ApplicationIndex({ language }: { language: Language }) {
@@ -772,7 +772,7 @@ function ModuleVisual({ module, language }: { module: AppModule; language: Langu
   const screen = moduleScreens[module.key];
   if (screen) {
     const imagePath = asset(`app-previews/${screen.image}`);
-    return <figure className="module-visual screen-preview"><a href={imagePath} target="_blank" rel="noreferrer"><img src={imagePath} alt={`${tx(screen.title, language)} — ${tx(screen.description, language)}`} decoding="async" /><span>{language === "fr" ? "Voir en pleine résolution" : "View full resolution"}<i>↗</i></span></a><figcaption><small>{language === "fr" ? "CAPTURE DE L’APPLICATION" : "APPLICATION SCREEN"}</small><b>{tx(screen.title, language)}</b><p>{tx(screen.description, language)}</p></figcaption></figure>;
+    return <figure className="module-visual screen-preview"><div className="screen-crop"><img src={imagePath} alt={`${tx(screen.title, language)} — ${tx(screen.description, language)}`} decoding="async" /></div><figcaption><small>{language === "fr" ? "CAPTURE DE L’APPLICATION" : "APPLICATION SCREEN"}</small><b>{tx(screen.title, language)}</b><p>{tx(screen.description, language)}</p></figcaption></figure>;
   }
   if (module.image) return <div className="module-visual image"><img src={asset(`app-previews/${module.image}`)} alt={`${tx(module.title, language)} — ${tx(module.kicker, language)}`} /><div><span>{language === "fr" ? "APERÇU DE L’APPLICATION" : "APPLICATION PREVIEW"}</span><b>{tx(module.title, language)}</b></div></div>;
   return <div className={`module-visual schematic theme-${module.group}`} role="img" aria-label={language === "fr" ? `Schéma fonctionnel de l’onglet ${tx(module.title, language)}` : `Functional diagram of the ${tx(module.title, language)} tab`}><div className="schematic-bar"><span /><span /><span /><b>BarCodeR / {tx(module.title, language)}</b></div><div className="schematic-body"><aside><strong>{module.icon}</strong>{modules.slice(0, 8).map((m) => <i className={m.key === module.key ? "active" : ""} key={m.key} />)}</aside><div className="schematic-content"><small>{tx(module.kicker, language)}</small><h3>{tx(module.title, language)}</h3><div className="schematic-cards"><span /><span /><span /></div><div className="schematic-lines"><i /><i /><i /><i /></div></div></div></div>;
@@ -782,6 +782,8 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   const index = modules.findIndex(m => m.key === module.key);
   const previous = modules[(index - 1 + modules.length) % modules.length];
   const next = modules[(index + 1) % modules.length];
+  const documentedModules = new Set(["openmetabar", "input-data", "datasets", "description", "data-edition", "filtration", "exploration", "analyse", "multiview"]);
+  const moduleDocsHref = documentedModules.has(module.key) ? asset(`documentation/${language}/${module.key}/guides-methodologiques.html`) : "#/documentation";
   const c = language === "fr" ? {
     app: "Fonctionnement de BarCodeR",
     what: "Ce que cet onglet permet de faire",
@@ -833,7 +835,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
 
     <section className="section page-width method-section"><div className="method-panel caution"><Eyebrow>{c.vigilance}</Eyebrow><h2>{c.vigilance}</h2><ul>{module.cautions.map(item => <li key={item.fr}><span>!</span>{tx(item, language)}</li>)}</ul></div><div className="method-panel reproducibility"><Eyebrow>{c.reproduce}</Eyebrow><h2>{c.reproduce}</h2><p>{c.reproText}</p><div className="provenance-mini"><span>{language === "fr" ? "dataset" : "dataset"}</span><i>→</i><span>{language === "fr" ? "choix" : "choices"}</span><i>→</i><span>{language === "fr" ? "résultat" : "result"}</span><i>→</i><span>{language === "fr" ? "export" : "export"}</span></div></div></section>
 
-    <section className="source-band"><div className="page-width"><div><Eyebrow>{c.docs}</Eyebrow><h2>{c.docsTitle}</h2><p>{c.docsText}</p></div><a href="#/documentation"><span>?</span><div><small>BarCodeR documentation</small><b>{c.docsAction} →</b></div></a></div></section>
+    <section className="source-band"><div className="page-width"><div><Eyebrow>{c.docs}</Eyebrow><h2>{c.docsTitle}</h2><p>{c.docsText}</p></div><a href={moduleDocsHref} target={documentedModules.has(module.key) ? "_blank" : undefined} rel={documentedModules.has(module.key) ? "noreferrer" : undefined}><span>?</span><div><small>BarCodeR documentation</small><b>{c.docsAction} →</b></div></a></div></section>
     <nav className="page-pagination page-width" aria-label={language === "fr" ? "Navigation entre les onglets" : "Tab navigation"}><a href={moduleHref(previous.key)}><small>← {c.previous}</small><b>{tx(previous.title, language)}</b></a><a href={moduleHref(next.key)}><small>{c.next} →</small><b>{tx(next.title, language)}</b></a></nav>
   </main>;
 }
@@ -1105,7 +1107,7 @@ function EvidencePage({ language }: { language: Language }) {
     ],
     libraryK: "Parcours disponibles",
     libraryT: "Des exemples courts reliés aux vrais onglets de BarCodeR.",
-    libraryP: "Seuls les tutoriels réellement disponibles sont affichés ici. Les développements futurs restent hors de la vitrine publique tant qu’ils ne sont pas utilisables.",
+    libraryP: "Chaque parcours relie un objectif concret aux onglets réellement utilisés dans BarCodeR, avec les résultats attendus et les points de vigilance utiles.",
     filters: [["all", "Tous"], ["beginner", "Débutant"], ["intermediate", "Intermédiaire"], ["advanced", "Avancé"]],
     statusPublished: "Disponible",
     level: { beginner: "Débutant", intermediate: "Intermédiaire", advanced: "Avancé" },
@@ -1123,6 +1125,7 @@ function EvidencePage({ language }: { language: Language }) {
     datasetsP: "GlobalPatterns fournit un objet phyloseq public pratique pour découvrir l’interface et reproduire plusieurs résultats de référence.",
     datasetInput: "Format",
     datasetCoverage: "Permet notamment de découvrir",
+    datasetAction: "Commencer avec GlobalPatterns",
     demo: "Exemple reproductible",
     demoT: "Quelques résultats obtenus à partir du même objet public.",
     demoP: "Ces figures servent à montrer le type de sorties que BarCodeR peut produire. Elles ne constituent pas une démonstration interactive de l’application, mais un point de repère pour suivre les tutoriels.",
@@ -1149,7 +1152,7 @@ function EvidencePage({ language }: { language: Language }) {
     ],
     libraryK: "Available journeys",
     libraryT: "Short examples linked to the actual BarCodeR tabs.",
-    libraryP: "Only tutorials that are genuinely available are displayed here. Future developments stay out of the public showcase until they can be used.",
+    libraryP: "Each journey connects a concrete objective to the BarCodeR tabs actually used, together with expected outputs and useful points of attention.",
     filters: [["all", "All"], ["beginner", "Beginner"], ["intermediate", "Intermediate"], ["advanced", "Advanced"]],
     statusPublished: "Available",
     level: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
@@ -1167,6 +1170,7 @@ function EvidencePage({ language }: { language: Language }) {
     datasetsP: "GlobalPatterns provides a public phyloseq object that is useful for discovering the interface and reproducing several reference outputs.",
     datasetInput: "Format",
     datasetCoverage: "Useful for discovering",
+    datasetAction: "Start with GlobalPatterns",
     demo: "Reproducible example",
     demoT: "A few results generated from the same public object.",
     demoP: "These figures illustrate the kinds of outputs BarCodeR can produce. They are not an interactive application demo, but a reference point for following the tutorials.",
@@ -1194,7 +1198,7 @@ function EvidencePage({ language }: { language: Language }) {
       {filteredTutorials.length === 0 && <p className="tutorial-empty">{c.noResult}</p>}
     </div></section>
 
-    <section className="section section-dark dataset-library-section"><div className="page-width"><div className="section-heading light reveal"><div><Eyebrow>{c.datasetsK}</Eyebrow><h2>{c.datasetsT}</h2></div><p>{c.datasetsP}</p></div><div className="dataset-library-grid">{availableDatasets.map((dataset, index) => <article className="dataset-library-card available reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={dataset.id}><div className="dataset-library-head"><span>{language === "fr" ? "Disponible" : "Available"}</span><i>{String(index + 1).padStart(2, "0")}</i></div><h3>{tx(dataset.title, language)}</h3><small>{c.datasetInput}</small><b>{tx(dataset.input, language)}</b><p>{tx(dataset.purpose, language)}</p><div><small>{c.datasetCoverage}</small><ul>{dataset.coverage.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div></article>)}</div></div></section>
+    <section className="section section-dark dataset-library-section"><div className="page-width"><div className="section-heading light reveal"><div><Eyebrow>{c.datasetsK}</Eyebrow><h2>{c.datasetsT}</h2></div><p>{c.datasetsP}</p></div><div className="dataset-library-grid">{availableDatasets.map((dataset, index) => <article className="dataset-library-card available reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={dataset.id}><div className="dataset-library-head"><span>{language === "fr" ? "Disponible" : "Available"}</span><i>{String(index + 1).padStart(2, "0")}</i></div><h3>{tx(dataset.title, language)}</h3><small>{c.datasetInput}</small><b>{tx(dataset.input, language)}</b><p>{tx(dataset.purpose, language)}</p><div><small>{c.datasetCoverage}</small><ul>{dataset.coverage.map(item => <li key={item.fr}>{tx(item, language)}</li>)}</ul></div>{dataset.id === "globalpatterns" && <button type="button" className="dataset-start-action" onClick={() => scrollToTutorial("discover-globalpatterns")}>{c.datasetAction}<span>↓</span></button>}</article>)}</div></div></section>
 
     <section className="section page-width tutorial-demo-section"><div className="dataset-demo dataset-demo-v2"><div><Eyebrow>{c.demo}</Eyebrow><h2>{c.demoT}</h2><p>{c.demoP}</p></div><div className="fact-row">{c.facts.map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div></div></section>
     <section className="figure-gallery page-width tutorial-figure-gallery">{publicFigures.map((figure, i) => <figure className="public-figure reveal" style={{ "--delay": `${i * 70}ms` } as React.CSSProperties} key={figure.file}><div><img src={asset(`figures/${figure.file}`)} alt={tx(figure.title, language)} /></div><figcaption><span>0{i + 1}</span><h2>{tx(figure.title, language)}</h2><small>{c.method}</small><p>{tx(figure.method, language)}</p></figcaption></figure>)}</section>
@@ -1571,9 +1575,9 @@ function ShowcasePage({ language }: { language: Language }) {
   const [selectedOutput, setSelectedOutput] = useState("composition");
 
   const c = language === "fr" ? {
-    heroK: "Cas d’usage et résultats",
-    heroT: <>Voir ce que BarCodeR permet<br /><em>de faire avec un projet réel.</em></>,
-    heroP: "BarCodeR accompagne plusieurs types de questions en métabarcoding, depuis la description des communautés jusqu’à la comparaison de groupes ou de plusieurs datasets. Cette page illustre le parcours et les types de résultats disponibles sans entrer dans les réglages techniques.",
+    heroK: "BarCodeR en situation",
+    heroT: <>Des données aux résultats,<br /><em>à travers des cas concrets.</em></>,
+    heroP: "Trois situations montrent comment les différents onglets s’enchaînent pour décrire des communautés, comparer des conditions ou mettre plusieurs datasets en regard. Les réglages techniques restent dans la documentation.",
     heroPrimary: "Voir les cas d’usage",
     heroSecondary: "Parcourir les résultats",
     metrics: [["3", "situations scientifiques illustrées"], ["11", "familles de sorties visibles"], ["3", "figures publiques reproductibles"]],
@@ -1634,9 +1638,9 @@ function ShowcasePage({ language }: { language: Language }) {
     finalTutorial: "Voir les tutoriels",
     finalDocs: "Consulter la documentation"
   } : {
-    heroK: "Use cases and results",
-    heroT: <>See what BarCodeR can do<br /><em>with a real project.</em></>,
-    heroP: "BarCodeR supports several kinds of metabarcoding questions, from community description to group comparison or multi-dataset analysis. This page illustrates workflows and available result types without diving into technical settings.",
+    heroK: "BarCodeR in practice",
+    heroT: <>From data to results,<br /><em>through concrete use cases.</em></>,
+    heroP: "Three situations show how the different tabs connect to describe communities, compare conditions or bring several datasets together. Technical settings remain in the documentation.",
     heroPrimary: "View use cases",
     heroSecondary: "Browse results",
     metrics: [["3", "illustrated scientific situations"], ["11", "visible output families"], ["3", "reproducible public figures"]],
@@ -1703,7 +1707,7 @@ function ShowcasePage({ language }: { language: Language }) {
   const currentOutput = gallery.find(item => item.id === selectedOutput) ?? gallery[0];
 
   return <main>
-    <section className="showcase-hero"><div className="page-width showcase-hero-grid"><div className="reveal"><Eyebrow>{c.heroK}</Eyebrow><h1>{c.heroT}</h1><p className="lead">{c.heroP}</p><div className="showcase-hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("scientific-use-cases")?.scrollIntoView({ behavior: "smooth" })}>{c.heroPrimary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("output-gallery")?.scrollIntoView({ behavior: "smooth" })}>{c.heroSecondary}<span>↘</span></button></div></div><div className="showcase-hero-visual reveal"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Planche de résultats dans MultiView" : "Result panel in MultiView"} /><span className="showcase-float-card top">BarCodeR · MultiView</span><span className="showcase-float-card bottom">Figures · Tables · Exports</span></div></div><div className="page-width showcase-metrics">{c.metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></section>
+    <section className="showcase-hero"><div className="page-width showcase-hero-grid"><div className="reveal"><Eyebrow>{c.heroK}</Eyebrow><h1>{c.heroT}</h1><p className="lead">{c.heroP}</p><div className="showcase-hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("scientific-use-cases")?.scrollIntoView({ behavior: "smooth" })}>{c.heroPrimary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("output-gallery")?.scrollIntoView({ behavior: "smooth" })}>{c.heroSecondary}<span>↘</span></button></div></div><div className="showcase-hero-visual reveal"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Planche de résultats dans MultiView" : "Result panel in MultiView"} /><span className="showcase-float-card top">BarCodeR · MultiView</span><span className="showcase-float-card bottom">Figures · Tables · Exports</span></div></div></section>
 
     <section className="section page-width showcase-cases" id="scientific-use-cases"><div className="section-heading"><div><Eyebrow>{c.casesK}</Eyebrow><h2>{c.casesT}</h2></div><p>{c.casesP}</p></div><div className="showcase-case-list">{c.cases.map((item, index) => <article className="showcase-case reveal" style={{ "--delay": `${index * 50}ms` } as React.CSSProperties} key={item.number}><div className="showcase-case-image"><img src={asset(item.image)} alt="" /><span>{item.number}</span></div><div className="showcase-case-copy"><small>{item.audience}</small><h3>{item.title}</h3><blockquote>{item.question}</blockquote><div className="showcase-case-input"><b>{c.input}</b><p>{item.input}</p></div><ol>{item.steps.map((step, stepIndex) => <li key={step}><span>{String(stepIndex + 1).padStart(2, "0")}</span>{step}</li>)}</ol><div className="showcase-output-tags"><b>{c.outputs}</b><div>{item.outputs.map(output => <span key={output}>{output}</span>)}</div></div><div className="showcase-case-actions"><a href={item.href}>{c.openAnalysis}<span>→</span></a><a href="#/tutorials">{c.openTutorials}<span>↗</span></a></div></div></article>)}</div></section>
 
@@ -1766,7 +1770,7 @@ function DownloadPage({ language }: { language: Language }) {
   const [copied, setCopied] = useState<string | null>(null);
   const appVersion = "2.12.8";
   const documentationVersion = "1.9.0";
-  const sourceCommand = 'shiny::runApp("app.R")';
+  const sourceCommand = 'shiny::runApp()';
   const temporaryCitation = language === "fr"
     ? `Équipe BarCodeR (${new Date().getFullYear()}). BarCodeR v${appVersion} : plateforme R/Shiny pour l’exploration et l’analyse reproductible de données de métabarcoding.`
     : `BarCodeR team (${new Date().getFullYear()}). BarCodeR v${appVersion}: an R/Shiny platform for reproducible exploration and analysis of metabarcoding data.`;
@@ -1790,9 +1794,9 @@ function DownloadPage({ language }: { language: Language }) {
     languages: "Langues de l’interface",
     currentAccess: "Accès actuel",
     localTitle: "Installation locale",
-    localP: "Le mode de référence pour travailler sur votre propre machine avec vos projets et vos données. Une fois les sources installées avec leurs dépendances, BarCodeR se lance comme une application Shiny.",
+    localP: "Le mode de référence pour travailler sur votre propre machine avec vos projets et vos données. Une fois l’archive complète extraite et les dépendances disponibles, lancez BarCodeR depuis le dossier BarCodeR_app contenant app.R et modules/.",
     localItems: ["Travail sur votre machine", "Accès à l’ensemble des modules", "Projets et résultats conservés dans votre environnement"],
-    launch: "Lancer BarCodeR",
+    launch: "Depuis le dossier BarCodeR_app",
     copy: "Copier",
     copied: "Copié",
     sharedTitle: "Déploiement pour une équipe",
@@ -1837,9 +1841,9 @@ function DownloadPage({ language }: { language: Language }) {
     languages: "Interface languages",
     currentAccess: "Current access",
     localTitle: "Local installation",
-    localP: "The reference mode for working on your own machine with your projects and data. Once the sources and dependencies are installed, BarCodeR runs as a Shiny application.",
+    localP: "The reference mode for working on your own machine with your projects and data. Once the complete archive is extracted and dependencies are available, launch BarCodeR from the BarCodeR_app directory containing app.R and modules/.",
     localItems: ["Work on your own machine", "Access to all modules", "Projects and results kept in your environment"],
-    launch: "Launch BarCodeR",
+    launch: "From the BarCodeR_app directory",
     copy: "Copy",
     copied: "Copied",
     sharedTitle: "Team deployment",
@@ -1949,7 +1953,7 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
