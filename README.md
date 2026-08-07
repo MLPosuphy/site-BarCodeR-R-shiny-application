@@ -1,7 +1,6 @@
-# BarCodeR × OpenMetaBar scientific website
+# BarCodeR scientific website
 
-Public React/Vite website for the BarCodeR R/Shiny application and its
-integration with the OpenMetaBar Nextflow workflow.
+Public React/Vite website for the BarCodeR R/Shiny metabarcoding application.
 
 ## Local development
 

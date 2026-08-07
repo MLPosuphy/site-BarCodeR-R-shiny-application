@@ -71,13 +71,13 @@ export const modules: AppModule[] = [
   {
     key: "openmetabar", order: "03", group: "input", icon: "⇢",
     title: l("OpenMetaBar", "OpenMetaBar"),
-    kicker: l("Des FASTQ à un objet analysable", "From FASTQ to an analysable object"),
+    kicker: l("Module optionnel · des FASTQ à un objet analysable", "Optional module · from FASTQ to an analysable object"),
     purpose: l("Préparer, soumettre et suivre un pipeline de métabarcoding sur une infrastructure distante, puis récupérer ses sorties dans BarCodeR.", "Prepare, submit and monitor a metabarcoding pipeline on remote infrastructure, then retrieve its outputs in BarCodeR."),
     question: l("Comment transformer un run de séquençage documenté en objet phyloseq traçable ?", "How can a documented sequencing run become a traceable phyloseq object?"),
     inputs: [l("Fichiers FASTQ", "FASTQ files"), l("Design file", "Design file"), l("Base de référence", "Reference database"), l("Accès SSH/Slurm", "SSH/Slurm access")],
     actions: [l("Valider la connexion au cluster", "Validate the cluster connection"), l("Choisir les fichiers en local ou sur le cluster", "Choose files locally or on the cluster"), l("Configurer technologie, marqueur, moteur et ressources", "Configure technology, marker, engine and resources"), l("Vérifier les aperçus avant soumission", "Review previews before submission"), l("Suivre les étapes, logs et historique du run", "Monitor run steps, logs and history"), l("Récupérer les sorties et importer le phyloseq", "Retrieve outputs and import the phyloseq object")],
     outputs: [l("Run Nextflow DSL2", "Nextflow DSL2 run"), l("Journaux d’exécution", "Execution logs"), l("Historique cluster", "Cluster history"), l("Objet phyloseq avec provenance", "Phyloseq object with provenance")],
-    cautions: [l("Une infrastructure SSH/Slurm correctement configurée est nécessaire.", "A properly configured SSH/Slurm infrastructure is required."), l("Les paramètres disponibles dépendent de la technologie, du marqueur et du moteur choisis.", "Available parameters depend on the selected technology, marker and engine.")],
+    cautions: [l("OpenMetaBar est facultatif : un objet phyloseq ou des composants déjà disponibles peuvent être analysés directement dans BarCodeR.", "OpenMetaBar is optional: an existing phyloseq object or available components can be analysed directly in BarCodeR."), l("Une infrastructure SSH/Slurm correctement configurée est nécessaire.", "A properly configured SSH/Slurm infrastructure is required."), l("Les paramètres disponibles dépendent de la technologie, du marqueur et du moteur choisis.", "Available parameters depend on the selected technology, marker and engine.")],
     source: "modules/openmetabar/mod_OpenMetaBar_ui.R"
   },
   {

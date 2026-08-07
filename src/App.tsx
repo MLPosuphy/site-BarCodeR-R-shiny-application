@@ -31,10 +31,9 @@ function useHashRoute() {
 
 function Brand({ language }: { language: Language }) {
   return (
-    <a className="brand" href="#/" aria-label={language === "fr" ? "BarCodeR et OpenMetaBar — accueil du site" : "BarCodeR and OpenMetaBar — website home"}>
+    <a className="brand" href="#/" aria-label={language === "fr" ? "BarCodeR — accueil du site" : "BarCodeR — website home"}>
       <img className="brand-barcoder" src={asset("app-previews/barcoder-logo.png")} alt="" />
-      <span className="brand-wordmark"><strong>BarCodeR</strong><i>×</i><strong>OpenMetaBar</strong></span>
-      <img className="brand-openmetabar" src={asset("app-previews/openmetabar-logo.png")} alt="" />
+      <span className="brand-wordmark"><strong>BarCodeR</strong></span>
     </a>
   );
 }
@@ -110,57 +109,37 @@ function HomeApplicationVisual({ language }: { language: Language }) {
   );
 }
 
-function Workflow({ language, compact = false }: { language: Language; compact?: boolean }) {
-  const overviewItems = [
-    [language === "fr" ? "Entrer dans BarCodeR" : "Enter BarCodeR", language === "fr" ? "Projet · données · paramètres" : "Project · data · parameters", "01"],
-    [language === "fr" ? "Lancer OpenMetaBar" : "Launch OpenMetaBar", "FASTQ · design · reference", "02"],
-    [language === "fr" ? "Suivre le calcul HPC" : "Monitor HPC computing", "Nextflow · Slurm · monitoring", "03"],
-    [language === "fr" ? "Récupérer le phyloseq" : "Retrieve the phyloseq", language === "fr" ? "Import direct dans BarCodeR" : "Direct import into BarCodeR", "04"],
-    [language === "fr" ? "Explorer & analyser" : "Explore & analyse", language === "fr" ? "Figures · statistiques · diagnostics" : "Figures · statistics · diagnostics", "05"],
-    [language === "fr" ? "Restituer" : "Report", language === "fr" ? "Historique · code R · MultiView" : "History · R code · MultiView", "06"]
-  ];
-  const applicationItems = [
-    ["FASTQ", "OpenMetaBar", "01"], ["phyloseq", language === "fr" ? "Objet scientifique" : "Scientific object", "02"],
-    [language === "fr" ? "Préparer" : "Prepare", language === "fr" ? "Édition & filtration" : "Edition & filtering", "03"],
-    [language === "fr" ? "Explorer" : "Explore", language === "fr" ? "Description & figures" : "Description & figures", "04"],
-    [language === "fr" ? "Tester" : "Test", language === "fr" ? "Modèles & diagnostics" : "Models & diagnostics", "05"],
-    [language === "fr" ? "Restituer" : "Report", "MultiView", "06"]
-  ];
-  const items = compact ? applicationItems : overviewItems;
-  return <div className={compact ? "workflow compact" : "workflow"}>{items.map(([name, detail, number], index) => <div className="workflow-step" key={number}><span>{number}</span><div><b>{name}</b><small>{detail}</small></div>{index < items.length - 1 && <i />}</div>)}</div>;
-}
-
 function Landing({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    badge: "Métabarcoding reproductible · traitement, contrôle et analyse",
-    title: <>Du FASTQ à la figure,<br /><em>dans un workflow traçable.</em></>,
-    intro: "OpenMetaBar prépare et suit le traitement de vos séquences sur cluster HPC. BarCodeR contrôle ensuite les objets phyloseq, guide les choix analytiques et produit des figures, tableaux et scripts R sans masquer les paramètres utilisés.",
-    workflowAction: "Découvrir le workflow",
+    badge: "Application R/Shiny modulaire pour le métabarcoding",
+    title: <>Analysez vos données de métabarcoding,<br /><em>sans perdre la reproductibilité.</em></>,
+    intro: "BarCodeR permet d’importer un objet phyloseq ou ses différents composants, d’en contrôler la cohérence, de créer des versions analytiques traçables et de conduire des analyses statistiques interactives sans masquer les paramètres utilisés.",
+    workflowAction: "Découvrir BarCodeR",
     analysesAction: "Explorer les analyses",
     downloadAction: "Télécharger BarCodeR",
-    version: "Versions présentées : BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
+    version: "Version présentée : BarCodeR v2.12.8",
     metrics: [
-      ["3", "technologies de séquençage", "Illumina · PacBio · Oxford Nanopore"],
+      ["PS", "entrée phyloseq", "Objet complet ou composants importés séparément"],
       ["5", "moteurs différentiels", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"],
-      ["6", "familles d’ordination", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
+      ["6", "méthodes d’ordination", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
       ["R", "code exportable", "Commencer dans l’interface, poursuivre dans R"]
     ],
-    journeysK: "Deux points d’entrée",
-    journeysT: "Commencez avec les données dont vous disposez déjà.",
-    journeysP: "OpenMetaBar et BarCodeR forment un continuum, mais restent indépendants. Le cluster n’est nécessaire que pour le traitement distant des séquences.",
-    fastqTitle: "Je pars de fichiers FASTQ",
-    fastqTag: "Parcours complet",
-    fastqText: "Préparez le design, configurez le pipeline, soumettez le calcul sur Slurm et récupérez automatiquement l’objet phyloseq dans BarCodeR.",
-    fastqSteps: ["FASTQ", "OpenMetaBar", "Nextflow / Slurm", "phyloseq", "BarCodeR"],
-    fastqAction: "Voir le parcours FASTQ",
+    journeysK: "Deux modes d’import",
+    journeysT: "Commencez avec la structure de données dont vous disposez déjà.",
+    journeysP: "BarCodeR travaille directement à partir d’un objet phyloseq ou reconstruit l’objet à partir de ses composants avant de poursuivre le même parcours d’analyse.",
     phyloseqTitle: "J’ai déjà un objet phyloseq",
     phyloseqTag: "Accès direct",
-    phyloseqText: "Importez votre objet ou ses composants, contrôlez sa structure, créez des versions filtrées puis explorez et testez vos hypothèses.",
+    phyloseqText: "Importez votre objet, contrôlez sa structure et ses métadonnées, puis créez les versions analytiques adaptées à vos hypothèses.",
     phyloseqSteps: ["Import", "Diagnostic", "Filtration", "Analyses", "MultiView"],
-    phyloseqAction: "Voir le parcours phyloseq",
+    phyloseqAction: "Voir l’import phyloseq",
+    componentsTitle: "J’ai les composants séparés",
+    componentsTag: "Assemblage contrôlé",
+    componentsText: "Importez la table d’abondance, la taxonomie et les métadonnées, puis ajoutez si nécessaire les séquences ou l’arbre avant de construire un objet cohérent.",
+    componentsSteps: ["OTU / ASV", "Taxonomie", "Métadonnées", "phyloseq", "Analyses"],
+    componentsAction: "Voir l’édition des données",
     questionsK: "Partir de la question scientifique",
-    questionsT: "L’interface ne vous demande pas d’apprendre treize onglets avant de commencer.",
-    questionsP: "Choisissez d’abord ce que vous cherchez à comprendre. BarCodeR vous oriente ensuite vers les données requises, les méthodes compatibles et les diagnostics à vérifier.",
+    questionsT: "Choisissez d’abord ce que vous cherchez à comprendre.",
+    questionsP: "BarCodeR vous oriente vers les données requises, les méthodes compatibles et les diagnostics à vérifier, plutôt que de présenter une simple succession de boutons statistiques.",
     questions: [
       ["Composition", "Quels taxons structurent mes communautés ?", "Barplots, analyses ciblées et niveaux taxonomiques."],
       ["Diversité", "La diversité diffère-t-elle entre mes groupes ?", "Richesse, Shannon, Simpson, Faith PD et tests associés."],
@@ -187,55 +166,55 @@ function Landing({ language }: { language: Language }) {
     audienceT: "Un point de rencontre entre expertise biologique, statistiques et bioinformatique.",
     audienceP: "Chaque profil peut entrer par le niveau qui lui convient, tout en partageant les mêmes objets, paramètres et résultats.",
     audiences: [
-      ["Biologistes & écologues", "Explorer un dataset, tester une hypothèse et produire des figures sans programmer les analyses courantes.", "Tester avec un exemple", "#/tutorials"],
+      ["Biologistes & écologues", "Explorer un dataset, tester une hypothèse et produire des figures sans programmer les analyses courantes.", "Découvrir un exemple", "#/tutorials"],
       ["Bioinformaticiens", "Inspecter les objets phyloseq, les transformations, les paramètres et le code R généré.", "Explorer les méthodes", "#/analyses"],
-      ["Plateformes", "Standardiser les parcours, connecter un cluster et remettre des projets documentés aux utilisateurs.", "Comprendre le fonctionnement", "#/functioning"],
+      ["Plateformes", "Standardiser les parcours, déployer BarCodeR et remettre des projets documentés aux utilisateurs.", "Comprendre le fonctionnement", "#/functioning"],
       ["Équipes de recherche", "Partager des datasets dérivés, reprendre une analyse et composer les résultats dans un cadre commun.", "Consulter la documentation", "#/documentation"]
     ],
     finalK: "Commencer",
-    finalT: "Testez d’abord le parcours qui correspond à vos données.",
-    finalP: "Utilisez un dataset public pour découvrir l’interface, consultez les méthodes avant de lancer un test ou installez BarCodeR pour travailler sur vos propres objets phyloseq.",
+    finalT: "Importez, contrôlez, analysez, puis conservez le contexte de vos résultats.",
+    finalP: "Utilisez un dataset public pour découvrir l’interface, consultez les méthodes avant de lancer un test ou installez BarCodeR pour travailler sur vos propres données.",
     finalTutorial: "Ouvrir les tutoriels",
     finalDocs: "Consulter la documentation",
     finalDownload: "Télécharger BarCodeR",
     citationK: "Science ouverte · communauté",
     citationT: "Une analyse reproductible doit aussi être identifiable et citable.",
-    citationP: "Les versions, le code source, les conditions de disponibilité et les informations de citation sont regroupés dans l’espace de téléchargement et de science ouverte."
+    citationP: "Les versions, le code source, les conditions de disponibilité et les informations de citation de BarCodeR sont regroupés dans l’espace de téléchargement et de science ouverte."
   } : {
-    badge: "Reproducible metabarcoding · processing, checking and analysis",
-    title: <>From FASTQ to figures,<br /><em>in a traceable workflow.</em></>,
-    intro: "OpenMetaBar prepares and monitors sequence processing on an HPC cluster. BarCodeR then checks phyloseq objects, guides analytical choices and produces figures, tables and R scripts without hiding the parameters used.",
-    workflowAction: "Explore the workflow",
+    badge: "Modular R/Shiny application for metabarcoding",
+    title: <>Analyse your metabarcoding data,<br /><em>without losing reproducibility.</em></>,
+    intro: "BarCodeR imports a phyloseq object or its individual components, checks their consistency, creates traceable analytical versions and supports interactive statistical analyses without hiding the parameters used.",
+    workflowAction: "Discover BarCodeR",
     analysesAction: "Explore analyses",
     downloadAction: "Download BarCodeR",
-    version: "Versions presented: BarCodeR v2.12.8 · OpenMetaBar v1.0.0",
+    version: "Version presented: BarCodeR v2.12.8",
     metrics: [
-      ["3", "sequencing technologies", "Illumina · PacBio · Oxford Nanopore"],
+      ["PS", "phyloseq input", "Complete object or separately imported components"],
       ["5", "differential engines", "ANCOM-BC2 · LinDA · ALDEx2 · corncob · MaAsLin 3"],
-      ["6", "ordination families", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
+      ["6", "ordination methods", "PCA · PCoA · NMDS · CCA · RDA · dbRDA"],
       ["R", "exportable code", "Start in the interface, continue in R"]
     ],
-    journeysK: "Two entry points",
-    journeysT: "Start with the data you already have.",
-    journeysP: "OpenMetaBar and BarCodeR form a continuum but remain independent. A cluster is required only for remote sequence processing.",
-    fastqTitle: "I have FASTQ files",
-    fastqTag: "Complete journey",
-    fastqText: "Prepare the design, configure the pipeline, submit the computation to Slurm and automatically retrieve the phyloseq object in BarCodeR.",
-    fastqSteps: ["FASTQ", "OpenMetaBar", "Nextflow / Slurm", "phyloseq", "BarCodeR"],
-    fastqAction: "View the FASTQ journey",
+    journeysK: "Two import modes",
+    journeysT: "Start with the data structure you already have.",
+    journeysP: "BarCodeR works directly from a phyloseq object or rebuilds the object from its components before continuing through the same analysis workflow.",
     phyloseqTitle: "I already have a phyloseq object",
     phyloseqTag: "Direct access",
-    phyloseqText: "Import your object or its components, check its structure, create filtered versions, then explore and test your hypotheses.",
+    phyloseqText: "Import your object, check its structure and metadata, then create analytical versions suited to your hypotheses.",
     phyloseqSteps: ["Import", "Diagnosis", "Filtering", "Analyses", "MultiView"],
-    phyloseqAction: "View the phyloseq journey",
+    phyloseqAction: "View phyloseq import",
+    componentsTitle: "I have separate components",
+    componentsTag: "Controlled assembly",
+    componentsText: "Import the abundance table, taxonomy and metadata, then add sequences or a tree when needed before building a consistent object.",
+    componentsSteps: ["OTU / ASV", "Taxonomy", "Metadata", "phyloseq", "Analyses"],
+    componentsAction: "View data editing",
     questionsK: "Start from the scientific question",
-    questionsT: "The interface does not require you to learn thirteen tabs before you begin.",
-    questionsP: "First choose what you need to understand. BarCodeR then points you to the required data, compatible methods and diagnostics to check.",
+    questionsT: "First choose what you need to understand.",
+    questionsP: "BarCodeR points you to the required data, compatible methods and diagnostics to check instead of presenting a simple succession of statistical buttons.",
     questions: [
       ["Composition", "Which taxa structure my communities?", "Bar plots, targeted analyses and taxonomic levels."],
-      ["Diversity", "Does diversity differ among groups?", "Richness, Shannon, Simpson, Faith PD and associated tests."],
+      ["Diversity", "Does diversity differ among my groups?", "Richness, Shannon, Simpson, Faith PD and associated tests."],
       ["Structure", "How are my samples organised?", "Ordinations, distances, stress and robustness."],
-      ["Hypotheses", "Does a variable explain the differences?", "PERMANOVA accompanied by a dispersion check."],
+      ["Hypotheses", "Does a variable explain the differences?", "PERMANOVA together with dispersion checks."],
       ["Taxa", "Which taxa are associated with a condition?", "Five differential engines and concordance comparison."],
       ["Matrices", "Do two markers tell the same story?", "Mantel, Procrustes, RV, co-inertia and MCOA."]
     ],
@@ -257,20 +236,20 @@ function Landing({ language }: { language: Language }) {
     audienceT: "A meeting point for biological expertise, statistics and bioinformatics.",
     audienceP: "Each profile can enter at the appropriate level while sharing the same objects, parameters and results.",
     audiences: [
-      ["Biologists & ecologists", "Explore a dataset, test a hypothesis and produce figures without programming routine analyses.", "Try an example", "#/tutorials"],
+      ["Biologists & ecologists", "Explore a dataset, test a hypothesis and produce figures without programming routine analyses.", "Discover an example", "#/tutorials"],
       ["Bioinformaticians", "Inspect phyloseq objects, transformations, parameters and generated R code.", "Explore methods", "#/analyses"],
-      ["Core facilities", "Standardise journeys, connect a cluster and deliver documented projects to users.", "Understand the workflow", "#/functioning"],
+      ["Core facilities", "Standardise workflows, deploy BarCodeR and deliver documented projects to users.", "Understand the workflow", "#/functioning"],
       ["Research teams", "Share derived datasets, resume analyses and compose results in a common framework.", "Read the documentation", "#/documentation"]
     ],
     finalK: "Get started",
-    finalT: "First test the journey that matches your data.",
-    finalP: "Use a public dataset to discover the interface, review methods before running a test or install BarCodeR to work with your own phyloseq objects.",
+    finalT: "Import, check, analyse, then retain the context of your results.",
+    finalP: "Use a public dataset to discover the interface, review methods before running a test or install BarCodeR to work with your own data.",
     finalTutorial: "Open tutorials",
     finalDocs: "Read the documentation",
     finalDownload: "Download BarCodeR",
     citationK: "Open science · community",
     citationT: "A reproducible analysis must also be identifiable and citable.",
-    citationP: "Versions, source code, availability conditions and citation information are grouped in the download and open-science area."
+    citationP: "BarCodeR versions, source code, availability conditions and citation information are grouped in the download and open-science area."
   };
 
   return <main>
@@ -289,74 +268,33 @@ function Landing({ language }: { language: Language }) {
       <div className="hero-media reveal delay-1">
         <div className="ambient-ring" />
         <HomeApplicationVisual language={language} />
-        <div className="signal-card signal-one"><span>PS</span><div><b>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</b><small>{language === "fr" ? "Entrée standardisée" : "Standardised input"}</small></div></div>
-        <div className="signal-card signal-two"><span>HPC</span><div><b>{language === "fr" ? "Calcul distant optionnel" : "Optional remote computing"}</b><small>OpenMetaBar · Nextflow · Slurm</small></div></div>
+        <div className="signal-card signal-one"><span>PS</span><div><b>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</b><small>{language === "fr" ? "Import direct" : "Direct import"}</small></div></div>
+        <div className="signal-card signal-two"><span>+</span><div><b>{language === "fr" ? "Composants séparés" : "Separate components"}</b><small>OTU / ASV · taxonomy · metadata</small></div></div>
         <div className="signal-card signal-three"><span>R</span><div><b>{language === "fr" ? "Code R prolongeable" : "Extensible R code"}</b><small>{language === "fr" ? "Paramètres visibles" : "Visible parameters"}</small></div></div>
       </div>
     </section>
 
-    <section className="home-metrics-band">
-      <div className="page-width home-metrics-grid">
-        {c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}
-      </div>
-    </section>
+    <section className="home-metrics-band"><div className="page-width home-metrics-grid">{c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}</div></section>
 
     <section className="section home-journeys page-width reveal">
       <div className="section-intro home-section-intro"><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2><p>{c.journeysP}</p></div>
       <div className="journey-grid">
-        <article className="journey-card openmetabar-journey">
-          <div className="journey-card-head"><span>01</span><small>{c.fastqTag}</small></div>
-          <h3>{c.fastqTitle}</h3><p>{c.fastqText}</p>
-          <div className="journey-chain">{c.fastqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.fastqSteps.length - 1 && <span>→</span>}</div>)}</div>
-          <a href="#/functioning">{c.fastqAction}<span>↗</span></a>
-        </article>
-        <article className="journey-card barcoder-journey">
-          <div className="journey-card-head"><span>02</span><small>{c.phyloseqTag}</small></div>
-          <h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p>
-          <div className="journey-chain">{c.phyloseqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.phyloseqSteps.length - 1 && <span>→</span>}</div>)}</div>
-          <a href="#/functioning">{c.phyloseqAction}<span>↗</span></a>
-        </article>
+        <article className="journey-card barcoder-journey"><div className="journey-card-head"><span>01</span><small>{c.phyloseqTag}</small></div><h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p><div className="journey-chain">{c.phyloseqSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.phyloseqSteps.length - 1 && <span>→</span>}</div>)}</div><a href="#/application/input-data">{c.phyloseqAction}<span>↗</span></a></article>
+        <article className="journey-card components-journey"><div className="journey-card-head"><span>02</span><small>{c.componentsTag}</small></div><h3>{c.componentsTitle}</h3><p>{c.componentsText}</p><div className="journey-chain">{c.componentsSteps.map((step, index) => <div key={step}><b>{step}</b>{index < c.componentsSteps.length - 1 && <span>→</span>}</div>)}</div><a href="#/application/data-edition">{c.componentsAction}<span>↗</span></a></article>
       </div>
     </section>
 
-    <section className="section section-tint home-questions">
-      <div className="page-width">
-        <div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div>
-        <div className="question-grid">
-          {c.questions.map(([label, question, detail], index) => <a className="question-card reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} href="#/analyses" key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><b>→</b></a>)}
-        </div>
-        <div className="section-action"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div>
-      </div>
-    </section>
+    <section className="section section-tint home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div><div className="question-grid">{c.questions.map(([label, question, detail], index) => <a className="question-card reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} href="#/analyses" key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><b>→</b></a>)}</div><div className="section-action"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div></div></section>
 
-    <section className="section home-strengths page-width">
-      <div className="section-intro home-section-intro reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div>
-      <div className="strength-grid">
-        {c.strengths.map(([number, title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}
-      </div>
-    </section>
+    <section className="section home-strengths page-width"><div className="section-intro home-section-intro reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div><div className="strength-grid">{c.strengths.map(([number, title, text], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
 
-    <section className="home-proof-section">
-      <div className="page-width home-proof-grid reveal">
-        <div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /><div className="proof-chip proof-chip-one">Barplot</div><div className="proof-chip proof-chip-two">Ordination</div><div className="proof-chip proof-chip-three">Differential</div></div>
-        <div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="button tertiary" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
-      </div>
-    </section>
+    <section className="home-proof-section"><div className="page-width home-proof-grid reveal"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /><div className="proof-chip proof-chip-one">Barplot</div><div className="proof-chip proof-chip-two">Ordination</div><div className="proof-chip proof-chip-three">Differential</div></div><div className="home-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h2>{c.proofT}</h2><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="button tertiary" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div></div></section>
 
-    <section className="section audience-section home-audiences">
-      <div className="page-width">
-        <div className="section-intro home-section-intro reveal"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div>
-        <div className="profile-grid">
-          {c.audiences.map(([title, text, action, href], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><a href={href}>{action}<b>→</b></a></article>)}
-        </div>
-      </div>
-    </section>
+    <section className="section audience-section home-audiences"><div className="page-width"><div className="section-intro home-section-intro reveal"><Eyebrow>{c.audienceK}</Eyebrow><h2>{c.audienceT}</h2><p>{c.audienceP}</p></div><div className="profile-grid">{c.audiences.map(([title, text, action, href], index) => <article className="reveal" style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><a href={href}>{action}<b>→</b></a></article>)}</div></div></section>
 
-    <section className="home-start-band">
-      <div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div>
-    </section>
+    <section className="home-start-band"><div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div></section>
 
-    <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">×</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p><a className="citation-link" href="#/download">{language === "fr" ? "Versions, code et citation" : "Versions, code and citation"}<span>→</span></a></div></div></section>
+    <section className="citation-band"><div className="page-width citation-band-inner reveal"><span className="citation-symbol">B|R</span><div><Eyebrow>{c.citationK}</Eyebrow><h2>{c.citationT}</h2><p>{c.citationP}</p><a className="citation-link" href="#/download">{language === "fr" ? "Versions, code et citation" : "Versions, code and citation"}<span>→</span></a></div></div></section>
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
@@ -365,59 +303,43 @@ function ModuleGrid({ language, limit }: { language: Language; limit?: number })
 
 function ApplicationIndex({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    k: "Fonctionnement de l’écosystème",
-    title: <>Deux outils complémentaires,<br /><em>un même fil scientifique.</em></>,
-    p: "OpenMetaBar orchestre le traitement distant des séquences. BarCodeR prend ensuite en charge les objets phyloseq, leur contrôle, leur transformation, les analyses statistiques et la restitution. Les deux outils peuvent être utilisés ensemble ou séparément.",
-    primary: "Voir le parcours complet",
+    k: "Fonctionnement de BarCodeR",
+    title: <>Un parcours modulaire,<br /><em>de l’import à la restitution.</em></>,
+    p: "BarCodeR organise l’analyse autour d’un projet, d’un dataset actif et de modules spécialisés. Les données sont importées, contrôlées, corrigées si nécessaire, déclinées en versions analytiques puis explorées et testées sans écraser l’objet de départ.",
+    primary: "Voir le parcours BarCodeR",
     secondary: "Explorer les modules",
-    bridge: "Le point de jonction",
-    bridgeTitle: "L’objet phyloseq relie le traitement bioinformatique à l’analyse.",
-    bridgeP: "OpenMetaBar peut produire un objet directement importable dans BarCodeR. BarCodeR accepte également des objets phyloseq déjà construits ou leurs composants fournis séparément.",
-    productsK: "Rôles respectifs",
-    productsT: "Une séparation claire entre traitement des reads et analyse scientifique.",
-    openmetaRole: "Traitement bioinformatique distant",
-    openmetaText: "Préparer un design, configurer un pipeline, transférer les entrées, soumettre sur Slurm, suivre Nextflow et récupérer les sorties.",
-    openmetaTags: ["FASTQ", "SSH", "Slurm", "Nextflow", "Monitoring"],
-    barcoderRole: "Contrôle, exploration et analyse",
-    barcoderText: "Vérifier la structure des données, gérer plusieurs versions, filtrer, explorer, tester des hypothèses et composer les résultats.",
-    barcoderTags: ["phyloseq", "Diagnostics", "Statistiques", "Code R", "MultiView"],
-    independent: "Indépendants par conception",
-    independentP: "OpenMetaBar n’est pas requis pour analyser un phyloseq dans BarCodeR. Inversement, les sorties d’OpenMetaBar restent exploitables en dehors de BarCodeR.",
-    pathsK: "Deux points d’entrée",
-    pathsT: "Le parcours s’adapte au niveau auquel commencent vos données.",
-    pathsP: "Les étapes affichées décrivent la logique de travail, pas une obligation de passer par tous les modules.",
-    fastqLabel: "Parcours A",
-    fastqTitle: "Je pars de fichiers FASTQ",
-    fastqIntro: "OpenMetaBar structure le passage des séquences brutes vers un objet scientifique contrôlable.",
-    fastqSteps: [
-      ["01", "Préparer les entrées", "FASTQ, design expérimental et base de référence."],
-      ["02", "Configurer le traitement", "Technologie, moteur, amorces, filtres et ressources HPC."],
-      ["03", "Valider avant lancement", "Cohérence des chemins, paramètres et fichiers attendus."],
-      ["04", "Soumettre et suivre", "SSH, Slurm, Nextflow, états des jobs et journaux d’exécution."],
-      ["05", "Récupérer les résultats", "Tables, rapports, séquences et objet phyloseq."],
-      ["06", "Poursuivre dans BarCodeR", "Description, filtration, analyses et restitution."],
+    entriesK: "Entrées prises en charge",
+    entriesT: "Deux façons d’entrer dans BarCodeR, puis un même parcours analytique.",
+    phyloseqRole: "Importer un objet phyloseq",
+    phyloseqText: "Chargez directement un objet existant, puis vérifiez sa structure, ses identifiants et les composantes disponibles avant toute analyse.",
+    phyloseqTags: [".rds", ".RData", "phyloseq", "validation"],
+    componentsRole: "Assembler des composants séparés",
+    componentsText: "Importez séparément la table OTU/ASV, la taxonomie et les métadonnées, puis ajoutez les séquences ou l’arbre lorsqu’ils sont disponibles.",
+    componentsTags: ["OTU / ASV", "Taxonomie", "Métadonnées", "Séquences", "Arbre"],
+    pathsK: "Parcours analytique",
+    pathsT: "Préserver l’original, documenter les transformations et analyser une version adaptée à la question.",
+    pathsP: "Les modules sont indépendants : l’utilisateur n’a pas à suivre chaque étape systématiquement. Les contrôles et dépendances nécessaires sont explicités au moment où ils deviennent pertinents.",
+    objectLabel: "Entrée A",
+    objectTitle: "Objet phyloseq existant",
+    objectIntro: "Le parcours commence directement par l’import et le diagnostic de l’objet.",
+    objectSteps: [
+      ["01", "Importer", "Charger un objet phyloseq ou restaurer un projet BarCodeR."],
+      ["02", "Diagnostiquer", "Contrôler dimensions, profondeur, sparsité, taxonomie et métadonnées."],
+      ["03", "Corriger si nécessaire", "Harmoniser les identifiants ou compléter les composantes de l’objet."],
+      ["04", "Créer une version analytique", "Appliquer des filtres explicites sans écraser le dataset de référence."],
+      ["05", "Explorer et tester", "Produire des figures, ordinations, modèles et diagnostics."],
+      ["06", "Restituer", "Sauvegarder figures, tableaux, paramètres, historique et code R."]
     ],
-    phyloseqLabel: "Parcours B",
-    phyloseqTitle: "J’ai déjà un objet phyloseq",
-    phyloseqIntro: "BarCodeR commence directement par la validation de l’objet et la préparation de versions analytiques traçables.",
-    phyloseqSteps: [
-      ["01", "Importer", "Objet phyloseq ou composants fournis séparément."],
-      ["02", "Diagnostiquer", "Dimensions, profondeur, sparsité, taxonomie et métadonnées."],
-      ["03", "Corriger si nécessaire", "Identifiants, tables, taxonomie, séquences ou arbre."],
-      ["04", "Créer une version analytique", "Filtres d’abondance, prévalence, taxonomie ou échantillons."],
-      ["05", "Explorer et tester", "Figures descriptives, ordinations, modèles et diagnostics."],
-      ["06", "Restituer", "Historique, tableaux, scripts R, bibliothèque et MultiView."],
-    ],
-    hpcK: "Cycle de vie d’un run OpenMetaBar",
-    hpcT: "Le calcul distant reste visible de la configuration jusqu’à la récupération.",
-    hpcP: "L’interface ne remplace pas Slurm ou Nextflow : elle rend leurs états, leurs paramètres et leurs journaux accessibles dans un parcours unique.",
-    hpcSteps: [
-      ["Configuration", "Choix des entrées, de la technologie et des paramètres."],
-      ["Validation", "Contrôles avant transfert et génération de la commande."],
-      ["Soumission", "Création du job sur l’infrastructure distante."],
-      ["Exécution", "Traitement par Nextflow et les outils du pipeline."],
-      ["Monitoring", "Lecture des états Slurm, progression et logs."],
-      ["Intégration", "Récupération des sorties et import du phyloseq."],
+    componentLabel: "Entrée B",
+    componentTitle: "Composants séparés",
+    componentIntro: "BarCodeR assemble d’abord les différentes tables dans une structure cohérente avant de rejoindre le même parcours.",
+    componentSteps: [
+      ["01", "Importer les tables", "Table OTU/ASV, taxonomie et métadonnées échantillons."],
+      ["02", "Ajouter les composants optionnels", "Séquences de référence et arbre phylogénétique lorsqu’ils existent."],
+      ["03", "Vérifier les correspondances", "Contrôler les identifiants entre taxons, échantillons et métadonnées."],
+      ["04", "Construire le dataset", "Créer un objet exploitable par l’ensemble des modules BarCodeR."],
+      ["05", "Diagnostiquer et filtrer", "Examiner la qualité puis produire les versions analytiques nécessaires."],
+      ["06", "Explorer, tester et restituer", "Utiliser les mêmes modules d’analyse et de sortie que pour un phyloseq importé."]
     ],
     lineageK: "Projets et lignée des datasets",
     lineageT: "Conserver l’original tout en construisant plusieurs versions analytiques.",
@@ -427,176 +349,81 @@ function ApplicationIndex({ language }: { language: Language }) {
       ["Dataset corrigé", "Structure et métadonnées harmonisées"],
       ["Filtration faible", "Exploration et contrôle de sensibilité"],
       ["Filtration standard", "Analyse principale"],
-      ["Filtration stricte", "Analyse de robustesse"],
+      ["Filtration stricte", "Analyse de robustesse"]
     ],
     editTitle: "Éditer corrige l’objet",
     editP: "L’édition agit sur la structure, les identifiants ou les composants du phyloseq.",
     filterTitle: "Filtrer crée une version dérivée",
     filterP: "La filtration sélectionne des taxons ou échantillons selon des règles analytiques explicites.",
-    responsibilityK: "Ce que l’écosystème garantit — et ce qu’il ne remplace pas",
+    responsibilityK: "Ce que BarCodeR garantit — et ce qu’il ne remplace pas",
     responsibilityT: "La traçabilité encadre les choix ; elle ne décide pas à la place du scientifique.",
-    guarantees: [
-      "Paramètres et étapes visibles dans l’interface.",
-      "Conservation de plusieurs datasets et de leur filiation.",
-      "Diagnostics associés aux méthodes lorsqu’ils sont disponibles.",
-      "Sorties exportables et analyses prolongeables avec R.",
-    ],
-    responsibilities: [
-      "Qualité du plan expérimental et de l’échantillonnage.",
-      "Pertinence des amorces et de la base de référence.",
-      "Choix des seuils, transformations, distances et modèles.",
-      "Interprétation biologique et portée des conclusions.",
-    ],
-    guaranteeTitle: "Fourni par l’outil",
+    guarantees: ["Paramètres et étapes visibles dans l’interface.", "Conservation de plusieurs datasets et de leur filiation.", "Diagnostics associés aux méthodes lorsqu’ils sont disponibles.", "Sorties exportables et analyses prolongeables avec R."],
+    responsibilities: ["Qualité du plan expérimental et de l’échantillonnage.", "Pertinence de la base taxonomique et des annotations.", "Choix des seuils, transformations, distances et modèles.", "Interprétation biologique et portée des conclusions."],
+    guaranteeTitle: "Fourni par BarCodeR",
     responsibilityTitle: "Reste sous responsabilité scientifique",
     modulesK: "Architecture détaillée",
-    modulesT: "Retrouver les modules de l’application par étape du parcours.",
-    modulesP: "Cette vue secondaire permet d’ouvrir chaque fiche fonctionnelle, avec ses entrées, opérations, sorties et points de vigilance.",
-    discover: "Découvrir",
+    modulesT: "Retrouver les modules de BarCodeR par étape du parcours.",
+    modulesP: "Chaque fiche décrit les entrées attendues, les opérations possibles, les sorties produites et les points de vigilance du module.",
+    discover: "Découvrir"
   } : {
-    k: "How the ecosystem works",
-    title: <>Two complementary tools,<br /><em>one scientific thread.</em></>,
-    p: "OpenMetaBar orchestrates remote sequence processing. BarCodeR then handles phyloseq objects, quality checks, transformations, statistical analyses and reporting. Both tools can be used together or independently.",
-    primary: "View the complete journey",
+    k: "How BarCodeR works",
+    title: <>A modular workflow,<br /><em>from import to reporting.</em></>,
+    p: "BarCodeR organises analysis around a project, an active dataset and specialised modules. Data are imported, checked, corrected when necessary, turned into analytical versions and then explored and tested without overwriting the starting object.",
+    primary: "View the BarCodeR workflow",
     secondary: "Explore the modules",
-    bridge: "The connection point",
-    bridgeTitle: "The phyloseq object connects bioinformatics processing to analysis.",
-    bridgeP: "OpenMetaBar can produce an object that is directly importable into BarCodeR. BarCodeR also accepts existing phyloseq objects or their components supplied separately.",
-    productsK: "Respective roles",
-    productsT: "A clear separation between read processing and scientific analysis.",
-    openmetaRole: "Remote bioinformatics processing",
-    openmetaText: "Prepare a design, configure a pipeline, transfer inputs, submit through Slurm, monitor Nextflow and retrieve outputs.",
-    openmetaTags: ["FASTQ", "SSH", "Slurm", "Nextflow", "Monitoring"],
-    barcoderRole: "Quality control, exploration and analysis",
-    barcoderText: "Check data structure, manage multiple versions, filter, explore, test hypotheses and assemble results.",
-    barcoderTags: ["phyloseq", "Diagnostics", "Statistics", "R code", "MultiView"],
-    independent: "Independent by design",
-    independentP: "OpenMetaBar is not required to analyse a phyloseq object in BarCodeR. Conversely, OpenMetaBar outputs remain usable outside BarCodeR.",
-    pathsK: "Two entry points",
-    pathsT: "The journey adapts to the stage at which your data begin.",
-    pathsP: "The displayed steps describe the working logic; users do not have to visit every module.",
-    fastqLabel: "Journey A",
-    fastqTitle: "I start with FASTQ files",
-    fastqIntro: "OpenMetaBar structures the transition from raw sequences to a scientific object that can be inspected.",
-    fastqSteps: [
-      ["01", "Prepare inputs", "FASTQ files, experimental design and reference database."],
-      ["02", "Configure processing", "Technology, engine, primers, filters and HPC resources."],
-      ["03", "Validate before launch", "Consistency of paths, parameters and expected files."],
-      ["04", "Submit and monitor", "SSH, Slurm, Nextflow, job states and execution logs."],
-      ["05", "Retrieve results", "Tables, reports, sequences and phyloseq object."],
-      ["06", "Continue in BarCodeR", "Description, filtering, analyses and reporting."],
-    ],
-    phyloseqLabel: "Journey B",
-    phyloseqTitle: "I already have a phyloseq object",
-    phyloseqIntro: "BarCodeR starts directly with object validation and preparation of traceable analytical versions.",
-    phyloseqSteps: [
-      ["01", "Import", "Phyloseq object or components supplied separately."],
-      ["02", "Diagnose", "Dimensions, depth, sparsity, taxonomy and metadata."],
-      ["03", "Correct when necessary", "Identifiers, tables, taxonomy, sequences or tree."],
-      ["04", "Create an analytical version", "Abundance, prevalence, taxonomy or sample filters."],
-      ["05", "Explore and test", "Descriptive figures, ordinations, models and diagnostics."],
-      ["06", "Report", "History, tables, R scripts, library and MultiView."],
-    ],
-    hpcK: "OpenMetaBar run lifecycle",
-    hpcT: "Remote computing remains visible from configuration to retrieval.",
-    hpcP: "The interface does not replace Slurm or Nextflow: it presents their states, parameters and logs in one continuous journey.",
-    hpcSteps: [
-      ["Configuration", "Select inputs, technology and parameters."],
-      ["Validation", "Checks before transfer and command generation."],
-      ["Submission", "Create the job on the remote infrastructure."],
-      ["Execution", "Processing through Nextflow and pipeline tools."],
-      ["Monitoring", "Read Slurm states, progress and logs."],
-      ["Integration", "Retrieve outputs and import the phyloseq object."],
-    ],
+    entriesK: "Supported inputs",
+    entriesT: "Two ways to enter BarCodeR, followed by the same analytical workflow.",
+    phyloseqRole: "Import a phyloseq object",
+    phyloseqText: "Load an existing object directly, then check its structure, identifiers and available components before analysis.",
+    phyloseqTags: [".rds", ".RData", "phyloseq", "validation"],
+    componentsRole: "Assemble separate components",
+    componentsText: "Import the OTU/ASV table, taxonomy and metadata separately, then add sequences or a tree when available.",
+    componentsTags: ["OTU / ASV", "Taxonomy", "Metadata", "Sequences", "Tree"],
+    pathsK: "Analytical workflow",
+    pathsT: "Preserve the original, document transformations and analyse a version suited to the question.",
+    pathsP: "Modules are independent: users do not need to visit every step systematically. Required checks and dependencies are made explicit when they become relevant.",
+    objectLabel: "Entry A",
+    objectTitle: "Existing phyloseq object",
+    objectIntro: "The workflow starts directly with import and object diagnosis.",
+    objectSteps: [["01", "Import", "Load a phyloseq object or restore a BarCodeR project."], ["02", "Diagnose", "Check dimensions, depth, sparsity, taxonomy and metadata."], ["03", "Correct when necessary", "Harmonise identifiers or complete object components."], ["04", "Create an analytical version", "Apply explicit filters without overwriting the reference dataset."], ["05", "Explore and test", "Produce figures, ordinations, models and diagnostics."], ["06", "Report", "Save figures, tables, parameters, history and R code."]],
+    componentLabel: "Entry B",
+    componentTitle: "Separate components",
+    componentIntro: "BarCodeR first assembles the different tables into a coherent structure before joining the same workflow.",
+    componentSteps: [["01", "Import tables", "OTU/ASV table, taxonomy and sample metadata."], ["02", "Add optional components", "Reference sequences and phylogenetic tree when available."], ["03", "Check correspondence", "Validate identifiers across taxa, samples and metadata."], ["04", "Build the dataset", "Create an object usable by all BarCodeR modules."], ["05", "Diagnose and filter", "Inspect quality and create the required analytical versions."], ["06", "Explore, test and report", "Use the same analysis and output modules as for an imported phyloseq object."]],
     lineageK: "Projects and dataset lineage",
     lineageT: "Keep the original while building several analytical versions.",
     lineageP: "BarCodeR distinguishes structural correction of an object from creation of a filtered sub-dataset. Each branch can address a different hypothesis without overwriting the previous version.",
-    lineageNodes: [
-      ["Original object", "Import preserved as reference"],
-      ["Corrected dataset", "Structure and metadata harmonised"],
-      ["Light filtering", "Exploration and sensitivity control"],
-      ["Standard filtering", "Primary analysis"],
-      ["Strict filtering", "Robustness analysis"],
-    ],
+    lineageNodes: [["Original object", "Import preserved as reference"], ["Corrected dataset", "Structure and metadata harmonised"], ["Light filtering", "Exploration and sensitivity control"], ["Standard filtering", "Primary analysis"], ["Strict filtering", "Robustness analysis"]],
     editTitle: "Editing corrects the object",
     editP: "Editing acts on the structure, identifiers or components of the phyloseq object.",
     filterTitle: "Filtering creates a derived version",
     filterP: "Filtering selects taxa or samples through explicit analytical rules.",
-    responsibilityK: "What the ecosystem guarantees — and what it does not replace",
+    responsibilityK: "What BarCodeR guarantees — and what it does not replace",
     responsibilityT: "Traceability frames decisions; it does not make them for the scientist.",
-    guarantees: [
-      "Parameters and steps remain visible in the interface.",
-      "Multiple datasets and their lineage are preserved.",
-      "Diagnostics accompany methods when available.",
-      "Outputs are exportable and analyses can continue in R.",
-    ],
-    responsibilities: [
-      "Quality of the experimental design and sampling.",
-      "Relevance of primers and reference database.",
-      "Choice of thresholds, transformations, distances and models.",
-      "Biological interpretation and scope of conclusions.",
-    ],
-    guaranteeTitle: "Provided by the tool",
+    guarantees: ["Parameters and steps remain visible in the interface.", "Multiple datasets and their lineage are preserved.", "Diagnostics accompany methods when available.", "Outputs are exportable and analyses can continue in R."],
+    responsibilities: ["Quality of the experimental design and sampling.", "Relevance of taxonomic databases and annotations.", "Choice of thresholds, transformations, distances and models.", "Biological interpretation and scope of conclusions."],
+    guaranteeTitle: "Provided by BarCodeR",
     responsibilityTitle: "Remains a scientific responsibility",
     modulesK: "Detailed architecture",
-    modulesT: "Find the application modules by stage of the journey.",
-    modulesP: "This secondary view opens each functional page with its inputs, operations, outputs and cautions.",
-    discover: "Discover",
+    modulesT: "Find BarCodeR modules by stage of the workflow.",
+    modulesP: "Each page describes expected inputs, available operations, produced outputs and cautions for the module.",
+    discover: "Discover"
   };
 
-  const renderPath = (label: string, title: string, intro: string, steps: string[][], variant: "openmeta" | "barcoder") => (
-    <article className={`function-path function-path-${variant} reveal`}>
-      <div className="function-path-heading"><span>{label}</span><h3>{title}</h3><p>{intro}</p></div>
-      <ol>{steps.map(([number, stepTitle, detail]) => <li key={number}><span>{number}</span><div><b>{stepTitle}</b><p>{detail}</p></div></li>)}</ol>
-    </article>
+  const renderPath = (label: string, title: string, intro: string, steps: string[][], variant: "components" | "barcoder") => (
+    <article className={`function-path function-path-${variant} reveal`}><div className="function-path-heading"><span>{label}</span><h3>{title}</h3><p>{intro}</p></div><ol>{steps.map(([number, stepTitle, detail]) => <li key={number}><span>{number}</span><div><b>{stepTitle}</b><p>{detail}</p></div></li>)}</ol></article>
   );
 
   return <main className="functioning-page">
-    <section className="functioning-hero">
-      <div className="page-width functioning-hero-grid">
-        <div className="functioning-hero-copy reveal"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("function-paths")?.scrollIntoView({ behavior: "smooth" })}>{c.primary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("function-modules")?.scrollIntoView({ behavior: "smooth" })}>{c.secondary}<span>→</span></button></div></div>
-        <div className="ecosystem-diagram reveal" aria-label={c.bridgeTitle}>
-          <div className="ecosystem-tool ecosystem-openmeta"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><small>OpenMetaBar</small><b>FASTQ → pipeline</b></div>
-          <div className="ecosystem-bridge"><span>phyloseq</span><i>→</i></div>
-          <div className="ecosystem-tool ecosystem-barcoder"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><small>BarCodeR</small><b>diagnostics → figures</b></div>
-          <div className="ecosystem-note"><small>{c.bridge}</small><strong>{c.bridgeTitle}</strong><p>{c.bridgeP}</p></div>
-        </div>
-      </div>
-    </section>
+    <section className="functioning-hero"><div className="page-width functioning-hero-grid"><div className="functioning-hero-copy reveal"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("function-paths")?.scrollIntoView({ behavior: "smooth" })}>{c.primary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("function-modules")?.scrollIntoView({ behavior: "smooth" })}>{c.secondary}<span>→</span></button></div></div><div className="reveal delay-1"><AppPreview language={language} /></div></div></section>
 
-    <section className="section page-width function-products">
-      <div className="section-heading reveal"><div><Eyebrow>{c.productsK}</Eyebrow><h2>{c.productsT}</h2></div></div>
-      <div className="product-role-grid">
-        <article className="product-role openmeta-role reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>OpenMetaBar</small><h3>{c.openmetaRole}</h3></div></div><p>{c.openmetaText}</p><div className="role-tags">{c.openmetaTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-openmetabar.png")} alt={c.openmetaRole} /></figure></article>
-        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>BarCodeR</small><h3>{c.barcoderRole}</h3></div></div><p>{c.barcoderText}</p><div className="role-tags">{c.barcoderTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/barcoder-home-real.png")} alt={c.barcoderRole} /></figure></article>
-      </div>
-      <aside className="independence-note reveal"><span>↔</span><div><b>{c.independent}</b><p>{c.independentP}</p></div></aside>
-    </section>
+    <section className="section page-width function-products"><div className="section-heading reveal"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div></div><div className="product-role-grid"><article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>phyloseq</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-input-data.png")} alt={c.phyloseqRole} /></figure></article><article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>components</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><figure><img src={asset("app-previews/screen-data-edition.png")} alt={c.componentsRole} /></figure></article></div></section>
 
-    <section className="section section-tint function-paths-section" id="function-paths">
-      <div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.pathsK}</Eyebrow><h2>{c.pathsT}</h2></div><p>{c.pathsP}</p></div><div className="function-path-grid">{renderPath(c.fastqLabel, c.fastqTitle, c.fastqIntro, c.fastqSteps, "openmeta")}{renderPath(c.phyloseqLabel, c.phyloseqTitle, c.phyloseqIntro, c.phyloseqSteps, "barcoder")}</div></div>
-    </section>
+    <section className="section section-tint function-paths-section" id="function-paths"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.pathsK}</Eyebrow><h2>{c.pathsT}</h2></div><p>{c.pathsP}</p></div><div className="function-path-grid">{renderPath(c.objectLabel, c.objectTitle, c.objectIntro, c.objectSteps, "barcoder")}{renderPath(c.componentLabel, c.componentTitle, c.componentIntro, c.componentSteps, "components")}</div></div></section>
 
-    <section className="section page-width hpc-lifecycle">
-      <div className="section-heading reveal"><div><Eyebrow>{c.hpcK}</Eyebrow><h2>{c.hpcT}</h2></div><p>{c.hpcP}</p></div>
-      <div className="hpc-track reveal">{c.hpcSteps.map(([title, detail], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><i /><h3>{title}</h3><p>{detail}</p></article>)}</div>
-      <div className="hpc-technology-row reveal"><span>SSH</span><i>→</i><span>Slurm</span><i>→</i><span>Nextflow</span><i>→</i><span>Logs</span><i>→</i><span>phyloseq</span></div>
-    </section>
+    <section className="dataset-lineage-section"><div className="page-width dataset-lineage-grid"><div className="dataset-lineage-copy reveal"><Eyebrow>{c.lineageK}</Eyebrow><h2>{c.lineageT}</h2><p>{c.lineageP}</p><div className="edition-filtering"><article><span>✎</span><div><b>{c.editTitle}</b><p>{c.editP}</p></div></article><article><span>⌁</span><div><b>{c.filterTitle}</b><p>{c.filterP}</p></div></article></div></div><div className="lineage-tree reveal">{c.lineageNodes.map(([title, value], index) => <article className={`lineage-node lineage-node-${index}`} key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><b>{title}</b><small>{value}</small></div></article>)}</div></div></section>
 
-    <section className="dataset-lineage-section">
-      <div className="page-width dataset-lineage-grid">
-        <div className="dataset-lineage-copy reveal"><Eyebrow>{c.lineageK}</Eyebrow><h2>{c.lineageT}</h2><p>{c.lineageP}</p><div className="edition-filtering"><article><span>✎</span><div><b>{c.editTitle}</b><p>{c.editP}</p></div></article><article><span>⌁</span><div><b>{c.filterTitle}</b><p>{c.filterP}</p></div></article></div></div>
-        <div className="lineage-tree reveal">{c.lineageNodes.map(([title, text], index) => <article className={`lineage-node lineage-node-${index}`} key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><b>{title}</b><small>{text}</small></div></article>)}</div>
-      </div>
-    </section>
-
-    <section className="section page-width responsibility-section">
-      <div className="section-intro reveal"><Eyebrow>{c.responsibilityK}</Eyebrow><h2>{c.responsibilityT}</h2></div>
-      <div className="responsibility-grid">
-        <article className="responsibility-provided reveal"><span>✓</span><h3>{c.guaranteeTitle}</h3><ul>{c.guarantees.map(item => <li key={item}>{item}</li>)}</ul></article>
-        <article className="responsibility-science reveal"><span>!</span><h3>{c.responsibilityTitle}</h3><ul>{c.responsibilities.map(item => <li key={item}>{item}</li>)}</ul></article>
-      </div>
-    </section>
+    <section className="section page-width responsibility-section"><div className="section-intro reveal"><Eyebrow>{c.responsibilityK}</Eyebrow><h2>{c.responsibilityT}</h2></div><div className="responsibility-grid"><article className="responsibility-provided reveal"><span>✓</span><h3>{c.guaranteeTitle}</h3><ul>{c.guarantees.map(item => <li key={item}>{item}</li>)}</ul></article><article className="responsibility-science reveal"><span>!</span><h3>{c.responsibilityTitle}</h3><ul>{c.responsibilities.map(item => <li key={item}>{item}</li>)}</ul></article></div></section>
 
     <section className="section section-tint process-section" id="function-modules"><div className="page-width"><div className="section-heading reveal"><div><Eyebrow>{c.modulesK}</Eyebrow><h2>{c.modulesT}</h2></div><p>{c.modulesP}</p></div>{groupOrder.map((group, groupIndex) => <div className="module-group" key={group}><div className="group-heading"><b>0{groupIndex + 1}</b><span>{tx(groups[group], language)}</span><i /></div><div className="module-grid">{modules.filter(m => m.group === group).map(module => <a className="module-card" href={moduleHref(module.key)} key={module.key}><div className="module-card-top"><span>{module.order}</span><i>{module.icon}</i></div><h3>{tx(module.title, language)}</h3><p>{tx(module.purpose, language)}</p><b>{c.discover}<span>→</span></b></a>)}</div></div>)}</div></section>
   </main>;
@@ -1062,7 +889,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
   const c = language === "fr" ? { app: "Processus analytique", what: "Ce que l’utilisateur peut faire", io: "De l’entrée à la sortie", inputs: "Entrées", operations: "Opérations", outputs: "Sorties", question: "Question directrice", modules: "Sous-modules et questions", vigilance: "Rigueur et points d’attention", source: "Confronté au code source", sourceText: "Le contenu de cette page est dérivé du module ci-dessous, et non d’une description générique du logiciel.", previous: "Onglet précédent", next: "Onglet suivant", reproduce: "Ce qui est conservé", reproText: "Le dataset et les paramètres restent rattachés à la session ou au projet. Lorsqu’un historique est proposé, il sert à relire le contexte de production de la figure ou du résultat." } : { app: "Analytical process", what: "What users can do", io: "From input to output", inputs: "Inputs", operations: "Operations", outputs: "Outputs", question: "Guiding question", modules: "Submodules and questions", vigilance: "Rigour and cautions", source: "Checked against source code", sourceText: "This page content is derived from the module below, not from a generic software description.", previous: "Previous tab", next: "Next tab", reproduce: "What is retained", reproText: "The dataset and parameters remain attached to the session or project. Where histories are available, they support review of the context used to produce a figure or result." };
   return <main className={module.key === "openmetabar" ? "module-page openmetabar-page" : "module-page"}>
     <section className="module-hero page-width">
-      <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/functioning">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div>{module.key === "openmetabar" && <img className="openmetabar-page-logo" src={asset("app-previews/openmetabar-logo.png")} alt="" />}<Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p><div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
+      <div className="module-hero-copy reveal"><div className="breadcrumbs"><a href="#/functioning">{c.app}</a><span>/</span><b>{tx(module.title, language)}</b></div>{module.key === "openmetabar" && <img className="openmetabar-page-logo" src={asset("app-previews/openmetabar-logo.png")} alt="" />}<Eyebrow>{module.order} · {tx(groups[module.group], language)}</Eyebrow><h1>{tx(module.title, language)}</h1><p className="module-kicker">{tx(module.kicker, language)}</p><p className="lead">{tx(module.purpose, language)}</p>{module.key === "openmetabar" && <div className="openmetabar-optional-note"><span>i</span><div><b>{language === "fr" ? "Module optionnel" : "Optional module"}</b><p>{language === "fr" ? "OpenMetaBar n’est pas nécessaire pour utiliser BarCodeR. Cet onglet concerne uniquement les projets qui souhaitent lancer un traitement bioinformatique à partir de fichiers FASTQ sur une infrastructure distante compatible." : "OpenMetaBar is not required to use BarCodeR. This tab is only for projects that need to launch bioinformatics processing from FASTQ files on a compatible remote infrastructure."}</p></div></div>}<div className="question-callout"><span>?</span><div><small>{c.question}</small><b>{tx(module.question, language)}</b></div></div></div>
       <div className="reveal delay-1"><ModuleVisual module={module} language={language} /></div>
     </section>
     <section className="section section-tint"><div className="page-width"><div className="section-heading"><div><Eyebrow>{module.order}</Eyebrow><h2>{c.what}</h2></div><p>{tx(module.question, language)}</p></div><div className="action-grid">{module.actions.map((action, i) => <article className="action-card reveal" style={{ "--delay": `${(i % 3) * 60}ms` } as React.CSSProperties} key={action.fr}><span>{String(i + 1).padStart(2, "0")}</span><p>{tx(action, language)}</p></article>)}</div></div></section>
@@ -1286,22 +1113,6 @@ const tutorialJourneys: TutorialJourney[] = [
     modules: ["analyse"],
     caution: { fr: "La concordance dépend fortement de l’intersection des échantillons et des choix de prétraitement.", en: "Concordance strongly depends on sample intersection and preprocessing choices." }
   },
-  {
-    id: "openmetabar-run", category: "advanced", level: "advanced", status: "planned", duration: "60 min",
-    title: { fr: "Lancer un run OpenMetaBar minimal", en: "Launch a minimal OpenMetaBar run" },
-    summary: { fr: "Préparer FASTQ et design, configurer le pipeline, soumettre sur Slurm puis importer le phyloseq produit.", en: "Prepare FASTQ and design, configure the pipeline, submit through Slurm and import the resulting phyloseq object." },
-    dataset: { fr: "Mini-run FASTQ + référence · à produire", en: "FASTQ mini-run + reference · to produce" },
-    goal: { fr: "Démontrer le passage reproductible des reads bruts à un objet analysable dans BarCodeR.", en: "Demonstrate the reproducible transition from raw reads to an analysable BarCodeR object." },
-    outputs: [{ fr: "un design validé", en: "a validated design" }, { fr: "un job Slurm suivi", en: "a monitored Slurm job" }, { fr: "des logs interprétables", en: "interpretable logs" }, { fr: "un phyloseq importé", en: "an imported phyloseq" }],
-    steps: [
-      { fr: "Préparer un jeu réduit légalement redistribuable et une base de référence minimale.", en: "Prepare a small redistributable dataset and a minimal reference database." },
-      { fr: "Valider noms de fichiers, design et paramètres technologiques.", en: "Validate filenames, design and technology-specific parameters." },
-      { fr: "Prévisualiser la configuration puis soumettre le job.", en: "Preview the configuration and submit the job." },
-      { fr: "Lire états Slurm, logs Nextflow et sorties avant l’import final.", en: "Read Slurm states, Nextflow logs and outputs before final import." }
-    ],
-    modules: ["openmetabar", "input-data", "description"],
-    caution: { fr: "Ce parcours dépend d’un cluster Slurm configuré, de Nextflow et d’images de conteneurs accessibles.", en: "This journey requires a configured Slurm cluster, Nextflow and accessible container images." }
-  }
 ];
 
 const testDatasets: TestDataset[] = [
@@ -1333,20 +1144,6 @@ const testDatasets: TestDataset[] = [
     coverage: [{ fr: "multi-datasets", en: "multiple datasets" }, { fr: "concordance", en: "concordance" }, { fr: "MCOA", en: "MCOA" }],
     note: { fr: "À construire à partir de matrices distribuables et d’une question écologique simple.", en: "To be built from redistributable matrices and a simple ecological question." }
   },
-  {
-    id: "openmetabar-mini", status: "planned", title: { fr: "OpenMetaBar Mini-run", en: "OpenMetaBar Mini-run" },
-    input: { fr: "FASTQ, design et référence minimaux", en: "Minimal FASTQ, design and reference" },
-    purpose: { fr: "Rejouer l’ensemble du passage FASTQ → Slurm → Nextflow → phyloseq sur un calcul court.", en: "Replay the complete FASTQ → Slurm → Nextflow → phyloseq path in a short computation." },
-    coverage: [{ fr: "FASTQ", en: "FASTQ" }, { fr: "HPC", en: "HPC" }, { fr: "phyloseq final", en: "final phyloseq" }],
-    note: { fr: "À produire après validation des droits de redistribution et du profil d’exécution de démonstration.", en: "To be produced after validating redistribution rights and the demonstration execution profile." }
-  },
-  {
-    id: "complete-project", status: "planned", title: { fr: "Complete Analysis Project", en: "Complete Analysis Project" },
-    input: { fr: "Projet BarCodeR portable", en: "Portable BarCodeR project" },
-    purpose: { fr: "Fournir un projet déjà structuré avec datasets dérivés, historiques, figures et composition MultiView pour apprendre à reprendre un travail existant.", en: "Provide a structured project with derived datasets, histories, figures and a MultiView composition to learn how to resume existing work." },
-    coverage: [{ fr: "provenance", en: "provenance" }, { fr: "historiques", en: "histories" }, { fr: "reprise", en: "resumption" }],
-    note: { fr: "À générer lorsque le format de projet public et la politique de compatibilité de versions seront figés.", en: "To be generated once the public project format and version-compatibility policy are fixed." }
-  }
 ];
 
 function EvidencePage({ language }: { language: Language }) {
@@ -1894,10 +1691,10 @@ function ShowcasePage({ language }: { language: Language }) {
   const c = language === "fr" ? {
     heroK: "Cas d’usage · résultats · provenance",
     heroT: <>Des questions scientifiques<br /><em>aux résultats traçables.</em></>,
-    heroP: "BarCodeR ne se limite pas à exposer des méthodes. Le logiciel relie une question, un objet phyloseq, une préparation explicite, des diagnostics et des sorties réutilisables. Cette page montre quatre parcours réalistes et les résultats que l’écosystème peut produire.",
+    heroP: "BarCodeR ne se limite pas à exposer des méthodes. Le logiciel relie une question, un objet phyloseq, une préparation explicite, des diagnostics et des sorties réutilisables. Cette page montre trois parcours réalistes et les résultats que BarCodeR peut produire.",
     heroPrimary: "Explorer les cas d’usage",
     heroSecondary: "Voir la galerie",
-    metrics: [["4", "cas d’usage scientifiques"], ["11", "familles de résultats illustrées"], ["3", "figures publiques reproductibles"], ["1", "provenance lisible par résultat"]],
+    metrics: [["3", "cas d’usage scientifiques"], ["11", "familles de résultats illustrées"], ["3", "figures publiques reproductibles"], ["1", "provenance lisible par résultat"]],
     casesK: "Parcours scientifiques",
     casesT: "Commencer par la question, puis enchaîner les contrôles appropriés.",
     casesP: "Chaque cas d’usage combine plusieurs modules. Les étapes proposées constituent un cadre de travail, pas une recette automatique : le plan expérimental et les hypothèses des méthodes restent déterminants.",
@@ -1931,14 +1728,6 @@ function ShowcasePage({ language }: { language: Language }) {
         caution: "Une corrélation entre matrices ne signifie pas que les deux marqueurs détectent les mêmes taxons ni qu’ils ont la même sensibilité.",
         image: "app-previews/comparaison_matrices.png", href: "#/analyses"
       },
-      {
-        number: "04", title: "Du séquençage à la restitution", question: "Comment transformer un run de séquençage en résultats inspectables ?",
-        audience: "Plateformes · projets complets · HPC", input: "FASTQ, design, amorces, références et accès à un cluster configuré.",
-        steps: ["OpenMetaBar", "Validation", "Slurm / Nextflow", "phyloseq", "Description", "Exploration / Analyse", "MultiView"],
-        outputs: ["logs du pipeline", "objet phyloseq", "diagnostics", "figures et tableaux", "scripts R", "composition finale"],
-        caution: "L’automatisation du pipeline ne corrige pas un design incomplet, une base inadaptée ou des paramètres biologiquement non justifiés.",
-        image: "app-previews/screen-openmetabar.png", href: "#/functioning"
-      }
     ],
     galleryK: "Galerie de résultats",
     galleryT: "Voir ce que produit réellement l’application.",
@@ -1980,10 +1769,10 @@ function ShowcasePage({ language }: { language: Language }) {
   } : {
     heroK: "Use cases · outputs · provenance",
     heroT: <>From scientific questions<br /><em>to traceable results.</em></>,
-    heroP: "BarCodeR does more than expose methods. It connects a question, a phyloseq object, explicit preparation, diagnostics and reusable outputs. This page presents four realistic journeys and the results the ecosystem can produce.",
+    heroP: "BarCodeR does more than expose methods. It connects a question, a phyloseq object, explicit preparation, diagnostics and reusable outputs. This page presents three realistic journeys and the results BarCodeR can produce.",
     heroPrimary: "Explore use cases",
     heroSecondary: "View the gallery",
-    metrics: [["4", "scientific use cases"], ["11", "illustrated output families"], ["3", "reproducible public figures"], ["1", "readable provenance per result"]],
+    metrics: [["3", "scientific use cases"], ["11", "illustrated output families"], ["3", "reproducible public figures"], ["1", "readable provenance per result"]],
     casesK: "Scientific journeys",
     casesT: "Start with the question, then connect the appropriate checks.",
     casesP: "Each use case combines several modules. These steps provide a working framework, not an automatic recipe: experimental design and method assumptions remain decisive.",
@@ -2017,14 +1806,6 @@ function ShowcasePage({ language }: { language: Language }) {
         caution: "A matrix correlation does not mean both markers detect the same taxa or have the same sensitivity.",
         image: "app-previews/comparaison_matrices.png", href: "#/analyses"
       },
-      {
-        number: "04", title: "From sequencing to reporting", question: "How can a sequencing run become inspectable results?",
-        audience: "Core facilities · complete projects · HPC", input: "FASTQ, design, primers, references and access to a configured cluster.",
-        steps: ["OpenMetaBar", "Validation", "Slurm / Nextflow", "phyloseq", "Description", "Exploration / Analysis", "MultiView"],
-        outputs: ["pipeline logs", "phyloseq object", "diagnostics", "figures and tables", "R scripts", "final composition"],
-        caution: "Pipeline automation cannot correct an incomplete design, an unsuitable database or biologically unjustified parameters.",
-        image: "app-previews/screen-openmetabar.png", href: "#/functioning"
-      }
     ],
     galleryK: "Output gallery",
     galleryT: "See what the application actually produces.",
@@ -2166,26 +1947,26 @@ function ShowcasePage({ language }: { language: Language }) {
 function ReproducibilityPage({ language }: { language: Language }) {
   const [activeStep, setActiveStep] = useState(0);
   const c = language === "fr" ? {
-    k: "Reproductibilité", title: "Un résultat ne devrait jamais être une boîte noire.", p: "BarCodeR × OpenMetaBar conserve le fil entre les fichiers bruts, les transformations, les paramètres et les sorties afin de comprendre, partager et rejouer une analyse.", metrics: [["6", "étapes reliées"], ["14", "familles de sorties avec code R"], ["1", "fil continu du run à la figure"]], explore: "Explorez la chaîne de traçabilité", exploreP: "Cliquez sur une étape pour voir ce qui est conservé et ce que cela rend possible.", steps: [
-      { title: "FASTQ & design", kicker: "Le point de départ", description: "Les fichiers bruts et le design du run identifient précisément les échantillons, les marqueurs et les entrées utilisées.", keeps: ["Fichiers FASTQ", "Design expérimental", "Amorces et métadonnées"], outcome: "Un départ identifiable" },
-      { title: "OpenMetaBar", kicker: "Le calcul documenté", description: "La configuration du pipeline, le profil d’exécution et les logs décrivent comment les reads ont été traités sur le cluster.", keeps: ["Paramètres du pipeline", "Profil Nextflow", "Logs d’exécution"], outcome: "Un traitement inspectable" },
-      { title: "Objet phyloseq", kicker: "Le passage de relais", description: "Les abondances, la taxonomie et les métadonnées sont réunies dans un objet standardisé directement exploitable dans BarCodeR.", keeps: ["Table d’abondance", "Taxonomie", "Métadonnées échantillons"], outcome: "Une entrée standardisée" },
-      { title: "Préparation", kicker: "Les transformations visibles", description: "Les opérations d’édition et de filtration produisent des objets dérivés sans effacer le lien avec leur origine.", keeps: ["Filtres appliqués", "Objets dérivés", "Contexte du projet"], outcome: "Des choix retraçables" },
+    k: "Reproductibilité", title: "Un résultat ne devrait jamais être une boîte noire.", p: "BarCodeR conserve le fil entre les données importées, les transformations, les paramètres et les sorties afin de comprendre, partager et rejouer une analyse.", metrics: [["6", "étapes reliées"], ["14", "familles de sorties avec code R"], ["1", "fil continu du dataset à la figure"]], explore: "Explorer la chaîne de traçabilité", exploreP: "Cliquez sur une étape pour voir ce qui est conservé et ce que cela rend possible.", steps: [
+      { title: "Données importées", kicker: "Le point de départ", description: "L’objet phyloseq ou les composants importés identifient précisément la matière scientifique utilisée dans le projet.", keeps: ["Objet ou tables importées", "Métadonnées", "Composants optionnels"], outcome: "Un départ identifiable" },
+      { title: "Validation", kicker: "Le contrôle initial", description: "La structure, les identifiants et la cohérence entre les composantes sont vérifiés avant de poursuivre.", keeps: ["Composantes détectées", "Contrôles de cohérence", "Journal des normalisations"], outcome: "Une entrée contrôlée" },
+      { title: "Préparation", kicker: "Les corrections visibles", description: "Les opérations d’édition corrigent ou complètent l’objet sans confondre correction structurelle et choix analytique.", keeps: ["Corrections appliquées", "État du dataset", "Contexte du projet"], outcome: "Un objet documenté" },
+      { title: "Dataset dérivé", kicker: "Les transformations analytiques", description: "Les filtrations produisent des versions dérivées sans effacer le lien avec le dataset qui les a précédées.", keeps: ["Filtres appliqués", "Datasets dérivés", "Filiation des objets"], outcome: "Des choix retraçables" },
       { title: "Analyse", kicker: "Les calculs paramétrés", description: "Les méthodes, variables, distances, graines et options graphiques restent associées au résultat produit.", keeps: ["Méthode et variables", "Paramètres statistiques", "Graine et versions"], outcome: "Un calcul rejouable" },
       { title: "Sorties", kicker: "La preuve partageable", description: "Figures, tableaux, historiques et scripts R permettent de relire le contexte et de prolonger l’analyse hors de l’interface.", keeps: ["Figure et tableau", "Historique", "Script R compatible"], outcome: "Un résultat transmissible" }
     ], pillarsK: "Quatre réflexes intégrés", pillarsT: "Capturer, relier, rejouer, partager.", pillars: [["01", "Capturer", "Paramètres, versions et choix restent attachés au travail réalisé."], ["02", "Relier", "Chaque transformation conserve un lien avec les objets qui l’ont précédée."], ["03", "Rejouer", "Les historiques et le code R permettent de retrouver la recette d’un résultat."], ["04", "Partager", "Figures, tableaux et contextes peuvent circuler sans perdre leur histoire."]], limits: "La traçabilité éclaire l’analyse — elle ne remplace pas le jugement scientifique.", limitP: "Un historique complet ne rend pas automatiquement un plan expérimental valide. L’interprétation dépend toujours du design, de la qualité des données, de la base taxonomique, des hypothèses des méthodes et des choix de filtrage."
   } : {
-    k: "Reproducibility", title: "A result should never be a black box.", p: "BarCodeR × OpenMetaBar preserves the thread between raw files, transformations, parameters and outputs so an analysis can be understood, shared and replayed.", metrics: [["6", "connected steps"], ["14", "output families with R code"], ["1", "continuous thread from run to figure"]], explore: "Explore the traceability chain", exploreP: "Select a step to see what is retained and what it enables.", steps: [
-      { title: "FASTQ & design", kicker: "The starting point", description: "Raw files and run design precisely identify the samples, markers and inputs used.", keeps: ["FASTQ files", "Experimental design", "Primers and metadata"], outcome: "An identifiable start" },
-      { title: "OpenMetaBar", kicker: "Documented computing", description: "Pipeline configuration, execution profile and logs describe how reads were processed on the cluster.", keeps: ["Pipeline parameters", "Nextflow profile", "Execution logs"], outcome: "Inspectable processing" },
-      { title: "Phyloseq object", kicker: "The handover", description: "Abundances, taxonomy and metadata are gathered in a standardised object ready for BarCodeR.", keeps: ["Abundance table", "Taxonomy", "Sample metadata"], outcome: "A standardised input" },
-      { title: "Preparation", kicker: "Visible transformations", description: "Editing and filtering operations create derived objects without erasing the link to their origin.", keeps: ["Applied filters", "Derived objects", "Project context"], outcome: "Traceable choices" },
+    k: "Reproducibility", title: "A result should never be a black box.", p: "BarCodeR preserves the thread between imported data, transformations, parameters and outputs so an analysis can be understood, shared and replayed.", metrics: [["6", "connected steps"], ["14", "output families with R code"], ["1", "continuous thread from dataset to figure"]], explore: "Explore the traceability chain", exploreP: "Select a step to see what is retained and what it enables.", steps: [
+      { title: "Imported data", kicker: "The starting point", description: "The phyloseq object or imported components precisely identify the scientific material used in the project.", keeps: ["Imported object or tables", "Metadata", "Optional components"], outcome: "An identifiable start" },
+      { title: "Validation", kicker: "Initial checks", description: "Structure, identifiers and consistency across components are checked before continuing.", keeps: ["Detected components", "Consistency checks", "Normalisation log"], outcome: "A controlled input" },
+      { title: "Preparation", kicker: "Visible corrections", description: "Editing operations correct or complete the object without conflating structural correction with analytical choice.", keeps: ["Applied corrections", "Dataset state", "Project context"], outcome: "A documented object" },
+      { title: "Derived dataset", kicker: "Analytical transformations", description: "Filtering creates derived versions without erasing the link to the dataset that came before.", keeps: ["Applied filters", "Derived datasets", "Object lineage"], outcome: "Traceable choices" },
       { title: "Analysis", kicker: "Parameterised calculations", description: "Methods, variables, distances, seeds and graphical options remain associated with the result.", keeps: ["Method and variables", "Statistical parameters", "Seed and versions"], outcome: "A replayable calculation" },
       { title: "Outputs", kicker: "Shareable evidence", description: "Figures, tables, histories and R scripts make it possible to review the context and continue outside the interface.", keeps: ["Figure and table", "History", "Compatible R script"], outcome: "A transferable result" }
     ], pillarsK: "Four built-in habits", pillarsT: "Capture, connect, replay, share.", pillars: [["01", "Capture", "Parameters, versions and choices remain attached to the work performed."], ["02", "Connect", "Every transformation retains a link to the objects that came before it."], ["03", "Replay", "Histories and R code make the recipe behind a result recoverable."], ["04", "Share", "Figures, tables and context can circulate without losing their history."]], limits: "Traceability informs analysis — it does not replace scientific judgement.", limitP: "A complete history does not automatically make an experimental design valid. Interpretation still depends on design, data quality, taxonomic databases, method assumptions and filtering choices."
   };
   const step = c.steps[activeStep];
-  return <main><section className="repro-hero"><div className="page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="repro-metrics">{c.metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></div></section><section className="section page-width"><div className="section-heading"><div><Eyebrow>{c.explore}</Eyebrow><h2>{c.explore}</h2></div><p>{c.exploreP}</p></div><div className="repro-explorer"><nav aria-label={c.explore}>{c.steps.map((item, index) => <button className={index === activeStep ? "active" : ""} onClick={() => setActiveStep(index)} aria-pressed={index === activeStep} key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><b>{item.title}</b><i>→</i></button>)}</nav><article className="repro-detail" key={step.title}><div className="repro-progress"><span style={{ width: `${((activeStep + 1) / c.steps.length) * 100}%` }} /></div><small>{step.kicker}</small><h3>{step.title}</h3><p>{step.description}</p><div className="repro-keeps">{step.keeps.map(item => <span key={item}>✓ {item}</span>)}</div><div className="repro-outcome"><small>{language === "fr" ? "Ce que cela permet" : "What this enables"}</small><b>{step.outcome}</b></div></article></div></section><section className="section section-tint"><div className="page-width"><div className="section-intro"><Eyebrow>{c.pillarsK}</Eyebrow><h2>{c.pillarsT}</h2></div><div className="repro-pillars">{c.pillars.map(([number, title, text]) => <article className="reveal" key={title}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section><section className="limits-panel repro-limits page-width"><span>!</span><div><Eyebrow>{c.limits}</Eyebrow><h2>{c.limits}</h2><p>{c.limitP}</p></div></section></main>;
+  return <main><section className="repro-hero"><div className="page-width"><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p className="lead">{c.p}</p><div className="repro-metrics">{c.metrics.map(([number, label]) => <div key={label}><b>{number}</b><span>{label}</span></div>)}</div></div></section><section className="section page-width"><div className="section-heading"><div><Eyebrow>{c.explore}</Eyebrow><h2>{c.explore}</h2></div><p>{c.exploreP}</p></div><div className="repro-explorer"><nav aria-label={c.explore}>{c.steps.map((item, index) => <button className={index === activeStep ? "active" : ""} onClick={() => setActiveStep(index)} aria-pressed={index === activeStep} key={item.title}><span>{String(index + 1).padStart(2, "0")}</span><b>{item.title}</b><i>→</i></button>)}</nav><article className="repro-detail" key={step.title}><div className="repro-progress"><span style={{ width: `${((activeStep + 1) / c.steps.length) * 100}%` }} /></div><small>{step.kicker}</small><h3>{step.title}</h3><p>{step.description}</p><div className="repro-keeps">{step.keeps.map(item => <span key={item}>✓ {item}</span>)}</div><div className="repro-outcome"><small>{language === "fr" ? "Ce que cela permet" : "What this enables"}</small><b>{step.outcome}</b></div></article></div></section><section className="section section-tint"><div className="page-width"><div className="section-intro"><Eyebrow>{c.pillarsK}</Eyebrow><h2>{c.pillarsT}</h2></div><div className="repro-pillars">{c.pillars.map(([number, title, value]) => <article className="reveal" key={title}><span>{number}</span><h3>{title}</h3><p>{value}</p></article>)}</div></div></section><section className="limits-panel repro-limits page-width"><span>!</span><div><Eyebrow>{c.limits}</Eyebrow><h2>{c.limits}</h2><p>{c.limitP}</p></div></section></main>;
 }
 
 function DownloadPage({ language }: { language: Language }) {
@@ -2234,10 +2015,6 @@ function DownloadPage({ language }: { language: Language }) {
     serverP: "Installation destinée à une plateforme, une équipe ou un service mutualisé. Le stockage, les droits d’accès et les sauvegardes doivent être configurés par l’administrateur.",
     serverNeeds: ["R et packages système", "Shiny Server ou infrastructure équivalente", "Stockage persistant des projets", "Politique d’accès et de sauvegarde"],
     serverAction: "Consulter l’architecture",
-    hpcTitle: "OpenMetaBar sur cluster HPC",
-    hpcP: "OpenMetaBar complète BarCodeR lorsque le traitement part de FASTQ. Le cluster et les outils d’exécution ne sont pas fournis avec l’application.",
-    hpcNeeds: ["Connexion SSH", "Ordonnanceur Slurm", "Nextflow", "Singularity ou Apptainer", "Bases et ressources de calcul"],
-    hpcAction: "Voir le fonctionnement HPC",
     modesK: "Modes d’accès",
     modesT: "Un même logiciel, plusieurs contextes de déploiement.",
     requirementsK: "Compatibilité et prérequis",
@@ -2254,15 +2031,14 @@ function DownloadPage({ language }: { language: Language }) {
     rows: [
       ["Sources R", "Oui", "Non", "Pour installation et mises à jour", "Développement, expertise, serveur"],
       ["Windows autonome", "Non", "Non", "Pour téléchargement et mises à jour", "Utilisation locale guidée"],
-      ["Serveur mutualisé", "Sur le serveur", "Non", "Selon l’infrastructure", "Plateforme ou équipe"],
-      ["OpenMetaBar", "Selon l’installation", "Oui", "Selon le cluster", "Traitement des FASTQ sur HPC"]
+      ["Serveur mutualisé", "Sur le serveur", "Non", "Selon l’infrastructure", "Plateforme ou équipe"]
     ],
     releasesK: "Versions et statut de publication",
     releasesT: "Distinguer ce qui est exploitable de ce qui doit encore être publié.",
     releaseRows: [
       ["BarCodeR", `v${appVersion}`, "Version détectée dans app.R", "stable"],
       ["Documentation", `v${documentationVersion}`, "90 pages, 9 modules, 5 langues", "stable"],
-      ["Site public", "Lot 7", "Refonte éditoriale en cours", "progress"],
+      ["Site web", "v1.0", "Interface publique BarCodeR", "stable"],
       ["Distribution Windows", "Non publiée", "Archive et validation à produire", "pending"],
       ["Licence", "Non déclarée", "À définir avant redistribution externe", "pending"],
       ["DOI / archive", "Non publié", "À produire pour une citation pérenne", "pending"]
@@ -2272,7 +2048,7 @@ function DownloadPage({ language }: { language: Language }) {
     openScienceK: "Code et science ouverte",
     openScienceT: "Les sources sont consultables ; la licence et l’archive citable doivent encore être formalisées.",
     appRepo: "Code de BarCodeR",
-    appRepoP: "Application R/Shiny, modules analytiques, gestion des projets et intégration OpenMetaBar.",
+    appRepoP: "Application R/Shiny, modules analytiques, gestion des projets, import des données et restitution reproductible.",
     siteRepo: "Code du site",
     siteRepoP: "Site React/Vite, contenus publics, documentation intégrée et scripts de génération.",
     openGithub: "Ouvrir sur GitHub",
@@ -2284,9 +2060,9 @@ function DownloadPage({ language }: { language: Language }) {
     publicationWarningP: "Déclarer une licence, synchroniser tous les identifiants de version, produire une archive immuable, publier son DOI et ajouter un fichier CITATION.cff.",
     privacyK: "Confidentialité et télémétrie",
     privacyT: "Les données scientifiques restent locales ; des événements d’usage peuvent être transmis.",
-    privacyP: "La télémétrie est configurable depuis Paramètres > Confidentialité. Elle est conçue pour mesurer l’usage et améliorer l’estimation des durées OpenMetaBar sans transmettre le contenu biologique des projets.",
+    privacyP: "La télémétrie est configurable depuis Paramètres > Confidentialité. Elle est conçue pour mesurer l’usage technique de l’application sans transmettre le contenu biologique des projets.",
     collected: "Peut être enregistré",
-    collectedItems: ["Onglets ouverts", "Analyses lancées", "Durées des traitements OpenMetaBar", "Erreurs rencontrées", "Informations techniques d’exécution"],
+    collectedItems: ["Onglets ouverts", "Analyses lancées", "Durées techniques de certains traitements", "Erreurs rencontrées", "Informations techniques d’exécution"],
     never: "N’est pas transmis",
     neverItems: ["Tables d’abondance", "Métadonnées scientifiques", "Noms d’échantillons", "Séquences", "Nom d’utilisateur de la machine"],
     privacyNote: "Les événements sont placés dans une file locale et peuvent être envoyés ultérieurement lorsque le réseau est disponible. L’envoi peut être désactivé dans l’application et la file peut être vidée.",
@@ -2295,7 +2071,7 @@ function DownloadPage({ language }: { language: Language }) {
     helpItems: [
       ["Tutoriels", "Tester BarCodeR sur un jeu de données documenté.", "#/tutorials"],
       ["Documentation", "Consulter les guides méthodologiques et techniques.", "#/documentation"],
-      ["Fonctionnement", "Comprendre le lien entre BarCodeR et OpenMetaBar.", "#/functioning"]
+      ["Fonctionnement", "Comprendre le parcours modulaire de BarCodeR.", "#/functioning"]
     ]
   } : {
     k: "Download, install and cite",
@@ -2323,10 +2099,6 @@ function DownloadPage({ language }: { language: Language }) {
     serverP: "Installation intended for a platform, team or shared service. Storage, access rights and backups must be configured by the administrator.",
     serverNeeds: ["R and system packages", "Shiny Server or equivalent infrastructure", "Persistent project storage", "Access and backup policy"],
     serverAction: "Read the architecture",
-    hpcTitle: "OpenMetaBar on an HPC cluster",
-    hpcP: "OpenMetaBar complements BarCodeR when processing starts from FASTQ. The cluster and execution tools are not provided with the application.",
-    hpcNeeds: ["SSH connection", "Slurm scheduler", "Nextflow", "Singularity or Apptainer", "Databases and compute resources"],
-    hpcAction: "View the HPC workflow",
     modesK: "Access modes",
     modesT: "One software package, several deployment contexts.",
     requirementsK: "Compatibility and requirements",
@@ -2344,14 +2116,13 @@ function DownloadPage({ language }: { language: Language }) {
       ["R sources", "Yes", "No", "For installation and updates", "Development, expertise, server"],
       ["Standalone Windows", "No", "No", "For download and updates", "Guided local use"],
       ["Shared server", "On the server", "No", "Depends on infrastructure", "Platform or team"],
-      ["OpenMetaBar", "Depends on installation", "Yes", "Depends on cluster", "FASTQ processing on HPC"]
     ],
     releasesK: "Versions and publication status",
     releasesT: "Separate what is usable from what still needs to be published.",
     releaseRows: [
       ["BarCodeR", `v${appVersion}`, "Version detected in app.R", "stable"],
       ["Documentation", `v${documentationVersion}`, "90 pages, 9 modules, 5 languages", "stable"],
-      ["Public website", "Lot 7", "Editorial redesign in progress", "progress"],
+      ["Website", "v1.0", "Public BarCodeR interface", "stable"],
       ["Windows distribution", "Not published", "Archive and validation to produce", "pending"],
       ["License", "Not declared", "Must be defined before external redistribution", "pending"],
       ["DOI / archive", "Not published", "Must be produced for a persistent citation", "pending"]
@@ -2361,7 +2132,7 @@ function DownloadPage({ language }: { language: Language }) {
     openScienceK: "Code and open science",
     openScienceT: "Sources can be inspected; the license and citable archive still need formalisation.",
     appRepo: "BarCodeR source code",
-    appRepoP: "R/Shiny application, analytical modules, project management and OpenMetaBar integration.",
+    appRepoP: "R/Shiny application, analytical modules, project management, data import and reproducible reporting.",
     siteRepo: "Website source code",
     siteRepoP: "React/Vite website, public content, embedded documentation and generation scripts.",
     openGithub: "Open on GitHub",
@@ -2373,9 +2144,9 @@ function DownloadPage({ language }: { language: Language }) {
     publicationWarningP: "Declare a license, synchronise all version identifiers, create an immutable archive, publish its DOI and add a CITATION.cff file.",
     privacyK: "Privacy and telemetry",
     privacyT: "Scientific data remain local; usage events may be transmitted.",
-    privacyP: "Telemetry is configurable from Settings > Privacy. It is designed to measure usage and improve OpenMetaBar runtime estimation without transmitting the biological content of projects.",
+    privacyP: "Telemetry is configurable from Settings > Privacy. It is designed to measure technical application usage without transmitting the biological content of projects.",
     collected: "May be recorded",
-    collectedItems: ["Opened tabs", "Launched analyses", "OpenMetaBar processing durations", "Encountered errors", "Technical runtime information"],
+    collectedItems: ["Opened tabs", "Launched analyses", "Technical durations of selected computations", "Encountered errors", "Technical runtime information"],
     never: "Is not transmitted",
     neverItems: ["Abundance tables", "Scientific metadata", "Sample names", "Sequences", "Machine username"],
     privacyNote: "Events are queued locally and may be sent later when a network is available. Sending can be disabled in the application and the queue can be cleared.",
@@ -2384,7 +2155,7 @@ function DownloadPage({ language }: { language: Language }) {
     helpItems: [
       ["Tutorials", "Test BarCodeR with a documented dataset.", "#/tutorials"],
       ["Documentation", "Read methodological and technical guides.", "#/documentation"],
-      ["How it works", "Understand the relationship between BarCodeR and OpenMetaBar.", "#/functioning"]
+      ["How it works", "Understand BarCodeR’s modular workflow.", "#/functioning"]
     ]
   };
 
@@ -2404,7 +2175,6 @@ function DownloadPage({ language }: { language: Language }) {
         <article className="download-mode-card featured"><header><span>R</span><b>{c.sourceAvailable}</b></header><h3>{c.sourceTitle}</h3><p>{c.sourceP}</p><ul>{c.sourceNeeds.map((item) => <li key={item}>{item}</li>)}</ul><div className="download-code-stack"><div><small>{c.clone}</small><code>{cloneCommand}</code><button type="button" onClick={() => copyText("clone", cloneCommand)}>{copied === "clone" ? c.copied : c.copy}</button></div><div><small>{c.launch}</small><code>{sourceCommand}</code><button type="button" onClick={() => copyText("launch", sourceCommand)}>{copied === "launch" ? c.copied : c.copy}</button></div></div><a href="https://github.com/MLPosuphy/BarCodeR" target="_blank" rel="noreferrer">{c.sourceAction}<span>↗</span></a></article>
         <article className="download-mode-card pending"><header><span>WIN</span><b>{c.pending}</b></header><h3>{c.windowsTitle}</h3><p>{c.windowsP}</p><ul>{c.windowsNeeds.map((item) => <li key={item}>{item}</li>)}</ul><div className="download-unavailable"><span>!</span><p>{c.windowsStatus}</p></div></article>
         <article className="download-mode-card"><header><span>SRV</span><b>{c.sourceAvailable}</b></header><h3>{c.serverTitle}</h3><p>{c.serverP}</p><ul>{c.serverNeeds.map((item) => <li key={item}>{item}</li>)}</ul><a href="#/functioning">{c.serverAction}<span>→</span></a></article>
-        <article className="download-mode-card openmetabar"><header><span>HPC</span><b>OpenMetaBar</b></header><h3>{c.hpcTitle}</h3><p>{c.hpcP}</p><ul>{c.hpcNeeds.map((item) => <li key={item}>{item}</li>)}</ul><a href="#/functioning">{c.hpcAction}<span>→</span></a></article>
       </div>
     </section>
 
@@ -2423,7 +2193,7 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Télécharger" : "Download"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR × OpenMetaBar · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Logiciel scientifique pour le traitement, l’exploration et l’analyse reproductible des données de métabarcoding." : "Scientific software for processing, exploring and reproducibly analysing metabarcoding data."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Télécharger" : "Download"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -2447,11 +2217,11 @@ export default function App() {
       : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation")
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
       : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
-      : route === "/functioning" || route === "/application" ? (language === "fr" ? "Fonctionnement de l’écosystème" : "How the ecosystem works")
+      : route === "/functioning" || route === "/application" ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
       : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
       : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
       : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
-    document.title = `${label} | BarCodeR × OpenMetaBar`;
+    document.title = `${label} | BarCodeR`;
   }, [language, route, activeModule]);
 
   useEffect(() => {
