@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
@@ -510,7 +510,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "α",
     title: analysisText("Diversité au sein des échantillons", "Diversity within samples"),
     question: analysisText("La richesse ou la diversité intra-échantillon diffère-t-elle entre mes groupes ?", "Does within-sample richness or diversity differ among groups?"),
-    summary: analysisText("Calculer plusieurs indices, visualiser leur distribution et appliquer des tests adaptés au nombre de groupes et au plan d’étude.", "Compute several indices, visualise their distribution and apply tests suited to the number of groups and study design."),
+    summary: analysisText("Comparer plusieurs dimensions de la richesse et de la diversité, visualiser leur distribution et examiner les différences entre groupes.", "Compare several dimensions of richness and diversity, visualise their distribution and examine differences among groups."),
     methods: ["Observed", "Chao1", "ACE", "Shannon", "Simpson", "Inverse Simpson", "Fisher", "Faith PD"],
     requirements: ["metadata", "tree", "counts"],
     inputs: [analysisText("Table de comptes", "Count table"), analysisText("Variable de groupe", "Grouping variable"), analysisText("Arbre pour Faith PD", "Tree for Faith PD")],
@@ -528,7 +528,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "◎",
     title: analysisText("Organisation globale des communautés", "Overall community organisation"),
     question: analysisText("Comment les échantillons s’organisent-ils dans un espace multivarié ?", "How are samples organised in multivariate space?"),
-    summary: analysisText("Résumer la structure globale avec des méthodes non contraintes ou contraintes, tout en contrôlant la qualité de la représentation.", "Summarise overall structure with unconstrained or constrained methods while checking representation quality."),
+    summary: analysisText("Représenter l’organisation globale des échantillons, rechercher les gradients ou séparations et examiner les diagnostics avant de les interpréter.", "Represent the overall organisation of samples, look for gradients or separations and inspect diagnostics before interpreting them."),
     methods: ["PCA", "PCoA", "NMDS", "CCA", "RDA", "dbRDA"],
     requirements: ["metadata", "tree"],
     inputs: [analysisText("Table OTU/ASV", "OTU/ASV table"), analysisText("Métadonnées facultatives ou explicatives", "Optional or explanatory metadata"), analysisText("Arbre pour UniFrac", "Tree for UniFrac")],
@@ -544,9 +544,9 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     family: "test",
     number: "04",
     icon: "P",
-    title: analysisText("PERMANOVA et dispersion", "PERMANOVA and dispersion"),
+    title: analysisText("Différences de composition entre groupes", "Composition differences among groups"),
     question: analysisText("Une variable explique-t-elle une part de la structure multivariée ?", "Does a variable explain part of multivariate structure?"),
-    summary: analysisText("Tester les différences de centroïdes avec des permutations et vérifier séparément que les dispersions ne conduisent pas à une conclusion trompeuse.", "Test centroid differences with permutations and separately check that dispersion does not lead to a misleading conclusion."),
+    summary: analysisText("Tester si la composition diffère entre groupes et contrôler séparément si leur dispersion peut influencer la conclusion.", "Test whether composition differs among groups and separately check whether dispersion may influence the conclusion."),
     methods: ["adonis2", "PERMDISP", "Pairwise", "Sequential tests", "Marginal tests"],
     requirements: ["metadata", "tree"],
     inputs: [analysisText("Matrice de distance", "Distance matrix"), analysisText("Facteur principal et covariables", "Main factor and covariates"), analysisText("Variable de bloc pour plans appariés", "Blocking variable for paired designs")],
@@ -564,7 +564,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "Δ",
     title: analysisText("Taxons associés aux conditions", "Taxa associated with conditions"),
     question: analysisText("Quels taxons sont associés à une condition après ajustement du modèle ?", "Which taxa are associated with a condition after model adjustment?"),
-    summary: analysisText("Appliquer jusqu’à cinq moteurs sur un même jeu de taxons et comparer la significativité corrigée ainsi que la direction des effets.", "Run up to five engines on the same taxon set and compare adjusted significance and effect direction."),
+    summary: analysisText("Identifier les taxons associés aux conditions étudiées et confronter plusieurs approches lorsque leur comparaison est pertinente.", "Identify taxa associated with the studied conditions and compare several approaches when that comparison is meaningful."),
     methods: ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"],
     requirements: ["metadata", "counts"],
     inputs: [analysisText("Comptes bruts", "Raw counts"), analysisText("Variable principale et référence", "Main variable and reference"), analysisText("Covariables et effets aléatoires compatibles", "Compatible covariates and random effects")],
@@ -582,7 +582,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "⇄",
     title: analysisText("Comparer plusieurs représentations", "Compare several representations"),
     question: analysisText("Plusieurs marqueurs ou représentations racontent-ils une structure cohérente ?", "Do multiple markers or representations reveal a coherent structure?"),
-    summary: analysisText("Apparier rigoureusement les mêmes unités biologiques puis comparer distances, ordinations et configurations communes.", "Rigorously match the same biological units, then compare distances, ordinations and shared configurations."),
+    summary: analysisText("Comparer l’organisation de plusieurs datasets décrivant les mêmes échantillons et mesurer dans quelle mesure leurs structures concordent.", "Compare the organisation of several datasets describing the same samples and assess how strongly their structures agree."),
     methods: ["Mantel", "Procrustes", "PROTEST", "Co-inertia", "MCOA"],
     requirements: ["multiple", "tree"],
     inputs: [analysisText("Au moins deux datasets", "At least two datasets"), analysisText("Clé d’appariement non ambiguë", "Unambiguous matching key"), analysisText("Intersection d’échantillons suffisante", "Sufficient sample intersection")],
@@ -600,7 +600,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "⌘",
     title: analysisText("Associations entre taxons", "Associations among taxa"),
     question: analysisText("Quelles associations statistiques émergent entre taxons ou domaines ?", "Which statistical associations emerge among taxa or domains?"),
-    summary: analysisText("Construire, filtrer et comparer des réseaux simples ou multi-domaines avec des diagnostics de stabilité et de structure.", "Build, filter and compare single- or multi-domain networks with stability and structural diagnostics."),
+    summary: analysisText("Explorer les associations entre taxons, repérer les éléments structurants et comparer l’organisation de plusieurs réseaux lorsque le projet s’y prête.", "Explore associations among taxa, identify structuring elements and compare the organisation of several networks when appropriate."),
     methods: ["SPIEC-EASI", "SparCC", "Proportionality", "Correlations", "Bootstrap"],
     requirements: ["counts", "multiple"],
     inputs: [analysisText("Au moins quatre échantillons et trois taxons après préparation", "At least four samples and three taxa after preparation"), analysisText("Comptes et taxonomie", "Counts and taxonomy"), analysisText("Plusieurs datasets pour le multi-domaine", "Multiple datasets for multi-domain analysis")],
@@ -617,7 +617,7 @@ const analysisMethodCatalog: AnalysisMethodSpec[] = [
     icon: "⋈",
     title: analysisText("Regroupements dans les données", "Groupings in the data"),
     question: analysisText("Des regroupements non supervisés sont-ils compatibles avec les données ?", "Are unsupervised groupings compatible with the data?"),
-    summary: analysisText("Regrouper échantillons ou taxons, comparer les algorithmes et évaluer la qualité des partitions avant toute interprétation biologique.", "Group samples or taxa, compare algorithms and assess partition quality before biological interpretation."),
+    summary: analysisText("Rechercher des regroupements non supervisés parmi les échantillons ou les taxons et examiner leur cohérence avant de leur donner un sens biologique.", "Search for unsupervised groupings among samples or taxa and examine their consistency before assigning biological meaning."),
     methods: ["Hierarchical", "Ward", "Silhouette", "Dunn", "Heatmap", "Bootstrap"],
     requirements: [],
     inputs: [analysisText("Table OTU/ASV", "OTU/ASV table"), analysisText("Métadonnées ou taxonomie facultatives", "Optional metadata or taxonomy"), analysisText("Choix de l’unité à regrouper", "Choice of unit to cluster")],
@@ -738,7 +738,7 @@ function AnalysesPage({ language }: { language: Language }) {
     setActiveFamily(family);
     window.setTimeout(() => document.getElementById("analysis-catalog")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
   };
-  const guidePath = asset(`documentation/${language}/analyse/index.html`);
+  const guidePath = asset(`documentation/${language}/analyse/guides-methodologiques.html`);
 
   return <main className="analyses-page">
     <section className="analyses-hero page-width">
@@ -778,10 +778,36 @@ function ModuleVisual({ module, language }: { module: AppModule; language: Langu
   return <div className={`module-visual schematic theme-${module.group}`} role="img" aria-label={language === "fr" ? `Schéma fonctionnel de l’onglet ${tx(module.title, language)}` : `Functional diagram of the ${tx(module.title, language)} tab`}><div className="schematic-bar"><span /><span /><span /><b>BarCodeR / {tx(module.title, language)}</b></div><div className="schematic-body"><aside><strong>{module.icon}</strong>{modules.slice(0, 8).map((m) => <i className={m.key === module.key ? "active" : ""} key={m.key} />)}</aside><div className="schematic-content"><small>{tx(module.kicker, language)}</small><h3>{tx(module.title, language)}</h3><div className="schematic-cards"><span /><span /><span /></div><div className="schematic-lines"><i /><i /><i /><i /></div></div></div></div>;
 }
 
+const moduleTraceability: Partial<Record<string, Localized>> = {
+  openmetabar: analysisText("La configuration du run, son état et ses journaux permettent de suivre le traitement jusqu’au phyloseq récupéré et de conserver sa provenance dans le projet.", "Run configuration, status and logs make it possible to follow processing through to the retrieved phyloseq and retain its provenance in the project."),
+  "input-data": analysisText("L’import conserve un récapitulatif des contrôles et ajustements appliqués avant que l’objet rejoigne le registre des datasets.", "Import keeps a summary of checks and adjustments applied before the object joins the dataset registry."),
+  datasets: analysisText("L’onglet centralise l’état du projet et permet de le sauvegarder ou de l’exporter avec ses datasets et les historiques de figures associés.", "The tab centralises project state and lets it be saved or exported with its datasets and associated figure histories."),
+  description: analysisText("Les vues descriptives peuvent être exportées pour documenter l’état du dataset examiné sans modifier celui-ci.", "Descriptive views can be exported to document the state of the examined dataset without modifying it."),
+  "data-edition": analysisText("Les transformations effectuées sont consignées dans un journal afin de retrouver ce qui a été modifié avant de poursuivre les analyses.", "Applied transformations are recorded in a log so changes can be reviewed before continuing with analyses."),
+  filtration: analysisText("Les critères utilisés, les éléments retirés et le bilan avant/après sont conservés dans le journal de filtration au moment de l’enregistrement.", "Applied criteria, removed elements and the before/after summary are retained in the filtering log when the result is saved."),
+  exploration: analysisText("Une figure sauvegardée conserve son contexte, ses paramètres et le code R nécessaire à sa reproduction afin de pouvoir la retrouver dans l’historique et dans MultiView.", "A saved figure retains its context, parameters and the R code needed to reproduce it so it can be retrieved from history and MultiView."),
+  analyse: analysisText("Les analyses enregistrées conservent leurs paramètres, diagnostics, résultats et code R afin de rendre les choix relisibles et les figures reproductibles.", "Recorded analyses retain their parameters, diagnostics, results and R code so choices remain reviewable and figures reproducible."),
+  multiview: analysisText("Une composition peut être sauvegardée puis rouverte ou importée pour retrouver la même sélection et la même organisation de figures.", "A composition can be saved and later reopened or imported to restore the same figure selection and arrangement.")
+};
+
+const moduleTraceFlow: Partial<Record<string, Localized[]>> = {
+  openmetabar: [analysisText("FASTQ", "FASTQ"), analysisText("run", "run"), analysisText("phyloseq", "phyloseq"), analysisText("projet", "project")],
+  "input-data": [analysisText("fichier R", "R file"), analysisText("contrôle", "checks"), analysisText("dataset", "dataset"), analysisText("projet", "project")],
+  datasets: [analysisText("datasets", "datasets"), analysisText("projet", "project"), analysisText("sauvegarde", "save"), analysisText("archive", "archive")],
+  description: [analysisText("dataset", "dataset"), analysisText("vue d’ensemble", "overview"), analysisText("contrôle", "review"), analysisText("export", "export")],
+  "data-edition": [analysisText("dataset", "dataset"), analysisText("modification", "edit"), analysisText("journal", "log"), analysisText("état enregistré", "saved state")],
+  filtration: [analysisText("dataset", "dataset"), analysisText("critères", "criteria"), analysisText("bilan", "summary"), analysisText("version enregistrée", "saved version")],
+  exploration: [analysisText("dataset", "dataset"), analysisText("paramètres", "parameters"), analysisText("figure", "figure"), analysisText("code R", "R code")],
+  analyse: [analysisText("question", "question"), analysisText("paramètres", "parameters"), analysisText("résultats", "results"), analysisText("code R", "R code")],
+  multiview: [analysisText("figures", "figures"), analysisText("sélection", "selection"), analysisText("composition", "composition"), analysisText("export", "export")]
+};
+
 function ModulePage({ module, language }: { module: AppModule; language: Language }) {
   const index = modules.findIndex(m => m.key === module.key);
   const previous = modules[(index - 1 + modules.length) % modules.length];
   const next = modules[(index + 1) % modules.length];
+  const traceability = moduleTraceability[module.key];
+  const traceFlow = moduleTraceFlow[module.key];
   const documentedModules = new Set(["openmetabar", "input-data", "datasets", "description", "data-edition", "filtration", "exploration", "analyse", "multiview"]);
   const moduleDocsHref = documentedModules.has(module.key) ? asset(`documentation/${language}/${module.key}/guides-methodologiques.html`) : "#/documentation";
   const c = language === "fr" ? {
@@ -833,7 +859,7 @@ function ModulePage({ module, language }: { module: AppModule; language: Languag
 
     {module.submodules && <section className="section submodule-section"><div className="page-width"><div className="section-intro light"><Eyebrow>{c.modules}</Eyebrow><h2>{c.modules}</h2></div><div className="submodule-grid">{module.submodules.map((sub, i) => <article className="submodule-card reveal" style={{ "--delay": `${(i % 3) * 55}ms` } as React.CSSProperties} key={sub.title.fr}>{sub.image ? <img src={asset(`app-previews/${sub.image}`)} alt="" /> : <div className="submodule-placeholder"><span>{module.icon}</span><i /></div>}<div><small>{String(i + 1).padStart(2, "0")}</small><h3>{tx(sub.title, language)}</h3><p>{tx(sub.question, language)}</p></div></article>)}</div></div></section>}
 
-    <section className="section page-width method-section"><div className="method-panel caution"><Eyebrow>{c.vigilance}</Eyebrow><h2>{c.vigilance}</h2><ul>{module.cautions.map(item => <li key={item.fr}><span>!</span>{tx(item, language)}</li>)}</ul></div><div className="method-panel reproducibility"><Eyebrow>{c.reproduce}</Eyebrow><h2>{c.reproduce}</h2><p>{c.reproText}</p><div className="provenance-mini"><span>{language === "fr" ? "dataset" : "dataset"}</span><i>→</i><span>{language === "fr" ? "choix" : "choices"}</span><i>→</i><span>{language === "fr" ? "résultat" : "result"}</span><i>→</i><span>{language === "fr" ? "export" : "export"}</span></div></div></section>
+    <section className={`section page-width method-section${traceability ? "" : " single-panel"}`}><div className="method-panel caution"><Eyebrow>{c.vigilance}</Eyebrow><h2>{c.vigilance}</h2><ul>{module.cautions.map(item => <li key={item.fr}><span>!</span>{tx(item, language)}</li>)}</ul></div>{traceability && <div className="method-panel reproducibility"><Eyebrow>{c.reproduce}</Eyebrow><h2>{c.reproduce}</h2><p>{tx(traceability, language)}</p>{traceFlow && <div className="provenance-mini">{traceFlow.map((item, i) => <Fragment key={item.fr}><span>{tx(item, language)}</span>{i < traceFlow.length - 1 && <i>→</i>}</Fragment>)}</div>}</div>}</section>
 
     <section className="source-band"><div className="page-width"><div><Eyebrow>{c.docs}</Eyebrow><h2>{c.docsTitle}</h2><p>{c.docsText}</p></div><a href={moduleDocsHref} target={documentedModules.has(module.key) ? "_blank" : undefined} rel={documentedModules.has(module.key) ? "noreferrer" : undefined}><span>?</span><div><small>BarCodeR documentation</small><b>{c.docsAction} →</b></div></a></div></section>
     <nav className="page-pagination page-width" aria-label={language === "fr" ? "Navigation entre les onglets" : "Tab navigation"}><a href={moduleHref(previous.key)}><small>← {c.previous}</small><b>{tx(previous.title, language)}</b></a><a href={moduleHref(next.key)}><small>{c.next} →</small><b>{tx(next.title, language)}</b></a></nav>

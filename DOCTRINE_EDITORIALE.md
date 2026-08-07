@@ -232,3 +232,34 @@ Une fonctionnalité ou ressource non disponible n'est pas affichée comme une fo
 - Les commandes affichées doivent être vérifiées contre le code de l'application.
 - Pour la version 2.12.8, la commande de lancement de référence est `shiny::runApp()` depuis le dossier `BarCodeR_app` contenant `app.R` et `modules/`.
 - Ne pas afficher une commande de lancement simplement plausible si l'application impose un dossier de travail particulier.
+
+## Passe exactitude fonctionnelle — 7 août 2026
+
+### Source de vérité
+- Une page d’onglet doit être écrite à partir du comportement observable de la version actuelle de BarCodeR, vérifié dans le code et sa fiche d’architecture.
+- En cas de contradiction entre une ancienne capture, un ancien texte du site et l’application actuelle, l’application actuelle fait foi.
+- Une capture devenue fonctionnellement obsolète est retirée plutôt que conservée pour des raisons esthétiques.
+
+### Niveau de détail
+- Le site explique les entrées, actions, résultats et limites utiles à la décision de l’utilisateur.
+- Les fonctions R, algorithmes, paramètres exhaustifs, formules, contraintes d’implémentation et détails d’infrastructure restent dans la documentation.
+- Un nom de méthode n’est affiché sur la vitrine que s’il aide réellement l’utilisateur à s’orienter ; la question scientifique reste prioritaire.
+
+### État et persistance
+- Ne pas employer indistinctement « sauvegarder », « modifier », « créer une version » ou « exporter » : le wording doit refléter le moment où l’état du registre ou du projet change réellement.
+- Description n’est pas un module de modification.
+- Filtration recalcule une vue avant d’écrire dans le registre ; l’écriture intervient lors de l’enregistrement.
+- Data Edition et Datasets ont des responsabilités de persistance différentes qui doivent rester explicites.
+
+### Analyses
+- Dire que BarCodeR vérifie **certains** prérequis et incompatibilités, et que le niveau de contrôle dépend du module.
+- Ne jamais transformer les garde-fous actuels en garantie générale de validité statistique.
+- Exploration peut contenir des comparaisons ciblées ; ne pas la définir comme exclusivement descriptive si le code propose effectivement des tests locaux.
+
+### MultiView
+- MultiView rassemble les figures déjà sauvegardées ; il ne recalcule pas les analyses.
+- Une composition sauvegardée conserve l’organisation des figures, pas un nouveau résultat statistique.
+
+### Documentation
+- L’onglet Documentation de BarCodeR est un hub de navigation vers la documentation HTML unifiée, pas une seconde copie des guides dans Shiny.
+- Les liens profonds du site doivent pointer vers des fichiers réellement générés et être contrôlés après toute modification de structure documentaire.

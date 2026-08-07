@@ -1766,3 +1766,5 @@ footer { background: #101426; color: white; padding-top: 58px; }
 @media (min-width: 901px) {
   .section { padding-block: 96px; }
 }
+
+.method-section.single-panel .method-panel { grid-column: 1 / -1; }
