@@ -183,11 +183,26 @@ Points importants :
 
 ### `public/app-previews/`
 
-Contient les captures et aperçus de l’application.
+Contient les captures et aperçus de l’application. Les pages publiques utilisent de préférence de vraies captures de BarCodeR, affichées sans annotations ni recadrage agressif.
 
-Les chemins sont utilisés directement depuis `content.ts` et `App.tsx`. Remplacer un fichier en conservant son nom permet généralement d’actualiser une capture sans modifier le composant.
+Les captures principales de la version actuellement présentée sont :
 
-Le site public doit utiliser l’identité **BarCodeR**. Éviter de remettre en ligne d’anciennes captures contenant un ancien nom ou un ancien fonctionnement de l’application.
+```text
+screen-home-current.png
+screen-datasets-current.png
+screen-description-current.png
+screen-filtration-current.png
+screen-exploration-current.png
+screen-analyse-current.png
+screen-multiview-current.png
+screen-openmetabar-current.png
+```
+
+`HOME_SCREENSHOT_PATH` dans `src/App.tsx` définit la capture utilisée sur l’accueil. `moduleScreens` dans `src/content.ts` associe les autres captures aux pages d’onglets.
+
+Les captures sont volontairement proches du rendu réel de l’application : le site ne doit pas ajouter de faux contrôles, de résultats simulés ou d’annotations qui pourraient être confondus avec l’interface.
+
+Lors de la préparation d’une nouvelle release, remplacer les fichiers `*-current.png` par des captures issues de la version réellement publiée puis vérifier que le nom, le logo, la langue et les données de démonstration correspondent à cette release. Conserver les mêmes noms de fichiers évite de modifier les composants React.
 
 ### `public/figures/`
 

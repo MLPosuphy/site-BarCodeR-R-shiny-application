@@ -8,7 +8,7 @@ const moduleHref = (key: string) => `#/application/${key}`;
 // Main BarCodeR application screenshot displayed on the overview page.
 // Replacing this file in `public/app-previews/` updates the visual without
 // changing the page component.
-const HOME_SCREENSHOT_PATH: string | null = null;
+const HOME_SCREENSHOT_PATH: string | null = "app-previews/screen-home-current.png";
 
 const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
@@ -100,12 +100,15 @@ function HomeApplicationVisual({ language }: { language: Language }) {
   if (!HOME_SCREENSHOT_PATH) return <AppPreview language={language} />;
 
   return (
-    <div className="home-screenshot-frame">
-      <img
-        src={asset(HOME_SCREENSHOT_PATH)}
-        alt={language === "fr" ? "Page d’accueil réelle de l’application BarCodeR" : "Real BarCodeR application home page"}
-      />
-    </div>
+    <figure className="home-screenshot-figure">
+      <div className="home-screenshot-frame">
+        <img
+          src={asset(HOME_SCREENSHOT_PATH)}
+          alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
+        />
+      </div>
+      <figcaption>{language === "fr" ? "Interface actuelle de BarCodeR — projet ouvert, dataset actif et accès aux principaux modules." : "Current BarCodeR interface — open project, active dataset and access to the main modules."}</figcaption>
+    </figure>
   );
 }
 
@@ -265,11 +268,7 @@ function Landing({ language }: { language: Language }) {
         <div className="hero-meta-row"><p className="version-line"><span />{c.version}</p><a href="#/download">{c.downloadAction}<b>→</b></a></div>
       </div>
       <div className="hero-media reveal delay-1">
-        <div className="ambient-ring" />
         <HomeApplicationVisual language={language} />
-        <div className="signal-card signal-one"><span>PS</span><div><b>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</b><small>{language === "fr" ? "Complet ou partiel" : "Complete or partial"}</small></div></div>
-        <div className="signal-card signal-two"><span>FQ</span><div><b>FASTQ</b><small>{language === "fr" ? "via OpenMetaBar" : "through OpenMetaBar"}</small></div></div>
-        <div className="signal-card signal-three"><span>R</span><div><b>{language === "fr" ? "Code R" : "R code"}</b><small>{language === "fr" ? "Pour reproduire et prolonger" : "To reproduce and extend"}</small></div></div>
       </div>
       <div className="home-trust-row reveal delay-1">{c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}</div>
     </section>
@@ -289,7 +288,7 @@ function Landing({ language }: { language: Language }) {
 
     <section className="home-value-section"><div className="page-width home-value-grid">
       <div className="home-value-copy reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2><div className="home-value-list">{c.strengths.map(([number, title, text]) => <article key={title}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></div>
-      <div className="home-value-proof reveal delay-1"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="inline-link" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
+      <div className="home-value-proof reveal delay-1"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="inline-link" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
     </div></section>
 
     <section className="home-start-band"><div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div></section>
@@ -1654,7 +1653,7 @@ function ShowcasePage({ language }: { language: Language }) {
     { id: "permanova", category: "analysis" as ShowcaseCategory, image: "app-previews/permanova_dispersion.png", title: { fr: "Différences entre groupes", en: "Differences among groups" }, use: { fr: "Tester si la composition des communautés diffère entre groupes tout en examinant les diagnostics nécessaires à l’interprétation.", en: "Test whether community composition differs among groups while reviewing the diagnostics needed for interpretation." }, source: "interface", href: "#/application/analyse" },
     { id: "matrices", category: "analysis" as ShowcaseCategory, image: "app-previews/comparaison_matrices.png", title: { fr: "Concordance entre datasets", en: "Concordance across datasets" }, use: { fr: "Évaluer si plusieurs marqueurs, domaines ou représentations décrivent une organisation comparable.", en: "Assess whether several markers, domains or representations describe a comparable organisation." }, source: "interface", href: "#/application/analyse" },
     { id: "clustering", category: "analysis" as ShowcaseCategory, image: "app-previews/clustering.png", title: { fr: "Regroupements d’échantillons", en: "Sample groupings" }, use: { fr: "Explorer si les échantillons forment naturellement des ensembles et examiner la stabilité de ces regroupements.", en: "Explore whether samples naturally form groups and review the stability of those groupings." }, source: "interface", href: "#/application/analyse" },
-    { id: "multiview", category: "report" as ShowcaseCategory, image: "app-previews/screen-multiview.png", title: { fr: "Composition de résultats", en: "Result composition" }, use: { fr: "Réunir plusieurs figures sauvegardées dans une même planche pour les comparer ou les présenter ensemble.", en: "Bring several saved figures into one panel for comparison or presentation." }, source: "interface", href: "#/application/multiview" }
+    { id: "multiview", category: "report" as ShowcaseCategory, image: "app-previews/screen-multiview-current.png", title: { fr: "Composition de résultats", en: "Result composition" }, use: { fr: "Réunir plusieurs figures sauvegardées dans une même planche pour les comparer ou les présenter ensemble.", en: "Bring several saved figures into one panel for comparison or presentation." }, source: "interface", href: "#/application/multiview" }
   ];
 
   const filteredGallery = category === "all" ? gallery : gallery.filter(item => item.category === category);
@@ -1666,7 +1665,7 @@ function ShowcasePage({ language }: { language: Language }) {
   const currentOutput = gallery.find(item => item.id === selectedOutput) ?? gallery[0];
 
   return <main>
-    <section className="showcase-hero"><div className="page-width showcase-hero-grid"><div className="reveal"><Eyebrow>{c.heroK}</Eyebrow><h1>{c.heroT}</h1><p className="lead">{c.heroP}</p><div className="showcase-hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("scientific-use-cases")?.scrollIntoView({ behavior: "smooth" })}>{c.heroPrimary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("output-gallery")?.scrollIntoView({ behavior: "smooth" })}>{c.heroSecondary}<span>↘</span></button></div></div><div className="showcase-hero-visual reveal"><img src={asset("app-previews/screen-multiview.png")} alt={language === "fr" ? "Planche de résultats dans MultiView" : "Result panel in MultiView"} /><span className="showcase-float-card top">BarCodeR · MultiView</span><span className="showcase-float-card bottom">Figures · Tables · Exports</span></div></div></section>
+    <section className="showcase-hero"><div className="page-width showcase-hero-grid"><div className="reveal"><Eyebrow>{c.heroK}</Eyebrow><h1>{c.heroT}</h1><p className="lead">{c.heroP}</p><div className="showcase-hero-actions"><button className="button primary" type="button" onClick={() => document.getElementById("scientific-use-cases")?.scrollIntoView({ behavior: "smooth" })}>{c.heroPrimary}<span>↓</span></button><button className="button secondary" type="button" onClick={() => document.getElementById("output-gallery")?.scrollIntoView({ behavior: "smooth" })}>{c.heroSecondary}<span>↘</span></button></div></div><div className="showcase-hero-visual reveal"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Bibliothèque de figures MultiView dans BarCodeR" : "MultiView figure library in BarCodeR"} /></div></div></section>
 
     <section className="section page-width showcase-cases" id="scientific-use-cases"><div className="section-heading"><div><Eyebrow>{c.casesK}</Eyebrow><h2>{c.casesT}</h2></div><p>{c.casesP}</p></div><div className="showcase-case-list">{c.cases.map((item, index) => <article className="showcase-case reveal" style={{ "--delay": `${index * 50}ms` } as React.CSSProperties} key={item.number}><div className="showcase-case-image"><img src={asset(item.image)} alt="" /><span>{item.number}</span></div><div className="showcase-case-copy"><small>{item.audience}</small><h3>{item.title}</h3><blockquote>{item.question}</blockquote><div className="showcase-case-input"><b>{c.input}</b><p>{item.input}</p></div><ol>{item.steps.map((step, stepIndex) => <li key={step}><span>{String(stepIndex + 1).padStart(2, "0")}</span>{step}</li>)}</ol><div className="showcase-output-tags"><b>{c.outputs}</b><div>{item.outputs.map(output => <span key={output}>{output}</span>)}</div></div><div className="showcase-case-actions"><a href={item.href}>{c.openAnalysis}<span>→</span></a><a href="#/tutorials">{c.openTutorials}<span>↗</span></a></div></div></article>)}</div></section>
 

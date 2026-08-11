@@ -224,7 +224,7 @@ export const modules: AppModule[] = [
 
 export const moduleScreens: Record<string, ModuleScreen> = {
   accueil: {
-    image: "barcoder-home-real.png",
+    image: "screen-home-current.png",
     title: l("Reprendre le projet en un regard", "Resume the project at a glance"),
     description: l(
       "Le tableau de bord rassemble l’état de sauvegarde, le dataset actif et ses indicateurs clés, puis matérialise la progression dans le parcours analytique pour orienter immédiatement la prochaine action.",
@@ -232,7 +232,7 @@ export const moduleScreens: Record<string, ModuleScreen> = {
     )
   },
   openmetabar: {
-    image: "screen-openmetabar.png",
+    image: "screen-openmetabar-current.png",
     title: l("Préparer un run avant sa soumission", "Prepare a run before submission"),
     description: l(
       "L’onglet guide la préparation du traitement à partir des FASTQ, vérifie le contexte du run et permet ensuite de lancer puis suivre OpenMetaBar sur l’infrastructure de calcul configurée.",
@@ -248,7 +248,7 @@ export const moduleScreens: Record<string, ModuleScreen> = {
     )
   },
   datasets: {
-    image: "screen-datasets.png",
+    image: "screen-datasets-current.png",
     title: l("Piloter le dataset actif et les projets", "Manage the active dataset and projects"),
     description: l(
       "La partie haute définit le dataset de travail global ; le registre inférieur sert à sauvegarder, recharger, dupliquer, importer ou exporter des projets et leurs jeux de données.",
@@ -256,11 +256,11 @@ export const moduleScreens: Record<string, ModuleScreen> = {
     )
   },
   description: {
-    image: "screen-description.png",
-    title: l("Diagnostiquer la structure du dataset", "Diagnose dataset structure"),
+    image: "screen-description-current.png",
+    title: l("Repérer les échantillons atypiques", "Identify atypical samples"),
     description: l(
-      "Cette vue synthétise immédiatement richesse, nombre d’échantillons, profondeur médiane et sparsité, tout en indiquant les composantes disponibles et les points d’attention avant exploration ou test.",
-      "This view immediately summarizes richness, sample count, median depth and sparsity, while indicating available components and points to review before exploration or testing."
+      "L’onglet Description permet notamment de repérer les profils atypiques sur plusieurs signaux comme la profondeur, la richesse ou la dominance, puis de revenir aux autres vues descriptives pour replacer ces alertes dans le contexte du dataset.",
+      "The Description tab can notably flag atypical profiles across signals such as depth, richness or dominance, then return to the other descriptive views to place those alerts in the dataset context."
     )
   },
   "data-edition": {
@@ -271,24 +271,32 @@ export const moduleScreens: Record<string, ModuleScreen> = {
       "After choosing the dataset, separate panels provide access to metadata, the OTU table, taxonomy, imports and exports, logs and saving the new state."
     )
   },
-  exploration: {
-    image: "screen-exploration.png",
-    title: l("Construire un Barplot de façon explicite", "Build a Barplot explicitly"),
+  filtration: {
+    image: "screen-filtration-current.png",
+    title: l("Construire un filtrage en observant son effet", "Build filtering while observing its effect"),
     description: l(
-      "Le Barplot illustre le fonctionnement des explorations : choisir le dataset, la vue taxonomique et le regroupement, observer le résultat de façon interactive puis sauvegarder la figure si elle doit être comparée ou reproduite.",
-      "The Barplot illustrates the exploration workflow: choose the dataset, taxonomic view and grouping, inspect the result interactively and save the figure when it needs to be compared or reproduced."
+      "Les filtres taxonomiques et d’abondance peuvent être réglés côte à côte avec des distributions mises à jour pour aider à mesurer l’effet des seuils avant d’enregistrer la version filtrée du dataset.",
+      "Taxonomic and abundance filters can be adjusted side by side with updated distributions to help assess threshold effects before saving the filtered dataset version."
+    )
+  },
+  exploration: {
+    image: "screen-exploration-current.png",
+    title: l("Comparer la diversité de façon interactive", "Compare diversity interactively"),
+    description: l(
+      "Cette vue d’alpha-diversité montre comment BarCodeR associe paramétrage, visualisation interactive et comparaison de plusieurs datasets dans un même écran, avec sauvegarde de la figure lorsqu’elle doit être réutilisée ou comparée.",
+      "This alpha-diversity view shows how BarCodeR combines settings, interactive visualisation and comparison of several datasets in the same screen, with figure saving when it needs to be reused or compared."
     )
   },
   analyse: {
-    image: "screen-analyse.png",
-    title: l("Paramétrer une analyse différentielle", "Configure a differential analysis"),
+    image: "screen-analyse-current.png",
+    title: l("Explorer une structure multivariée en 3D", "Explore multivariate structure in 3D"),
     description: l(
-      "L’analyse différentielle illustre la logique du module Analyse : définir la question et le modèle, comparer plusieurs approches lorsqu’elles sont compatibles, examiner les diagnostics puis sauvegarder les résultats avec leurs paramètres.",
-      "Differential analysis illustrates the Analysis module workflow: define the question and model, compare several approaches when compatible, inspect diagnostics and save results with their parameters."
+      "Le module Analyse permet notamment de construire des ordinations interactives en deux ou trois dimensions, d’ajuster leur rendu et de confronter visuellement la structure des groupes avant d’interpréter les résultats associés.",
+      "The Analysis module can notably build interactive two- or three-dimensional ordinations, adjust their rendering and visually compare group structure before interpreting the associated results."
     )
   },
   multiview: {
-    image: "screen-multiview.png",
+    image: "screen-multiview-current.png",
     title: l("Retrouver et comparer les figures enregistrées", "Retrieve and compare saved figures"),
     description: l(
       "La bibliothèque rassemble les figures sauvegardées dans les autres modules, permet de les retrouver par recherche, filtres, tags ou favoris, puis d’en sélectionner plusieurs pour les comparer dans une même composition.",
