@@ -1,6 +1,8 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
+import FunctioningPageV2 from "./FunctioningPageV2";
+import AnalysesPageV2 from "./AnalysesPageV2";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
@@ -2116,8 +2118,8 @@ export default function App() {
 
   let page: React.ReactNode;
   if (activeModule) page = <ModulePage module={activeModule} language={language} />;
-  else if (route === "/functioning" || route === "/application") page = <ApplicationIndex language={language} />;
-  else if (route === "/analyses") page = <AnalysesPage language={language} />;
+  else if (route === "/functioning" || route === "/application") page = <FunctioningPageV2 language={language} />;
+  else if (route === "/analyses") page = <AnalysesPageV2 language={language} />;
   else if (route === "/showcase") page = <ShowcasePage language={language} />;
   else if (route === "/tutorials" || route === "/evidence") page = <EvidencePage language={language} />;
   else if (route === "/documentation") page = <DocumentationPage language={language} />;

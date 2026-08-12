@@ -25,6 +25,8 @@ Le site n’utilise pas de CMS ni de framework de routage externe.
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
+│   ├── FunctioningPageV2.tsx
+│   ├── AnalysesPageV2.tsx
 │   ├── content.ts
 │   ├── styles.css
 │   └── vite-env.d.ts
@@ -98,8 +100,7 @@ Ce fichier contient :
 - la gestion FR/EN ;
 - le routage ;
 - la page d’accueil ;
-- la page Fonctionnement ;
-- la page Analyses ;
+- le routage vers les pages Fonctionnement et Analyses ;
 - les Tutoriels ;
 - la page Cas d’usage ;
 - la page Documentation ;
@@ -107,7 +108,46 @@ Ce fichier contient :
 - la page Installation ;
 - les composants réutilisés par ces pages.
 
-Les grandes pages éditoriales sont encore centralisées dans ce fichier. Lors d’une refonte importante, il est possible de les déplacer dans des composants séparés sans changer leur contenu ni leurs routes.
+Les pages éditoriales historiques restent présentes dans ce fichier pour préserver la structure existante. Les versions publiques refondues de Fonctionnement et Analyses sont maintenant isolées dans des composants dédiés.
+
+### `src/FunctioningPageV2.tsx`
+
+Composant public de la route `#/functioning`. La page explique comment l’utilisateur travaille dans BarCodeR, sans détailler les méthodes statistiques.
+
+Son organisation est volontairement narrative :
+
+1. présentation générale du parcours ;
+2. rappel compact des deux voies FASTQ et phyloseq ;
+3. parcours commun en six étapes ;
+4. capture de l’application mise à jour lors du défilement, du focus ou du survol ;
+5. fonctionnement par projet et lignée des datasets ;
+6. sauvegarde, transmission et reprise du travail ;
+7. orientation vers les analyses, les tutoriels et l’installation.
+
+Les captures du parcours sont déclarées dans le tableau local `steps`. Conserver des fichiers `*-current.png` permet de remplacer les visuels d’une release sans modifier le composant.
+
+### `src/AnalysesPageV2.tsx`
+
+Composant public de la route `#/analyses`. La page présente ce que BarCodeR permet d’étudier à partir d’objectifs scientifiques, sans reproduire la documentation méthodologique.
+
+Les cinq objectifs principaux sont :
+
+1. décrire la composition des communautés ;
+2. étudier la diversité au sein des échantillons ;
+3. comparer la structure des communautés ;
+4. identifier les taxons associés à une condition ;
+5. explorer relations, regroupements et concordances.
+
+Chaque objectif associe :
+
+- une question scientifique ;
+- ce que l’utilisateur peut examiner ;
+- les analyses réellement disponibles ;
+- plusieurs figures représentatives ;
+- une limite d’interprétation essentielle ;
+- un accès au module et à la documentation.
+
+Les prérequis exhaustifs, les transformations, les distances, les hypothèses statistiques et les paramètres propres aux méthodes doivent rester dans la documentation et ne pas être réintroduits dans cette page vitrine.
 
 ### `src/styles.css`
 
