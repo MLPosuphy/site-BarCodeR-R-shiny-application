@@ -134,22 +134,15 @@ function HomeApplicationVisual({ language }: { language: Language }) {
   );
 }
 
-function HomeScrollRail({ language }: { language: Language }) {
-  const sections = language === "fr"
-    ? [["home-value", "Atouts"], ["home-data", "Données"], ["home-questions", "Questions"], ["home-start", "Démarrer"]]
-    : [["home-value", "Benefits"], ["home-data", "Data"], ["home-questions", "Questions"], ["home-start", "Start"]];
-  const [active, setActive] = useState(0);
+function HomeScrollProgress() {
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const target = window.innerHeight * .42;
-      const distances = sections.map(([id]) => {
-        const element = document.getElementById(id);
-        return element ? Math.abs(element.getBoundingClientRect().top - target) : Number.POSITIVE_INFINITY;
-      });
-      setActive(distances.indexOf(Math.min(...distances)));
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(scrollable > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100)) : 0);
     };
     const onScroll = () => {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -162,12 +155,9 @@ function HomeScrollRail({ language }: { language: Language }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [language]);
+  }, []);
 
-  return <nav className="home-scroll-rail" aria-label={language === "fr" ? "Sections de l’accueil" : "Home page sections"}>
-    <div className="home-scroll-track"><span style={{ height: `${(active / (sections.length - 1)) * 100}%` }} /></div>
-    {sections.map(([id, label], index) => <button type="button" className={active === index ? "active" : ""} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })} aria-label={label} aria-current={active === index ? "step" : undefined} key={id}><i /><span>{label}</span></button>)}
-  </nav>;
+  return <div className="home-scroll-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>;
 }
 
 function Landing({ language }: { language: Language }) {
@@ -193,22 +183,24 @@ function Landing({ language }: { language: Language }) {
     questionsK: "Questions scientifiques",
     questionsT: "Quelles questions pouvez-vous explorer avec BarCodeR ?",
     questions: [
-      ["Composition", "Quels taxons dominent mes communautés ?", "Décrire leur abondance et leur répartition à différents niveaux taxonomiques.", ["Barplots interactifs", "Heat Tree", "Qualité taxonomique"]],
-      ["Conditions", "La composition de mes communautés évolue-t-elle selon une condition ?", "Confronter la composition observée aux taxons associés à la condition étudiée.", ["Barplots ciblés", "Analyses différentielles", "MultiView"]],
-      ["Diversité", "La richesse ou la diversité varie-t-elle entre mes groupes ?", "Comparer plusieurs dimensions de la diversité au sein des échantillons.", ["Observed · Chao1", "Shannon · Simpson", "Faith PD", "Tests globaux et post-hoc"]],
-      ["Partage", "Quels taxons ou séquences sont communs ou spécifiques à mes groupes ?", "Visualiser simplement les intersections entre plusieurs ensembles.", ["Diagramme de Venn", "UpSet", "Barplots"]],
-      ["Taxonomie", "Jusqu’à quel rang mes séquences sont-elles assignées ?", "Mesurer la profondeur des assignations et la part de données encore peu résolues.", ["Qualité taxonomique", "Heat Tree", "Barplots par rang"]],
-      ["Échantillons", "Certains échantillons présentent-ils un profil atypique ?", "Repérer les profondeurs, richesses ou dominances qui s’écartent du reste du jeu de données.", ["Détection d’outliers", "Courbes de raréfaction", "Profondeur et richesse"]],
-      ["Organisation", "Comment mes échantillons s’organisent-ils les uns par rapport aux autres ?", "Faire apparaître les ressemblances, gradients et séparations dans les communautés.", ["PCoA", "NMDS", "PCA", "Ordinations 2D et 3D"]],
-      ["Environnement", "Quelles variables environnementales sont liées à la structure observée ?", "Mettre en regard l’organisation des communautés et les variables explicatives disponibles.", ["RDA · CCA", "dbRDA", "envfit", "Biplots"]],
-      ["Groupes", "La composition globale diffère-t-elle entre mes groupes ?", "Tester les différences multivariées et vérifier séparément la dispersion des groupes.", ["PERMANOVA", "PERMDISP", "Tests pairwise", "Ordination"]],
-      ["Taxons", "Quels taxons sont associés à une condition ?", "Identifier les associations robustes et confronter plusieurs méthodes lorsqu’elles sont compatibles.", ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"]],
-      ["Associations", "Quelles associations statistiques apparaissent entre les taxons ?", "Construire un réseau, explorer ses modules et repérer les taxons structurants.", ["SPIEC-EASI", "SparCC", "Proportionnalité", "Bootstrap"]],
-      ["Regroupements", "Mes échantillons ou mes taxons forment-ils des groupes cohérents ?", "Explorer des regroupements non supervisés et vérifier leur stabilité.", ["Clustering hiérarchique", "Silhouette", "Indice de Dunn", "Bootstrap"]],
-      ["Multi-marqueurs", "Plusieurs marqueurs décrivent-ils la même organisation biologique ?", "Comparer plusieurs matrices portant sur des échantillons appariés.", ["Mantel", "Procrustes · PROTEST", "Co-inertie", "MCOA"]],
-      ["Phylogénie", "Comment la diversité se répartit-elle dans la phylogénie ?", "Explorer la position des taxons et intégrer l’information phylogénétique à la diversité.", ["Arbre phylogénétique", "Faith PD", "Heat Tree"]],
-      ["Sensibilité", "Mes conclusions changent-elles lorsque je prépare les données différemment ?", "Comparer les figures obtenues à partir de plusieurs versions conservées du dataset.", ["Versions de datasets", "Ordinations", "Analyses répétées", "MultiView"]],
-      ["Synthèse", "Comment réunir plusieurs résultats pour raconter une même analyse ?", "Sélectionner les figures utiles, les confronter et construire une planche de résultats.", ["Figures sauvegardées", "Bibliothèque MultiView", "Compositions", "Export"]]
+      ["Composition", "Quels taxons sont les plus abondants dans mes échantillons ?", "Décrire la composition relative à différents rangs taxonomiques.", ["Barplots", "Heat Tree"]],
+      ["Taxon ciblé", "L’abondance d’un taxon varie-t-elle entre mes groupes ?", "Visualiser le taxon choisi et comparer sa distribution entre groupes.", ["Barplots", "Comparaisons entre groupes"]],
+      ["Diversité alpha", "La richesse ou la diversité diffère-t-elle entre mes groupes ?", "Comparer les indices adaptés, puis réaliser les tests globaux et post-hoc.", ["Alpha-diversité", "Tests globaux", "Tests post-hoc", "Faith PD si arbre"]],
+      ["Intersections", "Quels taxons ou séquences sont partagés ou spécifiques ?", "Comparer des ensembles définis avec les mêmes règles de présence et d’agrégation.", ["Venn", "UpSet"]],
+      ["Taxonomie", "Jusqu’à quel rang mes séquences sont-elles assignées ?", "Quantifier la résolution taxonomique et repérer la part restant peu assignée.", ["Qualité taxonomique", "Barplots", "Heat Tree"]],
+      ["Séquençage", "Mon effort de séquençage couvre-t-il correctement mes échantillons ?", "Examiner la profondeur et la tendance des courbes de raréfaction sans les confondre avec une preuve d’exhaustivité.", ["Courbes de raréfaction", "Profondeur de séquençage"]],
+      ["Échantillons", "Certains échantillons présentent-ils un profil atypique ?", "Repérer les écarts de profondeur, richesse ou dominance avant de décider s’ils sont biologiques ou techniques.", ["Détection d’outliers", "Profondeur", "Richesse", "Dominance"]],
+      ["Organisation", "Comment mes échantillons s’organisent-ils selon leur composition ?", "Représenter les distances ou la structure multivariée avec une méthode adaptée aux données préparées.", ["PCoA", "NMDS", "PCA", "Ordinations 2D/3D"]],
+      ["Groupes", "La composition globale diffère-t-elle entre mes groupes ?", "Visualiser la structure, tester les différences de position et contrôler séparément la dispersion.", ["Ordination", "PERMANOVA", "PERMDISP", "Tests pairwise"]],
+      ["Environnement", "Quelles variables sont associées à la structure des communautés ?", "Utiliser une ordination contrainte ou ajuster les variables sur une ordination selon l’hypothèse étudiée.", ["RDA/CCA/dbRDA", "envfit", "Biplots"]],
+      ["Différentiel", "Quels taxons sont associés à une condition ?", "Estimer les associations en tenant compte du plan d’étude et des hypothèses propres à chaque méthode.", ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"]],
+      ["Concordance", "Quels taxons sont retrouvés par plusieurs méthodes différentielles ?", "Comparer les résultats sans considérer automatiquement leur intersection comme une vérité biologique.", ["Comparaison de méthodes", "MultiView"]],
+      ["Réseaux", "Quelles associations statistiques apparaissent entre les taxons ?", "Estimer puis explorer des associations, sans les interpréter directement comme des interactions biologiques.", ["SPIEC-EASI", "SparCC", "Proportionnalité", "Bootstrap"]],
+      ["Clustering", "Des groupes non supervisés d’échantillons ou de taxons émergent-ils ?", "Construire les regroupements et examiner leur séparation ainsi que leur stabilité.", ["Clustering hiérarchique", "Silhouette", "Indice de Dunn", "Bootstrap"]],
+      ["Deux matrices", "Deux jeux de données appariés décrivent-ils une structure concordante ?", "Comparer des matrices portant sur les mêmes échantillons et interpréter séparément corrélation et superposition.", ["Mantel", "Procrustes", "PROTEST"]],
+      ["Plusieurs matrices", "Plusieurs jeux de données partagent-ils une structure commune ?", "Rechercher une organisation commune entre plusieurs matrices appariées.", ["Co-inertie", "MCOA"]],
+      ["Phylogénie", "Comment la diversité se répartit-elle dans l’arbre phylogénétique ?", "Explorer la position des taxons et calculer une diversité phylogénétique lorsque l’arbre est disponible.", ["Arbre phylogénétique", "Faith PD"]],
+      ["Sensibilité", "Mes résultats changent-ils selon la préparation des données ?", "Répéter la même analyse sur des versions documentées du dataset et comparer les sorties obtenues.", ["Versions de datasets", "Analyses répétées", "MultiView"]]
     ] as Array<[string, string, string, string[]]>,
     questionsAction: "Découvrir les analyses disponibles",
     questionsDocsAction: "Consulter la documentation",
@@ -274,22 +266,24 @@ function Landing({ language }: { language: Language }) {
     questionsK: "Scientific questions",
     questionsT: "Which questions can you explore with BarCodeR?",
     questions: [
-      ["Composition", "Which taxa dominate my communities?", "Describe their abundance and distribution at different taxonomic levels.", ["Interactive bar plots", "Heat Tree", "Taxonomy quality"]],
-      ["Conditions", "Does community composition change with a condition?", "Compare observed composition with taxa associated with the condition of interest.", ["Targeted bar plots", "Differential analyses", "MultiView"]],
-      ["Diversity", "Does richness or diversity vary among my groups?", "Compare several dimensions of within-sample diversity.", ["Observed · Chao1", "Shannon · Simpson", "Faith PD", "Global and post-hoc tests"]],
-      ["Sharing", "Which taxa or sequences are shared or specific to my groups?", "Clearly visualise intersections among several sets.", ["Venn diagram", "UpSet", "Bar plots"]],
-      ["Taxonomy", "To which rank are my sequences assigned?", "Measure assignment depth and the share of data that remain poorly resolved.", ["Taxonomy quality", "Heat Tree", "Bar plots by rank"]],
-      ["Samples", "Do some samples have an atypical profile?", "Identify sequencing depth, richness or dominance values that differ from the rest of the dataset.", ["Outlier detection", "Rarefaction curves", "Depth and richness"]],
-      ["Organisation", "How are my samples organised relative to one another?", "Reveal similarities, gradients and separations among communities.", ["PCoA", "NMDS", "PCA", "2D and 3D ordinations"]],
-      ["Environment", "Which environmental variables relate to the observed structure?", "Relate community organisation to the available explanatory variables.", ["RDA · CCA", "dbRDA", "envfit", "Biplots"]],
-      ["Groups", "Does overall composition differ among my groups?", "Test multivariate differences and separately examine group dispersion.", ["PERMANOVA", "PERMDISP", "Pairwise tests", "Ordination"]],
-      ["Taxa", "Which taxa are associated with a condition?", "Identify robust associations and compare methods when they are compatible.", ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"]],
-      ["Associations", "Which statistical associations appear among taxa?", "Build a network, explore its modules and identify structuring taxa.", ["SPIEC-EASI", "SparCC", "Proportionality", "Bootstrap"]],
-      ["Clusters", "Do my samples or taxa form coherent groups?", "Explore unsupervised clusters and assess their stability.", ["Hierarchical clustering", "Silhouette", "Dunn index", "Bootstrap"]],
-      ["Multi-marker", "Do several markers describe the same biological organisation?", "Compare several matrices built from matched samples.", ["Mantel", "Procrustes · PROTEST", "Co-inertia", "MCOA"]],
-      ["Phylogeny", "How is diversity distributed across the phylogeny?", "Explore taxon positions and include phylogenetic information in diversity analyses.", ["Phylogenetic tree", "Faith PD", "Heat Tree"]],
-      ["Sensitivity", "Do my conclusions change when I prepare the data differently?", "Compare figures produced from several retained versions of the dataset.", ["Dataset versions", "Ordinations", "Repeated analyses", "MultiView"]],
-      ["Synthesis", "How can I bring several results together into one analysis narrative?", "Select useful figures, compare them and create a result panel.", ["Saved figures", "MultiView library", "Compositions", "Export"]]
+      ["Composition", "Which taxa are most abundant in my samples?", "Describe relative composition at different taxonomic ranks.", ["Barplots", "Heat Tree"]],
+      ["Target taxon", "Does the abundance of one taxon vary among my groups?", "Visualise the selected taxon and compare its distribution among groups.", ["Barplots", "Group comparisons"]],
+      ["Alpha diversity", "Do richness or diversity differ among my groups?", "Compare suitable indices, followed by global and post-hoc tests.", ["Alpha diversity", "Global tests", "Post-hoc tests", "Faith PD with a tree"]],
+      ["Intersections", "Which taxa or sequences are shared or specific?", "Compare sets defined using the same presence and aggregation rules.", ["Venn", "UpSet"]],
+      ["Taxonomy", "To which rank are my sequences assigned?", "Quantify taxonomic resolution and identify the share that remains poorly assigned.", ["Taxonomic quality", "Barplots", "Heat Tree"]],
+      ["Sequencing", "Does sequencing effort adequately cover my samples?", "Inspect depth and rarefaction-curve trends without treating them as proof of exhaustiveness.", ["Rarefaction curves", "Sequencing depth"]],
+      ["Samples", "Do some samples have an atypical profile?", "Identify unusual depth, richness or dominance before deciding whether the cause is biological or technical.", ["Outlier detection", "Depth", "Richness", "Dominance"]],
+      ["Organisation", "How are my samples organised by community composition?", "Represent distances or multivariate structure using a method suited to the prepared data.", ["PCoA", "NMDS", "PCA", "2D/3D ordinations"]],
+      ["Groups", "Does overall composition differ among my groups?", "Visualise structure, test location differences and assess dispersion separately.", ["Ordination", "PERMANOVA", "PERMDISP", "Pairwise tests"]],
+      ["Environment", "Which variables are associated with community structure?", "Use constrained ordination or fit variables onto an ordination according to the hypothesis.", ["RDA/CCA/dbRDA", "envfit", "Biplots"]],
+      ["Differential", "Which taxa are associated with a condition?", "Estimate associations while accounting for the study design and each method’s assumptions.", ["ANCOM-BC2", "LinDA", "ALDEx2", "corncob", "MaAsLin 3"]],
+      ["Agreement", "Which taxa are recovered by several differential methods?", "Compare results without automatically treating their intersection as biological truth.", ["Method comparison", "MultiView"]],
+      ["Networks", "Which statistical associations appear among taxa?", "Estimate and explore associations without directly interpreting them as biological interactions.", ["SPIEC-EASI", "SparCC", "Proportionality", "Bootstrap"]],
+      ["Clustering", "Do unsupervised groups of samples or taxa emerge?", "Build clusters and examine their separation and stability.", ["Hierarchical clustering", "Silhouette", "Dunn index", "Bootstrap"]],
+      ["Two matrices", "Do two matched datasets describe a concordant structure?", "Compare matrices measured on the same samples and interpret correlation and superimposition separately.", ["Mantel", "Procrustes", "PROTEST"]],
+      ["Several matrices", "Do several datasets share a common structure?", "Search for a common organisation among several matched matrices.", ["Co-inertia", "MCOA"]],
+      ["Phylogeny", "How is diversity distributed across the phylogenetic tree?", "Explore taxon positions and calculate phylogenetic diversity when a tree is available.", ["Phylogenetic tree", "Faith PD"]],
+      ["Sensitivity", "Do my results change with data preparation?", "Repeat the same analysis on documented dataset versions and compare the resulting outputs.", ["Dataset versions", "Repeated analyses", "MultiView"]]
     ] as Array<[string, string, string, string[]]>,
     questionsAction: "Discover available analyses",
     questionsDocsAction: "Read the documentation",
@@ -336,7 +330,7 @@ function Landing({ language }: { language: Language }) {
   };
 
   return <main className="home-page">
-    <HomeScrollRail language={language} />
+    <HomeScrollProgress />
     <section className="hero home-hero page-width">
       <div className="hero-copy reveal reveal-rise">
         <Eyebrow>{c.badge}</Eyebrow>
@@ -367,17 +361,25 @@ function Landing({ language }: { language: Language }) {
         </div>
         <div className="pathway-connectors pathway-connectors-first" aria-hidden="true"><i /><i /></div>
         <div className="pathway-column pathway-actions">
-          <a className="pathway-node pathway-openmetabar" href="#/application/openmetabar"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><h3>OpenMetaBar</h3><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
+          <a className="pathway-node pathway-openmetabar" href="#/application/openmetabar"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
           <a className="pathway-node pathway-import" href="#/application/input-data"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
         </div>
         <div className="pathway-converge" aria-hidden="true"><i /><i /><b /></div>
         <div className="pathway-hub"><small>{language === "fr" ? "Point de convergence" : "Convergence point"}</small><strong>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</strong><p>{language === "fr" ? "Abondances · taxonomie · métadonnées" : "Abundances · taxonomy · metadata"}</p></div>
         <div className="pathway-final-connector" aria-hidden="true"><i /></div>
-        <article className="pathway-barcoder"><div><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{language === "fr" ? "Même environnement pour tous les projets" : "The same environment for every project"}</small><strong>BarCodeR</strong></span></div><p>{language === "fr" ? "Une fois les données structurées, les mêmes outils deviennent accessibles quelle que soit leur origine." : "Once data are structured, the same tools become available regardless of their origin."}</p><div><span>{language === "fr" ? "Explorer" : "Explore"}</span><span>{language === "fr" ? "Analyser" : "Analyse"}</span><span>{language === "fr" ? "Visualiser" : "Visualise"}</span><span>{language === "fr" ? "Exporter" : "Export"}</span></div></article>
+        <article className="pathway-barcoder"><div><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{language === "fr" ? "Un environnement commun" : "One shared environment"}</small><strong>BarCodeR</strong></span></div><p>{language === "fr" ? "Une fois les données structurées, explorez-les et choisissez les analyses adaptées à votre question." : "Once the data are structured, explore them and select analyses suited to your question."}</p><div><span>{language === "fr" ? "Explorer" : "Explore"}</span><span>{language === "fr" ? "Analyser" : "Analyse"}</span><span>{language === "fr" ? "Visualiser" : "Visualise"}</span><span>{language === "fr" ? "Exporter" : "Export"}</span></div></article>
+        <div className="pathway-results">
+          <div className="pathway-results-copy"><small>{language === "fr" ? "Exemples de sorties" : "Example outputs"}</small><strong>{language === "fr" ? "Des données structurées aux figures interprétables" : "From structured data to interpretable figures"}</strong><p>{language === "fr" ? "Explorez les résultats dans l’interface, sauvegardez les figures utiles et retrouvez leur code R." : "Explore results in the interface, save useful figures and retrieve their R code."}</p></div>
+          {[
+            ["barplot.png", language === "fr" ? "Barplots" : "Barplots"],
+            ["ordinations.png", language === "fr" ? "Ordinations" : "Ordinations"],
+            ["alpha_diversite.png", language === "fr" ? "Alpha-diversité" : "Alpha diversity"]
+          ].map(([image, label]) => <figure key={image}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Exemple de figure ${label} produite avec BarCodeR` : `Example ${label} figure produced with BarCodeR`} /></div><figcaption>{label}</figcaption></figure>)}
+        </div>
       </div>
     </section>
 
-    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" style={{ "--delay": `${(index % 4) * 65}ms` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map(analysis => <b key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
+    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" style={{ "--delay": `${(index % 3) * 65}ms` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map(analysis => <b key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
 
     <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><a className="featured" href="#/tutorials"><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a><a href="#/download"><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small>{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
   </main>;

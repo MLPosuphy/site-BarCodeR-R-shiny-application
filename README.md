@@ -202,11 +202,11 @@ screen-openmetabar-current.png
 
 Sur l’accueil, `HomeApplicationVisual` affiche la capture complète dans un cadre interactif. Un clic ouvre une vue agrandie refermable au bouton, au clic sur l’arrière-plan ou avec la touche `Échap`.
 
-L’ordre de l’accueil est volontairement : promesse produit, preuve visuelle, grille des bénéfices, mise en avant de MultiView, convergence FASTQ/phyloseq, questions scientifiques et analyses proposées, tutoriels, puis installation. Les deux entrées doivent toujours converger vers un objet phyloseq avant de rejoindre le même environnement BarCodeR ; ne pas réintroduire sur l’accueil un parcours rigide module par module.
+L’ordre de l’accueil est volontairement : promesse produit, preuve visuelle, grille des bénéfices, mise en avant de MultiView, convergence FASTQ/phyloseq, aperçu de figures produites, questions scientifiques et analyses proposées, tutoriels, puis installation. Les deux entrées doivent toujours converger vers un objet phyloseq avant de rejoindre le même environnement BarCodeR ; ne pas réintroduire sur l’accueil un parcours rigide module par module.
 
-Les interactions propres à l’accueil se trouvent à la fin de `src/styles.css` : révélations progressives au défilement, repère latéral des grandes sections, animation du flux de données, effets de survol des cartes et agrandissement de la capture. Elles respectent `prefers-reduced-motion`. Le composant `HomeScrollRail` dans `src/App.tsx` gère le repère de progression visible sur les grands écrans.
+Les interactions propres à l’accueil se trouvent à la fin de `src/styles.css` : révélations progressives au défilement, barre horizontale discrète de progression, animation du flux de données, effets de survol des cartes et agrandissement de la capture. Elles respectent `prefers-reduced-motion`. Le composant `HomeScrollProgress` dans `src/App.tsx` gère la progression de lecture sans ajouter de navigation latérale.
 
-Chaque question scientifique affichée sur l’accueil doit rester associée à une ou plusieurs analyses réellement disponibles dans l’application. Les méthodes proposées sont des pistes d’analyse, pas un assistant automatique de choix statistique.
+Chaque question scientifique affichée sur l’accueil doit rester associée à une ou plusieurs analyses réellement disponibles dans l’application. Les formulations doivent distinguer description, visualisation, test et diagnostic : une ordination ne remplace pas un test, une PERMANOVA doit être interprétée avec la dispersion, et un réseau d’associations ne prouve pas des interactions biologiques.
 
 Les captures sont volontairement proches du rendu réel de l’application : le site ne doit pas ajouter de faux contrôles, de résultats simulés ou d’annotations qui pourraient être confondus avec l’interface.
 
