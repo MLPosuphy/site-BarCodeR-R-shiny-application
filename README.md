@@ -200,6 +200,10 @@ screen-openmetabar-current.png
 
 `HOME_SCREENSHOT_PATH` dans `src/App.tsx` définit la capture utilisée sur l’accueil. `moduleScreens` dans `src/content.ts` associe les autres captures aux pages d’onglets.
 
+Sur l’accueil, `HomeApplicationVisual` affiche la capture complète dans un cadre interactif. Un clic ouvre une vue agrandie refermable au bouton, au clic sur l’arrière-plan ou avec la touche `Échap`. Les effets de survol et le mouvement très léger sont définis à la fin de `src/styles.css` et respectent `prefers-reduced-motion`.
+
+L’ordre de l’accueil est volontairement : promesse produit, preuve visuelle, raisons d’utiliser BarCodeR, convergence FASTQ/phyloseq, questions couvertes, puis installation et tutoriels. Les deux entrées doivent toujours converger vers une formulation générale de l’exploration et de l’analyse dans BarCodeR ; ne pas réintroduire sur l’accueil un parcours rigide module par module.
+
 Les captures sont volontairement proches du rendu réel de l’application : le site ne doit pas ajouter de faux contrôles, de résultats simulés ou d’annotations qui pourraient être confondus avec l’interface.
 
 Lors de la préparation d’une nouvelle release, remplacer les fichiers `*-current.png` par des captures issues de la version réellement publiée puis vérifier que le nom, le logo, la langue et les données de démonstration correspondent à cette release. Conserver les mêmes noms de fichiers évite de modifier les composants React.

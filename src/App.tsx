@@ -97,74 +97,94 @@ function AppPreview({ language }: { language: Language }) {
 }
 
 function HomeApplicationVisual({ language }: { language: Language }) {
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExpanded(false);
+    };
+    document.body.classList.add("screenshot-open");
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.classList.remove("screenshot-open");
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [expanded]);
+
   if (!HOME_SCREENSHOT_PATH) return <AppPreview language={language} />;
 
   return (
-    <figure className="home-screenshot-figure">
-      <div className="home-screenshot-frame">
+    <>
+      <figure className="home-screenshot-figure">
+        <button className="home-screenshot-frame" type="button" onClick={() => setExpanded(true)} aria-label={language === "fr" ? "Agrandir la capture de BarCodeR" : "Enlarge the BarCodeR screenshot"}>
         <img
           src={asset(HOME_SCREENSHOT_PATH)}
           alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
         />
-      </div>
-      <figcaption>{language === "fr" ? "Interface actuelle de BarCodeR — projet ouvert, dataset actif et accès aux principaux modules." : "Current BarCodeR interface — open project, active dataset and access to the main modules."}</figcaption>
-    </figure>
+          <span>{language === "fr" ? "Explorer l’interface" : "Explore the interface"}<b>↗</b></span>
+        </button>
+        <figcaption>{language === "fr" ? "Vue réelle de l’espace de travail BarCodeR." : "Real view of the BarCodeR workspace."}</figcaption>
+      </figure>
+      {expanded && <div className="screenshot-lightbox" role="dialog" aria-modal="true" aria-label={language === "fr" ? "Capture agrandie de BarCodeR" : "Enlarged BarCodeR screenshot"} onClick={() => setExpanded(false)}>
+        <button type="button" autoFocus onClick={() => setExpanded(false)} aria-label={language === "fr" ? "Fermer" : "Close"}>×</button>
+        <img src={asset(HOME_SCREENSHOT_PATH)} alt={language === "fr" ? "Interface BarCodeR en grand format" : "Large BarCodeR interface view"} onClick={event => event.stopPropagation()} />
+      </div>}
+    </>
   );
 }
 
 function Landing({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    badge: "Analyse interactive du métabarcoding",
-    title: <>Analysez vos données de métabarcoding,<br /><em>sans perdre la maîtrise de vos méthodes.</em></>,
-    intro: "BarCodeR centralise la préparation des données, leur exploration, les analyses statistiques guidées et la comparaison des résultats dans une même application. Importez directement un objet phyloseq complet ou partiel, ou partez de fichiers FASTQ via le module OpenMetaBar.",
-    workflowAction: "Découvrir le parcours",
-    analysesAction: "Voir les questions scientifiques",
-    downloadAction: "Installer BarCodeR",
-    version: "Version présentée : BarCodeR v2.12.8",
-    metrics: [
-      ["PS", "phyloseq", "Import direct d’un objet complet ou partiel"],
-      ["FQ", "FASTQ", "Traitement en amont via OpenMetaBar"],
-      ["R", "code exportable", "Reproduire ou prolonger une analyse hors de l’interface"],
-      ["LOCAL", "données sous contrôle", "Les analyses s’exécutent sur votre installation"]
-    ],
+    badge: "Exploration et analyse interactives de données de métabarcoding",
+    title: <>Analysez vos données de métabarcoding de A à Z,<br /><em>de façon interactive et reproductible.</em></>,
+    intro: "De vos fichiers FASTQ ou de votre objet phyloseq jusqu’aux figures et résultats statistiques, BarCodeR réunit dans une même interface la préparation, l’exploration, l’analyse et la comparaison de vos données. Ajustez chaque étape, gardez la trace de vos choix et exportez vos résultats sans reconstruire tout le workflow à la main.",
+    workflowAction: "Découvrir BarCodeR",
+    downloadAction: "Installer BarCodeR · v2.12.8",
     journeysK: "Commencer avec vos données",
     journeysT: "Deux points d’entrée, puis un même environnement d’analyse.",
-    journeysP: "BarCodeR s’adapte à l’étape où se trouve votre projet. Si votre objet phyloseq existe déjà, vous l’importez directement. Si vous partez de FASTQ, le module OpenMetaBar permet de lancer le traitement sur une infrastructure HPC puis de récupérer l’objet phyloseq dans le projet.",
+    journeysP: "Vous partez de séquences brutes ? OpenMetaBar les transforme d’abord en données structurées. Vous disposez déjà d’un objet phyloseq ? Importez-le directement. Dans les deux cas, vos données rejoignent ensuite le même espace d’exploration et d’analyse dans BarCodeR.",
     phyloseqTitle: "J’ai déjà un objet phyloseq",
     phyloseqTag: "Import direct",
-    phyloseqText: "Chargez un objet phyloseq complet ou partiel au format R, vérifiez ce qu’il contient puis poursuivez avec les modules de description, d’édition, de filtration et d’analyse.",
-    phyloseqSteps: ["Projet", "Import", "Description", "Analyses", "Export"],
+    phyloseqText: "Le traitement des séquences a déjà été réalisé et les tables utiles sont regroupées dans un objet phyloseq. Importez cet objet dans BarCodeR pour commencer directement l’exploration et l’analyse.",
+    phyloseqSteps: ["Objet phyloseq", "Import direct"],
     phyloseqAction: "Voir l’import des données",
     componentsTitle: "Je pars de fichiers FASTQ",
-    componentsTag: "Module optionnel",
-    componentsText: "Configurez et suivez un traitement OpenMetaBar depuis BarCodeR, sur une infrastructure distante compatible, puis récupérez le phyloseq produit pour poursuivre l’analyse dans la même application.",
-    componentsSteps: ["Projet", "FASTQ", "OpenMetaBar", "phyloseq", "Analyses"],
+    componentsTag: "Séquences brutes",
+    componentsText: "Les FASTQ contiennent les séquences produites par le séquenceur. Elles doivent d’abord être traitées avec OpenMetaBar sur une infrastructure compatible afin de produire l’objet phyloseq qui sera analysé dans BarCodeR.",
+    componentsSteps: ["FASTQ", "OpenMetaBar", "Objet phyloseq"],
     componentsAction: "Découvrir l’onglet OpenMetaBar",
-    questionsK: "Partir de la question scientifique",
-    questionsT: "Cherchez d’abord ce que vous voulez comprendre.",
-    questionsP: "Le site présente les possibilités de BarCodeR par question scientifique. Les choix techniques, les paramètres et les détails méthodologiques restent documentés dans la documentation dédiée.",
+    questionsK: "Questions scientifiques",
+    questionsT: "BarCodeR permet d’explorer de nombreuses dimensions de vos données.",
+    questionsP: "Les questions ci-dessous correspondent aux explorations et analyses réellement disponibles. BarCodeR fournit les outils ; le choix de la méthode reste lié à votre plan expérimental et à vos données.",
     questions: [
-      ["Composition", "Quels taxons dominent ou structurent mes communautés ?", "Explorer leur abondance et leur répartition selon les groupes étudiés."],
-      ["Diversité", "La diversité diffère-t-elle entre mes échantillons ou mes groupes ?", "Comparer la richesse et plusieurs dimensions de la diversité."],
-      ["Structure", "Comment mes échantillons s’organisent-ils les uns par rapport aux autres ?", "Visualiser les grands gradients et les ressemblances entre communautés."],
-      ["Effet", "Une variable est-elle associée à la structure des communautés ?", "Tester une hypothèse multivariée avec les contrôles associés."],
+      ["Composition", "Quels taxons dominent mes communautés ?", "Comparer leur abondance et leur répartition entre échantillons ou groupes."],
+      ["Diversité", "La diversité varie-t-elle entre mes groupes ?", "Étudier la richesse et plusieurs dimensions de la diversité intra-échantillon."],
+      ["Partage", "Quels taxons ou séquences sont communs ou spécifiques ?", "Visualiser les intersections entre plusieurs ensembles."],
+      ["Taxonomie", "Jusqu’à quel niveau mes séquences sont-elles assignées ?", "Évaluer la qualité et la profondeur des assignations taxonomiques."],
+      ["Échantillons", "Certains échantillons présentent-ils un profil atypique ?", "Repérer les profondeurs, richesses ou dominances qui sortent du profil attendu."],
+      ["Structure", "Comment mes échantillons s’organisent-ils les uns par rapport aux autres ?", "Visualiser ressemblances, gradients et regroupements dans les communautés."],
+      ["Groupes", "La composition globale diffère-t-elle entre mes groupes ?", "Tester les différences de composition et examiner leur dispersion."],
       ["Taxons", "Quels taxons sont associés à une condition ?", "Comparer plusieurs approches d’analyse différentielle dans un même cadre."],
-      ["Comparaison", "Plusieurs datasets ou marqueurs racontent-ils une histoire cohérente ?", "Mettre en regard plusieurs représentations d’un même système biologique."]
+      ["Relations", "Quelles associations apparaissent entre taxons ?", "Construire et explorer des réseaux d’associations."],
+      ["Phylogénie", "Comment la diversité se répartit-elle dans la phylogénie ?", "Explorer un arbre lorsque les données phylogénétiques sont disponibles."],
+      ["Matrices", "Deux représentations de mes données racontent-elles la même histoire ?", "Comparer des structures multivariées issues de plusieurs matrices."],
+      ["Regroupements", "Mes échantillons forment-ils des groupes cohérents ?", "Explorer différents regroupements et les diagnostics associés."]
     ],
-    questionsAction: "Explorer toutes les questions",
+    questionsAction: "Découvrir les analyses disponibles",
+    questionsDocsAction: "Consulter la documentation",
     strengthsK: "Pourquoi utiliser BarCodeR",
-    strengthsT: "Rendre les analyses plus accessibles sans les transformer en boîte noire.",
+    strengthsT: "Un environnement unique pour travailler plus clairement, de vos données à vos résultats.",
     strengths: [
-      ["01", "Une interface réellement interactive", "Explorez les données, modifiez les paramètres et examinez les résultats directement dans l’application avant de les exporter."],
-      ["02", "Un parcours guidé mais transparent", "BarCodeR signale les prérequis, incompatibilités et points de vigilance lorsqu’ils sont pertinents, tout en laissant les choix analytiques à l’utilisateur."],
-      ["03", "Des datasets adaptés à chaque question", "L’édition et la filtration permettent de préparer différentes versions d’un projet sans perdre le contexte des transformations effectuées."],
-      ["04", "Des résultats reproductibles", "Les figures, tableaux, paramètres, historiques et scripts R permettent de retrouver comment un résultat a été produit et de poursuivre le travail hors de l’interface."]
+      ["01", "Tout réunir dans un même projet", "Datasets, transformations, figures et historiques restent organisés dans un espace de travail commun.", "Projets & datasets"],
+      ["02", "Explorer les résultats de façon interactive", "Modifiez les paramètres, observez leur effet et examinez les visualisations avant de les sauvegarder ou de les exporter.", "Visualisations interactives"],
+      ["03", "Retrouver comment un résultat a été obtenu", "Paramètres, historiques et code R exportable permettent de reprendre ou prolonger le travail hors de l’interface.", "Traçabilité & code R"],
+      ["04", "Comparer plusieurs résultats au même endroit", "MultiView rassemble les figures sauvegardées pour les filtrer, les confronter côte à côte et créer des compositions.", "Bibliothèque MultiView"]
     ],
     proofK: "Comparer et restituer",
     proofT: "MultiView rassemble les résultats que vous avez choisi de conserver.",
     proofP: "Les figures sauvegardées depuis les différents modules sont réunies dans une bibliothèque commune. Vous pouvez les rechercher, les comparer côte à côte, construire des compositions et exporter une planche de résultats sans perdre leur contexte d’origine.",
     proofAction: "Découvrir MultiView",
-    showcaseAction: "Voir des exemples de résultats",
     audienceK: "Pensé pour plusieurs profils",
     audienceT: "Un même projet, différents niveaux d’expertise.",
     audienceP: "BarCodeR vise à faciliter le travail des biologistes et écologues tout en conservant suffisamment de transparence pour les utilisateurs avancés, les bioinformaticiens et les plateformes.",
@@ -175,66 +195,67 @@ function Landing({ language }: { language: Language }) {
       ["Plateformes & équipes", "Proposer un environnement commun pour préparer, analyser, reprendre et partager des projets de métabarcoding.", "Consulter la documentation", "#/documentation"]
     ],
     finalK: "Commencer avec BarCodeR",
-    finalT: "Importez vos données, explorez-les, préparez-les puis répondez à vos questions scientifiques.",
-    finalP: "Le site présente le fonctionnement général et les possibilités de l’application. La documentation prend ensuite le relais pour les paramètres, les méthodes et les détails techniques.",
+    finalT: "Installez BarCodeR et prenez l’application en main à votre rythme.",
+    finalP: "BarCodeR v2.12.8 est actuellement distribué comme application R/Shiny. Il s’utilise localement dans un navigateur sous Windows, macOS ou Linux, sous réserve de disposer de R et des dépendances nécessaires. Aucun installateur autonome .exe n’est fourni dans cette version.",
+    finalInstallLabel: "Version actuelle",
+    finalInstallMeta: "BarCodeR v2.12.8 · sources R/Shiny",
+    finalTutorialLabel: "Premiers pas",
+    finalTutorialMeta: "Parcours guidés avec un jeu de données public",
     finalTutorial: "Voir les tutoriels",
-    finalDocs: "Ouvrir la documentation",
     finalDownload: "Installer BarCodeR",
     citationK: "Projet scientifique",
     citationT: "BarCodeR est conçu pour être utilisé, compris et cité.",
     citationP: "La version utilisée, les modalités d’installation et les informations de citation sont regroupées dans l’espace de téléchargement."
   } : {
-    badge: "Interactive metabarcoding analysis",
-    title: <>Analyse your metabarcoding data,<br /><em>without losing control of your methods.</em></>,
-    intro: "BarCodeR centralises data preparation, exploration, guided statistical analyses and result comparison in one application. Import a complete or partial phyloseq object directly, or start from FASTQ files through the OpenMetaBar module.",
-    workflowAction: "Discover the workflow",
-    analysesAction: "View scientific questions",
-    downloadAction: "Install BarCodeR",
-    version: "Version presented: BarCodeR v2.12.8",
-    metrics: [
-      ["PS", "phyloseq", "Direct import of a complete or partial object"],
-      ["FQ", "FASTQ", "Upstream processing through OpenMetaBar"],
-      ["R", "exportable code", "Reproduce or extend an analysis outside the interface"],
-      ["LOCAL", "data under control", "Analyses run on your installation"]
-    ],
+    badge: "Interactive exploration and analysis of metabarcoding data",
+    title: <>Analyse your metabarcoding data from end to end,<br /><em>interactively and reproducibly.</em></>,
+    intro: "From FASTQ files or an existing phyloseq object to statistical results and figures, BarCodeR brings data preparation, exploration, analysis and comparison into one interface. Adjust each step, retain a record of your choices and export results without rebuilding the whole workflow by hand.",
+    workflowAction: "Discover BarCodeR",
+    downloadAction: "Install BarCodeR · v2.12.8",
     journeysK: "Start with your data",
     journeysT: "Two entry points, then one analysis environment.",
-    journeysP: "BarCodeR adapts to the stage of your project. Import an existing phyloseq object directly, or use the OpenMetaBar module to process FASTQ files on a compatible HPC infrastructure and retrieve the resulting phyloseq object into the project.",
+    journeysP: "Starting from raw sequences? OpenMetaBar first turns them into structured data. Already have a phyloseq object? Import it directly. Either way, your data then enter the same exploration and analysis environment in BarCodeR.",
     phyloseqTitle: "I already have a phyloseq object",
     phyloseqTag: "Direct import",
-    phyloseqText: "Load a complete or partial phyloseq object stored in an R file, inspect its available components, then continue with description, editing, filtering and analysis modules.",
-    phyloseqSteps: ["Project", "Import", "Description", "Analyses", "Export"],
+    phyloseqText: "Sequence processing has already been completed and the useful tables are grouped in a phyloseq object. Import it into BarCodeR to move directly into exploration and analysis.",
+    phyloseqSteps: ["Phyloseq object", "Direct import"],
     phyloseqAction: "View data import",
     componentsTitle: "I start from FASTQ files",
-    componentsTag: "Optional module",
-    componentsText: "Configure and monitor an OpenMetaBar run from BarCodeR on a compatible remote infrastructure, then retrieve the produced phyloseq object and continue the analysis in the same application.",
-    componentsSteps: ["Project", "FASTQ", "OpenMetaBar", "phyloseq", "Analyses"],
+    componentsTag: "Raw sequences",
+    componentsText: "FASTQ files contain sequences produced by the sequencer. They must first be processed with OpenMetaBar on a compatible infrastructure to produce the phyloseq object that will be analysed in BarCodeR.",
+    componentsSteps: ["FASTQ", "OpenMetaBar", "Phyloseq object"],
     componentsAction: "Discover the OpenMetaBar tab",
-    questionsK: "Start from the scientific question",
-    questionsT: "First decide what you want to understand.",
-    questionsP: "The website presents BarCodeR capabilities through scientific questions. Technical choices, parameters and methodological details remain in the dedicated documentation.",
+    questionsK: "Scientific questions",
+    questionsT: "BarCodeR lets you explore many dimensions of your data.",
+    questionsP: "The questions below match explorations and analyses that are actually available. BarCodeR provides the tools; method selection still depends on your experimental design and data.",
     questions: [
-      ["Composition", "Which taxa dominate or structure my communities?", "Explore abundance and distribution across the groups being studied."],
-      ["Diversity", "Does diversity differ among my samples or groups?", "Compare richness and several dimensions of diversity."],
-      ["Structure", "How are my samples organised relative to each other?", "Visualise major gradients and similarities among communities."],
-      ["Effect", "Is a variable associated with community structure?", "Test a multivariate hypothesis with associated checks."],
-      ["Taxa", "Which taxa are associated with a condition?", "Compare several differential-analysis approaches in a common framework."],
-      ["Comparison", "Do several datasets or markers tell a coherent story?", "Compare several representations of the same biological system."]
+      ["Composition", "Which taxa dominate my communities?", "Compare their abundance and distribution among samples or groups."],
+      ["Diversity", "Does diversity vary among my groups?", "Study richness and several dimensions of within-sample diversity."],
+      ["Sharing", "Which taxa or sequences are shared or specific?", "Visualise intersections among several sets."],
+      ["Taxonomy", "How deeply are my sequences assigned?", "Assess the quality and depth of taxonomic assignments."],
+      ["Samples", "Do some samples have an atypical profile?", "Identify depth, richness or dominance values outside the expected profile."],
+      ["Structure", "How are my samples organised relative to one another?", "Visualise similarities, gradients and groupings among communities."],
+      ["Groups", "Does overall composition differ among my groups?", "Test composition differences and examine dispersion."],
+      ["Taxa", "Which taxa are associated with a condition?", "Compare several differential-analysis approaches in a shared framework."],
+      ["Relationships", "Which associations appear among taxa?", "Build and explore association networks."],
+      ["Phylogeny", "How is diversity distributed across the phylogeny?", "Explore a tree when phylogenetic data are available."],
+      ["Matrices", "Do two representations of my data tell the same story?", "Compare multivariate structures derived from several matrices."],
+      ["Clusters", "Do my samples form coherent groups?", "Explore different groupings and the associated diagnostics."]
     ],
-    questionsAction: "Explore all questions",
+    questionsAction: "Discover available analyses",
+    questionsDocsAction: "Read the documentation",
     strengthsK: "Why use BarCodeR",
-    strengthsT: "Make analyses more accessible without turning them into a black box.",
+    strengthsT: "One environment to work more clearly from data to results.",
     strengths: [
-      ["01", "A genuinely interactive interface", "Explore data, adjust parameters and inspect results directly in the application before exporting them."],
-      ["02", "Guided but transparent workflows", "BarCodeR flags prerequisites, incompatibilities and cautions when relevant while leaving analytical decisions to the user."],
-      ["03", "Datasets adapted to each question", "Editing and filtering support several project versions without losing the context of the transformations applied."],
-      ["04", "Reproducible results", "Figures, tables, parameters, histories and R scripts make it possible to recover how a result was produced and continue outside the interface."]
+      ["01", "Keep everything in one project", "Datasets, transformations, figures and histories remain organised in a shared workspace.", "Projects & datasets"],
+      ["02", "Explore results interactively", "Adjust parameters, observe their effect and inspect visualisations before saving or exporting them.", "Interactive visualisations"],
+      ["03", "Recover how a result was produced", "Parameters, histories and exportable R code let you resume or extend the work outside the interface.", "Traceability & R code"],
+      ["04", "Compare results in one place", "MultiView gathers saved figures so they can be filtered, viewed side by side and arranged into compositions.", "MultiView library"]
     ],
     proofK: "Compare and report",
     proofT: "MultiView brings together the results you chose to keep.",
     proofP: "Figures saved from the different modules are gathered in a shared library. Search them, compare them side by side, build compositions and export result panels without losing their original context.",
     proofAction: "Discover MultiView",
-    showcaseAction: "View result examples",
     audienceK: "Designed for several profiles",
     audienceT: "One project, different levels of expertise.",
     audienceP: "BarCodeR aims to simplify work for biologists and ecologists while retaining enough transparency for advanced users, bioinformaticians and core facilities.",
@@ -245,10 +266,13 @@ function Landing({ language }: { language: Language }) {
       ["Core facilities & teams", "Provide a shared environment to prepare, analyse, resume and share metabarcoding projects.", "Read the documentation", "#/documentation"]
     ],
     finalK: "Get started with BarCodeR",
-    finalT: "Import your data, explore them, prepare them and answer your scientific questions.",
-    finalP: "The website presents the application workflow and capabilities. The documentation then takes over for parameters, methods and technical details.",
+    finalT: "Install BarCodeR and learn the application at your own pace.",
+    finalP: "BarCodeR v2.12.8 is currently distributed as an R/Shiny application. It runs locally in a browser on Windows, macOS or Linux, provided that R and the required dependencies are installed. This version does not include a standalone installer.",
+    finalInstallLabel: "Current version",
+    finalInstallMeta: "BarCodeR v2.12.8 · R/Shiny sources",
+    finalTutorialLabel: "First steps",
+    finalTutorialMeta: "Guided workflows with a public dataset",
     finalTutorial: "View tutorials",
-    finalDocs: "Open documentation",
     finalDownload: "Install BarCodeR",
     citationK: "Scientific project",
     citationT: "BarCodeR is designed to be used, understood and cited.",
@@ -263,35 +287,31 @@ function Landing({ language }: { language: Language }) {
         <p className="lead">{c.intro}</p>
         <div className="hero-actions">
           <a className="button primary" href="#/functioning">{c.workflowAction}<span>→</span></a>
-          <a className="button secondary" href="#/analyses">{c.analysesAction}<span>↘</span></a>
+          <a className="button secondary" href="#/download">{c.downloadAction}<span>↓</span></a>
         </div>
-        <div className="hero-meta-row"><p className="version-line"><span />{c.version}</p><a href="#/download">{c.downloadAction}<b>→</b></a></div>
       </div>
       <div className="hero-media reveal delay-1">
         <HomeApplicationVisual language={language} />
       </div>
-      <div className="home-trust-row reveal delay-1">{c.metrics.map(([number, label, detail]) => <article key={label}><b>{number}</b><div><span>{label}</span><small>{detail}</small></div></article>)}</div>
     </section>
+
+    <section className="home-value-section"><div className="page-width home-value-grid">
+      <div className="home-value-copy reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2><div className="home-value-list">{c.strengths.map(([number, title, text, proof]) => <article key={title}><span>{number}</span><div><h3>{title}</h3><p>{text}</p><small>{proof}</small></div></article>)}</div></div>
+      <div className="home-value-proof reveal delay-1"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a></div></div>
+    </div></section>
 
     <section className="section home-journeys page-width reveal">
       <div className="section-heading home-journey-heading"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><p>{c.journeysP}</p></div>
-      <div className="journey-grid journey-grid-compact">
-        <article className="journey-card barcoder-journey"><div className="journey-card-head"><span>01</span><small>{c.phyloseqTag}</small></div><h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p><a href="#/application/input-data">{c.phyloseqAction}<span>↗</span></a></article>
-        <article className="journey-card components-journey"><div className="journey-card-head"><span>02</span><small>{c.componentsTag}</small></div><h3>{c.componentsTitle}</h3><p>{c.componentsText}</p><a href="#/application/openmetabar">{c.componentsAction}<span>↗</span></a></article>
+      <div className="journey-grid journey-grid-compact journey-converging-grid">
+        <article className="journey-card components-journey"><div className="journey-card-head"><span>01</span><small>{c.componentsTag}</small></div><h3>{c.componentsTitle}</h3><p>{c.componentsText}</p><div className="journey-mini-flow">{c.componentsSteps.map((step, index) => <Fragment key={step}><b>{step}</b>{index < c.componentsSteps.length - 1 && <span>→</span>}</Fragment>)}</div><a href="#/application/openmetabar">{c.componentsAction}<span>↗</span></a></article>
+        <article className="journey-card barcoder-journey"><div className="journey-card-head"><span>02</span><small>{c.phyloseqTag}</small></div><h3>{c.phyloseqTitle}</h3><p>{c.phyloseqText}</p><div className="journey-mini-flow">{c.phyloseqSteps.map((step, index) => <Fragment key={step}><b>{step}</b>{index < c.phyloseqSteps.length - 1 && <span>→</span>}</Fragment>)}</div><a href="#/application/input-data">{c.phyloseqAction}<span>↗</span></a></article>
       </div>
-      <div className="home-common-flow" aria-label={language === "fr" ? "Parcours commun dans BarCodeR" : "Shared BarCodeR workflow"}>
-        {(language === "fr" ? ["Projet", "Description", "Édition / Filtration", "Exploration / Analyses", "MultiView", "Export"] : ["Project", "Description", "Editing / Filtering", "Exploration / Analyses", "MultiView", "Export"]).map((step, index, steps) => <div key={step}><span>{String(index + 1).padStart(2, "0")}</span><b>{step}</b>{index < steps.length - 1 && <i>→</i>}</div>)}
-      </div>
+      <div className="journey-convergence" aria-label={language === "fr" ? "Convergence vers BarCodeR" : "Convergence into BarCodeR"}><span /><div><small>{language === "fr" ? "Point commun" : "Shared destination"}</small><b>{language === "fr" ? "Exploration et analyse des données dans BarCodeR" : "Data exploration and analysis in BarCodeR"}</b><p>{language === "fr" ? "Une fois l’objet phyloseq présent dans le projet, les mêmes outils BarCodeR deviennent accessibles." : "Once the phyloseq object is in the project, the same BarCodeR tools become available."}</p></div></div>
     </section>
 
-    <section className="section section-tint home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div><div className="question-grid">{c.questions.map(([label, question, detail], index) => <a className="question-card reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} href="#/analyses" key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><b>→</b></a>)}</div><div className="section-action"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div></div></section>
+    <section className="section section-tint home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div><p>{c.questionsP}</p></div><div className="question-grid">{c.questions.map(([label, question, detail], index) => <article className="question-card reveal" style={{ "--delay": `${index * 35}ms` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p></article>)}</div><div className="section-action question-actions"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
 
-    <section className="home-value-section"><div className="page-width home-value-grid">
-      <div className="home-value-copy reveal"><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2><div className="home-value-list">{c.strengths.map(([number, title, text]) => <article key={title}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></div>
-      <div className="home-value-proof reveal delay-1"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a><a className="inline-link" href="#/showcase">{c.showcaseAction}<span>→</span></a></div></div>
-    </div></section>
-
-    <section className="home-start-band"><div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-actions"><a className="button start-light" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button start-outline" href="#/documentation">{c.finalDocs}<span>↗</span></a><a className="button start-accent" href="#/download">{c.finalDownload}<span>↓</span></a></div></div></section>
+    <section className="home-start-band"><div className="page-width home-start-inner reveal"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p><div className="platform-list"><span>Windows</span><span>macOS</span><span>Linux</span></div></div><div className="home-start-options"><a href="#/download"><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a><a href="#/tutorials"><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a></div></div></section>
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
@@ -306,12 +326,12 @@ function ApplicationIndex({ language }: { language: Language }) {
     primary: "Voir le parcours",
     secondary: "Explorer les onglets",
     entriesK: "Deux points d’entrée",
-    entriesT: "Commencez là où se trouve réellement votre projet.",
+    entriesT: "Comprendre les deux formats qui peuvent démarrer votre projet.",
     phyloseqRole: "Importer un objet phyloseq",
-    phyloseqText: "BarCodeR accepte un objet phyloseq complet ou partiel enregistré au format .rds, .RData, .rda ou .rdata. Les composantes présentes sont identifiées au chargement avant de poursuivre dans l’application.",
+    phyloseqText: "Un objet phyloseq est un objet R qui regroupe les tables nécessaires à l’analyse : abondances, taxonomie, métadonnées et, lorsqu’elles existent, séquences ou phylogénie. BarCodeR accepte un objet complet ou partiel au format .rds, .RData, .rda ou .rdata.",
     phyloseqTags: [".rds", ".RData", "phyloseq complet", "phyloseq partiel"],
     componentsRole: "Partir de fichiers FASTQ",
-    componentsText: "Le module OpenMetaBar permet de préparer, lancer et suivre un traitement sur une infrastructure HPC distante, puis de récupérer l’objet phyloseq produit dans BarCodeR.",
+    componentsText: "Les fichiers FASTQ contiennent les séquences brutes et leurs scores de qualité à la sortie du séquenceur. OpenMetaBar permet de les traiter sur une infrastructure HPC distante afin de produire l’objet phyloseq ensuite utilisé dans BarCodeR.",
     componentsTags: ["FASTQ", "OpenMetaBar", "HPC", "phyloseq"],
     pathsK: "Le parcours dans l’application",
     pathsT: "Les mêmes étapes deviennent disponibles une fois les données présentes dans le projet.",
@@ -369,12 +389,12 @@ function ApplicationIndex({ language }: { language: Language }) {
     primary: "View the workflow",
     secondary: "Explore the tabs",
     entriesK: "Two entry points",
-    entriesT: "Start where your project actually is.",
+    entriesT: "Understand the two formats that can start your project.",
     phyloseqRole: "Import a phyloseq object",
-    phyloseqText: "BarCodeR accepts a complete or partial phyloseq object stored as .rds, .RData, .rda or .rdata. Available components are identified at loading before continuing in the application.",
+    phyloseqText: "A phyloseq object is an R object that groups the tables needed for analysis: abundances, taxonomy, metadata and, when present, sequences or phylogeny. BarCodeR accepts a complete or partial object stored as .rds, .RData, .rda or .rdata.",
     phyloseqTags: [".rds", ".RData", "complete phyloseq", "partial phyloseq"],
     componentsRole: "Start from FASTQ files",
-    componentsText: "The OpenMetaBar module can prepare, launch and monitor processing on a remote HPC infrastructure, then retrieve the produced phyloseq object into BarCodeR.",
+    componentsText: "FASTQ files contain raw sequences and their quality scores as produced by the sequencer. OpenMetaBar processes them on a remote HPC infrastructure to produce the phyloseq object subsequently used in BarCodeR.",
     componentsTags: ["FASTQ", "OpenMetaBar", "HPC", "phyloseq"],
     pathsK: "The application workflow",
     pathsT: "The same steps become available once data are present in the project.",
@@ -444,8 +464,8 @@ function ApplicationIndex({ language }: { language: Language }) {
       <div className="section-heading reveal"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div><p>{language === "fr" ? "Le projet est le point commun. Seule la manière d’y faire entrer les données change." : "The project is the shared starting point. Only the way data enter it changes."}</p></div>
       <div className="function-project-start reveal"><span>01</span><div><small>{language === "fr" ? "Point de départ" : "Starting point"}</small><h3>{language === "fr" ? "Créer ou ouvrir un projet" : "Create or open a project"}</h3><p>{language === "fr" ? "Le projet regroupe les datasets, les historiques et les résultats produits au cours du travail." : "The project brings together datasets, histories and results produced throughout the work."}</p></div></div>
       <div className="product-role-grid function-entry-grid">
-        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>phyloseq</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/input-data">{language === "fr" ? "Voir l’import" : "View import"}<span>→</span></a></article>
-        <article className="product-role openmetabar-entry-card reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>{language === "fr" ? "Option FASTQ" : "FASTQ option"}</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/openmetabar">{language === "fr" ? "Voir OpenMetaBar" : "View OpenMetaBar"}<span>→</span></a></article>
+        <article className="product-role openmetabar-entry-card reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>{language === "fr" ? "Séquences brutes" : "Raw sequences"}</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/openmetabar">{language === "fr" ? "Voir OpenMetaBar" : "View OpenMetaBar"}<span>→</span></a></article>
+        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>{language === "fr" ? "Données déjà structurées" : "Already structured data"}</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/input-data">{language === "fr" ? "Voir l’import" : "View import"}<span>→</span></a></article>
       </div>
       <div className="function-converge reveal"><span>↓</span><b>{language === "fr" ? "Une fois un objet phyloseq présent dans le projet, le parcours est commun." : "Once a phyloseq object is present in the project, the workflow is shared."}</b></div>
     </section>
