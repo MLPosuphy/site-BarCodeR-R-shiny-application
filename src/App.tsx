@@ -248,10 +248,10 @@ function Landing({ language }: { language: Language }) {
     strengths: [
       ["01", "⌁", "Analyser sans savoir coder", "L’interface accompagne la préparation, l’exploration et l’analyse des données. Aucune connaissance en R ni compétence en programmation n’est nécessaire pour utiliser les modules.", "Prise en main accessible"],
       ["02", "∑", "Accéder à de nombreuses analyses statistiques", "Diversité, ordinations, différences entre groupes, analyses différentielles, réseaux, comparaison de matrices et clustering produisent des sorties structurées et faciles à explorer.", "Analyses & diagnostics"],
-      ["03", "◎", "Comprendre les résultats visuellement", "Graphiques interactifs, tableaux, diagnostics et filtres permettent d’observer les résultats et d’ajuster les paramètres directement dans l’interface.", "Exploration interactive"],
-      ["04", "↻", "Assurer la reproductibilité du travail", "Les paramètres, transformations et résultats restent associés au projet afin de comprendre comment chaque sortie a été obtenue et de répéter l’analyse.", "Reproductibilité & traçabilité"],
-      ["05", "R", "Récupérer le code R et personnaliser les figures", "Le code R généré peut être exporté pour reproduire l’analyse, prolonger le travail et modifier librement l’apparence des figures en dehors de BarCodeR.", "Code R exportable"],
-      ["06", "▦", "Conserver un projet clair et organisé", "Datasets, versions préparées, figures et historiques sont regroupés dans un même espace de travail pour éviter la multiplication de fichiers isolés.", "Projets & datasets"]
+      ["03", "◎", "Explorer les résultats avec des visualisations interactives", "Graphiques interactifs, tableaux, diagnostics et filtres rendent les tendances plus lisibles et permettent d’examiner les résultats directement dans l’interface.", "Exploration interactive"],
+      ["04", "↻", "Assurer la reproductibilité du travail", "Les paramètres, transformations et résultats restent traçables afin de comprendre comment chaque sortie a été obtenue et de pouvoir répéter l’analyse.", "Reproductibilité & traçabilité"],
+      ["05", "R", "Reprendre et personnaliser une figure avec son code R", "Après avoir produit une figure, l’utilisateur peut récupérer le code R associé à sa génération. Il peut ensuite l’exécuter hors de BarCodeR et modifier librement son apparence selon ses besoins.", "Code R associé à la figure"],
+      ["06", "▦", "Garder les données et les résultats organisés", "Datasets, versions préparées, figures et historiques restent regroupés pour éviter la multiplication de fichiers isolés et retrouver facilement les étapes du travail.", "Données & résultats structurés"]
     ],
     proofK: "Comparer et restituer",
     proofT: "MultiView rassemble les résultats que vous avez choisi de conserver.",
@@ -266,6 +266,15 @@ function Landing({ language }: { language: Language }) {
       ["Bioinformaticiens", "Utiliser une interface modulaire sans perdre l’accès aux objets phyloseq, aux paramètres ni au code R reproductible.", "Comprendre le fonctionnement", "#/functioning"],
       ["Plateformes & équipes", "Proposer un environnement commun pour préparer, analyser, reprendre et partager des projets de métabarcoding.", "Consulter la documentation", "#/documentation"]
     ],
+    projectK: "Travail en équipe",
+    projectT: "Travaillez sous forme de projet et transmettez vos avancées sans perdre le fil.",
+    projectP: "Un projet BarCodeR regroupe les datasets, leurs versions, les figures sauvegardées et les historiques associés. Exportez-le dans une archive portable, puis transmettez-la à un collègue qui pourra l’importer dans BarCodeR et reprendre le travail dans son propre environnement.",
+    projectSteps: [
+      ["01", "Organiser", "Réunir les données, les versions préparées, les figures et les historiques dans un même projet."],
+      ["02", "Transmettre", "Exporter le projet complet dans une archive .zip, avec les figures déjà sauvegardées."],
+      ["03", "Reprendre", "Importer l’archive comme nouveau projet et retrouver les avancées sur une autre installation."]
+    ],
+    projectNote: "Partage entre collègues · archivage d’une analyse · reprise sur une autre installation",
     finalK: "Se former puis installer",
     finalT: "Découvrez BarCodeR avec les tutoriels, puis lancez l’application en quelques clics.",
     finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. Lorsque vous êtes prêt, installez la version adaptée à votre système.",
@@ -331,10 +340,10 @@ function Landing({ language }: { language: Language }) {
     strengths: [
       ["01", "⌁", "Analyse without knowing how to code", "The interface supports data preparation, exploration and analysis. No R knowledge or programming skills are required to use the modules.", "Accessible workflow"],
       ["02", "∑", "Access a wide range of statistical analyses", "Diversity, ordinations, group differences, differential analyses, networks, matrix comparison and clustering produce structured, explorable outputs.", "Analyses & diagnostics"],
-      ["03", "◎", "Understand results visually", "Interactive charts, tables, diagnostics and filters let you inspect results and adjust parameters directly in the interface.", "Interactive exploration"],
-      ["04", "↻", "Make the work reproducible", "Parameters, transformations and results remain linked to the project so each output can be understood and the analysis repeated.", "Reproducibility & traceability"],
-      ["05", "R", "Retrieve R code and customise figures", "Generated R code can be exported to reproduce an analysis, extend the work and freely modify figure appearance outside BarCodeR.", "Exportable R code"],
-      ["06", "▦", "Keep the project clear and organised", "Datasets, prepared versions, figures and histories stay in one workspace instead of being scattered across isolated files.", "Projects & datasets"]
+      ["03", "◎", "Explore results through interactive visualisations", "Interactive charts, tables, diagnostics and filters make patterns easier to see and let users examine results directly in the interface.", "Interactive exploration"],
+      ["04", "↻", "Make the work reproducible", "Parameters, transformations and results remain traceable so users can understand how each output was obtained and repeat the analysis.", "Reproducibility & traceability"],
+      ["05", "R", "Reuse and customise a figure with its R code", "After producing a figure, users can retrieve the R code used to generate it. They can then run it outside BarCodeR and freely customise its appearance.", "R code linked to the figure"],
+      ["06", "▦", "Keep data and results organised", "Datasets, prepared versions, figures and histories stay grouped together, avoiding scattered files and making each stage easier to retrieve.", "Structured data & results"]
     ],
     proofK: "Compare and report",
     proofT: "MultiView brings together the results you chose to keep.",
@@ -349,6 +358,15 @@ function Landing({ language }: { language: Language }) {
       ["Bioinformaticians", "Use a modular interface without losing access to phyloseq objects, parameters or reproducible R code.", "Understand the workflow", "#/functioning"],
       ["Core facilities & teams", "Provide a shared environment to prepare, analyse, resume and share metabarcoding projects.", "Read the documentation", "#/documentation"]
     ],
+    projectK: "Team workflow",
+    projectT: "Work as a project and transfer progress without losing context.",
+    projectP: "A BarCodeR project brings together datasets, their versions, saved figures and associated histories. Export it as a portable archive, then send it to a colleague who can import it into BarCodeR and resume the work in their own environment.",
+    projectSteps: [
+      ["01", "Organise", "Keep data, prepared versions, figures and histories together in one project."],
+      ["02", "Transfer", "Export the complete project as a .zip archive, including saved figures."],
+      ["03", "Resume", "Import the archive as a new project and continue the work on another installation."]
+    ],
+    projectNote: "Colleague-to-colleague sharing · analysis archiving · continuation on another installation",
     finalK: "Learn, then install",
     finalT: "Discover BarCodeR through the tutorials, then launch the application in a few clicks.",
     finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. When you are ready, install the version suited to your operating system.",
@@ -398,7 +416,7 @@ function Landing({ language }: { language: Language }) {
     </div></section>
 
     <section className="section home-journeys page-width" id="home-data">
-      <div className="section-heading home-journey-heading reveal reveal-left"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><p>{c.journeysP}</p></div>
+      <div className="section-heading home-journey-heading reveal reveal-left"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><aside className="home-journey-context"><span aria-hidden="true">02</span><p>{c.journeysP}</p></aside></div>
       <div className="data-pathway reveal reveal-scale" aria-label={language === "fr" ? "Deux parcours de données convergent vers BarCodeR" : "Two data paths converge into BarCodeR"}>
         <div className="pathway-route-labels">
           <span><b>{language === "fr" ? "Voie 1" : "Path 1"}</b>{language === "fr" ? "Je pars de fichiers FASTQ" : "I start from FASTQ files"}</span>
@@ -413,7 +431,7 @@ function Landing({ language }: { language: Language }) {
           <a className="pathway-node pathway-openmetabar" href="#/application/openmetabar"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
           <a className="pathway-node pathway-import" href="#/application/input-data"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
         </div>
-        <div className="pathway-merge" aria-hidden="true"><i /><i /><b /></div>
+        <div className="pathway-merge" aria-hidden="true"><i /><i /><b /><span /></div>
         <div className="pathway-hub"><small>{language === "fr" ? "Point de convergence" : "Convergence point"}</small><strong>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</strong><p>{language === "fr" ? "Abondances · taxonomie · métadonnées" : "Abundances · taxonomy · metadata"}</p></div>
         <div className="pathway-vertical-link" aria-hidden="true"><i /></div>
         <article className="pathway-barcoder"><div><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{language === "fr" ? "Un environnement commun" : "One shared environment"}</small><strong>BarCodeR</strong></span></div><p>{language === "fr" ? "Une fois les données structurées, explorez-les et choisissez les analyses adaptées à votre question." : "Once the data are structured, explore them and select analyses suited to your question."}</p><div><span>{language === "fr" ? "Explorer" : "Explore"}</span><span>{language === "fr" ? "Analyser" : "Analyse"}</span><span>{language === "fr" ? "Visualiser" : "Visualise"}</span><span>{language === "fr" ? "Exporter" : "Export"}</span></div></article>
@@ -432,9 +450,11 @@ function Landing({ language }: { language: Language }) {
       </div>
     </section>
 
-    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">✦</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
+    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">⚡</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
 
-    <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><a className="featured" href="#/tutorials"><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a><a href="#/download"><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small>{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
+    <section className="home-project-section"><div className="page-width home-project-shell reveal reveal-scale"><div className="home-project-copy"><Eyebrow>{c.projectK}</Eyebrow><h2>{c.projectT}</h2><p>{c.projectP}</p><small>{c.projectNote}</small></div><div className="home-project-flow">{c.projectSteps.map(([number, title, text], index) => <Fragment key={title}><article><span>{number}</span><h3>{title}</h3><p>{text}</p></article>{index < c.projectSteps.length - 1 && <i aria-hidden="true"><b /></i>}</Fragment>)}</div></div></section>
+
+    <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><a className="featured training" href="#/tutorials"><span className="home-start-step">01</span><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a><a className="installation" href="#/download"><span className="home-start-step">02</span><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small><i aria-hidden="true" />{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
