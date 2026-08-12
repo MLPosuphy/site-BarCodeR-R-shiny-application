@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
@@ -99,6 +100,21 @@ function AppPreview({ language }: { language: Language }) {
 function HomeApplicationVisual({ language }: { language: Language }) {
   const [expanded, setExpanded] = useState(false);
 
+  const moveScreenshot = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width;
+    const y = (event.clientY - bounds.top) / bounds.height;
+    event.currentTarget.style.setProperty("--screen-x", `${x * 100}%`);
+    event.currentTarget.style.setProperty("--screen-y", `${y * 100}%`);
+    event.currentTarget.style.setProperty("--screen-rotate-y", `${(x - .5) * 3.2}deg`);
+    event.currentTarget.style.setProperty("--screen-rotate-x", `${(.5 - y) * 2.4}deg`);
+  };
+
+  const resetScreenshot = (event: React.PointerEvent<HTMLButtonElement>) => {
+    event.currentTarget.style.removeProperty("--screen-rotate-x");
+    event.currentTarget.style.removeProperty("--screen-rotate-y");
+  };
+
   useEffect(() => {
     if (!expanded) return;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -116,20 +132,43 @@ function HomeApplicationVisual({ language }: { language: Language }) {
 
   return (
     <>
-      <figure className="home-screenshot-figure">
-        <button className="home-screenshot-frame" type="button" onClick={() => setExpanded(true)} aria-label={language === "fr" ? "Agrandir la capture de BarCodeR" : "Enlarge the BarCodeR screenshot"}>
-        <img
-          src={asset(HOME_SCREENSHOT_PATH)}
-          alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
-        />
-          <span>{language === "fr" ? "Explorer l’interface" : "Explore the interface"}<b>↗</b></span>
-        </button>
-        <figcaption>{language === "fr" ? "Vue réelle de l’accueil de BarCodeR." : "Real view of the BarCodeR home page."}</figcaption>
-      </figure>
-      {expanded && <div className="screenshot-lightbox" role="dialog" aria-modal="true" aria-label={language === "fr" ? "Capture agrandie de BarCodeR" : "Enlarged BarCodeR screenshot"} onClick={() => setExpanded(false)}>
-        <button type="button" autoFocus onClick={() => setExpanded(false)} aria-label={language === "fr" ? "Fermer" : "Close"}>×</button>
-        <img src={asset(HOME_SCREENSHOT_PATH)} alt={language === "fr" ? "Interface BarCodeR en grand format" : "Large BarCodeR interface view"} onClick={event => event.stopPropagation()} />
-      </div>}
+      <div className="home-screen-stage">
+        <figure className="home-screenshot-figure">
+          <button
+            className="home-screenshot-frame"
+            type="button"
+            onClick={() => setExpanded(true)}
+            onPointerMove={moveScreenshot}
+            onPointerLeave={resetScreenshot}
+            aria-label={language === "fr" ? "Agrandir la capture de BarCodeR" : "Enlarge the BarCodeR screenshot"}
+          >
+            <img
+              src={asset(HOME_SCREENSHOT_PATH)}
+              alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
+            />
+            <span>{language === "fr" ? "Explorer l’interface" : "Explore the interface"}<b>↗</b></span>
+          </button>
+          <figcaption>{language === "fr" ? "Vue réelle de l’accueil de BarCodeR." : "Real view of the BarCodeR home page."}</figcaption>
+        </figure>
+        <a className="hero-scroll-cue" href="#home-value">
+          <small>{language === "fr" ? "Découvrez ce que vous pouvez faire" : "Discover what you can do"}</small>
+          <span aria-hidden="true"><i /></span>
+        </a>
+      </div>
+      {expanded && createPortal(
+        <div className="screenshot-lightbox" role="dialog" aria-modal="true" aria-label={language === "fr" ? "Capture agrandie de BarCodeR" : "Enlarged BarCodeR screenshot"} onClick={() => setExpanded(false)}>
+          <div className="screenshot-lightbox-panel" onClick={event => event.stopPropagation()}>
+            <div className="screenshot-lightbox-bar">
+              <span>{language === "fr" ? "Accueil de BarCodeR · vue agrandie" : "BarCodeR home · enlarged view"}</span>
+              <button type="button" autoFocus onClick={() => setExpanded(false)} aria-label={language === "fr" ? "Fermer" : "Close"}>×</button>
+            </div>
+            <div className="screenshot-lightbox-canvas">
+              <img src={asset(HOME_SCREENSHOT_PATH)} alt={language === "fr" ? "Interface BarCodeR en grand format" : "Large BarCodeR interface view"} />
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   );
 }
@@ -329,6 +368,12 @@ function Landing({ language }: { language: Language }) {
     citationP: "Version information, installation options and citation guidance are grouped in the download area."
   };
 
+  const trackQuestionGlow = (event: React.PointerEvent<HTMLElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--question-x", `${event.clientX - bounds.left}px`);
+    event.currentTarget.style.setProperty("--question-y", `${event.clientY - bounds.top}px`);
+  };
+
   return <main className="home-page">
     <HomeScrollProgress />
     <section className="hero home-hero page-width">
@@ -355,31 +400,35 @@ function Landing({ language }: { language: Language }) {
     <section className="section home-journeys page-width" id="home-data">
       <div className="section-heading home-journey-heading reveal reveal-left"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><p>{c.journeysP}</p></div>
       <div className="data-pathway reveal reveal-scale" aria-label={language === "fr" ? "Deux parcours de données convergent vers BarCodeR" : "Two data paths converge into BarCodeR"}>
-        <div className="pathway-column pathway-inputs">
+        <div className="pathway-stage pathway-inputs">
           <a className="pathway-node pathway-fastq" href="#/application/openmetabar"><span>01</span><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></a>
           <a className="pathway-node pathway-existing" href="#/application/input-data"><span>02</span><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></a>
         </div>
-        <div className="pathway-connectors pathway-connectors-first" aria-hidden="true"><i /><i /></div>
-        <div className="pathway-column pathway-actions">
+        <div className="pathway-lane-links" aria-hidden="true"><i /><i /></div>
+        <div className="pathway-stage pathway-actions">
           <a className="pathway-node pathway-openmetabar" href="#/application/openmetabar"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
           <a className="pathway-node pathway-import" href="#/application/input-data"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
         </div>
-        <div className="pathway-converge" aria-hidden="true"><i /><i /><b /></div>
+        <div className="pathway-merge" aria-hidden="true"><i /><i /><b /></div>
         <div className="pathway-hub"><small>{language === "fr" ? "Point de convergence" : "Convergence point"}</small><strong>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</strong><p>{language === "fr" ? "Abondances · taxonomie · métadonnées" : "Abundances · taxonomy · metadata"}</p></div>
-        <div className="pathway-final-connector" aria-hidden="true"><i /></div>
+        <div className="pathway-vertical-link" aria-hidden="true"><i /></div>
         <article className="pathway-barcoder"><div><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{language === "fr" ? "Un environnement commun" : "One shared environment"}</small><strong>BarCodeR</strong></span></div><p>{language === "fr" ? "Une fois les données structurées, explorez-les et choisissez les analyses adaptées à votre question." : "Once the data are structured, explore them and select analyses suited to your question."}</p><div><span>{language === "fr" ? "Explorer" : "Explore"}</span><span>{language === "fr" ? "Analyser" : "Analyse"}</span><span>{language === "fr" ? "Visualiser" : "Visualise"}</span><span>{language === "fr" ? "Exporter" : "Export"}</span></div></article>
+        <div className="pathway-vertical-link pathway-to-results" aria-hidden="true"><i /></div>
         <div className="pathway-results">
           <div className="pathway-results-copy"><small>{language === "fr" ? "Exemples de sorties" : "Example outputs"}</small><strong>{language === "fr" ? "Des données structurées aux figures interprétables" : "From structured data to interpretable figures"}</strong><p>{language === "fr" ? "Explorez les résultats dans l’interface, sauvegardez les figures utiles et retrouvez leur code R." : "Explore results in the interface, save useful figures and retrieve their R code."}</p></div>
-          {[
-            ["barplot.png", language === "fr" ? "Barplots" : "Barplots"],
-            ["ordinations.png", language === "fr" ? "Ordinations" : "Ordinations"],
-            ["alpha_diversite.png", language === "fr" ? "Alpha-diversité" : "Alpha diversity"]
-          ].map(([image, label]) => <figure key={image}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Exemple de figure ${label} produite avec BarCodeR` : `Example ${label} figure produced with BarCodeR`} /></div><figcaption>{label}</figcaption></figure>)}
+          <div className="pathway-results-grid">{[
+            ["barplot.png", "Barplots"],
+            ["ordinations.png", "Ordinations"],
+            ["alpha_diversite.png", language === "fr" ? "Alpha-diversité" : "Alpha diversity"],
+            ["analyses_differentielles.png", language === "fr" ? "Analyses différentielles" : "Differential analyses"],
+            ["clustering.png", "Clustering"],
+            ["comparaison_matrices.png", language === "fr" ? "Comparaison de matrices" : "Matrix comparison"]
+          ].map(([image, label], index) => <figure style={{ "--result-delay": `${index * 55}ms` } as React.CSSProperties} key={image}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Exemple de figure ${label} produite avec BarCodeR` : `Example ${label} figure produced with BarCodeR`} /></div><figcaption>{label}<span aria-hidden="true">✦</span></figcaption></figure>)}</div>
         </div>
       </div>
     </section>
 
-    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" style={{ "--delay": `${(index % 3) * 65}ms` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map(analysis => <b key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
+    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">✦</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
 
     <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><a className="featured" href="#/tutorials"><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a><a href="#/download"><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small>{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
   </main>;
