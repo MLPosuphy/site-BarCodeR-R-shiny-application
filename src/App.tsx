@@ -400,6 +400,10 @@ function Landing({ language }: { language: Language }) {
     <section className="section home-journeys page-width" id="home-data">
       <div className="section-heading home-journey-heading reveal reveal-left"><div><Eyebrow>{c.journeysK}</Eyebrow><h2>{c.journeysT}</h2></div><p>{c.journeysP}</p></div>
       <div className="data-pathway reveal reveal-scale" aria-label={language === "fr" ? "Deux parcours de données convergent vers BarCodeR" : "Two data paths converge into BarCodeR"}>
+        <div className="pathway-route-labels">
+          <span><b>{language === "fr" ? "Voie 1" : "Path 1"}</b>{language === "fr" ? "Je pars de fichiers FASTQ" : "I start from FASTQ files"}</span>
+          <span><b>{language === "fr" ? "Voie 2" : "Path 2"}</b>{language === "fr" ? "J’importe un objet phyloseq" : "I import a phyloseq object"}</span>
+        </div>
         <div className="pathway-stage pathway-inputs">
           <a className="pathway-node pathway-fastq" href="#/application/openmetabar"><span>01</span><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></a>
           <a className="pathway-node pathway-existing" href="#/application/input-data"><span>02</span><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></a>
