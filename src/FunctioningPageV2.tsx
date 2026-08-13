@@ -198,14 +198,14 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       <div className="function-v4-hero-visual reveal delay-1">
         <div className="function-v4-orbit-system" aria-label={language === "fr" ? "Étapes principales du parcours BarCodeR" : "Main stages of the BarCodeR journey"}>
           <i className="function-v4-orbit-line orbit-line-1" /><i className="function-v4-orbit-line orbit-line-2" />
-          {c.heroOrbit.map(([number, label], index) => <span className="function-v4-orbit-node" style={{ "--orbit-index": index } as React.CSSProperties} key={number}><b>{number}</b><strong>{label}</strong></span>)}
+          {c.heroOrbit.map(([number, label], index) => <span className="function-v4-orbit-node" style={{ "--orbit-index": index === 0 ? 0 : c.heroOrbit.length - index } as React.CSSProperties} key={number}><b>{number}</b><strong>{label}</strong></span>)}
         </div>
         <div className="function-v4-browser"><div><span /><span /><span /><b>BarCodeR</b></div><img src={asset("app-previews/screen-home-current.png")} alt={language === "fr" ? "Accueil de BarCodeR" : "BarCodeR home"} /></div>
       </div>
     </div></section>
 
     <section className="function-v4-journey" id="function-v4-journey"><div className="page-width">
-      <div className="section-heading home-journey-heading function-v4-entry-heading reveal reveal-left"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div><aside className="home-journey-context"><span aria-hidden="true">01</span><p>{c.entriesP}</p></aside></div>
+      <div className="section-heading home-journey-heading function-v4-entry-heading reveal reveal-left"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div><aside className="home-journey-context"><p>{c.entriesP}</p></aside></div>
       <div className="function-v4-story-heading reveal"><Eyebrow>{c.storyK}</Eyebrow><h2>{c.storyT}</h2></div>
 
       <div className="function-v4-journey-grid">
@@ -228,7 +228,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     </div></section>
 
     <section className="function-v4-project"><div className="page-width">
-      <div className="section-heading home-journey-heading function-v4-project-heading reveal reveal-left"><div><Eyebrow>{c.projectK}</Eyebrow><h2>{c.projectT}</h2></div><aside className="home-journey-context"><span aria-hidden="true">02</span><p>{c.projectP}</p></aside></div>
+      <div className="section-heading home-journey-heading function-v4-project-heading reveal reveal-left"><div><Eyebrow>{c.projectK}</Eyebrow><h2>{c.projectT}</h2></div><aside className="home-journey-context"><p>{c.projectP}</p></aside></div>
 
       <div className="function-v4-project-visual reveal reveal-scale">
         <div className="function-v4-dataset-stack"><small>Datasets</small>{c.datasetStack.map((dataset, index) => <span style={{ "--dataset-index": index } as React.CSSProperties} key={dataset}><i>◇</i><b>{dataset}</b></span>)}</div>

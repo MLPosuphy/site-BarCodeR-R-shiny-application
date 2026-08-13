@@ -3845,7 +3845,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .function-v4-entry-heading > div { max-width: none; width: 100%; }
 .function-v4-entry-heading h2 { font-size: clamp(39px, 4.9vw, 67px); max-width: none; width: 100%; }
 .function-v4-entry-heading .home-journey-context { margin-top: 18px; }
-.function-v4-entry-heading .home-journey-context p { color: var(--ink-soft); font-size: 18px; line-height: 1.65; }
+.function-v4-entry-heading .home-journey-context p { color: var(--ink-soft); font-size: 18px; line-height: 1.65; margin-top: 0; }
 .function-v4-story-heading { border-bottom: 1px solid var(--line); margin-top: 115px; padding-bottom: 42px; }
 .function-v4-story-heading h2 { font-size: clamp(38px, 4.6vw, 64px); max-width: 1180px; }
 .function-v4-journey-grid { align-items: start; display: grid; gap: clamp(50px, 6vw, 85px); grid-template-columns: minmax(350px, .74fr) minmax(0, 1.26fr); margin-top: 58px; }
@@ -3918,7 +3918,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .function-v4-project-heading { align-items: start; margin: 0; }
 .function-v4-project-heading h2 { font-size: clamp(42px, 5vw, 69px); max-width: 850px; }
 .function-v4-project-heading .home-journey-context { margin-top: 18px; }
-.function-v4-project-heading .home-journey-context p { color: var(--ink-soft); font-size: 17px; line-height: 1.65; }
+.function-v4-project-heading .home-journey-context p { color: var(--ink-soft); font-size: 17px; line-height: 1.65; margin-top: 0; }
 .function-v4-project-visual { align-items: center; background: linear-gradient(145deg, #171c32, #242b48); border: 1px solid rgba(255,255,255,.08); border-radius: 27px; box-shadow: 0 28px 80px rgba(17,24,45,.18); color: white; display: grid; gap: 14px; grid-template-areas: "datasets link1 session link2 archive link3 resume"; grid-template-columns: minmax(190px,1.05fr) 42px minmax(210px,1.25fr) 42px minmax(140px,.72fr) 42px minmax(155px,.82fr); margin-top: 65px; min-height: 390px; overflow: hidden; padding: 42px; position: relative; }
 .function-v4-project-visual::before { background-image: radial-gradient(rgba(160,150,235,.16) 1px, transparent 1px); background-size: 20px 20px; content: ""; inset: 0; mask-image: radial-gradient(circle, #000, transparent 78%); pointer-events: none; position: absolute; }
 .function-v4-dataset-stack, .function-v4-session-card, .function-v4-archive-card, .function-v4-resume-card, .function-v4-project-link { position: relative; z-index: 2; }
