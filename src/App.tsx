@@ -152,10 +152,6 @@ function HomeApplicationVisual({ language }: { language: Language }) {
           </button>
           <figcaption>{language === "fr" ? "Vue réelle de l’accueil de BarCodeR." : "Real view of the BarCodeR home page."}</figcaption>
         </figure>
-        <a className="hero-scroll-cue" href="#home-value">
-          <small>{language === "fr" ? "Découvrez ce que vous pouvez faire" : "Discover what you can do"}</small>
-          <span aria-hidden="true"><i /></span>
-        </a>
       </div>
       {expanded && createPortal(
         <div className="screenshot-lightbox" role="dialog" aria-modal="true" aria-label={language === "fr" ? "Capture agrandie de BarCodeR" : "Enlarged BarCodeR screenshot"} onClick={() => setExpanded(false)}>
@@ -175,7 +171,7 @@ function HomeApplicationVisual({ language }: { language: Language }) {
   );
 }
 
-function HomeScrollProgress() {
+function SiteScrollProgress({ route }: { route: string }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -196,9 +192,9 @@ function HomeScrollProgress() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [route]);
 
-  return <div className="home-scroll-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>;
+  return <div className="home-scroll-progress site-scroll-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>;
 }
 
 function Landing({ language }: { language: Language }) {
@@ -396,7 +392,6 @@ function Landing({ language }: { language: Language }) {
   };
 
   return <main className="home-page">
-    <HomeScrollProgress />
     <section className="hero home-hero page-width">
       <div className="hero-copy reveal reveal-rise">
         <Eyebrow>{c.badge}</Eyebrow>
@@ -2127,5 +2122,5 @@ export default function App() {
   else if (route === "/download" || route === "/availability") page = <DownloadPage language={language} />;
   else page = <Landing language={language} />;
 
-  return <div className={activeModule?.key === "openmetabar" ? "site-shell openmetabar-route" : "site-shell"}><Header language={language} setLanguage={setLanguage} route={route} />{page}<Footer language={language} /></div>;
+  return <div className={activeModule?.key === "openmetabar" ? "site-shell openmetabar-route" : "site-shell"}><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
 }
