@@ -31,7 +31,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     heroP: "À partir de fichiers FASTQ ou d’un objet phyloseq, BarCodeR structure un même chemin vers la préparation, l’exploration, les analyses, la visualisation et les exports.",
     heroOrbit: [["01A", "Traiter des séquences brutes"], ["01B", "Importer un objet phyloseq"], ["02", "Préparer les données"], ["03", "Explorer les données"], ["04", "Analyser les données"], ["05", "Visualiser les données"], ["06", "Exporter les données"]],
     entriesK: "Genèse du parcours analytique",
-    entriesT: "BarCodeR intervient à plusieurs niveaux de l’analyse des données de métabarcoding, avant ou après le traitement des séquences.",
+    entriesT: "BarCodeR intervient à plusieurs niveaux de l’analyse des données de métabarcoding : avant ou après le traitement des séquences.",
     entriesP: "Le parcours au sein de BarCodeR dépend des données initiales disponibles et des choix retenus pour le traitement des séquences.",
     storyK: "Le parcours des données dans l’application",
     storyT: "Chaque onglet de l’application représente une étape du parcours analytique des données.",
@@ -60,15 +60,14 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       ["03", "Conserver", "Retrouver les datasets, figures sauvegardées et historiques disponibles comme dans une session de travail."],
       ["04", "Transmettre", "Exporter le projet sous forme d’archive portable afin de déplacer le contexte du travail."],
       ["05", "Reprendre", "Importer l’archive comme un nouveau projet et poursuivre l’analyse dans un autre environnement."]
-    ],
-    projectNote: "L’import d’une archive crée un nouveau projet ; aucune fusion silencieuse avec le projet déjà ouvert."
+    ]
   } : {
     heroK: "How BarCodeR works",
     heroT: <>One environment for <em>the complete metabarcoding data journey.</em></>,
     heroP: "Starting from FASTQ files or a phyloseq object, BarCodeR structures one path through preparation, exploration, analyses, visualisation and exports.",
     heroOrbit: [["01A", "Process raw sequences"], ["01B", "Import a phyloseq object"], ["02", "Prepare data"], ["03", "Explore data"], ["04", "Analyse data"], ["05", "Visualise data"], ["06", "Export data"]],
     entriesK: "Origins of the analytical journey",
-    entriesT: "BarCodeR can enter the metabarcoding data analysis process at several levels, before or after sequence processing.",
+    entriesT: "BarCodeR can enter the metabarcoding data analysis process at several levels: before or after sequence processing.",
     entriesP: "The journey through BarCodeR depends on the available starting data and the selected sequence-processing choices.",
     storyK: "The data journey through the application",
     storyT: "Each application tab represents a stage in the analytical data journey.",
@@ -97,8 +96,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       ["03", "Retain", "Recover datasets, saved figures and available histories as in a work session."],
       ["04", "Transfer", "Export the project as a portable archive to move the working context."],
       ["05", "Resume", "Import the archive as a new project and continue the analysis in another environment."]
-    ],
-    projectNote: "Importing an archive creates a new project; it is never silently merged into the project already open."
+    ]
   };
 
   const steps: JourneyStep[] = language === "fr" ? [
@@ -145,7 +143,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       image: "app-previews/screen-filtration-current.png", imageAlt: "Filtration interactive dans BarCodeR", tone: "barcoder"
     },
     {
-      id: "analyse", number: "06–07", title: "Explorer et analyser les datasets",
+      id: "analyse", number: "06", title: "Explorer et analyser les datasets",
       lead: "Une grande diversité de paramétrages calculatoires et graphiques permet d’explorer les données, de tester des hypothèses et de conduire des analyses intra- ou inter-datasets.",
       details: ["Paramétrages graphiques et calculatoires", "Analyses au sein d’un dataset", "Analyses et comparaisons entre datasets"],
       modules: ["Onglet Exploration", "Onglet Analyse"], outputs: ["Figures et diagnostics", "Résultats intra- et inter-datasets"],
@@ -153,14 +151,14 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       actionLabel: "Explorer les analyses disponibles", actionHref: "#/analyses"
     },
     {
-      id: "multiview", number: "08", title: "MultiView, un outil au service de l’interprétation des figures",
+      id: "multiview", number: "07", title: "MultiView, un outil au service de l’interprétation des figures",
       lead: "Toutes les figures générées et sauvegardées dans un projet peuvent être retrouvées, visualisées, déplacées, redimensionnées et organisées librement dans un espace interactif.",
       details: ["Récupération des figures sauvegardées", "Disposition et redimensionnement interactifs", "Organisation d’une lecture d’ensemble"],
       modules: ["Onglet MultiView"], outputs: ["Bibliothèque de figures", "Composition visuelle interactive"],
       image: "app-previews/screen-multiview-current.png", imageAlt: "Organisation interactive des figures dans MultiView", tone: "barcoder"
     },
     {
-      id: "repro", number: "09", title: "Une reproductibilité sans faille",
+      id: "repro", number: "08", title: "Une reproductibilité sans faille",
       lead: "Chaque résultat sauvegardé reste relié à son dataset, à ses paramètres et, lorsque la fonctionnalité est disponible, au code R permettant de comprendre, répéter ou prolonger l’analyse.",
       details: ["Historique des opérations et paramètres", "Code R associé aux figures compatibles", "Exports réutilisables hors de BarCodeR"],
       modules: ["Historiques", "Exports", "Code R"], outputs: ["Historique retrouvable", "Résultats et code réutilisables"],
@@ -173,9 +171,9 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     { id: "describe", number: "03", title: "Data overview", lead: "The main variables are visualised to assess dataset structure, quality and relevance before deeper analyses.", details: ["Dataset structure and dimensions", "Depth, richness and composition", "Available taxonomy and metadata"], modules: ["Description tab"], outputs: ["Dataset overview", "Identified points to review"], image: "app-previews/screen-description-current.png", imageAlt: "Dataset overview in BarCodeR", tone: "barcoder" },
     { id: "edit", number: "04", title: "Correct or enrich datasets", lead: "Dataset components can be adjusted whenever structure or information requires corrections or additions.", details: ["Data editing", "Information addition or correction", "Savable new state"], modules: ["Data Edition tab"], outputs: ["Enriched or corrected dataset", "Retainable new state"], image: "app-previews/screen-data-edition.png", imageAlt: "Dataset editing in BarCodeR", tone: "barcoder" },
     { id: "filter", number: "05", title: "Filter for the scientific question", lead: "Multiple, diverse and customisable filters adapt each dataset to the scientific question and available data.", details: ["Taxonomic and biological filters", "Sample and sequence selection", "Before-and-after preview"], modules: ["Filtering tab"], outputs: ["Question-specific dataset", "Documented transformations"], image: "app-previews/screen-filtration-current.png", imageAlt: "Interactive filtering in BarCodeR", tone: "barcoder" },
-    { id: "analyse", number: "06–07", title: "Explore and analyse datasets", lead: "A broad range of computational and graphical settings supports data exploration, hypothesis testing, and within- or between-dataset analyses.", details: ["Graphical and computational settings", "Within-dataset analyses", "Between-dataset analyses and comparisons"], modules: ["Exploration tab", "Analysis tab"], outputs: ["Figures and diagnostics", "Within- and between-dataset results"], image: "app-previews/screen-analyse-current.png", imageAlt: "Exploration and analyses in BarCodeR", tone: "barcoder", actionLabel: "Explore available analyses", actionHref: "#/analyses" },
-    { id: "multiview", number: "08", title: "MultiView, a tool supporting figure interpretation", lead: "All figures generated and saved in a project can be recovered, viewed, moved, resized and freely organised in an interactive space.", details: ["Saved figure retrieval", "Interactive layout and resizing", "Organisation of an overall reading"], modules: ["MultiView tab"], outputs: ["Figure library", "Interactive visual composition"], image: "app-previews/screen-multiview-current.png", imageAlt: "Interactive figure organisation in MultiView", tone: "barcoder" },
-    { id: "repro", number: "09", title: "Reproducibility without compromise", lead: "Every saved result remains linked to its dataset, parameters and, when available, the R code needed to understand, repeat or extend the analysis.", details: ["Operation and parameter history", "R code attached to compatible figures", "Reusable exports outside BarCodeR"], modules: ["Histories", "Exports", "R code"], outputs: ["Recoverable history", "Reusable results and code"], image: "app-previews/screen-home-current.png", imageAlt: "Project and work history in BarCodeR", tone: "repro" }
+    { id: "analyse", number: "06", title: "Explore and analyse datasets", lead: "A broad range of computational and graphical settings supports data exploration, hypothesis testing, and within- or between-dataset analyses.", details: ["Graphical and computational settings", "Within-dataset analyses", "Between-dataset analyses and comparisons"], modules: ["Exploration tab", "Analysis tab"], outputs: ["Figures and diagnostics", "Within- and between-dataset results"], image: "app-previews/screen-analyse-current.png", imageAlt: "Exploration and analyses in BarCodeR", tone: "barcoder", actionLabel: "Explore available analyses", actionHref: "#/analyses" },
+    { id: "multiview", number: "07", title: "MultiView, a tool supporting figure interpretation", lead: "All figures generated and saved in a project can be recovered, viewed, moved, resized and freely organised in an interactive space.", details: ["Saved figure retrieval", "Interactive layout and resizing", "Organisation of an overall reading"], modules: ["MultiView tab"], outputs: ["Figure library", "Interactive visual composition"], image: "app-previews/screen-multiview-current.png", imageAlt: "Interactive figure organisation in MultiView", tone: "barcoder" },
+    { id: "repro", number: "08", title: "Reproducibility without compromise", lead: "Every saved result remains linked to its dataset, parameters and, when available, the R code needed to understand, repeat or extend the analysis.", details: ["Operation and parameter history", "R code attached to compatible figures", "Reusable exports outside BarCodeR"], modules: ["Histories", "Exports", "R code"], outputs: ["Recoverable history", "Reusable results and code"], image: "app-previews/screen-home-current.png", imageAlt: "Project and work history in BarCodeR", tone: "repro" }
   ];
 
   useEffect(() => {
@@ -234,16 +232,15 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
 
       <div className="function-v4-project-visual reveal reveal-scale">
         <div className="function-v4-dataset-stack"><small>Datasets</small>{c.datasetStack.map((dataset, index) => <span style={{ "--dataset-index": index } as React.CSSProperties} key={dataset}><i>◇</i><b>{dataset}</b></span>)}</div>
-        <i className="function-v4-project-link"><b /></i>
+        <i className="function-v4-project-link project-link-1"><b /></i>
         <article className="function-v4-session-card"><header><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{c.sessionK}</small><b>{c.sessionT}</b></span></header><div>{c.sessionItems.map(item => <span key={item}>✓ {item}</span>)}</div></article>
-        <i className="function-v4-project-link"><b /></i>
+        <i className="function-v4-project-link project-link-2"><b /></i>
         <article className="function-v4-archive-card"><span>ZIP</span><small>{c.archiveK}</small><b>{c.archiveT}</b></article>
-        <i className="function-v4-project-link"><b /></i>
+        <i className="function-v4-project-link project-link-3"><b /></i>
         <article className="function-v4-resume-card"><span>↻</span><small>{c.resumeK}</small><b>{c.resumeT}</b></article>
       </div>
 
       <div className="function-v4-project-stages reveal">{c.projectStages.map(([number, title, text]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-      <p className="function-v4-project-note"><span>i</span>{c.projectNote}</p>
     </div></section>
   </main>;
 }
