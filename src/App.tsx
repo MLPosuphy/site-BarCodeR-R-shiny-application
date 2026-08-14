@@ -5,6 +5,7 @@ import FunctioningPageV2 from "./FunctioningPageV2";
 import AnalysesPageV2 from "./AnalysesPageV2";
 import TutorialsPageV2 from "./TutorialsPageV2";
 import InstallerPageV2 from "./InstallerPageV2";
+import CitationPageV2 from "./CitationPageV2";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
@@ -46,9 +47,9 @@ function Brand({ language }: { language: Language }) {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", download: "Installer"
+    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", download: "Installer", citation: "Citation"
   } : {
-    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", download: "Install"
+    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", download: "Install", citation: "Citation"
   };
 
   useEffect(() => setOpen(false), [route]);
@@ -65,6 +66,7 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
         <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
         <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
+        <a className={route === "/citation" ? "active" : ""} href="#/citation">{c.citation}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
           <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
           <button className={language === "en" ? "active" : ""} onClick={() => { setLanguage("en"); setOpen(false); }}>EN</button>
@@ -285,7 +287,7 @@ function Landing({ language }: { language: Language }) {
     finalTutorial: "Voir les tutoriels",
     finalDownload: "Installer BarCodeR",
     platforms: [
-      ["Disponible", "Windows", "Lanceur dédié généré avec executablePackeR"],
+      ["Disponible", "Windows", "Application autonome prête à ouvrir"],
       ["Bientôt", "macOS", "Version dédiée en préparation"],
       ["Disponible", "Linux", "Exécution du lanceur Windows via un système compatible avec les .exe"]
     ],
@@ -377,7 +379,7 @@ function Landing({ language }: { language: Language }) {
     finalTutorial: "View tutorials",
     finalDownload: "Install BarCodeR",
     platforms: [
-      ["Available", "Windows", "Dedicated launcher generated with executablePackeR"],
+      ["Available", "Windows", "Standalone application ready to open"],
       ["Coming soon", "macOS", "Dedicated version in preparation"],
       ["Available", "Linux", "Windows launcher through a system that supports .exe files"]
     ],
@@ -1914,7 +1916,7 @@ function DownloadPage({ language }: { language: Language }) {
     languages: "Langues de l’interface",
     currentAccess: "Distribution actuelle",
     localTitle: "Lanceur local dédié",
-    localP: "Sous Windows, le lanceur généré avec executablePackeR permet d’ouvrir BarCodeR sans préparer manuellement l’environnement R/Shiny. Une version dédiée à macOS est prévue ; sous Linux, le lanceur Windows peut être utilisé avec un système compatible avec les fichiers .exe.",
+    localP: "Sous Windows, l’application autonome permet d’ouvrir BarCodeR sans préparer manuellement l’environnement R/Shiny. Une version dédiée à macOS est prévue ; sous Linux, le lanceur Windows peut être utilisé avec un système compatible avec les fichiers .exe.",
     localItems: ["Lanceur disponible pour Windows", "Version macOS bientôt disponible", "Utilisation sous Linux via une compatibilité .exe"],
     launch: "Mode avancé depuis les sources R",
     copy: "Copier",
@@ -1961,7 +1963,7 @@ function DownloadPage({ language }: { language: Language }) {
     languages: "Interface languages",
     currentAccess: "Current distribution",
     localTitle: "Dedicated local launcher",
-    localP: "On Windows, the launcher generated with executablePackeR opens BarCodeR without manually preparing the R/Shiny environment. A dedicated macOS version is planned; on Linux, the Windows launcher can be used through a system that supports .exe files.",
+    localP: "On Windows, the standalone application opens BarCodeR without manually preparing the R/Shiny environment. A dedicated macOS version is planned; on Linux, the Windows launcher can be used through a system that supports .exe files.",
     localItems: ["Launcher available for Windows", "macOS version coming soon", "Linux use through .exe compatibility"],
     launch: "Advanced mode from R sources",
     copy: "Copy",
@@ -2073,7 +2075,8 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  const fr = language === "fr";
+  return <footer className="site-footer-v2"><div className="page-width site-footer-v2-main"><div className="site-footer-v2-intro"><Brand language={language} /><p>{fr ? "Un environnement interactif pour préparer, explorer, comparer et analyser des données de métabarcoding." : "An interactive environment for preparing, exploring, comparing and analysing metabarcoding data."}</p><div><span>R / Shiny</span><span>phyloseq</span><span>{fr ? "Analyse reproductible" : "Reproducible analysis"}</span></div></div><nav aria-label={fr ? "Navigation de pied de page" : "Footer navigation"}><div><small>{fr ? "Découvrir" : "Discover"}</small><a href="#/">{fr ? "Accueil" : "Home"}<span>↗</span></a><a href="#/functioning">{fr ? "Fonctionnement" : "How it works"}<span>↗</span></a><a href="#/analyses">Analyses<span>↗</span></a></div><div><small>{fr ? "Utiliser" : "Use"}</small><a href="#/tutorials">{fr ? "Tutoriels" : "Tutorials"}<span>↗</span></a><a href="#/download">{fr ? "Installer" : "Install"}<span>↗</span></a><a href="#/citation">Citation<span>↗</span></a></div></nav></div><div className="page-width site-footer-v2-bottom"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span><a href="#top" onClick={event => { event.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} aria-label={fr ? "Revenir en haut" : "Back to top"}>↑</a></div></footer>;
 }
 
 export default function App() {
@@ -2092,7 +2095,8 @@ export default function App() {
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
       : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
       : route === "/functioning" || route.startsWith("/application") ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
-      : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
+      : route === "/download" || route === "/availability" ? (language === "fr" ? "Installer BarCodeR" : "Install BarCodeR")
+      : route === "/citation" ? (language === "fr" ? "Citer BarCodeR" : "Cite BarCodeR")
       : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
       : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR`;
@@ -2117,6 +2121,7 @@ export default function App() {
   else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
   else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={language} />;
+  else if (route === "/citation") page = <CitationPageV2 language={language} />;
   else page = <Landing language={language} />;
 
   return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
