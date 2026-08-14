@@ -5,6 +5,7 @@ import FunctioningPageV2 from "./FunctioningPageV2";
 import AnalysesPageV2 from "./AnalysesPageV2";
 import TutorialsPageV2 from "./TutorialsPageV2";
 import InstallerPageV2 from "./InstallerPageV2";
+import CitationPage from "./CitationPage";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
@@ -46,9 +47,9 @@ function Brand({ language }: { language: Language }) {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", download: "Installer"
+    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", citation: "Citation", download: "Installer"
   } : {
-    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", download: "Install"
+    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", citation: "Citation", download: "Install"
   };
 
   useEffect(() => setOpen(false), [route]);
@@ -64,6 +65,7 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <a className={route === "/functioning" || route.startsWith("/application") ? "active" : ""} href="#/functioning">{c.functioning}</a>
         <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
         <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
+        <a className={route === "/citation" ? "active" : ""} href="#/citation">{c.citation}</a>
         <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
           <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
@@ -2073,7 +2075,7 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/citation">Citation</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -2092,6 +2094,7 @@ export default function App() {
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
       : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
       : route === "/functioning" || route.startsWith("/application") ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
+      : route === "/citation" ? (language === "fr" ? "Citer BarCodeR" : "Cite BarCodeR")
       : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
       : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
       : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
@@ -2116,6 +2119,7 @@ export default function App() {
   else if (route === "/showcase") page = <ShowcasePage language={language} />;
   else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
+  else if (route === "/citation") page = <CitationPage language={language} />;
   else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={language} />;
   else page = <Landing language={language} />;
 

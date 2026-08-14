@@ -4317,7 +4317,9 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .installer-v2-citation > div { align-items: center; display: grid; gap: 25px; grid-template-columns: minmax(250px,.7fr) minmax(0,1.3fr) auto; }
 .installer-v2-citation h2 { font-size: 30px; margin-top: 13px; }
 .installer-v2-citation blockquote { background: #fff; border-left: 3px solid var(--violet); color: #514a5f; font-size: 13px; line-height: 1.6; padding: 18px; }
-.installer-v2-citation button { background: var(--violet); border: 0; border-radius: 10px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 800; padding: 13px 16px; }
+.installer-v2-citation-actions { display: grid; gap: 8px; }
+.installer-v2-citation-actions button { background: var(--violet); border: 0; border-radius: 10px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 800; padding: 13px 16px; }
+.installer-v2-citation-actions a { align-items: center; color: var(--violet); display: flex; font-size: 10px; font-weight: 850; gap: 10px; justify-content: space-between; padding: 4px 2px; }
 .installer-v2-faq { background: radial-gradient(circle at 12% 18%, rgba(157,224,231,.15), transparent 27%), radial-gradient(circle at 86% 76%, rgba(91,77,184,.32), transparent 31%), linear-gradient(145deg, #2c235f, #17132f); color: #fff; overflow: hidden; padding: clamp(95px, 11vw, 155px) 0 70px; position: relative; }
 .installer-v2-faq > div { display: grid; gap: clamp(50px, 7vw, 95px); grid-template-columns: minmax(290px,.72fr) minmax(0,1.28fr); }
 .installer-v2-faq-heading { align-self: start; position: sticky; top: 110px; }
@@ -4331,7 +4333,12 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .installer-v2-faq-orbit > i:last-child { animation-direction: reverse; animation-duration: 8s; inset: -12px; opacity: .55; }
 @keyframes installerFaqOrbit { to { transform: rotate(360deg); } }
 .installer-v2-faq-topics { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 30px; }
-.installer-v2-faq-topics span { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; color: #dcd8ea; font-size: 10px; font-weight: 800; padding: 8px 11px; }
+.installer-v2-faq-topics button { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; color: #dcd8ea; cursor: pointer; font-size: 10px; font-weight: 800; padding: 8px 11px; transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease; }
+.installer-v2-faq-topics button:hover { border-color: rgba(157,224,231,.4); transform: translateY(-2px); }
+.installer-v2-faq-topics button.active { background: #9de0e7; border-color: #9de0e7; color: #21194d; }
+.installer-v2-faq-content { min-width: 0; }
+.installer-v2-faq-count { align-items: baseline; color: #aaa3be; display: flex; font-size: 10px; font-weight: 800; gap: 9px; letter-spacing: .06em; margin-bottom: 13px; text-transform: uppercase; }
+.installer-v2-faq-count b { color: #9de0e7; font-family: var(--font-display); font-size: 26px; letter-spacing: -.04em; }
 .installer-v2-faq-list { display: grid; gap: 11px; }
 .installer-v2-faq-list details { background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.11); border-radius: 15px; overflow: hidden; transition: background .25s ease, border-color .25s ease, transform .25s ease; }
 .installer-v2-faq-list details:hover { border-color: rgba(157,224,231,.3); transform: translateX(-5px); }
@@ -4352,6 +4359,73 @@ footer { background: #101426; color: white; padding-top: 58px; }
 .installer-v2-faq-footer a:hover { transform: translateY(-3px); }
 .installer-v2-faq-footer a b { color: var(--violet); font-size: 16px; }
 
+/* Citation page */
+.citation-page { background: #fff; }
+.citation-hero { background: radial-gradient(circle at 82% 19%, rgba(58,175,188,.18), transparent 31%), linear-gradient(180deg, #fff, #f7f7fc); padding: clamp(80px, 9vw, 130px) 0 65px; }
+.citation-hero > div { display: grid; gap: clamp(44px, 7vw, 95px); grid-template-columns: minmax(0,1.15fr) minmax(330px,.85fr); }
+.citation-hero header { align-self: center; }
+.citation-hero h1 { font-size: clamp(60px, 7vw, 96px); letter-spacing: -.06em; line-height: .94; margin-top: 22px; max-width: 900px; }
+.citation-hero header > p { color: var(--ink-soft); font-size: clamp(18px, 1.5vw, 22px); line-height: 1.65; margin-top: 28px; max-width: 780px; }
+.citation-hero aside { align-items: center; display: flex; justify-content: center; min-height: 390px; position: relative; }
+.citation-hero-sheet { background: linear-gradient(145deg, #302667, #21194d); border: 1px solid rgba(255,255,255,.16); border-radius: 23px; box-shadow: 0 30px 70px rgba(43,34,91,.24); color: #fff; height: 310px; overflow: hidden; padding: 35px; position: relative; transform: rotate(3deg); width: 260px; }
+.citation-hero-sheet::before { border: 1px solid rgba(157,224,231,.2); border-radius: 50%; content: ""; height: 255px; left: -75px; position: absolute; top: 100px; width: 255px; }
+.citation-hero-sheet small { color: #9de0e7; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.citation-hero-sheet strong { display: block; font-size: 34px; margin-top: 10px; }
+.citation-hero-sheet > span { color: rgba(157,224,231,.18); font-family: Georgia, serif; font-size: 180px; line-height: 1; position: absolute; right: 28px; top: 77px; }
+.citation-hero-sheet > i { animation: citationOrbit 6s linear infinite; border: 1px solid rgba(157,224,231,.32); border-radius: 50%; bottom: 32px; height: 72px; position: absolute; right: 34px; width: 72px; }
+.citation-hero-sheet > i::after { background: #9de0e7; border-radius: 50%; box-shadow: 0 0 12px #9de0e7; content: ""; height: 7px; left: 8px; position: absolute; top: 5px; width: 7px; }
+.citation-hero-sheet > i:last-child { animation-direction: reverse; animation-duration: 9s; bottom: 17px; height: 102px; right: 19px; width: 102px; }
+@keyframes citationOrbit { to { transform: rotate(360deg); } }
+.citation-hero dl { border-top: 1px solid rgba(91,77,184,.16); display: grid; grid-column: 1 / -1; grid-template-columns: repeat(3,1fr); margin-top: 10px; }
+.citation-hero dl > div { min-height: 84px; padding: 20px 24px; }
+.citation-hero dl > div + div { border-left: 1px solid rgba(91,77,184,.13); }
+.citation-hero dt { color: var(--muted); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.citation-hero dd { font-family: var(--font-display); font-size: 17px; font-weight: 750; margin-top: 8px; }
+.citation-current, .citation-record, .citation-writing { padding: clamp(95px, 10vw, 145px) 0; }
+.citation-heading h2, .citation-record-heading h2 { font-size: clamp(43px, 5vw, 68px); letter-spacing: -.05em; line-height: 1.02; margin-top: 20px; max-width: 1050px; }
+.citation-heading > p, .citation-record-heading > p { color: var(--muted); font-size: 17px; line-height: 1.7; margin-top: 23px; max-width: 850px; }
+.citation-format-grid { display: grid; gap: 17px; grid-template-columns: 1fr 1fr; margin-top: 50px; }
+.citation-format-grid article { background: #f7f6fb; border: 1px solid rgba(91,77,184,.13); border-radius: 18px; display: flex; flex-direction: column; min-height: 355px; overflow: hidden; padding: 27px; transition: box-shadow .25s ease, transform .25s ease; }
+.citation-format-grid article:hover { box-shadow: 0 24px 55px rgba(43,34,91,.12); transform: translateY(-5px); }
+.citation-format-grid header { align-items: center; display: flex; gap: 12px; }
+.citation-format-grid header span { color: var(--violet); font-family: var(--font-mono); font-size: 10px; }
+.citation-format-grid header b { font-size: 13px; text-transform: uppercase; }
+.citation-format-grid blockquote, .citation-format-grid pre { background: #fff; border-left: 3px solid var(--violet); color: #514a5f; flex: 1; font-size: 14px; line-height: 1.75; margin: 25px 0 20px; overflow: auto; padding: 24px; white-space: pre-wrap; }
+.citation-format-grid pre { font-family: var(--font-mono); font-size: 11px; }
+.citation-format-grid button, .citation-method-example button { align-items: center; align-self: flex-end; background: var(--violet); border: 0; border-radius: 9px; color: #fff; cursor: pointer; display: flex; font-size: 11px; font-weight: 850; gap: 25px; padding: 12px 14px; }
+.citation-format-grid button i { font-style: normal; }
+.citation-record { background: linear-gradient(145deg, #2c235f, #17132f); color: #fff; }
+.citation-record .eyebrow { color: #9de0e7; }
+.citation-record-heading > p { color: #cec8e3; }
+.citation-record-grid { display: grid; gap: 13px; grid-template-columns: repeat(4,1fr); margin-top: 50px; }
+.citation-record-grid article { background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.11); border-radius: 15px; min-height: 255px; padding: 25px; transition: background .25s ease, border-color .25s ease, transform .25s ease; }
+.citation-record-grid article:hover { background: rgba(157,224,231,.1); border-color: rgba(157,224,231,.25); transform: translateY(-5px); }
+.citation-record-grid span { color: #9de0e7; font-family: var(--font-mono); font-size: 10px; }
+.citation-record-grid h3 { font-size: 26px; margin-top: 45px; }
+.citation-record-grid p { color: #cec8e3; font-size: 13px; line-height: 1.65; margin-top: 13px; }
+.citation-writing-flow { display: grid; gap: 32px; grid-template-columns: repeat(3,1fr); margin-top: 52px; }
+.citation-writing-flow article { border-top: 3px solid var(--violet); min-height: 225px; padding: 25px 20px; position: relative; }
+.citation-writing-flow article > span { color: var(--violet); font-family: var(--font-mono); font-size: 10px; }
+.citation-writing-flow h3 { font-size: 28px; margin-top: 28px; }
+.citation-writing-flow p { color: var(--muted); font-size: 14px; line-height: 1.65; margin-top: 12px; }
+.citation-writing-flow article > i { background: rgba(91,77,184,.2); height: 2px; position: absolute; right: -27px; top: 50%; width: 22px; }
+.citation-writing-flow article > i em { animation: citationFlow 2s linear infinite; background: var(--cyan); border-radius: 50%; height: 7px; left: 0; position: absolute; top: -3px; width: 7px; }
+@keyframes citationFlow { to { left: calc(100% - 7px); } }
+.citation-method-example { align-items: center; background: #f4f3f9; border-left: 4px solid var(--violet); display: grid; gap: 13px 25px; grid-template-columns: 1fr auto; margin: 34px 0 0; padding: 27px; }
+.citation-method-example small { color: var(--violet); font-size: 10px; font-weight: 850; grid-column: 1; text-transform: uppercase; }
+.citation-method-example p { color: #514a5f; font-size: 14px; grid-column: 1; line-height: 1.65; }
+.citation-method-example button { grid-column: 2; grid-row: 1 / 3; }
+.citation-status { background: #effafb; padding: 75px 0; }
+.citation-status > div { align-items: center; display: grid; gap: 55px; grid-template-columns: 135px 1fr; }
+.citation-status-mark { align-items: center; display: flex; height: 120px; justify-content: center; position: relative; width: 120px; }
+.citation-status-mark span { align-items: center; background: linear-gradient(145deg, var(--cyan), var(--violet)); border-radius: 50%; color: #fff; display: flex; font-family: Georgia, serif; font-size: 44px; font-weight: 800; height: 78px; justify-content: center; position: relative; width: 78px; z-index: 2; }
+.citation-status-mark i { animation: citationStatus 2.8s ease-in-out infinite; border: 1px solid rgba(91,77,184,.23); border-radius: 50%; inset: 0; position: absolute; }
+@keyframes citationStatus { 50% { opacity: .28; transform: scale(1.12); } }
+.citation-status h2 { font-size: clamp(34px, 4vw, 52px); margin-top: 15px; }
+.citation-status p { color: #4f596d; font-size: 16px; line-height: 1.7; margin-top: 16px; max-width: 900px; }
+.citation-actions { padding: 50px 0 80px; }
+.citation-actions > div { display: flex; flex-wrap: wrap; gap: 12px; }
+
 @media (max-width: 980px) {
   .analysis-v2-repro-cards { grid-template-columns: 1fr 1fr; }
   .tutorial-v3-grid, .tutorial-v3-dataset-grid { grid-template-columns: 1fr; }
@@ -4367,6 +4441,12 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .installer-v2-faq-heading { display: grid; grid-template-columns: 150px 1fr; position: static; }
   .installer-v2-faq-heading .eyebrow, .installer-v2-faq-heading h2, .installer-v2-faq-heading > p, .installer-v2-faq-topics { grid-column: 2; }
   .installer-v2-faq-orbit { grid-column: 1; grid-row: 1 / 6; margin: 0; }
+  .citation-hero > div { grid-template-columns: 1fr; }
+  .citation-hero aside { min-height: 340px; }
+  .citation-format-grid { grid-template-columns: 1fr; }
+  .citation-record-grid { grid-template-columns: 1fr 1fr; }
+  .citation-writing-flow { gap: 14px; }
+  .citation-writing-flow article > i { display: none; }
 }
 
 @media (max-width: 700px) {
@@ -4377,7 +4457,7 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .analysis-v2-reading-flow i em { animation-name: analysisReadingMoveVertical; left: -3px; top: 0; }
   @keyframes analysisReadingMoveVertical { to { top: calc(100% - 8px); } }
   .analysis-v2-repro-cards { grid-template-columns: 1fr; }
-  .tutorial-v3-hero h1, .installer-v2-hero h1 { font-size: 50px; }
+  .tutorial-v3-hero h1, .installer-v2-hero h1, .citation-hero h1 { font-size: 50px; }
   .tutorial-v3-path { grid-template-columns: 1fr; }
   .tutorial-v3-path article { min-height: 100px; }
   .tutorial-v3-path article > i { height: 33px; left: 50%; top: 63px; width: 2px; }
@@ -4396,8 +4476,17 @@ footer { background: #101426; color: white; padding-top: 58px; }
   .installer-v2-faq-list details > p { margin-left: 53px; padding: 18px 18px 22px 0; }
   .installer-v2-faq-footer { align-items: stretch; flex-direction: column; gap: 18px; }
   .installer-v2-faq-footer a { justify-content: space-between; }
+  .citation-hero aside { min-height: 300px; }
+  .citation-hero dl { grid-template-columns: 1fr; }
+  .citation-hero dl > div + div { border-left: 0; border-top: 1px solid rgba(91,77,184,.13); }
+  .citation-record-grid, .citation-writing-flow { grid-template-columns: 1fr; }
+  .citation-record-grid article { min-height: 215px; }
+  .citation-method-example { grid-template-columns: 1fr; }
+  .citation-method-example button { grid-column: 1; grid-row: auto; justify-content: space-between; width: 100%; }
+  .citation-status > div { grid-template-columns: 1fr; }
+  .citation-actions > div { display: grid; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .analysis-v2-reading-flow i em, .tutorial-v3-path article > i em, .installer-v2-app-icon i, .installer-v2-process-flow article > i em, .installer-v2-package-core > i, .installer-v2-faq-orbit > i { animation: none; }
+  .analysis-v2-reading-flow i em, .tutorial-v3-path article > i em, .installer-v2-app-icon i, .installer-v2-process-flow article > i em, .installer-v2-package-core > i, .installer-v2-faq-orbit > i, .citation-hero-sheet > i, .citation-writing-flow article > i em, .citation-status-mark i { animation: none; }
 }
