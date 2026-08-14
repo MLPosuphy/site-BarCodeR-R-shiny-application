@@ -6,7 +6,7 @@ import AnalysesPageV2 from "./AnalysesPageV2";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
-const moduleHref = (key: string) => `#/application/${key}`;
+const moduleHref = (key: string) => key === "exploration" || key === "analyse" ? "#/analyses" : key === "documentation" ? "#/documentation" : "#/functioning";
 
 // Main BarCodeR application screenshot displayed on the overview page.
 // Replacing this file in `public/app-previews/` updates the visual without
@@ -410,7 +410,7 @@ function Landing({ language }: { language: Language }) {
     <section className="home-value-section" id="home-value"><div className="page-width">
       <div className="section-heading home-value-heading reveal reveal-left"><div><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div></div>
       <div className="home-value-cards">{c.strengths.map(([number, icon, title, text, proof], index) => <article className="home-value-card reveal reveal-pop" style={{ "--delay": `${index * 70}ms` } as React.CSSProperties} key={title}><div className="home-value-card-head"><span>{number}</span><i>{icon}</i></div><h3>{title}</h3><p>{text}</p><small>{proof}</small></article>)}</div>
-      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/application/multiview">{c.proofAction}<span>↗</span></a></div></div></div>
+      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/functioning">{c.proofAction}<span>↗</span></a></div></div></div>
     </div></section>
 
     <section className="section home-journeys page-width" id="home-data">
@@ -421,13 +421,13 @@ function Landing({ language }: { language: Language }) {
           <span className="pathway-route-two" onPointerEnter={() => setActivePath(2)}><b>{language === "fr" ? "Voie 2" : "Path 2"}</b>{language === "fr" ? "J’importe un objet phyloseq" : "I import a phyloseq object"}</span>
         </div>
         <div className="pathway-stage pathway-inputs">
-          <a className="pathway-node pathway-fastq pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/application/openmetabar"><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></a>
-          <a className="pathway-node pathway-existing pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/application/input-data"><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></a>
+          <a className="pathway-node pathway-fastq pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/functioning"><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></a>
+          <a className="pathway-node pathway-existing pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/functioning"><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></a>
         </div>
         <div className="pathway-lane-links" aria-hidden="true"><i className="pathway-route-one" /><i className="pathway-route-two" /></div>
         <div className="pathway-stage pathway-actions">
-          <a className="pathway-node pathway-openmetabar pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/application/openmetabar"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
-          <a className="pathway-node pathway-import pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/application/input-data"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
+          <a className="pathway-node pathway-openmetabar pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/functioning"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
+          <a className="pathway-node pathway-import pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/functioning"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
         </div>
         <div className="pathway-merge" aria-hidden="true"><i className="pathway-route-one" /><i className="pathway-route-two" /><b /><span /></div>
         <div className="pathway-hub"><small>{language === "fr" ? "Point de convergence" : "Convergence point"}</small><strong>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</strong><p>{language === "fr" ? "Abondances · taxonomie · métadonnées" : "Abundances · taxonomy · metadata"}</p></div>
@@ -605,8 +605,8 @@ function ApplicationIndex({ language }: { language: Language }) {
       <div className="section-heading reveal"><div><Eyebrow>{c.entriesK}</Eyebrow><h2>{c.entriesT}</h2></div><p>{language === "fr" ? "Le projet est le point commun. Seule la manière d’y faire entrer les données change." : "The project is the shared starting point. Only the way data enter it changes."}</p></div>
       <div className="function-project-start reveal"><span>01</span><div><small>{language === "fr" ? "Point de départ" : "Starting point"}</small><h3>{language === "fr" ? "Créer ou ouvrir un projet" : "Create or open a project"}</h3><p>{language === "fr" ? "Le projet regroupe les datasets, les historiques et les résultats produits au cours du travail." : "The project brings together datasets, histories and results produced throughout the work."}</p></div></div>
       <div className="product-role-grid function-entry-grid">
-        <article className="product-role openmetabar-entry-card reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>{language === "fr" ? "Séquences brutes" : "Raw sequences"}</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/openmetabar">{language === "fr" ? "Voir OpenMetaBar" : "View OpenMetaBar"}<span>→</span></a></article>
-        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>{language === "fr" ? "Données déjà structurées" : "Already structured data"}</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/application/input-data">{language === "fr" ? "Voir l’import" : "View import"}<span>→</span></a></article>
+        <article className="product-role openmetabar-entry-card reveal"><div className="product-role-head"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><div><small>{language === "fr" ? "Séquences brutes" : "Raw sequences"}</small><h3>{c.componentsRole}</h3></div></div><p>{c.componentsText}</p><div className="role-tags">{c.componentsTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/functioning">{language === "fr" ? "Voir OpenMetaBar" : "View OpenMetaBar"}<span>→</span></a></article>
+        <article className="product-role barcoder-role reveal"><div className="product-role-head"><img src={asset("app-previews/barcoder-logo.png")} alt="" /><div><small>{language === "fr" ? "Données déjà structurées" : "Already structured data"}</small><h3>{c.phyloseqRole}</h3></div></div><p>{c.phyloseqText}</p><div className="role-tags">{c.phyloseqTags.map(tag => <span key={tag}>{tag}</span>)}</div><a className="function-entry-link" href="#/functioning">{language === "fr" ? "Voir l’import" : "View import"}<span>→</span></a></article>
       </div>
       <div className="function-converge reveal"><span>↓</span><b>{language === "fr" ? "Une fois un objet phyloseq présent dans le projet, le parcours est commun." : "Once a phyloseq object is present in the project, the workflow is shared."}</b></div>
     </section>
@@ -1616,7 +1616,7 @@ function DocumentationPage({ language }: { language: Language }) {
           <p className="lead">{c.p}</p>
           <div className="documentation-actions">
             <a className="button primary" href={fullDocumentationUrl} target="_blank" rel="noreferrer">{c.open}<span>↗</span></a>
-            <a className="button secondary" href="#/application/documentation">{c.appTab}<span>→</span></a>
+            <a className="button secondary" href="#/documentation">{c.appTab}<span>→</span></a>
           </div>
         </div>
         <div className="documentation-level-preview">
@@ -2084,24 +2084,18 @@ export default function App() {
   });
 
   const setLanguage = (next: Language) => { localStorage.setItem("barcoder-site-language", next); setLanguageState(next); };
-  const activeModule = useMemo(() => {
-    const match = route.match(/^\/application\/([^/]+)/);
-    return match ? modules.find(module => module.key === match[1]) : undefined;
-  }, [route]);
-
   useEffect(() => {
     document.documentElement.lang = language;
-    const label = activeModule ? tx(activeModule.title, language)
-      : route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
+    const label = route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
       : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation")
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
       : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
-      : route === "/functioning" || route === "/application" ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
+      : route === "/functioning" || route.startsWith("/application") ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
       : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
       : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
       : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR`;
-  }, [language, route, activeModule]);
+  }, [language, route]);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
@@ -2112,8 +2106,7 @@ export default function App() {
   }, [route, language]);
 
   let page: React.ReactNode;
-  if (activeModule) page = <ModulePage module={activeModule} language={language} />;
-  else if (route === "/functioning" || route === "/application") page = <FunctioningPageV2 language={language} />;
+  if (route === "/functioning" || route.startsWith("/application")) page = <FunctioningPageV2 language={language} />;
   else if (route === "/analyses") page = <AnalysesPageV2 language={language} />;
   else if (route === "/showcase") page = <ShowcasePage language={language} />;
   else if (route === "/tutorials" || route === "/evidence") page = <EvidencePage language={language} />;
@@ -2122,5 +2115,5 @@ export default function App() {
   else if (route === "/download" || route === "/availability") page = <DownloadPage language={language} />;
   else page = <Landing language={language} />;
 
-  return <div className={activeModule?.key === "openmetabar" ? "site-shell openmetabar-route" : "site-shell"}><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
+  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
 }

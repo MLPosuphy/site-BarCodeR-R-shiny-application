@@ -27,7 +27,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
 
   const c = language === "fr" ? {
     heroK: "Fonctionnement de BarCodeR",
-    heroT: <>Un environnement unique pour suivre <em>tout le parcours des données de métabarcoding.</em></>,
+    heroT: <>Un environnement unique pour conduire <em>l’ensemble du parcours analytique des données de métabarcoding.</em></>,
     heroP: "À partir de fichiers FASTQ ou d’un objet phyloseq, BarCodeR structure un même chemin vers la préparation, l’exploration, les analyses, la visualisation et les exports.",
     heroOrbit: [["01A", "Traiter des séquences brutes"], ["01B", "Importer un objet phyloseq"], ["02", "Préparer les données"], ["03", "Explorer les données"], ["04", "Analyser les données"], ["05", "Visualiser les données"], ["06", "Exporter les données"]],
     entriesK: "Genèse du parcours analytique",
@@ -63,7 +63,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     ]
   } : {
     heroK: "How BarCodeR works",
-    heroT: <>One environment for <em>the complete metabarcoding data journey.</em></>,
+    heroT: <>One environment for <em>the complete analytical journey of metabarcoding data.</em></>,
     heroP: "Starting from FASTQ files or a phyloseq object, BarCodeR structures one path through preparation, exploration, analyses, visualisation and exports.",
     heroOrbit: [["01A", "Process raw sequences"], ["01B", "Import a phyloseq object"], ["02", "Prepare data"], ["03", "Explore data"], ["04", "Analyse data"], ["05", "Visualise data"], ["06", "Export data"]],
     entriesK: "Origins of the analytical journey",
@@ -112,7 +112,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       lead: "Un objet phyloseq déjà structuré rejoint directement l’espace de travail BarCodeR.",
       details: ["Import d’un objet phyloseq (format compatible : .rds, .rdata)", "Vérification de la compatibilité du ou des fichiers chargés", "Corrections automatiques si l’objet chargé ne respecte pas les conventions de l’application"],
       modules: ["Onglet Input data"], outputs: ["Dataset importé", "Compatibilité contrôlée"],
-      image: "app-previews/screen-input-data.png", imageAlt: "Import d’un objet phyloseq dans BarCodeR", tone: "barcoder"
+      image: "app-previews/screen-input-data.png", imageAlt: "Import d’un objet phyloseq dans BarCodeR", tone: "openmeta"
     },
     {
       id: "organize", number: "02", title: "Organiser les datasets (objets phyloseq) en projets",
@@ -166,7 +166,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     }
   ] : [
     { id: "fastq", number: "01A", title: "Process raw sequences", lead: "OpenMetaBar turns FASTQ files into a phyloseq object ready for BarCodeR.", details: ["Bioinformatics processing choices", "Processing-step monitoring", "Production of a structured phyloseq object (dataset)"], modules: ["OpenMetaBar tab"], outputs: ["Structured phyloseq dataset", "Sequences ready for analysis"], image: "app-previews/screen-openmetabar-current.png", imageAlt: "Sequence processing in OpenMetaBar", tone: "openmeta" },
-    { id: "phyloseq", number: "01B", title: "Import a phyloseq object", lead: "An already structured phyloseq object enters the BarCodeR workspace directly.", details: ["Phyloseq object import (compatible format: .rds, .rdata)", "Compatibility check for loaded file or files", "Automatic corrections when the loaded object does not follow application conventions"], modules: ["Input data tab"], outputs: ["Imported dataset", "Checked compatibility"], image: "app-previews/screen-input-data.png", imageAlt: "Phyloseq object import in BarCodeR", tone: "barcoder" },
+    { id: "phyloseq", number: "01B", title: "Import a phyloseq object", lead: "An already structured phyloseq object enters the BarCodeR workspace directly.", details: ["Phyloseq object import (compatible format: .rds, .rdata)", "Compatibility check for loaded file or files", "Automatic corrections when the loaded object does not follow application conventions"], modules: ["Input data tab"], outputs: ["Imported dataset", "Checked compatibility"], image: "app-previews/screen-input-data.png", imageAlt: "Phyloseq object import in BarCodeR", tone: "openmeta" },
     { id: "organize", number: "02", title: "Organise datasets (phyloseq objects) into projects", lead: "Several datasets can be organised in one project, analysed in a shared context and, where supported by the methods, compared directly.", details: ["Active dataset selection", "Organisation of several phyloseq objects", "Within- and between-dataset comparisons"], modules: ["Datasets tab"], outputs: ["Multi-dataset project", "Shared analysis context"], image: "app-previews/screen-datasets-current.png", imageAlt: "Dataset organisation in BarCodeR", tone: "barcoder" },
     { id: "describe", number: "03", title: "Data overview", lead: "The main variables are visualised to assess dataset structure, quality and relevance before deeper analyses.", details: ["Dataset structure and dimensions", "Depth, richness and composition", "Available taxonomy and metadata"], modules: ["Description tab"], outputs: ["Dataset overview", "Identified points to review"], image: "app-previews/screen-description-current.png", imageAlt: "Dataset overview in BarCodeR", tone: "barcoder" },
     { id: "edit", number: "04", title: "Correct or enrich datasets", lead: "Dataset components can be adjusted whenever structure or information requires corrections or additions.", details: ["Data editing", "Information addition or correction", "Savable new state"], modules: ["Data Edition tab"], outputs: ["Enriched or corrected dataset", "Retainable new state"], image: "app-previews/screen-data-edition.png", imageAlt: "Dataset editing in BarCodeR", tone: "barcoder" },
@@ -219,7 +219,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
         </aside>
 
         <div className="function-v4-chapters">{steps.map((step, index) => <article id={`function-v4-chapter-${step.id}`} className={`function-v4-chapter ${activeStep === index ? "active" : ""}`} data-step={index} data-tone={step.tone} key={step.id} onPointerEnter={() => setActiveStep(index)}>
-          <header><span>{step.number}</span><div><small>{step.modules.join(" · ")}</small><h3>{step.title}</h3><p>{step.lead}</p></div></header>
+          <header><div><div className="function-v4-module-line">{step.id === "phyloseq" && <img src={asset("app-previews/openmetabar-logo.png")} alt="" />}<small>{step.modules.join(" · ")}</small></div><h3>{step.title}</h3><p>{step.lead}</p></div></header>
           <div className="function-v4-chapter-body"><div className="function-v4-detail-list">{step.details.map((detail, detailIndex) => <p key={detail}><span>0{detailIndex + 1}</span>{detail}</p>)}</div><figure><figcaption>{c.screenLabel}<b>{step.modules[0]}</b></figcaption><div><img src={asset(step.image)} alt={step.imageAlt} /></div></figure></div>
           {step.actionHref && <a className="function-v4-analysis-link" href={step.actionHref}>{step.actionLabel}<span>→</span></a>}
           <div className="function-v4-outcomes"><small><i>✦</i>{c.outputsLabel}</small><div>{step.outputs.map((output, outputIndex) => <span key={output}><b>0{outputIndex + 1}</b><strong>{output}</strong></span>)}</div></div>
