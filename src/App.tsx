@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
 import FunctioningPageV2 from "./FunctioningPageV2";
 import AnalysesPageV2 from "./AnalysesPageV2";
+import TutorialsPageV2 from "./TutorialsPageV2";
+import InstallerPageV2 from "./InstallerPageV2";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const tx = (value: Localized, language: Language) => value[language];
@@ -44,9 +46,9 @@ function Brand({ language }: { language: Language }) {
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", documentation: "Documentation", download: "Installer"
+    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", download: "Installer"
   } : {
-    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", documentation: "Documentation", download: "Install"
+    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", download: "Install"
   };
 
   useEffect(() => setOpen(false), [route]);
@@ -62,7 +64,6 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <a className={route === "/functioning" || route.startsWith("/application") ? "active" : ""} href="#/functioning">{c.functioning}</a>
         <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
         <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
-        <a className={route === "/documentation" ? "active" : ""} href="#/documentation">{c.documentation}</a>
         <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
         <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
           <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
@@ -448,7 +449,7 @@ function Landing({ language }: { language: Language }) {
       </div>
     </section>
 
-    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">⚡</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a><a className="button secondary" href="#/documentation">{c.questionsDocsAction}<span>↗</span></a></div></div></section>
+    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">⚡</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div></div></section>
 
     <section className="home-project-section"><div className="page-width home-project-shell reveal reveal-scale"><div className="home-project-copy"><div><Eyebrow>{c.projectK}</Eyebrow><h2>{c.projectT}</h2></div><div><p>{c.projectP}</p><small>{c.projectNote}</small></div></div><div className="home-project-flow">{c.projectSteps.map(([number, title, text], index) => <Fragment key={title}><article><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>{index < c.projectSteps.length - 1 && <i aria-hidden="true"><b /></i>}</Fragment>)}</div></div></section>
 
@@ -1834,7 +1835,7 @@ function ShowcasePage({ language }: { language: Language }) {
 
     <section className="section page-width showcase-provenance"><div className="section-heading"><div><Eyebrow>{c.compareK}</Eyebrow><h2>{c.compareT}</h2></div><p>{c.compareP}</p></div><div className="showcase-limits-grid">{c.compareItems.map(([title, text], index) => <article className="reveal" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div><div className="showcase-case-actions"><a href="#/application/multiview">{c.compareAction}<span>→</span></a><a href="#/reproducibility">{c.reproAction}<span>↗</span></a></div></section>
 
-    <section className="section page-width showcase-final"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div><a className="button primary" href="#/tutorials">{c.finalTutorial}<span>→</span></a><a className="button secondary" href="#/documentation">{c.finalDocs}<span>↗</span></a></div></section>
+    <section className="section page-width showcase-final"><div><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div><a className="button primary" href="#/tutorials">{c.finalTutorial}<span>→</span></a></div></section>
   </main>;
 }
 
@@ -2072,7 +2073,7 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/documentation">Documentation</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
 }
 
 export default function App() {
@@ -2087,7 +2088,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = language;
     const label = route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
-      : route === "/documentation" ? (language === "fr" ? "Documentation BarCodeR" : "BarCodeR documentation")
+      : route === "/documentation" ? (language === "fr" ? "Tutoriels BarCodeR" : "BarCodeR tutorials")
       : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
       : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
       : route === "/functioning" || route.startsWith("/application") ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
@@ -2096,6 +2097,10 @@ export default function App() {
       : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
     document.title = `${label} | BarCodeR`;
   }, [language, route]);
+
+  useEffect(() => {
+    if (route === "/documentation") window.location.hash = "#/tutorials";
+  }, [route]);
 
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
@@ -2109,10 +2114,9 @@ export default function App() {
   if (route === "/functioning" || route.startsWith("/application")) page = <FunctioningPageV2 language={language} />;
   else if (route === "/analyses") page = <AnalysesPageV2 language={language} />;
   else if (route === "/showcase") page = <ShowcasePage language={language} />;
-  else if (route === "/tutorials" || route === "/evidence") page = <EvidencePage language={language} />;
-  else if (route === "/documentation") page = <DocumentationPage language={language} />;
+  else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={language} />;
   else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
-  else if (route === "/download" || route === "/availability") page = <DownloadPage language={language} />;
+  else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={language} />;
   else page = <Landing language={language} />;
 
   return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
