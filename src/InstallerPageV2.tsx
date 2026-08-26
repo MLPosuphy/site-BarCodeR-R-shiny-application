@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { Language } from "./content";
 
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow"><span />{children}</p>;
 }
 
 export default function InstallerPageV2({ language }: { language: Language }) {
   const [copied, setCopied] = useState(false);
-  const [faqFilter, setFaqFilter] = useState("all");
   const appVersion = "2.12.8";
   const citation = language === "fr"
     ? `Équipe BarCodeR (${new Date().getFullYear()}). BarCodeR v${appVersion} : plateforme pour l’exploration et l’analyse reproductible de données de métabarcoding.`
@@ -27,7 +28,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     release: "Distribution actuelle", system: "Windows", status: "Version locale", ready: "Application autonome",
     processK: "Installation", processT: "Trois actions suffisent pour lancer BarCodeR.", processP: "Le dossier téléchargé contient l’application et son environnement d’exécution. Il doit rester complet : aucun fichier interne n’a besoin d’être ouvert ou modifié.",
     process: [["↓", "Télécharger le dossier", "Récupérer la dernière version publiée de BarCodeR."], ["↗", "Ouvrir le dossier", "Décompresser l’archive dans un emplacement accessible."], ["▶", "Double-cliquer sur BarCodeR", "L’application initialise son environnement puis ouvre l’interface."]],
-    packagingK: "Une application préparée avec executablePackeR", packagingT: "La complexité de R reste dans la fabrication de l’application, pas dans son utilisation.", packagingP: "executablePackeR transforme l’application Shiny en programme exécutable et permet d’intégrer l’environnement nécessaire à son lancement. La version distribuée de BarCodeR est préparée en amont : les dépendances sont assemblées et testées avant publication.",
+    packagingK: "Une application préparée avec executablePackeR", packagingT: "Épargnez-vous la difficulté de maintenir R et de multiples packages à jour pour utiliser l’application.", packagingP: "executablePackeR transforme l’application Shiny en programme exécutable et permet d’intégrer l’environnement nécessaire à son lancement. La version distribuée de BarCodeR est préparée en amont : les dépendances sont assemblées et testées avant publication.",
     included: "Préparé dans la distribution", includedItems: ["Environnement R utilisé par BarCodeR", "Packages et dépendances compatibles", "Application Shiny et ressources associées", "Lanceur ouvrant l’interface"],
     user: "Ce qui reste à faire", userItems: ["Télécharger la version récente", "Conserver le dossier complet", "Double-cliquer sur l’application", "Télécharger une nouvelle version lors d’une mise à jour"],
     noNeed: "Aucune maintenance technique à assurer", noNeedItems: [["R", "Aucune installation locale de R"], ["RStudio", "Aucun environnement de développement"], ["Packages", "Aucune mise à jour manuelle"], ["Compatibilité", "Aucune résolution de dépendances"]],
@@ -35,7 +36,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     updateSteps: [["01", "Télécharger", "Récupérer le nouveau dossier BarCodeR."], ["02", "Ouvrir", "Lancer la nouvelle application sans modifier l’ancienne."], ["03", "Vérifier", "Ouvrir un projet ou importer un objet de test."], ["04", "Remplacer", "Archiver ou supprimer l’ancienne version lorsque tout est validé."]],
     limitsK: "Disponibilité", limitsT: "Une distribution locale adaptée au système pris en charge.", limitsP: "La distribution mise en avant concerne actuellement Windows. Une version macOS dédiée est prévue. Les disponibilités exactes doivent être vérifiées sur chaque publication.",
     startK: "Premier lancement", startT: "Les premiers repères après l’ouverture.", startItems: [["Créer un projet", "Donner un nom au nouvel espace de travail."], ["Importer un phyloseq", "Charger un fichier .rds ou .RData depuis Input data."], ["Découvrir l’interface", "Suivre les tutoriels d’installation et de prise en main."]],
-    tutorials: "Ouvrir les tutoriels", citeK: "Citer BarCodeR", citeT: "Conserver la version utilisée dans les travaux.", copy: "Copier la citation", copied: "Citation copiée", citationPage: "Ouvrir la page Citation",
+    tutorials: "Ouvrir les tutoriels", citeK: "Citer BarCodeR", citeT: "Conserver la version utilisée dans les travaux.", copy: "Copier la citation", copied: "Citation copiée", citationPage: "Ouvrir la page Citation", download: "Télécharger l’archive test v2.12.7 (.zip)", seeProcess: "Voir les trois étapes",
     faqK: "Questions fréquentes", faqT: "Tout ce qu’il faut savoir avant de commencer.", faqP: "Installation, mises à jour, données, projets ou dépannage : des réponses concrètes pour comprendre le fonctionnement de BarCodeR et résoudre les situations courantes.",
     faqTopics: [["all", "Toutes"], ["installation", "Installation"], ["updates", "Mises à jour"], ["data", "Données"], ["projects", "Projets"], ["usage", "Utilisation"]],
     faqItems: [
@@ -63,7 +64,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     release: "Current distribution", system: "Windows", status: "Local version", ready: "Standalone application",
     processK: "Installation", processT: "Three actions are enough to launch BarCodeR.", processP: "The downloaded folder contains the application and its runtime environment. It must remain complete: no internal file needs to be opened or changed.",
     process: [["↓", "Download the folder", "Get the latest published BarCodeR version."], ["↗", "Open the folder", "Extract the archive to an accessible location."], ["▶", "Double-click BarCodeR", "The application initialises its environment and opens the interface."]],
-    packagingK: "An application prepared with executablePackeR", packagingT: "R complexity stays in application production, not in its use.", packagingP: "executablePackeR turns the Shiny application into an executable program and can integrate the environment needed to launch it. The distributed BarCodeR version is prepared in advance: dependencies are assembled and tested before publication.",
+    packagingK: "An application prepared with executablePackeR", packagingT: "Avoid the difficulty of keeping R and multiple packages up to date just to use the application.", packagingP: "executablePackeR turns the Shiny application into an executable program and can integrate the environment needed to launch it. The distributed BarCodeR version is prepared in advance: dependencies are assembled and tested before publication.",
     included: "Prepared in the distribution", includedItems: ["R environment used by BarCodeR", "Compatible packages and dependencies", "Shiny application and associated resources", "Launcher that opens the interface"],
     user: "What remains to do", userItems: ["Download the recent version", "Keep the complete folder", "Double-click the application", "Download a new version when an update is released"],
     noNeed: "No technical maintenance required", noNeedItems: [["R", "No local R installation"], ["RStudio", "No development environment"], ["Packages", "No manual updates"], ["Compatibility", "No dependency resolution"]],
@@ -71,7 +72,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     updateSteps: [["01", "Download", "Get the new BarCodeR folder."], ["02", "Open", "Launch the new application without changing the old one."], ["03", "Check", "Open a project or import a test object."], ["04", "Replace", "Archive or remove the old version once everything is validated."]],
     limitsK: "Availability", limitsT: "A local distribution suited to the supported system.", limitsP: "The highlighted distribution currently targets Windows. A dedicated macOS version is planned. Exact availability should be checked for each release.",
     startK: "First launch", startT: "The first landmarks after opening.", startItems: [["Create a project", "Give the new workspace a name."], ["Import a phyloseq", "Load an .rds or .RData file from Input data."], ["Discover the interface", "Follow the installation and getting-started tutorials."]],
-    tutorials: "Open tutorials", citeK: "Cite BarCodeR", citeT: "Keep the version used in your work.", copy: "Copy citation", copied: "Citation copied", citationPage: "Open the Citation page",
+    tutorials: "Open tutorials", citeK: "Cite BarCodeR", citeT: "Keep the version used in your work.", copy: "Copy citation", copied: "Citation copied", citationPage: "Open the Citation page", download: "Download test archive v2.12.7 (.zip)", seeProcess: "View the three steps",
     faqK: "Frequently asked questions", faqT: "Everything to know before getting started.", faqP: "Installation, updates, data, projects or troubleshooting: practical answers to understand how BarCodeR works and resolve common situations.",
     faqTopics: [["all", "All"], ["installation", "Installation"], ["updates", "Updates"], ["data", "Data"], ["projects", "Projects"], ["usage", "Use"]],
     faqItems: [
@@ -96,10 +97,8 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     faqFilterLabel: "Filter questions", faqCount: "questions shown", faqMore: "Need a guided path?", faqAction: "Browse the tutorials"
   };
 
-  const filteredFaq = faqFilter === "all" ? c.faqItems : c.faqItems.filter(item => item[3] === faqFilter);
-
   return <main className="installer-v2-page">
-    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><a className="button primary" href="#installer-process">{language === "fr" ? "Voir l’installation" : "View installation"}<span>↓</span></a></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR <em>v{appVersion}</em></h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
+    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><div className="installer-v2-hero-actions"><a className="button primary" href={asset("downloads/BarCodeR_v2.12.7.zip")} download>{c.download}<span>↓</span></a><a className="button secondary" href="#installer-process">{c.seeProcess}<span>↓</span></a></div></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR <em>v{appVersion}</em></h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
 
     <section className="installer-v2-process" id="installer-process"><div className="page-width"><div className="installer-v2-heading"><Eyebrow>{c.processK}</Eyebrow><h2>{c.processT}</h2><p>{c.processP}</p></div><div className="installer-v2-process-flow">{c.process.map(([icon, title, text], index) => <article className="reveal" key={title}><span>{icon}</span><small>0{index + 1}</small><h3>{title}</h3><p>{text}</p>{index < c.process.length - 1 && <i><em /></i>}</article>)}</div></div></section>
 
@@ -113,6 +112,5 @@ export default function InstallerPageV2({ language }: { language: Language }) {
 
     <section className="installer-v2-citation"><div className="page-width"><div><Eyebrow>{c.citeK}</Eyebrow><h2>{c.citeT}</h2></div><blockquote>{citation}</blockquote><div className="installer-v2-citation-actions"><button type="button" onClick={copyCitation}>{copied ? c.copied : c.copy}</button><a href="#/citation">{c.citationPage}<span>→</span></a></div></div></section>
 
-    <section className="installer-v2-faq"><div className="page-width"><header className="installer-v2-faq-heading reveal"><div className="installer-v2-faq-orbit" aria-hidden="true"><span>?</span><i /><i /></div><Eyebrow>{c.faqK}</Eyebrow><h2>{c.faqT}</h2><p>{c.faqP}</p><div className="installer-v2-faq-topics" role="group" aria-label={c.faqFilterLabel}>{c.faqTopics.map(([value, label]) => <button type="button" className={faqFilter === value ? "active" : ""} aria-pressed={faqFilter === value} onClick={() => setFaqFilter(value)} key={value}>{label}</button>)}</div></header><div className="installer-v2-faq-content"><p className="installer-v2-faq-count"><b>{String(filteredFaq.length).padStart(2, "0")}</b>{c.faqCount}</p><div className="installer-v2-faq-list">{filteredFaq.map(([question, answer, tag], index) => <details className="reveal visible" open={index === 0} key={question}><summary><span>{String(index + 1).padStart(2, "0")}</span><div><small>{tag}</small><b>{question}</b></div><i aria-hidden="true">+</i></summary><p>{answer}</p></details>)}</div></div><footer className="installer-v2-faq-footer"><span><i aria-hidden="true">→</i>{c.faqMore}</span><a href="#/tutorials">{c.faqAction}<b>↗</b></a></footer></div></section>
   </main>;
 }

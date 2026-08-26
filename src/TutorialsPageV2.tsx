@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Language, Localized } from "./content";
 
 type TutorialCategory = "install" | "start" | "project" | "tools";
@@ -121,22 +121,26 @@ const datasets = [
 ];
 
 export default function TutorialsPageV2({ language }: { language: Language }) {
-  const [filter, setFilter] = useState<"all" | TutorialCategory>("all");
-  const filtered = useMemo(() => tutorials.filter(item => filter === "all" || item.category === filter), [filter]);
+  const [selectedTutorial, setSelectedTutorial] = useState<Tutorial | null>(null);
+  useEffect(() => {
+    if (!selectedTutorial) return;
+    const close = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedTutorial(null); };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", close);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", close); };
+  }, [selectedTutorial]);
   const c = language === "fr" ? {
     k: "Tutoriels BarCodeR", title: "Installer, découvrir et utiliser l’outil pas à pas.", p: "Des parcours courts centrés exclusivement sur la prise en main de BarCodeR : installation, navigation, import, projets, préparation des données, sauvegarde des figures et utilisation de MultiView.",
     path: [["01", "Installer"], ["02", "Ouvrir"], ["03", "Importer"], ["04", "Travailler"], ["05", "Sauvegarder"]],
     libraryK: "Parcours guidés", libraryT: "Un tutoriel pour chaque action essentielle dans BarCodeR.",
-    filters: [["all", "Tous"], ["install", "Installation"], ["start", "Prise en main"], ["project", "Projets"], ["tools", "Outils"]],
-    result: "Résultat attendu", steps: "Afficher les étapes", tabs: "Parties de l’application", available: "Tutoriel disponible",
+    result: "Résultat attendu", steps: "Étapes du tutoriel", tabs: "Parties de l’application", available: "Tutoriel vidéo", launch: "Lancer le tutoriel", close: "Fermer le tutoriel", videoNote: "Vidéo test intégrée au site",
     dataK: "Objets phyloseq publics", dataT: "Télécharger des jeux de données prêts à importer.", dataP: "Ces objets sont distribués avec le package phyloseq et permettent de tester rapidement l’import et les fonctions de BarCodeR sans utiliser de données personnelles.",
     download: "Télécharger l’objet", source: "Source officielle phyloseq", format: "Format"
   } : {
     k: "BarCodeR tutorials", title: "Install, discover and use the tool step by step.", p: "Short journeys focused exclusively on getting started with BarCodeR: installation, navigation, import, projects, data preparation, figure saving and MultiView.",
     path: [["01", "Install"], ["02", "Open"], ["03", "Import"], ["04", "Work"], ["05", "Save"]],
     libraryK: "Guided journeys", libraryT: "One tutorial for every essential action in BarCodeR.",
-    filters: [["all", "All"], ["install", "Installation"], ["start", "Getting started"], ["project", "Projects"], ["tools", "Tools"]],
-    result: "Expected result", steps: "Show steps", tabs: "Application areas", available: "Tutorial available",
+    result: "Expected result", steps: "Tutorial steps", tabs: "Application areas", available: "Video tutorial", launch: "Start tutorial", close: "Close tutorial", videoNote: "Test video embedded in the website",
     dataK: "Public phyloseq objects", dataT: "Download datasets ready to import.", dataP: "These objects are distributed with the phyloseq package and provide a quick way to test BarCodeR import and features without using personal data.",
     download: "Download object", source: "Official phyloseq source", format: "Format"
   };
@@ -144,8 +148,10 @@ export default function TutorialsPageV2({ language }: { language: Language }) {
   return <main className="tutorial-v3-page">
     <section className="tutorial-v3-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p></header><div className="tutorial-v3-path">{c.path.map(([number, label], index) => <article key={number}><span>{number}</span><b>{label}</b>{index < c.path.length - 1 && <i><em /></i>}</article>)}</div></div></section>
 
-    <section className="tutorial-v3-library"><div className="page-width"><div className="tutorial-v3-heading"><Eyebrow>{c.libraryK}</Eyebrow><h2>{c.libraryT}</h2></div><div className="tutorial-v3-filters">{c.filters.map(([value, label]) => <button type="button" className={filter === value ? "active" : ""} onClick={() => setFilter(value as "all" | TutorialCategory)} key={value}>{label}</button>)}</div><div className="tutorial-v3-grid">{filtered.map((tutorial, index) => <article className="tutorial-v3-card reveal" key={tutorial.id}><header><span>{String(index + 1).padStart(2, "0")}</span><small>{c.available} · {tutorial.duration}</small></header><h3>{tx(tutorial.title, language)}</h3><p>{tx(tutorial.summary, language)}</p><div className="tutorial-v3-result"><b>✓ {c.result}</b><span>{tx(tutorial.result, language)}</span></div><details><summary>{c.steps}<span>+</span></summary><ol>{tutorial.steps.map(step => <li key={step.fr}>{tx(step, language)}</li>)}</ol></details><footer><small>{c.tabs}</small><div>{tutorial.tabs.map(tab => <span key={tab.fr}>{tx(tab, language)}</span>)}</div></footer></article>)}</div></div></section>
+    <section className="tutorial-v3-library"><div className="page-width"><div className="tutorial-v3-heading"><Eyebrow>{c.libraryK}</Eyebrow><h2>{c.libraryT}</h2></div><div className="tutorial-v3-grid">{tutorials.map((tutorial, index) => <article className="tutorial-v3-card reveal" key={tutorial.id}><button className="tutorial-v3-card-trigger" type="button" onClick={() => setSelectedTutorial(tutorial)} aria-label={`${c.launch} : ${tx(tutorial.title, language)}`}><header><span>{String(index + 1).padStart(2, "0")}</span><small>{c.available} · {tutorial.duration}</small></header><h3>{tx(tutorial.title, language)}</h3><p>{tx(tutorial.summary, language)}</p><div className="tutorial-v3-result"><b>✓ {c.result}</b><span>{tx(tutorial.result, language)}</span></div><div className="tutorial-v3-app-visual" aria-hidden="true"><span className="tutorial-v3-window-dots">•••</span><div className="tutorial-v3-mini-rail">B|R</div><div className="tutorial-v3-module-map"><small>{c.tabs}</small>{tutorial.tabs.map((tab, tabIndex) => <span key={tab.fr}><i>{String(tabIndex + 1).padStart(2, "0")}</i>{tx(tab, language)}</span>)}</div></div><footer><b>{c.launch}</b><span>▶</span></footer></button></article>)}</div></div></section>
 
     <section className="tutorial-v3-datasets"><div className="page-width"><div className="tutorial-v3-dataset-heading"><Eyebrow>{c.dataK}</Eyebrow><h2>{c.dataT}</h2><p>{c.dataP}</p></div><div className="tutorial-v3-dataset-grid">{datasets.map((dataset, index) => { const source = `https://github.com/joey711/phyloseq/blob/master/data/${dataset.file}`; const raw = `https://raw.githubusercontent.com/joey711/phyloseq/master/data/${dataset.file}`; return <article className="reveal" key={dataset.name}><header><span>{String(index + 1).padStart(2, "0")}</span><b>{dataset.marker}</b></header><h3>{dataset.name}</h3><p>{tx(dataset.description, language)}</p><dl><div><dt>{c.format}</dt><dd>{dataset.file}</dd></div><div><dt>{language === "fr" ? "Taille indiquée" : "Listed size"}</dt><dd>{dataset.size}</dd></div></dl><a className="primary" href={raw} target="_blank" rel="noreferrer">{c.download}<span>↓</span></a><a className="source" href={source} target="_blank" rel="noreferrer">{c.source}<span>↗</span></a></article>; })}</div></div></section>
+
+    {selectedTutorial && <div className="tutorial-v3-modal" role="dialog" aria-modal="true" aria-labelledby="tutorial-modal-title" onMouseDown={event => { if (event.target === event.currentTarget) setSelectedTutorial(null); }}><article><header><div><small>{c.available} · {selectedTutorial.duration}</small><h2 id="tutorial-modal-title">{tx(selectedTutorial.title, language)}</h2></div><button type="button" onClick={() => setSelectedTutorial(null)} aria-label={c.close}>×</button></header><div className="tutorial-v3-video"><video key={selectedTutorial.id} controls autoPlay playsInline preload="metadata"><source src={`${import.meta.env.BASE_URL}media/tuto-barcoder-test.mp4`} type="video/mp4" /></video><span>{c.videoNote}</span></div><div className="tutorial-v3-modal-body"><section><h3>{c.steps}</h3><ol>{selectedTutorial.steps.map(step => <li key={step.fr}>{tx(step, language)}</li>)}</ol></section><aside><small>{c.tabs}</small><div>{selectedTutorial.tabs.map(tab => <span key={tab.fr}>{tx(tab, language)}</span>)}</div><b>✓ {c.result}</b><p>{tx(selectedTutorial.result, language)}</p></aside></div></article></div>}
   </main>;
 }
