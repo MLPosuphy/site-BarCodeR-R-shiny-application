@@ -2121,24 +2121,18 @@ function DownloadPage({ language }: { language: Language }) {
   </main>;
 }
 
-function Footer({ language, route }: { language: Language; route: string }) {
+function Footer({ language }: { language: Language }) {
   const c = language === "fr" ? {
-    k: "Poursuivre avec BarCodeR", title: "Choisissez la prochaine étape.", p: "Comprendre le parcours, parcourir les analyses, suivre un tutoriel ou préparer l’installation sous Windows.",
-    actions: [["01", "Comprendre le parcours", "Suivre les données depuis leur point d’entrée jusqu’aux résultats.", "#/functioning"], ["02", "Explorer les analyses", "Découvrir les questions, méthodes et sorties disponibles.", "#/analyses"], ["03", "Apprendre par la pratique", "Lancer un tutoriel vidéo et utiliser un objet public.", "#/tutorials"], ["04", "Installer sous Windows", "Télécharger la distribution autonome et lancer BarCodeR.", "#/download"]],
     description: "Un environnement interactif pour préparer, explorer, analyser et restituer des données de métabarcoding tout en conservant le contexte du travail.",
     discover: "Découvrir", learn: "Prendre en main", project: "Utiliser et citer",
     signals: ["Windows", "Sans R ni RStudio", "Projets exportables", "Documentation intégrée"]
   } : {
-    k: "Continue with BarCodeR", title: "Choose the next step.", p: "Understand the journey, browse analyses, follow a tutorial or prepare the Windows installation.",
-    actions: [["01", "Understand the journey", "Follow data from their entry point to the results.", "#/functioning"], ["02", "Explore analyses", "Discover available questions, methods and outputs.", "#/analyses"], ["03", "Learn by doing", "Launch a video tutorial and use a public object.", "#/tutorials"], ["04", "Install on Windows", "Download the standalone distribution and launch BarCodeR.", "#/download"]],
     description: "An interactive environment to prepare, explore, analyse and report metabarcoding data while retaining the context of the work.",
     discover: "Discover", learn: "Get started", project: "Use and cite",
     signals: ["Windows", "No R or RStudio", "Exportable projects", "Built-in documentation"]
   };
-  const routeFor = (href: string) => href.replace(/^#/, "");
 
   return <footer className="site-footer">
-    <section className="footer-next page-width"><div className="footer-next-heading"><Eyebrow>{c.k}</Eyebrow><h2>{c.title}</h2><p>{c.p}</p></div><div className="footer-next-grid">{c.actions.map(([number, title, text, href]) => <a className={route === routeFor(href) ? "active" : ""} href={href} key={href}><span>{number}</span><h3>{title}</h3><p>{text}</p><b>→</b></a>)}</div></section>
     <div className="footer-core page-width"><div className="footer-brand-block"><Brand language={language} /><p>{c.description}</p></div><nav className="footer-nav-group"><b>{c.discover}</b><a href="#/">{language === "fr" ? "Accueil" : "Home"}</a><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">Analyses</a></nav><nav className="footer-nav-group"><b>{c.learn}</b><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/faq">FAQ</a></nav><nav className="footer-nav-group"><b>{c.project}</b><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a><a href="#/citation">Citation</a></nav></div>
     <div className="footer-signals page-width">{c.signals.map((signal, index) => <span key={signal}><i>{["▣", "R", "↗", "?"][index]}</i>{signal}</span>)}</div>
     <div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
@@ -2192,5 +2186,5 @@ export default function App() {
   else if (route === "/faq") page = <FaqPage language={language} />;
   else page = <Landing language={language} />;
 
-  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} route={route} /></div>;
+  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
 }

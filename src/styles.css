@@ -5042,75 +5042,17 @@ h1 em { color: var(--violet); font-style: normal; }
   transform: translateY(-2px);
 }
 
-/* Footer: a useful navigation band rather than a passive signature. */
+/* Compact footer shared by every page. */
 .site-footer {
   background:
     radial-gradient(circle at 14% 4%, rgba(157,224,231,.1), transparent 25%),
     radial-gradient(circle at 84% 17%, rgba(103,85,214,.22), transparent 28%),
     #101426;
   overflow: hidden;
-  padding-top: clamp(68px, 8vw, 112px);
-}
-.footer-next {
-  border-bottom: 1px solid rgba(255,255,255,.12);
-  padding-bottom: clamp(56px, 7vw, 86px);
-}
-.footer-next-heading {
-  align-items: end;
-  display: grid;
-  gap: 14px 55px;
-  grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr);
-  margin-bottom: 36px;
-}
-.footer-next-heading .eyebrow { color: #9de0e7; grid-column: 1 / -1; }
-.footer-next-heading h2 {
-  color: #fff;
-  font-size: clamp(40px, 5vw, 68px);
-  letter-spacing: -.055em;
-  line-height: .98;
-}
-.footer-next-heading > p {
-  color: #b9c1d5;
-  font-size: 16px;
-  line-height: 1.7;
-  max-width: 520px;
-}
-.footer-next-grid {
-  display: grid;
-  gap: 11px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-.footer-next-grid > a {
-  background: rgba(255,255,255,.055);
-  border: 1px solid rgba(255,255,255,.11);
-  border-radius: 15px;
-  color: #fff;
-  min-height: 230px;
-  padding: 22px;
-  position: relative;
-  transition: background .25s ease, border-color .25s ease, transform .25s ease;
-}
-.footer-next-grid > a:hover,
-.footer-next-grid > a.active {
-  background: rgba(103,85,214,.2);
-  border-color: rgba(157,224,231,.33);
-  transform: translateY(-5px);
-}
-.footer-next-grid > a > span {
-  color: #9de0e7;
-  font-family: var(--font-mono);
-  font-size: 10px;
-}
-.footer-next-grid h3 { color: #fff; font-size: 22px; margin-top: 34px; }
-.footer-next-grid p { color: #aeb6ca; font-size: 13px; line-height: 1.6; margin-top: 10px; }
-.footer-next-grid b {
-  bottom: 20px;
-  color: #9de0e7;
-  font-size: 20px;
-  position: absolute;
-  right: 21px;
+  padding-top: 0;
 }
 .footer-core {
+  border-top: 1px solid rgba(255,255,255,.12);
   display: grid;
   gap: clamp(28px, 5vw, 75px);
   grid-template-columns: minmax(280px, 1.4fr) repeat(3, minmax(120px, .55fr));
@@ -5177,7 +5119,6 @@ h1 em { color: var(--violet); font-style: normal; }
 
 @media (max-width: 1050px) {
   .pathway-output-group .pathway-results-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .footer-next-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-core { grid-template-columns: 1.5fr repeat(3, 1fr); }
 }
 
@@ -5185,7 +5126,6 @@ h1 em { color: var(--violet); font-style: normal; }
   .pathway-output-group > header { grid-template-columns: 36px 1fr; }
   .pathway-output-group > header small { grid-column: 2; grid-row: 2; }
   .pathway-output-group .pathway-results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .footer-next-heading { grid-template-columns: 1fr; }
   .footer-core { grid-template-columns: 1fr 1fr; }
   .footer-brand-block { grid-column: 1 / -1; }
   .footer-signals { grid-template-columns: 1fr 1fr; }
@@ -5199,8 +5139,6 @@ h1 em { color: var(--violet); font-style: normal; }
   .pathway-output-group .pathway-results-grid { grid-template-columns: 1fr; }
   .analysis-v2-repro-note { padding: 17px; }
   .analysis-v2-repro-note p { font-size: 13px; }
-  .footer-next-grid { grid-template-columns: 1fr; }
-  .footer-next-grid > a { min-height: 188px; }
   .footer-core { grid-template-columns: 1fr; }
   .footer-brand-block { grid-column: auto; }
   .footer-signals { grid-template-columns: 1fr; }
