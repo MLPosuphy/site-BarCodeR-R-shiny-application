@@ -1,6 +1,6 @@
 # Site web BarCodeR
 
-Site public de **BarCodeR**, construit avec React, TypeScript et Vite. Il présente l’application R/Shiny, son parcours utilisateur, ses modules, ses analyses, ses tutoriels, ses cas d’usage et la documentation HTML générée par BarCodeR.
+Site public de **BarCodeR**, construit avec React, TypeScript et Vite. Il présente l’application R/Shiny, son parcours utilisateur, ses analyses, ses tutoriels, son installation, sa citation et une FAQ détaillée.
 
 Ce dépôt concerne uniquement le **site vitrine/documentaire**. Le code de l’application Shiny n’est pas contenu ici.
 
@@ -27,6 +27,10 @@ Le site n’utilise pas de CMS ni de framework de routage externe.
 │   ├── App.tsx
 │   ├── FunctioningPageV2.tsx
 │   ├── AnalysesPageV2.tsx
+│   ├── TutorialsPageV2.tsx
+│   ├── InstallerPageV2.tsx
+│   ├── CitationPage.tsx
+│   ├── FaqPage.tsx
 │   ├── content.ts
 │   ├── styles.css
 │   └── vite-env.d.ts
@@ -58,11 +62,9 @@ Principales routes :
 #/functioning           Fonctionnement
 #/analyses              Analyses
 #/tutorials             Tutoriels
-#/showcase              Cas d’usage / galerie de résultats
-#/documentation         Documentation
-#/reproducibility       Reproductibilité
 #/download              Installation
-#/application/<module>  Présentation d’un onglet BarCodeR
+#/citation              Citation
+#/faq                   Questions fréquentes
 ```
 
 Ce choix permet de déployer le site comme un ensemble de fichiers statiques sans configuration serveur spécifique pour chaque route.
@@ -101,11 +103,7 @@ Ce fichier contient :
 - le routage ;
 - la page d’accueil ;
 - le routage vers les pages Fonctionnement et Analyses ;
-- les Tutoriels ;
-- la page Cas d’usage ;
-- la page Documentation ;
-- la page Reproductibilité ;
-- la page Installation ;
+- le bandeau de navigation commun placé en bas de toutes les pages ;
 - les composants réutilisés par ces pages.
 
 Les pages éditoriales historiques restent présentes dans ce fichier pour préserver la structure existante. Les versions publiques refondues de Fonctionnement et Analyses sont maintenant isolées dans des composants dédiés.
@@ -118,11 +116,11 @@ Son organisation est volontairement narrative :
 
 1. présentation générale du parcours ;
 2. rappel compact des deux voies FASTQ et phyloseq ;
-3. parcours commun en six étapes ;
+3. parcours commun depuis les deux points d’entrée ;
 4. capture de l’application mise à jour lors du défilement, du focus ou du survol ;
 5. fonctionnement par projet et lignée des datasets ;
 6. sauvegarde, transmission et reprise du travail ;
-7. orientation vers les analyses, les tutoriels et l’installation.
+7. organisation, sauvegarde, transmission et reprise du travail sous forme de projet.
 
 Les captures du parcours sont déclarées dans le tableau local `steps`. Conserver des fichiers `*-current.png` permet de remplacer les visuels d’une release sans modifier le composant.
 
@@ -144,8 +142,10 @@ Chaque objectif associe :
 - ce que l’utilisateur peut examiner ;
 - les analyses réellement disponibles ;
 - plusieurs figures représentatives ;
-- une limite d’interprétation essentielle ;
-- un accès au module et à la documentation.
+- plusieurs aperçus rectangulaires des résultats ;
+- un accès aux explications complémentaires.
+
+La seconde partie de la page explique la relation entre figure centrale et diagnostics, les usages intra- et inter-datasets et la chaîne de reproductibilité allant des FASTQ jusqu’à l’historique et au code R disponible.
 
 Les prérequis exhaustifs, les transformations, les distances, les hypothèses statistiques et les paramètres propres aux méthodes doivent rester dans la documentation et ne pas être réintroduits dans cette page vitrine.
 
@@ -242,7 +242,7 @@ screen-openmetabar-current.png
 
 Sur l’accueil, `HomeApplicationVisual` affiche la capture complète dans un cadre interactif avec halo, reflet et légère perspective suivant le pointeur. Un clic ouvre, au niveau de la fenêtre du navigateur, une vue réellement agrandie refermable au bouton, au clic sur l’arrière-plan ou avec la touche `Échap`.
 
-L’ordre de l’accueil est volontairement : promesse produit, preuve visuelle, grille des bénéfices, mise en avant de MultiView, convergence FASTQ/phyloseq, aperçu de figures produites, questions scientifiques et analyses proposées, partage d’un projet, tutoriels, puis installation. Le schéma se lit verticalement : la voie 1 part des fichiers FASTQ et passe par OpenMetaBar, tandis que la voie 2 importe directement un objet phyloseq. Elles convergent ensuite vers BarCodeR et une galerie de six sorties sur deux rangées de trois. Les particules animées renforcent le sens de lecture de haut en bas. La carte OpenMetaBar conserve les couleurs vert/cyan de son logo ; les autres étapes utilisent l’identité violet/cyan de BarCodeR. Ne pas réintroduire sur l’accueil un parcours rigide module par module.
+L’ordre de l’accueil est volontairement : promesse produit, preuve visuelle, grille des bénéfices, mise en avant de MultiView, convergence FASTQ/phyloseq, aperçu de figures produites, questions scientifiques et analyses proposées, partage d’un projet, tutoriels, puis installation. Le schéma se lit verticalement : la voie 1 part des fichiers FASTQ et passe par OpenMetaBar, tandis que la voie 2 importe directement un objet phyloseq. Les deux tracés et leurs particules restent indépendants jusqu’à leur convergence sur l’objet phyloseq. La galerie propose ensuite un emplacement pour chaque sous-onglet d’Exploration et d’Analyse ; certains visuels restent volontairement dupliqués tant que les captures définitives ne sont pas disponibles. La carte OpenMetaBar conserve les couleurs vert/cyan de son logo ; les autres étapes utilisent l’identité violet/cyan de BarCodeR.
 
 Les petits libellés, descriptions et étiquettes de l’accueil disposent de tailles minimales propres à cette page. Conserver leurs différences de niveau, mais ne pas réduire les textes informatifs au point de les rendre difficiles à lire sur un écran standard.
 
@@ -252,7 +252,9 @@ Les deux voies du schéma sont affichées simultanément au repos. Le survol d�
 
 La rubrique de travail en équipe utilise un parcours horizontal compact en trois étapes plutôt que des cartes verticales de grande hauteur. Dans la dernière section, le numéro décoratif `04` occupe une zone réservée de la grille et ne doit pas être replacé derrière les cartes de tutoriel ou d’installation.
 
-La rubrique de travail en équipe décrit une fonction réelle de l’application : l’export `.zip` d’un projet inclut les datasets, les historiques et les figures sauvegardées ; l’import crée un nouveau projet au lieu de fusionner silencieusement avec le projet ouvert. Toute évolution de ce texte doit rester cohérente avec `modules/datasets/mod_datasets_server.R` et `modules/_shared/_project_store.R` dans BarCodeR.
+La rubrique de travail en équipe décrit une fonction réelle de l’application : l’export `.zip` d’un projet réunit les datasets, les historiques et les figures sauvegardées afin de transmettre et reprendre le contexte de travail. Toute évolution de ce texte doit rester cohérente avec `modules/datasets/mod_datasets_server.R` et `modules/_shared/_project_store.R` dans BarCodeR.
+
+Le fichier `public/downloads/BarCodeR_telechargement_test.zip` est un téléchargement de contrôle très léger. Il ne contient pas l’application et doit être remplacé par la distribution Windows officielle au moment de la publication.
 
 Chaque question scientifique affichée sur l’accueil doit rester associée à une ou plusieurs analyses réellement disponibles dans l’application. Les formulations doivent distinguer description, visualisation, test et diagnostic : une ordination ne remplace pas un test, une PERMANOVA doit être interprétée avec la dispersion, et un réseau d’associations ne prouve pas des interactions biologiques.
 
@@ -318,7 +320,7 @@ Après synchronisation, vérifier au minimum :
 - les langues attendues ;
 - les ancres utilisées depuis le site.
 
-La page `#/documentation` du site sert de point d’entrée vers cette documentation. Les détails techniques ne doivent pas être recopiés inutilement dans les pages vitrines.
+La documentation détaillée reste consultable directement dans l’application BarCodeR. La FAQ du site rappelle cette disponibilité et apporte des réponses rapides sans recopier l’intégralité des guides méthodologiques et techniques.
 
 ## 10. Développement local
 

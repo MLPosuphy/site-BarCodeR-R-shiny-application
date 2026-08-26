@@ -1,0 +1,10 @@
+BarCodeR — fichier de test du téléchargement
+============================================
+
+Cette petite archive remplace temporairement la distribution complète de BarCodeR.
+Elle sert uniquement à vérifier que le bouton de téléchargement du site fonctionne.
+
+Elle ne contient pas l’application et ne permet pas de lancer BarCodeR.
+La distribution Windows officielle sera ajoutée lors de la publication de la version définitive.
+
+Site de démonstration — août 2026

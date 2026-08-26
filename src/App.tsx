@@ -280,8 +280,8 @@ function Landing({ language }: { language: Language }) {
     ],
     projectNote: "Partage entre collègues · archivage d’une analyse · reprise sur une autre installation",
     finalK: "Se former puis installer",
-    finalT: "Découvrez BarCodeR avec les tutoriels, puis lancez l’application en quelques clics.",
-    finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. Lorsque vous êtes prêt, installez la version adaptée à votre système.",
+    finalT: "Découvrez BarCodeR avec les tutoriels, puis lancez l’application sous Windows en quelques clics.",
+    finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. La distribution autonome fonctionne sous Windows ; sous macOS ou Linux, l’utilisation nécessite une machine virtuelle Windows.",
     finalInstallLabel: "Installer l’application",
     finalInstallMeta: "BarCodeR v2.12.8 · lanceur dédié",
     finalTutorialLabel: "Commencer ici",
@@ -289,9 +289,9 @@ function Landing({ language }: { language: Language }) {
     finalTutorial: "Voir les tutoriels",
     finalDownload: "Installer BarCodeR",
     platforms: [
-      ["Disponible", "Windows", "Lanceur dédié généré avec executablePackeR"],
-      ["Bientôt", "macOS", "Version dédiée en préparation"],
-      ["Disponible", "Linux", "Exécution du lanceur Windows via un système compatible avec les .exe"]
+      ["Disponible", "Windows", "Distribution autonome et lanceur dédié générés avec executablePackeR"],
+      ["Via Windows", "macOS", "Utilisation possible dans une machine virtuelle exécutant Windows"],
+      ["Via Windows", "Linux", "Utilisation possible dans une machine virtuelle exécutant Windows"]
     ],
     citationK: "Projet scientifique",
     citationT: "BarCodeR est conçu pour être utilisé, compris et cité.",
@@ -372,8 +372,8 @@ function Landing({ language }: { language: Language }) {
     ],
     projectNote: "Colleague-to-colleague sharing · analysis archiving · continuation on another installation",
     finalK: "Learn, then install",
-    finalT: "Discover BarCodeR through the tutorials, then launch the application in a few clicks.",
-    finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. When you are ready, install the version suited to your operating system.",
+    finalT: "Discover BarCodeR through the tutorials, then launch the application on Windows in a few clicks.",
+    finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. The standalone distribution runs on Windows; macOS and Linux users need a Windows virtual machine.",
     finalInstallLabel: "Install the application",
     finalInstallMeta: "BarCodeR v2.12.8 · dedicated launcher",
     finalTutorialLabel: "Start here",
@@ -381,14 +381,54 @@ function Landing({ language }: { language: Language }) {
     finalTutorial: "View tutorials",
     finalDownload: "Install BarCodeR",
     platforms: [
-      ["Available", "Windows", "Dedicated launcher generated with executablePackeR"],
-      ["Coming soon", "macOS", "Dedicated version in preparation"],
-      ["Available", "Linux", "Windows launcher through a system that supports .exe files"]
+      ["Available", "Windows", "Standalone distribution and dedicated launcher generated with executablePackeR"],
+      ["Through Windows", "macOS", "Available through a virtual machine running Windows"],
+      ["Through Windows", "Linux", "Available through a virtual machine running Windows"]
     ],
     citationK: "Scientific project",
     citationT: "BarCodeR is designed to be used, understood and cited.",
     citationP: "Version information, installation options and citation guidance are grouped in the download area."
   };
+
+  const explorationOutputs = language === "fr" ? [
+    ["barplot.png", "Composition taxonomique"],
+    ["alpha_diversite.png", "Alpha-diversité"],
+    ["diagramme_venn.png", "Venn et UpSet"],
+    ["heat_tree.png", "Heat Tree"],
+    ["heat_tree.png", "Arbres phylogénétiques"],
+    ["qualite_assignation_taxonomique.png", "Qualité taxonomique"],
+    ["alpha_diversite.png", "Analyses descriptives"]
+  ] : [
+    ["barplot.png", "Taxonomic composition"],
+    ["alpha_diversite.png", "Alpha diversity"],
+    ["diagramme_venn.png", "Venn and UpSet"],
+    ["heat_tree.png", "Heat Tree"],
+    ["heat_tree.png", "Phylogenetic trees"],
+    ["qualite_assignation_taxonomique.png", "Taxonomic quality"],
+    ["alpha_diversite.png", "Descriptive analyses"]
+  ];
+
+  const analysisOutputs = language === "fr" ? [
+    ["analyses_differentielles.png", "Analyses différentielles"],
+    ["analyses_differentielles.png", "Comparaison des moteurs différentiels"],
+    ["ordinations.png", "Ordinations"],
+    ["permanova_dispersion.png", "Diagnostics des ordinations"],
+    ["comparaison_matrices.png", "Comparaison de matrices"],
+    ["clustering.png", "Réseaux d’associations"],
+    ["comparaison_matrices.png", "Analyses multi-domaines"],
+    ["permanova_dispersion.png", "PERMANOVA et dispersion"],
+    ["clustering.png", "Clustering"]
+  ] : [
+    ["analyses_differentielles.png", "Differential analyses"],
+    ["analyses_differentielles.png", "Differential-engine comparison"],
+    ["ordinations.png", "Ordinations"],
+    ["permanova_dispersion.png", "Ordination diagnostics"],
+    ["comparaison_matrices.png", "Matrix comparison"],
+    ["clustering.png", "Association networks"],
+    ["comparaison_matrices.png", "Multi-domain analyses"],
+    ["permanova_dispersion.png", "PERMANOVA and dispersion"],
+    ["clustering.png", "Clustering"]
+  ];
 
   const trackQuestionGlow = (event: React.PointerEvent<HTMLElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -434,21 +474,26 @@ function Landing({ language }: { language: Language }) {
           <a className="pathway-node pathway-openmetabar pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/functioning"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
           <a className="pathway-node pathway-import pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/functioning"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
         </div>
-        <div className="pathway-merge" aria-hidden="true"><i className="pathway-route-one" /><i className="pathway-route-two" /><b /><span /></div>
+        <div className="pathway-merge" aria-hidden="true">
+          <svg viewBox="0 0 1000 120" preserveAspectRatio="none">
+            <path className="pathway-merge-track openmeta" d="M250 0 C250 56 500 45 500 120" />
+            <path className="pathway-merge-track direct" d="M750 0 C750 56 500 45 500 120" />
+            <circle className="pathway-merge-particle openmeta" r="7"><animateMotion dur="2.35s" repeatCount="indefinite" path="M250 0 C250 56 500 45 500 120" /></circle>
+            <circle className="pathway-merge-particle openmeta secondary" r="5"><animateMotion begin="-1.18s" dur="2.35s" repeatCount="indefinite" path="M250 0 C250 56 500 45 500 120" /></circle>
+            <circle className="pathway-merge-particle direct" r="7"><animateMotion dur="2.35s" repeatCount="indefinite" path="M750 0 C750 56 500 45 500 120" /></circle>
+            <circle className="pathway-merge-particle direct secondary" r="5"><animateMotion begin="-1.18s" dur="2.35s" repeatCount="indefinite" path="M750 0 C750 56 500 45 500 120" /></circle>
+          </svg>
+          <span className="pathway-merge-point" />
+        </div>
         <div className="pathway-hub"><small>{language === "fr" ? "Point de convergence" : "Convergence point"}</small><strong>{language === "fr" ? "Objet phyloseq" : "Phyloseq object"}</strong><p>{language === "fr" ? "Abondances · taxonomie · métadonnées" : "Abundances · taxonomy · metadata"}</p></div>
         <div className="pathway-vertical-link" aria-hidden="true"><i /></div>
         <article className="pathway-barcoder"><div><img src={asset("app-previews/barcoder-logo.png")} alt="" /><span><small>{language === "fr" ? "Un environnement commun" : "One shared environment"}</small><strong>BarCodeR</strong></span></div><p>{language === "fr" ? "Une fois les données structurées, explorez-les et choisissez les analyses adaptées à votre question." : "Once the data are structured, explore them and select analyses suited to your question."}</p><div><span>{language === "fr" ? "Explorer" : "Explore"}</span><span>{language === "fr" ? "Analyser" : "Analyse"}</span><span>{language === "fr" ? "Visualiser" : "Visualise"}</span><span>{language === "fr" ? "Exporter" : "Export"}</span></div></article>
         <div className="pathway-vertical-link pathway-to-results" aria-hidden="true"><i /></div>
         <div className="pathway-results">
           <div className="pathway-results-copy"><small>{language === "fr" ? "Exemples de sorties" : "Example outputs"}</small><strong>{language === "fr" ? "Des données structurées aux figures interprétables" : "From structured data to interpretable figures"}</strong><p>{language === "fr" ? "Explorez les résultats dans l’interface, sauvegardez les figures utiles et retrouvez leur code R." : "Explore results in the interface, save useful figures and retrieve their R code."}</p></div>
-          <div className="pathway-results-grid">{[
-            ["barplot.png", "Barplots"],
-            ["ordinations.png", "Ordinations"],
-            ["alpha_diversite.png", language === "fr" ? "Alpha-diversité" : "Alpha diversity"],
-            ["analyses_differentielles.png", language === "fr" ? "Analyses différentielles" : "Differential analyses"],
-            ["clustering.png", "Clustering"],
-            ["comparaison_matrices.png", language === "fr" ? "Comparaison de matrices" : "Matrix comparison"]
-          ].map(([image, label], index) => <figure style={{ "--result-delay": `${index * 55}ms` } as React.CSSProperties} key={image}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Exemple de figure ${label} produite avec BarCodeR` : `Example ${label} figure produced with BarCodeR`} /></div><figcaption>{label}<span aria-hidden="true">✦</span></figcaption></figure>)}</div>
+          <div className="pathway-output-groups">
+            {[[language === "fr" ? "Onglet Exploration" : "Exploration tab", explorationOutputs], [language === "fr" ? "Onglet Analyse" : "Analysis tab", analysisOutputs]].map(([group, outputs]) => <section className="pathway-output-group" key={group as string}><header><span>✦</span><h4>{group as string}</h4><small>{language === "fr" ? "Un aperçu par sous-onglet" : "One preview per subtab"}</small></header><div className="pathway-results-grid">{(outputs as string[][]).map(([image, label], index) => <figure style={{ "--result-delay": `${index * 55}ms` } as React.CSSProperties} key={`${group}-${label}`}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Aperçu du sous-onglet ${label}` : `${label} subtab preview`} /></div><figcaption>{label}<span aria-hidden="true">✦</span></figcaption></figure>)}</div></section>)}
+          </div>
         </div>
       </div>
     </section>
@@ -2076,8 +2121,28 @@ function DownloadPage({ language }: { language: Language }) {
   </main>;
 }
 
-function Footer({ language }: { language: Language }) {
-  return <footer><div className="page-width footer-main"><Brand language={language} /><p>{language === "fr" ? "Plateforme scientifique pour préparer, explorer et analyser de manière interactive et reproductible des données de métabarcoding." : "Scientific platform for preparing, exploring and reproducibly analysing metabarcoding data through an interactive interface."}</p><nav><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">{language === "fr" ? "Analyses" : "Analyses"}</a><a href="#/showcase">{language === "fr" ? "Cas d’usage" : "Use cases"}</a><a href="#/reproducibility">{language === "fr" ? "Reproductibilité" : "Reproducibility"}</a><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/citation">Citation</a><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a><a href="#/faq">FAQ</a></nav></div><div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div></footer>;
+function Footer({ language, route }: { language: Language; route: string }) {
+  const c = language === "fr" ? {
+    k: "Poursuivre avec BarCodeR", title: "Choisissez la prochaine étape.", p: "Comprendre le parcours, parcourir les analyses, suivre un tutoriel ou préparer l’installation sous Windows.",
+    actions: [["01", "Comprendre le parcours", "Suivre les données depuis leur point d’entrée jusqu’aux résultats.", "#/functioning"], ["02", "Explorer les analyses", "Découvrir les questions, méthodes et sorties disponibles.", "#/analyses"], ["03", "Apprendre par la pratique", "Lancer un tutoriel vidéo et utiliser un objet public.", "#/tutorials"], ["04", "Installer sous Windows", "Télécharger la distribution autonome et lancer BarCodeR.", "#/download"]],
+    description: "Un environnement interactif pour préparer, explorer, analyser et restituer des données de métabarcoding tout en conservant le contexte du travail.",
+    discover: "Découvrir", learn: "Prendre en main", project: "Utiliser et citer",
+    signals: ["Windows", "Sans R ni RStudio", "Projets exportables", "Documentation intégrée"]
+  } : {
+    k: "Continue with BarCodeR", title: "Choose the next step.", p: "Understand the journey, browse analyses, follow a tutorial or prepare the Windows installation.",
+    actions: [["01", "Understand the journey", "Follow data from their entry point to the results.", "#/functioning"], ["02", "Explore analyses", "Discover available questions, methods and outputs.", "#/analyses"], ["03", "Learn by doing", "Launch a video tutorial and use a public object.", "#/tutorials"], ["04", "Install on Windows", "Download the standalone distribution and launch BarCodeR.", "#/download"]],
+    description: "An interactive environment to prepare, explore, analyse and report metabarcoding data while retaining the context of the work.",
+    discover: "Discover", learn: "Get started", project: "Use and cite",
+    signals: ["Windows", "No R or RStudio", "Exportable projects", "Built-in documentation"]
+  };
+  const routeFor = (href: string) => href.replace(/^#/, "");
+
+  return <footer className="site-footer">
+    <section className="footer-next page-width"><div className="footer-next-heading"><Eyebrow>{c.k}</Eyebrow><h2>{c.title}</h2><p>{c.p}</p></div><div className="footer-next-grid">{c.actions.map(([number, title, text, href]) => <a className={route === routeFor(href) ? "active" : ""} href={href} key={href}><span>{number}</span><h3>{title}</h3><p>{text}</p><b>→</b></a>)}</div></section>
+    <div className="footer-core page-width"><div className="footer-brand-block"><Brand language={language} /><p>{c.description}</p></div><nav className="footer-nav-group"><b>{c.discover}</b><a href="#/">{language === "fr" ? "Accueil" : "Home"}</a><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">Analyses</a></nav><nav className="footer-nav-group"><b>{c.learn}</b><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/faq">FAQ</a></nav><nav className="footer-nav-group"><b>{c.project}</b><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a><a href="#/citation">Citation</a></nav></div>
+    <div className="footer-signals page-width">{c.signals.map((signal, index) => <span key={signal}><i>{["▣", "R", "↗", "?"][index]}</i>{signal}</span>)}</div>
+    <div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
+  </footer>;
 }
 
 export default function App() {
@@ -2127,5 +2192,5 @@ export default function App() {
   else if (route === "/faq") page = <FaqPage language={language} />;
   else page = <Landing language={language} />;
 
-  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
+  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} route={route} /></div>;
 }
