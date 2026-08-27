@@ -5164,6 +5164,65 @@ h1 em { color: var(--violet); font-style: normal; }
 }
 .home-screenshot-frame img { animation: none; }
 
+/* Use the complete symbol area of the supplied logo without stretching it. */
+.brand {
+  gap: 10px;
+}
+.brand-mark {
+  background-position: center top;
+  background-size: 100% auto;
+  height: 43px;
+  width: 48px;
+}
+.brand-wordmark {
+  font-size: 19px;
+  line-height: 1;
+}
+.brand-wordmark strong {
+  font-weight: 720;
+}
+.footer-brand-block .brand {
+  background: transparent;
+  border-radius: 0;
+  color: #fff;
+  padding: 0;
+}
+.footer-brand-block .brand-wordmark strong {
+  color: #fff;
+}
+
+.home-proof-visuals {
+  min-width: 0;
+  padding-bottom: 14px;
+}
+.home-value-proof .home-proof-visual {
+  margin: 0;
+  overflow: visible;
+  position: relative;
+}
+.home-proof-visual figcaption {
+  background: rgba(33, 25, 77, .94);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  bottom: 12px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 850;
+  left: 12px;
+  letter-spacing: .04em;
+  padding: 7px 11px;
+  position: absolute;
+  text-transform: uppercase;
+}
+.home-proof-composition {
+  margin: -58px 12px 0 auto !important;
+  width: 82%;
+  z-index: 2;
+}
+.home-proof-composition > img {
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .34);
+}
+
 .pathway-results {
   display: block;
 }
@@ -5242,8 +5301,12 @@ h1 em { color: var(--violet); font-style: normal; }
 @media (max-width: 920px) {
   .pathway-results-unified { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .function-v4-chapter-figures.dual { grid-template-columns: 1fr; }
+  .home-proof-composition { margin-top: -38px !important; width: 88%; }
 }
 
 @media (max-width: 560px) {
   .pathway-results-unified { grid-template-columns: 1fr; }
+  .home-proof-composition { margin: 12px 0 0 !important; width: 100%; }
+  .brand-mark { height: 36px; width: 40px; }
+  .brand-wordmark { font-size: 16px; }
 }

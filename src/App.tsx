@@ -260,6 +260,8 @@ function Landing({ language }: { language: Language }) {
     proofK: "Comparer et restituer",
     proofT: "MultiView rassemble les résultats que vous avez choisi de conserver.",
     proofP: "Les figures sauvegardées depuis les différents modules sont réunies dans une bibliothèque commune. Vous pouvez les rechercher, les comparer côte à côte, construire des compositions et exporter une planche de résultats sans perdre leur contexte d’origine.",
+    proofLibrary: "Bibliothèque de figures",
+    proofComposition: "Composition de plusieurs résultats",
     proofAction: "Découvrir MultiView",
     audienceK: "Pensé pour plusieurs profils",
     audienceT: "Un même projet, différents niveaux d’expertise.",
@@ -352,6 +354,8 @@ function Landing({ language }: { language: Language }) {
     proofK: "Compare and report",
     proofT: "MultiView brings together the results you chose to keep.",
     proofP: "Figures saved from the different modules are gathered in a shared library. Search them, compare them side by side, build compositions and export result panels without losing their original context.",
+    proofLibrary: "Figure library",
+    proofComposition: "Multi-result composition",
     proofAction: "Discover MultiView",
     audienceK: "Designed for several profiles",
     audienceT: "One project, different levels of expertise.",
@@ -443,7 +447,7 @@ function Landing({ language }: { language: Language }) {
     <section className="home-value-section" id="home-value"><div className="page-width">
       <div className="section-heading home-value-heading reveal reveal-left"><div><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div></div>
       <div className="home-value-cards">{c.strengths.map(([number, icon, title, text, proof], index) => <article className="home-value-card reveal reveal-pop" style={{ "--delay": `${index * 70}ms` } as React.CSSProperties} key={title}><div className="home-value-card-head"><span>{number}</span><i>{icon}</i></div><h3>{title}</h3><p>{text}</p><small>{proof}</small></article>)}</div>
-      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visual"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Interface MultiView de BarCodeR" : "BarCodeR MultiView interface"} /></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/functioning">{c.proofAction}<span>↗</span></a></div></div></div>
+      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visuals"><figure className="home-proof-visual home-proof-library"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Bibliothèque de figures sauvegardées dans MultiView" : "Saved figure library in MultiView"} /><figcaption>{c.proofLibrary}</figcaption></figure><figure className="home-proof-visual home-proof-composition"><img src={asset("app-previews/screen-multiview-composition.png")} alt={language === "fr" ? "Composition MultiView réunissant plusieurs résultats" : "MultiView composition combining several results"} /><figcaption>{c.proofComposition}</figcaption></figure></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/functioning">{c.proofAction}<span>↗</span></a></div></div></div>
     </div></section>
 
     <section className="section home-journeys page-width" id="home-data">

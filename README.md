@@ -223,7 +223,7 @@ Points importants :
 
 ## 7. Captures, figures et tutoriels
 
-Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage. La mosaïque d’ouverture de la page Analyses réunit sans les séparer toutes les sorties d’Exploration et d’Analyses. La section consacrée au résultat principal utilise ensuite les trois visuels dédiés fournis pour distinguer l’analyse centrale et ses deux analyses complémentaires.
+Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage. La mosaïque d’ouverture de la page Analyses réunit sans les séparer toutes les sorties d’Exploration et d’Analyses. La section consacrée au résultat principal utilise ensuite les trois visuels dédiés fournis pour distinguer l’analyse centrale et ses deux analyses complémentaires. La mise en avant de MultiView sur l’accueil associe la bibliothèque de figures et une composition réunissant plusieurs résultats.
 
 La page Tutoriels propose six objets phyloseq publics issus des packages `phyloseq` et `microbiome`, dont `atlas1006` et `dietswap`.
 
@@ -330,7 +330,7 @@ Après synchronisation, vérifier au minimum :
 - les langues attendues ;
 - les ancres utilisées depuis le site.
 
-La documentation détaillée reste consultable directement dans l’application BarCodeR. La FAQ du site rappelle cette disponibilité et apporte des réponses rapides sans recopier l’intégralité des guides méthodologiques et techniques.
+La documentation détaillée reste consultable directement dans l’application BarCodeR. La FAQ du site rappelle cette disponibilité et propose 94 réponses bilingues couvrant l’installation, les systèmes, les données, OpenMetaBar, les projets, les analyses, la reproductibilité et le dépannage, sans recopier l’intégralité des guides méthodologiques et techniques.
 
 ## 10. Développement local
 
