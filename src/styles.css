@@ -4039,13 +4039,11 @@ h1 em { color: var(--violet); font-style: normal; }
 .analysis-v2-hero-copy .eyebrow { justify-content: center; }
 .analysis-v2-hero-copy h1 { font-size: clamp(55px, 6.4vw, 92px); margin-inline: auto; }
 .analysis-v2-hero-copy .lead { margin-inline: auto; max-width: 900px; }
-.analysis-v2-mosaic { gap: 14px; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(6, 46px); margin: clamp(54px, 6vw, 82px) auto 0; max-width: 1080px; min-height: 290px; }
-.analysis-v2-mosaic .mosaic-1 { grid-column: 1 / 5; grid-row: 1 / 5; }
-.analysis-v2-mosaic .mosaic-2 { grid-column: 5 / 9; grid-row: 1 / 4; }
-.analysis-v2-mosaic .mosaic-3 { grid-column: 9 / 13; grid-row: 1 / 5; }
-.analysis-v2-mosaic .mosaic-4 { grid-column: 1 / 5; grid-row: 5 / 7; }
-.analysis-v2-mosaic .mosaic-5 { grid-column: 5 / 9; grid-row: 4 / 7; }
-.analysis-v2-mosaic .mosaic-6 { grid-column: 9 / 13; grid-row: 5 / 7; }
+.analysis-v2-mosaic { column-count: 4; column-gap: 14px; display: block; margin: clamp(54px, 6vw, 82px) auto 0; max-width: 1180px; min-height: 0; }
+.analysis-v2-mosaic figure,
+.analysis-v2-mosaic [class^="mosaic-"] { break-inside: avoid; display: inline-block; margin: 0 0 14px; transform: none; width: 100%; }
+.analysis-v2-mosaic figure:hover { transform: translateY(-6px) scale(1.012); }
+.analysis-v2-mosaic img { display: block; height: auto; width: 100%; }
 
 .analysis-v2-orient { padding-block: clamp(90px, 10vw, 145px); }
 .analysis-v2-orient-heading h2,
@@ -4080,12 +4078,12 @@ h1 em { color: var(--violet); font-style: normal; }
 .analysis-v2-feature-heading .eyebrow,
 .analysis-v2-feature-heading h2 { grid-column: 1 / -1; }
 .analysis-v2-feature-heading > p { color: var(--muted); font-size: 17px; grid-column: 2; line-height: 1.72; margin-top: 27px; }
-.analysis-v2-central-grid { display: grid; gap: 16px; grid-template-columns: 1.45fr .75fr; grid-template-rows: 1fr 1fr; margin-top: 55px; }
+.analysis-v2-central-grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; margin-top: 55px; }
 .analysis-v2-central-grid figure { background: #fff; border: 1px solid rgba(91,77,184,.14); border-radius: 18px; box-shadow: 0 18px 45px rgba(43,34,91,.08); overflow: hidden; position: relative; }
-.analysis-v2-central-grid img { display: block; height: 100%; object-fit: cover; width: 100%; }
+.analysis-v2-central-grid img { display: block; height: auto; object-fit: contain; width: 100%; }
 .analysis-v2-central-grid figcaption { background: rgba(36,28,78,.92); bottom: 12px; color: #fff; font-size: 11px; font-weight: 800; left: 12px; padding: 8px 10px; position: absolute; }
-.analysis-v2-central-main { aspect-ratio: 16 / 9; grid-row: 1 / 3; }
-.analysis-v2-central-side { aspect-ratio: 16 / 8.7; }
+.analysis-v2-central-main { grid-column: 1 / -1; }
+.analysis-v2-central-side { align-self: start; }
 .analysis-v2-feature-cards { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
 .analysis-v2-feature-cards article { background: #fff; border: 1px solid rgba(91,77,184,.13); border-radius: 15px; min-height: 180px; padding: 25px; transition: box-shadow .25s ease, transform .25s ease; }
 .analysis-v2-feature-cards article:hover { box-shadow: 0 18px 40px rgba(43,34,91,.1); transform: translateY(-5px); }
@@ -4120,6 +4118,7 @@ h1 em { color: var(--violet); font-style: normal; }
   .analysis-v2-goal-figures { min-height: 0; }
   .analysis-v2-feature-heading { display: block; }
   .analysis-v2-feature-heading > p { max-width: 760px; }
+  .analysis-v2-mosaic { column-count: 3; }
   .analysis-v2-central-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
   .analysis-v2-central-main { grid-column: 1 / -1; grid-row: auto; }
   .analysis-v2-comparison-flow { gap: 16px; }
@@ -4129,8 +4128,8 @@ h1 em { color: var(--violet); font-style: normal; }
 
 @media (max-width: 700px) {
   .analysis-v2-hero-copy h1 { font-size: clamp(43px, 12vw, 60px); }
-  .analysis-v2-mosaic { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: none; min-height: 0; }
-  .analysis-v2-mosaic figure { aspect-ratio: 16 / 10; grid-column: auto !important; grid-row: auto !important; transform: none !important; }
+  .analysis-v2-mosaic { column-count: 2; display: block; min-height: 0; }
+  .analysis-v2-mosaic figure { aspect-ratio: auto; transform: none !important; }
   .analysis-v2-orient-heading h2, .analysis-v2-feature-heading h2 { font-size: 41px; }
   .analysis-v2-qualities, .analysis-v2-feature-cards, .analysis-v2-comparison-flow { grid-template-columns: 1fr; }
   .analysis-v2-tabs { grid-template-columns: 1fr; }

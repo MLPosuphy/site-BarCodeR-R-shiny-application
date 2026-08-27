@@ -82,18 +82,30 @@ export default function AnalysesPageV2({ language }: { language: Language }) {
   const selected = goals.find(goal => goal.id === activeGoal) || goals[0];
   const guidePath = asset(`documentation/${language}/analyse/guides-methodologiques.html`);
   const mosaic = language === "fr" ? [
-    ["app-previews/ordinations.png", "Ordinations"],
+    ["app-previews/barplot.png", "Composition taxonomique"],
     ["app-previews/alpha_diversite.png", "Alpha-diversité"],
+    ["app-previews/diagramme_venn.png", "Venn / UpSet"],
     ["app-previews/heat_tree.png", "Heat Tree"],
+    ["app-previews/arbre_phylogenetique.png", "Arbre phylogénétique"],
+    ["app-previews/qualite_assignation_taxonomique.png", "Qualité taxonomique"],
     ["app-previews/analyses_differentielles.png", "Analyses différentielles"],
+    ["app-previews/ordinations.png", "Ordinations"],
+    ["app-previews/comparaison_matrices.png", "Comparaison de matrices"],
     ["app-previews/reseaux_associations.png", "Réseaux d’associations"],
+    ["app-previews/permanova_dispersion.png", "PERMANOVA / dispersion"],
     ["app-previews/clustering.png", "Clustering"]
   ] : [
-    ["app-previews/ordinations.png", "Ordinations"],
+    ["app-previews/barplot.png", "Taxonomic composition"],
     ["app-previews/alpha_diversite.png", "Alpha diversity"],
+    ["app-previews/diagramme_venn.png", "Venn / UpSet"],
     ["app-previews/heat_tree.png", "Heat Tree"],
+    ["app-previews/arbre_phylogenetique.png", "Phylogenetic tree"],
+    ["app-previews/qualite_assignation_taxonomique.png", "Taxonomic quality"],
     ["app-previews/analyses_differentielles.png", "Differential analyses"],
+    ["app-previews/ordinations.png", "Ordinations"],
+    ["app-previews/comparaison_matrices.png", "Matrix comparison"],
     ["app-previews/reseaux_associations.png", "Association networks"],
+    ["app-previews/permanova_dispersion.png", "PERMANOVA / dispersion"],
     ["app-previews/clustering.png", "Clustering"]
   ];
 
@@ -113,7 +125,7 @@ export default function AnalysesPageV2({ language }: { language: Language }) {
       </article>
     </section>
 
-    <section className="analysis-v2-central"><div className="page-width"><div className="analysis-v2-feature-heading reveal"><Eyebrow>{c.centralK}</Eyebrow><h2>{c.centralT}</h2><p>{c.centralP}</p></div><div className="analysis-v2-reading-flow reveal"><span>{language === "fr" ? "Question" : "Question"}</span><i><em /></i><strong>{c.centralMain}</strong><i><em /></i><span>{language === "fr" ? "Diagnostics" : "Diagnostics"}</span><i><em /></i><span>{language === "fr" ? "Interprétation" : "Interpretation"}</span></div><div className="analysis-v2-central-grid"><figure className="analysis-v2-central-main reveal"><img src={asset("app-previews/ordinations.png")} alt="" /><figcaption><b>01</b>{c.centralMain}</figcaption></figure><figure className="analysis-v2-central-side reveal"><img src={asset("app-previews/permanova_dispersion.png")} alt="" /><figcaption><b>02</b>{c.centralDiagnostic}</figcaption></figure><figure className="analysis-v2-central-side reveal"><img src={asset("app-previews/qualite_assignation_taxonomique.png")} alt="" /><figcaption><b>03</b>{c.centralQuality}</figcaption></figure></div><div className="analysis-v2-feature-cards">{c.centralItems.map(([title, text], index) => <article className="reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+    <section className="analysis-v2-central"><div className="page-width"><div className="analysis-v2-feature-heading reveal"><Eyebrow>{c.centralK}</Eyebrow><h2>{c.centralT}</h2><p>{c.centralP}</p></div><div className="analysis-v2-reading-flow reveal"><span>{language === "fr" ? "Question" : "Question"}</span><i><em /></i><strong>{c.centralMain}</strong><i><em /></i><span>{language === "fr" ? "Diagnostics" : "Diagnostics"}</span><i><em /></i><span>{language === "fr" ? "Interprétation" : "Interpretation"}</span></div><div className="analysis-v2-central-grid"><figure className="analysis-v2-central-main reveal"><img src={asset("app-previews/analyse_principale.png")} alt={language === "fr" ? "Résultat principal : composition taxonomique" : "Primary result: taxonomic composition"} /><figcaption><b>01</b>{c.centralMain}</figcaption></figure><figure className="analysis-v2-central-side reveal"><img src={asset("app-previews/analyses_secondaires_1.png")} alt={language === "fr" ? "Analyse complémentaire : statistiques globales" : "Complementary analysis: global statistics"} /><figcaption><b>02</b>{c.centralDiagnostic}</figcaption></figure><figure className="analysis-v2-central-side reveal"><img src={asset("app-previews/analyses_secondaires_2.png")} alt={language === "fr" ? "Analyse complémentaire : échantillons dominants" : "Complementary analysis: dominant samples"} /><figcaption><b>03</b>{c.centralQuality}</figcaption></figure></div><div className="analysis-v2-feature-cards">{c.centralItems.map(([title, text], index) => <article className="reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 
     <section className="analysis-v2-comparison"><div className="page-width"><div className="analysis-v2-feature-heading reveal"><Eyebrow>{c.compareK}</Eyebrow><h2>{c.compareT}</h2><p>{c.compareP}</p></div><div className="analysis-v2-comparison-flow reveal">{c.compareFlow.map(([title, mode, text], index) => <article className={index === 2 ? "result" : ""} key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><small>{mode}</small><b>{title}</b><p>{text}</p></div>{index < c.compareFlow.length - 1 && <i><em /></i>}</article>)}</div><div className="analysis-v2-feature-cards">{c.compareCards.map(([title, text], index) => <article className="reveal" key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 

@@ -223,7 +223,7 @@ Points importants :
 
 ## 7. Captures, figures et tutoriels
 
-Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage.
+Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage. La mosaïque d’ouverture de la page Analyses réunit sans les séparer toutes les sorties d’Exploration et d’Analyses. La section consacrée au résultat principal utilise ensuite les trois visuels dédiés fournis pour distinguer l’analyse centrale et ses deux analyses complémentaires.
 
 La page Tutoriels propose six objets phyloseq publics issus des packages `phyloseq` et `microbiome`, dont `atlas1006` et `dietswap`.
 
