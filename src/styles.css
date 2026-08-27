@@ -21,8 +21,8 @@
   --dark: #15192d;
   --dark-soft: #202640;
   --shadow: 0 22px 70px rgba(31, 37, 64, .11);
-  --font-body: "Source Sans 3", "Segoe UI", sans-serif;
-  --font-display: "Manrope", "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", "Noto Sans SC", "Microsoft YaHei", "Noto Sans Devanagari", "Nirmala UI", "Segoe UI", sans-serif;
+  --font-display: "Manrope", "Noto Sans SC", "Microsoft YaHei", "Noto Sans Devanagari", "Nirmala UI", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", Consolas, monospace;
   color: var(--ink);
   background: var(--paper);
@@ -34,6 +34,9 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html[lang="zh"] { --font-body: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif; --font-display: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif; }
+html[lang="hi"] { --font-body: "Noto Sans Devanagari", "Nirmala UI", "Mangal", sans-serif; --font-display: "Noto Sans Devanagari", "Nirmala UI", "Mangal", sans-serif; }
+html[lang="zh"] h1, html[lang="zh"] h2, html[lang="zh"] h3, html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3 { letter-spacing: -.018em; }
 body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); font-size: 17px; line-height: 1.65; }
 button, input, select, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -60,9 +63,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 .primary-nav > a::after { background: var(--violet); bottom: -11px; content: ""; height: 2px; left: 0; position: absolute; transform: scaleX(0); transform-origin: right; transition: transform .18s ease; width: 100%; }
 .primary-nav > a:hover, .primary-nav > a.active { color: var(--ink); }
 .primary-nav > a:hover::after, .primary-nav > a.active::after { transform: scaleX(1); transform-origin: left; }
-.language-switch { align-items: center; background: var(--tint); border: 1px solid var(--line); border-radius: 999px; display: flex; padding: 3px; }
-.language-switch button { background: transparent; border: 0; border-radius: 999px; color: var(--muted); cursor: pointer; font-family: var(--font-display); font-size: 13px; font-weight: 700; min-height: 34px; min-width: 39px; padding: 5px 9px; }
-.language-switch button.active { background: var(--surface); box-shadow: 0 2px 10px rgba(31,37,64,.1); color: var(--violet-dark); }
+.language-switch { align-items: center; background: var(--tint); border: 1px solid var(--line); border-radius: 999px; display: flex; gap: 4px; padding: 3px 7px 3px 4px; position: relative; }
+.language-switch::after { color: var(--muted); content: "⌄"; font-size: 12px; pointer-events: none; position: absolute; right: 9px; top: 50%; transform: translateY(-56%); }
+.language-switch-code { align-items: center; background: var(--surface); border-radius: 999px; box-shadow: 0 2px 10px rgba(31,37,64,.1); color: var(--violet-dark); display: flex; font-family: var(--font-display); font-size: 11px; font-weight: 800; height: 32px; justify-content: center; min-width: 32px; padding-inline: 6px; }
+.language-switch select { appearance: none; background: transparent; border: 0; color: var(--ink); cursor: pointer; font-family: var(--font-display); font-size: 12px; font-weight: 700; min-height: 34px; outline: 0; padding: 5px 22px 5px 4px; width: 82px; }
+.language-switch:focus-within { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(102,84,217,.12); }
 .menu-button { background: transparent; border: 0; cursor: pointer; display: none; height: 44px; position: relative; width: 44px; }
 .menu-button span { background: var(--ink); height: 2px; left: 9px; position: absolute; top: 16px; width: 26px; }
 .menu-button span:last-child { top: 26px; width: 19px; }

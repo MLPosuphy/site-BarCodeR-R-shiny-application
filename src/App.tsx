@@ -1,15 +1,15 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { groups, moduleScreens, modules, type AppModule, type Language, type Localized } from "./content";
+import { getBaseLanguage, groups, moduleScreens, modules, tx, type AppModule, type Language, type Localized } from "./content";
 import FunctioningPageV2 from "./FunctioningPageV2";
 import AnalysesPageV2 from "./AnalysesPageV2";
 import TutorialsPageV2 from "./TutorialsPageV2";
 import InstallerPageV2 from "./InstallerPageV2";
 import CitationPage from "./CitationPage";
 import FaqPage from "./FaqPage";
+import { languageOptions, observeTranslations, updateDocumentMetadata } from "./siteI18n";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
-const tx = (value: Localized, language: Language) => value[language];
 const moduleHref = (key: string) => key === "exploration" || key === "analyse" ? "#/analyses" : key === "documentation" ? "#/documentation" : "#/functioning";
 
 // Main BarCodeR application screenshot displayed on the overview page.
@@ -69,10 +69,12 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <a className={route === "/citation" ? "active" : ""} href="#/citation">{c.citation}</a>
         <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
         <a className={route === "/faq" ? "active" : ""} href="#/faq">{c.faq}</a>
-        <div className="language-switch" aria-label={language === "fr" ? "Langue" : "Language"}>
-          <button className={language === "fr" ? "active" : ""} onClick={() => { setLanguage("fr"); setOpen(false); }}>FR</button>
-          <button className={language === "en" ? "active" : ""} onClick={() => { setLanguage("en"); setOpen(false); }}>EN</button>
-        </div>
+        <label className="language-switch">
+          <span className="language-switch-code" aria-hidden="true">{languageOptions.find((option) => option.code === language)?.short}</span>
+          <select aria-label={language === "fr" ? "Langue" : "Language"} value={language} onChange={(event) => { setLanguage(event.target.value as Language); setOpen(false); }}>
+            {languageOptions.map((option) => <option value={option.code} key={option.code}>{option.label}</option>)}
+          </select>
+        </label>
       </nav>
     </header>
   );
@@ -2133,28 +2135,25 @@ export default function App() {
   const route = useHashRoute();
   const [language, setLanguageState] = useState<Language>(() => {
     const stored = localStorage.getItem("barcoder-site-language");
-    if (stored === "fr" || stored === "en") return stored;
+    if (stored === "fr" || stored === "en" || stored === "es" || stored === "zh" || stored === "hi") return stored;
     return "en";
   });
+  const contentLanguage = getBaseLanguage(language);
 
   const setLanguage = (next: Language) => { localStorage.setItem("barcoder-site-language", next); setLanguageState(next); };
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = language;
-    const label = route === "/tutorials" || route === "/evidence" ? (language === "fr" ? "Tutoriels et datasets tests" : "Tutorials and test datasets")
-      : route === "/documentation" ? (language === "fr" ? "Tutoriels BarCodeR" : "BarCodeR tutorials")
-      : route === "/analyses" ? (language === "fr" ? "Analyses scientifiques" : "Scientific analyses")
-      : route === "/showcase" ? (language === "fr" ? "Cas d’usage et résultats" : "Use cases and outputs")
-      : route === "/functioning" || route.startsWith("/application") ? (language === "fr" ? "Fonctionnement de BarCodeR" : "How BarCodeR works")
-      : route === "/citation" ? (language === "fr" ? "Citer BarCodeR" : "Cite BarCodeR")
-      : route === "/download" || route === "/availability" ? (language === "fr" ? "Télécharger et citer" : "Download and cite")
-      : route === "/faq" ? (language === "fr" ? "Questions fréquentes" : "Frequently asked questions")
-      : route === "/reproducibility" ? (language === "fr" ? "Reproductibilité" : "Reproducibility")
-      : (language === "fr" ? "Analyse reproductible du métabarcoding" : "Reproducible metabarcoding analysis");
-    document.title = `${label} | BarCodeR`;
+    updateDocumentMetadata(route, language);
+  }, [language, route]);
+
+  useLayoutEffect(() => {
+    const observer = observeTranslations(document.body, language);
+    return () => observer?.disconnect();
   }, [language, route]);
 
   useEffect(() => {
     if (route === "/documentation") window.location.hash = "#/tutorials";
+    else if (route === "/showcase" || route === "/reproducibility") window.location.hash = "#/analyses";
   }, [route]);
 
   useEffect(() => {
@@ -2166,15 +2165,13 @@ export default function App() {
   }, [route, language]);
 
   let page: React.ReactNode;
-  if (route === "/functioning" || route.startsWith("/application")) page = <FunctioningPageV2 language={language} />;
-  else if (route === "/analyses") page = <AnalysesPageV2 language={language} />;
-  else if (route === "/showcase") page = <ShowcasePage language={language} />;
-  else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={language} />;
-  else if (route === "/reproducibility") page = <ReproducibilityPage language={language} />;
-  else if (route === "/citation") page = <CitationPage language={language} />;
-  else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={language} />;
-  else if (route === "/faq") page = <FaqPage language={language} />;
-  else page = <Landing language={language} />;
+  if (route === "/functioning" || route.startsWith("/application")) page = <FunctioningPageV2 language={contentLanguage} />;
+  else if (route === "/analyses" || route === "/showcase" || route === "/reproducibility") page = <AnalysesPageV2 language={contentLanguage} />;
+  else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={contentLanguage} />;
+  else if (route === "/citation") page = <CitationPage language={contentLanguage} />;
+  else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={contentLanguage} />;
+  else if (route === "/faq") page = <FaqPage language={contentLanguage} />;
+  else page = <Landing language={contentLanguage} />;
 
-  return <div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={language} /></div>;
+  return <div className="site-shell" key={language}><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={contentLanguage} /></div>;
 }

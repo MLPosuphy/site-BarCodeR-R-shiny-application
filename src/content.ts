@@ -1,7 +1,10 @@
-export type Language = "fr" | "en";
+export type Language = "en" | "fr" | "es" | "zh" | "hi";
+export type BaseLanguage = "en" | "fr";
 export type Localized = { fr: string; en: string };
 
 export const l = (fr: string, en: string): Localized => ({ fr, en });
+export const getBaseLanguage = (language: Language): BaseLanguage => language === "fr" ? "fr" : "en";
+export const tx = (value: Localized, language: Language): string => value[getBaseLanguage(language)];
 
 export type SubModule = {
   title: Localized;

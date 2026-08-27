@@ -32,6 +32,11 @@ Le site n’utilise pas de CMS ni de framework de routage externe.
 │   ├── CitationPage.tsx
 │   ├── FaqPage.tsx
 │   ├── content.ts
+│   ├── siteI18n.ts
+│   ├── locales/
+│   │   ├── es.json
+│   │   ├── zh.json
+│   │   └── hi.json
 │   ├── styles.css
 │   └── vite-env.d.ts
 ├── public/
@@ -99,7 +104,7 @@ Les pages `#/application/<module>` sont générées à partir de ces données. P
 Ce fichier contient :
 
 - le header et le footer ;
-- la gestion FR/EN ;
+- la gestion du choix de langue ;
 - le routage ;
 - la page d’accueil ;
 - le routage vers les pages Fonctionnement et Analyses ;
@@ -165,10 +170,10 @@ Tous les styles publics du site sont regroupés ici :
 
 ## 5. Internationalisation du site
 
-Le site public possède actuellement deux langues :
+Le site public possède les cinq langues proposées dans BarCodeR :
 
 ```ts
-type Language = "fr" | "en";
+type Language = "en" | "fr" | "es" | "zh" | "hi";
 ```
 
 Les contenus réutilisables utilisent le type :
@@ -180,11 +185,17 @@ type Localized = {
 };
 ```
 
-Dans `content.ts`, la fonction `l(fr, en)` crée ces objets. Dans `App.tsx`, la fonction `tx(value, language)` récupère la langue active.
+Dans `content.ts`, la fonction `l(fr, en)` crée ces objets historiques. Le français reste rendu directement depuis cette source et l’anglais sert de base aux trois ressources additionnelles.
 
-Lorsqu’un texte public est ajouté, il faut donc fournir **FR et EN au même endroit**.
+`src/siteI18n.ts` applique les ressources statiques `es.json`, `zh.json` et `hi.json` au contenu anglais. Lorsqu’un texte public est ajouté, il faut donc :
 
-L’anglais est la langue affichée lors de la première visite. Un choix manuel FR/EN est ensuite conservé dans le navigateur.
+1. fournir les versions française et anglaise au même endroit ;
+2. ajouter la chaîne anglaise et ses traductions aux trois fichiers de `src/locales/` ;
+3. conserver les noms de produits, méthodes, packages et datasets sous leur forme canonique.
+
+L’anglais est la langue affichée lors de la première visite. Le choix manuel parmi English, Français, Español, 中文 et हिन्दी est ensuite conservé dans le navigateur.
+
+Les captures de l’application sont volontairement conservées en anglais dans toutes les langues du site.
 
 La documentation HTML intégrée peut contenir davantage de langues que l’interface du site. Sa gestion est indépendante.
 

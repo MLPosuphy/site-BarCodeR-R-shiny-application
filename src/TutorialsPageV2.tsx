@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Language, Localized } from "./content";
+import { tx, type Language, type Localized } from "./content";
 
 type TutorialCategory = "install" | "start" | "project" | "tools";
 type Tutorial = {
@@ -12,8 +12,6 @@ type Tutorial = {
   steps: Localized[];
   tabs: Localized[];
 };
-
-const tx = (value: Localized, language: Language) => value[language];
 
 // Final posters will be extracted from each tutorial video.
 const tutorialPreview = {
