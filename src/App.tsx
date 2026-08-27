@@ -86,7 +86,7 @@ function AppPreview({ language }: { language: Language }) {
   const names = language === "fr" ? ["Données", "Description", "Édition", "Filtration", "Exploration", "Analyse"] : ["Input", "Description", "Edition", "Filtering", "Exploration", "Analysis"];
   return (
     <div className="app-preview" role="img" aria-label={language === "fr" ? "Schéma du tableau de bord BarCodeR avec projet, dataset actif et parcours analytique" : "Diagram of the BarCodeR dashboard with project, active dataset and analytical workflow"}>
-      <div className="preview-titlebar"><span /><span /><span /><b>BarCodeR · GlobalPatterns</b><em>FR</em></div>
+      <div className="preview-titlebar"><span /><span /><span /><b>BarCodeR · GlobalPatterns</b><em>{language.toUpperCase()}</em></div>
       <div className="preview-body">
         <div className="preview-rail"><strong>B|R</strong>{["⌂", "?", "⇢", "↓", "▦", "◎", "✎", "≋", "◉", "∴", "▤"].map((x, i) => <span className={i === 0 ? "active" : ""} key={`${x}-${i}`}>{x}</span>)}</div>
         <div className="preview-main">
@@ -390,42 +390,30 @@ function Landing({ language }: { language: Language }) {
     citationP: "Version information, installation options and citation guidance are grouped in the download area."
   };
 
-  const explorationOutputs = language === "fr" ? [
+  const resultOutputs = language === "fr" ? [
     ["barplot.png", "Composition taxonomique"],
     ["alpha_diversite.png", "Alpha-diversité"],
     ["diagramme_venn.png", "Venn et UpSet"],
     ["heat_tree.png", "Heat Tree"],
-    ["heat_tree.png", "Arbres phylogénétiques"],
+    ["arbre_phylogenetique.png", "Arbres phylogénétiques"],
     ["qualite_assignation_taxonomique.png", "Qualité taxonomique"],
-    ["alpha_diversite.png", "Analyses descriptives"]
+    ["analyses_differentielles.png", "Analyses différentielles"],
+    ["ordinations.png", "Ordinations"],
+    ["comparaison_matrices.png", "Comparaison de matrices"],
+    ["reseaux_associations.png", "Réseaux d’associations"],
+    ["permanova_dispersion.png", "PERMANOVA et dispersion"],
+    ["clustering.png", "Clustering"]
   ] : [
     ["barplot.png", "Taxonomic composition"],
     ["alpha_diversite.png", "Alpha diversity"],
     ["diagramme_venn.png", "Venn and UpSet"],
     ["heat_tree.png", "Heat Tree"],
-    ["heat_tree.png", "Phylogenetic trees"],
+    ["arbre_phylogenetique.png", "Phylogenetic trees"],
     ["qualite_assignation_taxonomique.png", "Taxonomic quality"],
-    ["alpha_diversite.png", "Descriptive analyses"]
-  ];
-
-  const analysisOutputs = language === "fr" ? [
-    ["analyses_differentielles.png", "Analyses différentielles"],
-    ["analyses_differentielles.png", "Comparaison des moteurs différentiels"],
-    ["ordinations.png", "Ordinations"],
-    ["permanova_dispersion.png", "Diagnostics des ordinations"],
-    ["comparaison_matrices.png", "Comparaison de matrices"],
-    ["clustering.png", "Réseaux d’associations"],
-    ["comparaison_matrices.png", "Analyses multi-domaines"],
-    ["permanova_dispersion.png", "PERMANOVA et dispersion"],
-    ["clustering.png", "Clustering"]
-  ] : [
     ["analyses_differentielles.png", "Differential analyses"],
-    ["analyses_differentielles.png", "Differential-engine comparison"],
     ["ordinations.png", "Ordinations"],
-    ["permanova_dispersion.png", "Ordination diagnostics"],
     ["comparaison_matrices.png", "Matrix comparison"],
-    ["clustering.png", "Association networks"],
-    ["comparaison_matrices.png", "Multi-domain analyses"],
+    ["reseaux_associations.png", "Association networks"],
     ["permanova_dispersion.png", "PERMANOVA and dispersion"],
     ["clustering.png", "Clustering"]
   ];
@@ -491,9 +479,7 @@ function Landing({ language }: { language: Language }) {
         <div className="pathway-vertical-link pathway-to-results" aria-hidden="true"><i /></div>
         <div className="pathway-results">
           <div className="pathway-results-copy"><small>{language === "fr" ? "Exemples de sorties" : "Example outputs"}</small><strong>{language === "fr" ? "Des données structurées aux figures interprétables" : "From structured data to interpretable figures"}</strong><p>{language === "fr" ? "Explorez les résultats dans l’interface, sauvegardez les figures utiles et retrouvez leur code R." : "Explore results in the interface, save useful figures and retrieve their R code."}</p></div>
-          <div className="pathway-output-groups">
-            {[[language === "fr" ? "Onglet Exploration" : "Exploration tab", explorationOutputs], [language === "fr" ? "Onglet Analyse" : "Analysis tab", analysisOutputs]].map(([group, outputs]) => <section className="pathway-output-group" key={group as string}><header><span>✦</span><h4>{group as string}</h4><small>{language === "fr" ? "Un aperçu par sous-onglet" : "One preview per subtab"}</small></header><div className="pathway-results-grid">{(outputs as string[][]).map(([image, label], index) => <figure style={{ "--result-delay": `${index * 55}ms` } as React.CSSProperties} key={`${group}-${label}`}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Aperçu du sous-onglet ${label}` : `${label} subtab preview`} /></div><figcaption>{label}<span aria-hidden="true">✦</span></figcaption></figure>)}</div></section>)}
-          </div>
+          <div className="pathway-results-grid pathway-results-unified">{resultOutputs.map(([image, label], index) => <figure style={{ "--result-delay": `${index * 55}ms` } as React.CSSProperties} key={label}><div><img src={asset(`app-previews/${image}`)} alt={language === "fr" ? `Exemple de sortie : ${label}` : `Example output: ${label}`} /></div><figcaption>{label}<span aria-hidden="true">✦</span></figcaption></figure>)}</div>
         </div>
       </div>
     </section>
@@ -2144,7 +2130,7 @@ export default function App() {
   const [language, setLanguageState] = useState<Language>(() => {
     const stored = localStorage.getItem("barcoder-site-language");
     if (stored === "fr" || stored === "en") return stored;
-    return navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en";
+    return "en";
   });
 
   const setLanguage = (next: Language) => { localStorage.setItem("barcoder-site-language", next); setLanguageState(next); };

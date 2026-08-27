@@ -13,6 +13,8 @@ type JourneyStep = {
   outputs: string[];
   image: string;
   imageAlt: string;
+  secondaryImage?: string;
+  secondaryImageAlt?: string;
   tone: "openmeta" | "barcoder" | "repro";
   actionLabel?: string;
   actionHref?: string;
@@ -148,6 +150,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       details: ["Paramétrages graphiques et calculatoires", "Analyses au sein d’un dataset", "Analyses et comparaisons entre datasets"],
       modules: ["Onglet Exploration", "Onglet Analyse"], outputs: ["Figures et diagnostics", "Résultats intra- et inter-datasets"],
       image: "app-previews/screen-analyse-current.png", imageAlt: "Exploration et analyses dans BarCodeR", tone: "barcoder",
+      secondaryImage: "app-previews/screen-exploration-current.png", secondaryImageAlt: "Exploration des données dans BarCodeR",
       actionLabel: "Explorer les analyses disponibles", actionHref: "#/analyses"
     },
     {
@@ -162,7 +165,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
       lead: "Chaque résultat sauvegardé reste relié à son dataset, à ses paramètres et, lorsque la fonctionnalité est disponible, au code R permettant de comprendre, répéter ou prolonger l’analyse.",
       details: ["Historique des opérations et paramètres", "Code R associé aux figures compatibles", "Exports réutilisables hors de BarCodeR"],
       modules: ["Historiques", "Exports", "Code R"], outputs: ["Historique retrouvable", "Résultats et code réutilisables"],
-      image: "app-previews/screen-home-current.png", imageAlt: "Projet et historique de travail dans BarCodeR", tone: "repro"
+      image: "app-previews/screen-history-code-current.png", imageAlt: "Historique et code R reproductible dans BarCodeR", tone: "repro"
     }
   ] : [
     { id: "fastq", number: "01A", title: "Process raw sequences", lead: "OpenMetaBar turns FASTQ files into a phyloseq object ready for BarCodeR.", details: ["Bioinformatics processing choices", "Processing-step monitoring", "Production of a structured phyloseq object (dataset)"], modules: ["OpenMetaBar tab"], outputs: ["Structured phyloseq dataset", "Sequences ready for analysis"], image: "app-previews/screen-openmetabar-current.png", imageAlt: "Sequence processing in OpenMetaBar", tone: "openmeta" },
@@ -171,9 +174,9 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
     { id: "describe", number: "03", title: "Data overview", lead: "The main variables are visualised to assess dataset structure, quality and relevance before deeper analyses.", details: ["Dataset structure and dimensions", "Depth, richness and composition", "Available taxonomy and metadata"], modules: ["Description tab"], outputs: ["Dataset overview", "Identified points to review"], image: "app-previews/screen-description-current.png", imageAlt: "Dataset overview in BarCodeR", tone: "barcoder" },
     { id: "edit", number: "04", title: "Correct or enrich datasets", lead: "Dataset components can be adjusted whenever structure or information requires corrections or additions.", details: ["Data editing", "Information addition or correction", "Savable new state"], modules: ["Data Edition tab"], outputs: ["Enriched or corrected dataset", "Retainable new state"], image: "app-previews/screen-data-edition.png", imageAlt: "Dataset editing in BarCodeR", tone: "barcoder" },
     { id: "filter", number: "05", title: "Filter for the scientific question", lead: "Multiple, diverse and customisable filters adapt each dataset to the scientific question and available data.", details: ["Taxonomic and biological filters", "Sample and sequence selection", "Before-and-after preview"], modules: ["Filtering tab"], outputs: ["Question-specific dataset", "Documented transformations"], image: "app-previews/screen-filtration-current.png", imageAlt: "Interactive filtering in BarCodeR", tone: "barcoder" },
-    { id: "analyse", number: "06", title: "Explore and analyse datasets", lead: "A broad range of computational and graphical settings supports data exploration, hypothesis testing, and within- or between-dataset analyses.", details: ["Graphical and computational settings", "Within-dataset analyses", "Between-dataset analyses and comparisons"], modules: ["Exploration tab", "Analysis tab"], outputs: ["Figures and diagnostics", "Within- and between-dataset results"], image: "app-previews/screen-analyse-current.png", imageAlt: "Exploration and analyses in BarCodeR", tone: "barcoder", actionLabel: "Explore available analyses", actionHref: "#/analyses" },
+    { id: "analyse", number: "06", title: "Explore and analyse datasets", lead: "A broad range of computational and graphical settings supports data exploration, hypothesis testing, and within- or between-dataset analyses.", details: ["Graphical and computational settings", "Within-dataset analyses", "Between-dataset analyses and comparisons"], modules: ["Exploration tab", "Analysis tab"], outputs: ["Figures and diagnostics", "Within- and between-dataset results"], image: "app-previews/screen-analyse-current.png", imageAlt: "Analysis in BarCodeR", secondaryImage: "app-previews/screen-exploration-current.png", secondaryImageAlt: "Data exploration in BarCodeR", tone: "barcoder", actionLabel: "Explore available analyses", actionHref: "#/analyses" },
     { id: "multiview", number: "07", title: "MultiView, a tool supporting figure interpretation", lead: "All figures generated and saved in a project can be recovered, viewed, moved, resized and freely organised in an interactive space.", details: ["Saved figure retrieval", "Interactive layout and resizing", "Organisation of an overall reading"], modules: ["MultiView tab"], outputs: ["Figure library", "Interactive visual composition"], image: "app-previews/screen-multiview-current.png", imageAlt: "Interactive figure organisation in MultiView", tone: "barcoder" },
-    { id: "repro", number: "08", title: "Reproducibility without compromise", lead: "Every saved result remains linked to its dataset, parameters and, when available, the R code needed to understand, repeat or extend the analysis.", details: ["Operation and parameter history", "R code attached to compatible figures", "Reusable exports outside BarCodeR"], modules: ["Histories", "Exports", "R code"], outputs: ["Recoverable history", "Reusable results and code"], image: "app-previews/screen-home-current.png", imageAlt: "Project and work history in BarCodeR", tone: "repro" }
+    { id: "repro", number: "08", title: "Reproducibility without compromise", lead: "Every saved result remains linked to its dataset, parameters and, when available, the R code needed to understand, repeat or extend the analysis.", details: ["Operation and parameter history", "R code attached to compatible figures", "Reusable exports outside BarCodeR"], modules: ["Histories", "Exports", "R code"], outputs: ["Recoverable history", "Reusable results and code"], image: "app-previews/screen-history-code-current.png", imageAlt: "History and reproducible R code in BarCodeR", tone: "repro" }
   ];
 
   useEffect(() => {
@@ -220,7 +223,7 @@ export default function FunctioningPageV2({ language }: { language: Language }) 
 
         <div className="function-v4-chapters">{steps.map((step, index) => <article id={`function-v4-chapter-${step.id}`} className={`function-v4-chapter ${activeStep === index ? "active" : ""}`} data-step={index} data-tone={step.tone} key={step.id} onPointerEnter={() => setActiveStep(index)}>
           <header><div><div className="function-v4-module-line">{step.id === "fastq" && <img src={asset("app-previews/openmetabar-logo.png")} alt="" />}<small>{step.modules.join(" · ")}</small></div><h3>{step.title}</h3><p>{step.lead}</p></div></header>
-          <div className="function-v4-chapter-body"><div className="function-v4-detail-list">{step.details.map((detail, detailIndex) => <p key={detail}><span>0{detailIndex + 1}</span>{detail}</p>)}</div><figure><figcaption>{c.screenLabel}<b>{step.modules[0]}</b></figcaption><div><img src={asset(step.image)} alt={step.imageAlt} /></div></figure></div>
+          <div className="function-v4-chapter-body"><div className="function-v4-detail-list">{step.details.map((detail, detailIndex) => <p key={detail}><span>0{detailIndex + 1}</span>{detail}</p>)}</div><div className={step.secondaryImage ? "function-v4-chapter-figures dual" : "function-v4-chapter-figures"}><figure><figcaption>{c.screenLabel}<b>{step.modules[step.secondaryImage ? 1 : 0]}</b></figcaption><div><img src={asset(step.image)} alt={step.imageAlt} /></div></figure>{step.secondaryImage && <figure><figcaption>{c.screenLabel}<b>{step.modules[0]}</b></figcaption><div><img src={asset(step.secondaryImage)} alt={step.secondaryImageAlt} /></div></figure>}</div></div>
           {step.actionHref && <a className="function-v4-analysis-link" href={step.actionHref}>{step.actionLabel}<span>→</span></a>}
           <div className="function-v4-outcomes"><small><i>✦</i>{c.outputsLabel}</small><div>{step.outputs.map((output, outputIndex) => <span key={output}><b>0{outputIndex + 1}</b><strong>{output}</strong></span>)}</div></div>
         </article>)}</div>

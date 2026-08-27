@@ -5150,3 +5150,101 @@ h1 em { color: var(--violet); font-style: normal; }
   .pathway-merge-particle { display: none; }
   .tutorial-v3-video-preview video { transition: none; }
 }
+
+/* Screenshot batch: preserve every source image without cropping. */
+.home-screenshot-frame,
+.home-proof-visual {
+  aspect-ratio: auto;
+}
+.home-screenshot-frame img,
+.home-proof-visual > img {
+  height: auto;
+  object-fit: contain;
+  transform: none !important;
+  width: 100%;
+}
+.home-screenshot-frame img { animation: none; }
+
+.pathway-results {
+  display: block;
+}
+.pathway-results-copy {
+  margin-bottom: 24px;
+}
+.pathway-results-unified {
+  align-items: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.pathway-results-unified figure > div {
+  aspect-ratio: auto;
+  display: block;
+}
+.pathway-results-unified figure img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  transform: none !important;
+  width: 100%;
+}
+
+.function-v4-browser img {
+  aspect-ratio: auto;
+  display: block;
+  height: auto;
+  object-fit: contain;
+}
+.function-v4-chapter-figures {
+  display: grid;
+  gap: 18px;
+}
+.function-v4-chapter-figures.dual {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.function-v4-chapter figure > div {
+  aspect-ratio: auto;
+}
+.function-v4-chapter figure img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  transform: none !important;
+  width: 100%;
+}
+
+.module-visual {
+  min-height: 0;
+}
+.module-visual.image img,
+.submodule-card > img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  transform: none !important;
+  width: 100%;
+}
+
+.analysis-v2-mosaic img,
+.analysis-v2-goal-figures img,
+.analysis-v2-central-grid img,
+.analysis-v2-flagship figure img {
+  object-fit: contain;
+  transform: none !important;
+}
+.analysis-v2-goal-figures figure,
+.analysis-v2-central-grid figure,
+.analysis-v2-mosaic figure {
+  background: #fff;
+}
+
+.tutorial-v3-video-preview video {
+  object-fit: contain;
+}
+
+@media (max-width: 920px) {
+  .pathway-results-unified { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .function-v4-chapter-figures.dual { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .pathway-results-unified { grid-template-columns: 1fr; }
+}

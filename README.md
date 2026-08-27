@@ -103,7 +103,7 @@ Ce fichier contient :
 - le routage ;
 - la page d’accueil ;
 - le routage vers les pages Fonctionnement et Analyses ;
-- le bandeau de navigation commun placé en bas de toutes les pages ;
+- le pied de page compact commun à toutes les pages ;
 - les composants réutilisés par ces pages.
 
 Les pages éditoriales historiques restent présentes dans ce fichier pour préserver la structure existante. Les versions publiques refondues de Fonctionnement et Analyses sont maintenant isolées dans des composants dédiés.
@@ -184,6 +184,8 @@ Dans `content.ts`, la fonction `l(fr, en)` crée ces objets. Dans `App.tsx`, la 
 
 Lorsqu’un texte public est ajouté, il faut donc fournir **FR et EN au même endroit**.
 
+L’anglais est la langue affichée lors de la première visite. Un choix manuel FR/EN est ensuite conservé dans le navigateur.
+
 La documentation HTML intégrée peut contenir davantage de langues que l’interface du site. Sa gestion est indépendante.
 
 ## 6. Positionnement fonctionnel à respecter
@@ -218,6 +220,14 @@ Points importants :
 - les paramètres, algorithmes et détails méthodologiques doivent rester dans la documentation ;
 - BarCodeR guide et contrôle certains prérequis mais ne remplace pas l’interprétation scientifique ;
 - MultiView réutilise les figures sauvegardées, il ne recalcule pas les analyses.
+
+## 7. Captures, figures et tutoriels
+
+Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage.
+
+La page Tutoriels propose six objets phyloseq publics issus des packages `phyloseq` et `microbiome`, dont `atlas1006` et `dietswap`.
+
+Les vidéos définitives ne sont pas encore intégrées. Pour chaque futur tutoriel, l’image d’aperçu devra être extraite directement de sa vidéo, puis remplacer l’aperçu de démonstration actuel dans `public/media/`.
 
 ## 7. Captures et autres assets
 
