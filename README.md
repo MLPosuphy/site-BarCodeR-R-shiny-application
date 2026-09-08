@@ -234,7 +234,7 @@ Points importants :
 
 ## 7. Captures, figures et tutoriels
 
-Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage. La mosaïque d’ouverture de la page Analyses réunit sans les séparer toutes les sorties d’Exploration et d’Analyses. La section consacrée au résultat principal utilise ensuite les trois visuels dédiés fournis pour distinguer l’analyse centrale et ses deux analyses complémentaires. La mise en avant de MultiView sur l’accueil associe la bibliothèque de figures et une composition réunissant plusieurs résultats.
+Les captures de l’application et les figures scientifiques sont stockées dans `public/app-previews/`. Le site conserve leur proportion d’origine et utilise `object-fit: contain` afin d’éviter tout recadrage. Sur l’accueil, la capture principale est présentée dans un ordinateur 3D léger construit en HTML/CSS ; elle reste cliquable pour ouvrir la vue agrandie. La mosaïque d’ouverture de la page Analyses réunit sans les séparer toutes les sorties d’Exploration et d’Analyses. La section consacrée au résultat principal utilise ensuite les trois visuels dédiés fournis pour distinguer l’analyse centrale et ses deux analyses complémentaires. La mise en avant de MultiView sur l’accueil associe la bibliothèque de figures et une composition réunissant plusieurs résultats.
 
 La page Tutoriels propose six objets phyloseq publics issus des packages `phyloseq` et `microbiome`, dont `atlas1006` et `dietswap`.
 

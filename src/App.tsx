@@ -113,15 +113,17 @@ function HomeApplicationVisual({ language }: { language: Language }) {
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width;
     const y = (event.clientY - bounds.top) / bounds.height;
-    event.currentTarget.style.setProperty("--screen-x", `${x * 100}%`);
-    event.currentTarget.style.setProperty("--screen-y", `${y * 100}%`);
-    event.currentTarget.style.setProperty("--screen-rotate-y", `${(x - .5) * 3.2}deg`);
-    event.currentTarget.style.setProperty("--screen-rotate-x", `${(.5 - y) * 2.4}deg`);
+    const computer = event.currentTarget.closest<HTMLElement>(".home-computer-3d");
+    computer?.style.setProperty("--screen-x", `${x * 100}%`);
+    computer?.style.setProperty("--screen-y", `${y * 100}%`);
+    computer?.style.setProperty("--screen-rotate-y", `${-5 + (x - .5) * 5}deg`);
+    computer?.style.setProperty("--screen-rotate-x", `${-1 + (.5 - y) * 3}deg`);
   };
 
   const resetScreenshot = (event: React.PointerEvent<HTMLButtonElement>) => {
-    event.currentTarget.style.removeProperty("--screen-rotate-x");
-    event.currentTarget.style.removeProperty("--screen-rotate-y");
+    const computer = event.currentTarget.closest<HTMLElement>(".home-computer-3d");
+    computer?.style.removeProperty("--screen-rotate-x");
+    computer?.style.removeProperty("--screen-rotate-y");
   };
 
   useEffect(() => {
@@ -143,20 +145,27 @@ function HomeApplicationVisual({ language }: { language: Language }) {
     <>
       <div className="home-screen-stage">
         <figure className="home-screenshot-figure">
-          <button
-            className="home-screenshot-frame"
-            type="button"
-            onClick={() => setExpanded(true)}
-            onPointerMove={moveScreenshot}
-            onPointerLeave={resetScreenshot}
-            aria-label={language === "fr" ? "Agrandir la capture de BarCodeR" : "Enlarge the BarCodeR screenshot"}
-          >
-            <img
-              src={asset(HOME_SCREENSHOT_PATH)}
-              alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
-            />
-            <span>{language === "fr" ? "Explorer l’interface" : "Explore the interface"}<b>↗</b></span>
-          </button>
+          <div className="home-computer-3d">
+            <div className="home-computer-display">
+              <i className="home-computer-camera" aria-hidden="true" />
+              <button
+                className="home-screenshot-frame"
+                type="button"
+                onClick={() => setExpanded(true)}
+                onPointerMove={moveScreenshot}
+                onPointerLeave={resetScreenshot}
+                aria-label={language === "fr" ? "Agrandir la capture de BarCodeR" : "Enlarge the BarCodeR screenshot"}
+              >
+                <img
+                  src={asset(HOME_SCREENSHOT_PATH)}
+                  alt={language === "fr" ? "Page d’accueil actuelle de l’application BarCodeR avec projet et dataset actifs" : "Current BarCodeR application home page with active project and dataset"}
+                />
+                <span>{language === "fr" ? "Explorer l’interface" : "Explore the interface"}<b>↗</b></span>
+              </button>
+            </div>
+            <div className="home-computer-neck" aria-hidden="true" />
+            <div className="home-computer-base" aria-hidden="true"><span /></div>
+          </div>
           <figcaption>{language === "fr" ? "Vue réelle de l’accueil de BarCodeR." : "Real view of the BarCodeR home page."}</figcaption>
         </figure>
       </div>
