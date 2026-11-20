@@ -32,15 +32,36 @@ Le site web est distinct de l'application R/Shiny et du pipeline de traitement b
 
 ## Écosystème logiciel
 
-```text
-Fichiers FASTQ ──► OpenMetaBar (Nextflow) ──► Données phyloseq
-                                                  │
-Objets phyloseq ───────────────────────────────────┤
-                                                  ▼
-                                         BarCodeR (R/Shiny)
-                                                  │
-                                                  ▼
-                                    Analyses et visualisations
+```mermaid
+flowchart TB
+    subgraph SOURCES["Sources de données"]
+        FASTQ["Fichiers FASTQ"]
+        PHYLO["Objet phyloseq existant"]
+    end
+
+    subgraph PREP["Traitement bioinformatique"]
+        OMB["OpenMetaBar (Nextflow)"]
+        PHYLO_OUT["Objet phyloseq généré"]
+    end
+
+    subgraph ANALYSIS["Analyse interactive"]
+        BCR["BarCodeR (R / Shiny)"]
+        RESULTS["Édition des données · Analyses · Visualisations"]
+    end
+
+    FASTQ --> OMB --> PHYLO_OUT --> BCR
+    PHYLO --> BCR
+    BCR --> RESULTS
+
+    classDef input fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1px;
+    classDef pipeline fill:#F0FDFA,stroke:#0D9488,color:#134E4A,stroke-width:1px;
+    classDef app fill:#F3E8FF,stroke:#9333EA,color:#581C87,stroke-width:2px;
+    classDef output fill:#F8FAFC,stroke:#64748B,color:#334155,stroke-width:1px;
+
+    class FASTQ,PHYLO,PHYLO_OUT input;
+    class OMB pipeline;
+    class BCR app;
+    class RESULTS output;
 ```
 
 - **OpenMetaBar** : traitement bioinformatique des données de séquençage.
@@ -51,14 +72,32 @@ Objets phyloseq ─────────────────────�
 
 Le site est hébergé sur **Cloudflare Pages**. La publication est automatisée à partir de la branche `main` du dépôt.
 
-```text
-Développement → Tests et vérifications → Commit → Push sur main → Cloudflare Pages
-                                                                  │
-                                                                  ▼
-                                                             Publication
+```mermaid
+flowchart TB
+    DEV["Développement, tests techniques et commits"]
+    REVIEW["Tests et validation manuelle"]
+    VALID{"Modifications validées ?"}
+    MAIN["Push sur main"]
+    BUILD["Cloudflare Pages : build et déploiement automatiques"]
+    ONLINE["Site publié"]
+    CONTROL["Vérification après publication"]
+
+    DEV --> REVIEW --> VALID
+    VALID -->|Non : corrections| DEV
+    VALID -->|Oui| MAIN --> BUILD --> ONLINE --> CONTROL
+
+    classDef development fill:#EFF6FF,stroke:#3B82F6,color:#1E3A8A,stroke-width:1px;
+    classDef review fill:#FFF7ED,stroke:#EA580C,color:#7C2D12,stroke-width:1px;
+    classDef deployment fill:#F0FDFA,stroke:#0D9488,color:#134E4A,stroke-width:1px;
+
+    class DEV,MAIN development;
+    class REVIEW,VALID review;
+    class BUILD,ONLINE,CONTROL deployment;
 ```
 
-Les modifications sont développées et contrôlées avant leur intégration dans `main`. Après le déploiement, le rendu des pages, la navigation et les liens sont vérifiés.
+Les évolutions du site sont développées à l'aide de Claude Code et de Codex, avec des tests techniques et des commits successifs. Les modifications sont ensuite contrôlées manuellement ; des corrections supplémentaires peuvent être demandées avant le `push` sur `main`.
+
+Après le déploiement automatique, le rendu des pages, la navigation et les liens sont vérifiés.
 
 La documentation, les captures d'écran et les liens de téléchargement sont maintenus en cohérence avec les versions publiées de BarCodeR et d'OpenMetaBar.
 
