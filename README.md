@@ -5,7 +5,7 @@
 
 **Présentation · Documentation · Ressources**
 
-Site officiel de présentation de **BarCodeR**, une application R/Shiny dédiée à l'exploration, à l'analyse et à la visualisation interactive de données de métabarcoding.
+Site web du projet **BarCodeR**, une application R/Shiny consacrée à l'exploration, à l'analyse et à la visualisation interactive de données de métabarcoding.
 
 [**Consulter le site web**](https://site-barcoder-r-shiny-application.pages.dev/)
 
@@ -15,24 +15,22 @@ Site officiel de présentation de **BarCodeR**, une application R/Shiny dédiée
 
 ## À propos
 
-Ce dépôt contient les sources du site web de BarCodeR. Il présente les fonctionnalités du logiciel, ses modalités d'utilisation et les ressources destinées aux utilisateurs.
+Ce dépôt contient le code source du site web de BarCodeR. Il présente le fonctionnement de l'application, ses principales fonctionnalités et les ressources destinées à ses utilisateurs.
 
-Le site est distinct de l'application d'analyse et du pipeline de traitement bioinformatique, qui disposent de leurs propres dépôts.
+Le site web est distinct de l'application R/Shiny et du pipeline de traitement bioinformatique OpenMetaBar, qui constituent des composants indépendants du projet.
 
 ## Contenu du site
 
 | Rubrique | Description |
 | :--- | :--- |
-| **Accueil** | Présentation générale de BarCodeR et de son écosystème. |
-| **Fonctionnement** | Parcours d'utilisation à partir de fichiers FASTQ ou de données `phyloseq`. |
-| **Analyses** | Aperçu des outils d'édition des données, des analyses et des visualisations interactives. |
-| **Tutoriels** | Ressources pour découvrir et prendre en main l'application. |
-| **Installation** | Informations sur le téléchargement et l'installation de BarCodeR. |
+| **Accueil** | Présentation de BarCodeR et de son écosystème. |
+| **Fonctionnement** | Utilisation à partir de données `phyloseq` ou de fichiers FASTQ traités avec OpenMetaBar. |
+| **Analyses** | Présentation des outils d'édition des données, des analyses statistiques et des visualisations interactives. |
+| **Tutoriels** | Ressources de prise en main et exemples d'utilisation. |
+| **Installation** | Téléchargement et installation de l'application. |
 | **FAQ** | Réponses aux questions fréquentes. |
 
 ## Écosystème logiciel
-
-BarCodeR s'inscrit dans un ensemble de composants complémentaires :
 
 ```text
 Fichiers FASTQ ──► OpenMetaBar (Nextflow) ──► Données phyloseq
@@ -45,38 +43,45 @@ Objets phyloseq ─────────────────────�
                                     Analyses et visualisations
 ```
 
-- **OpenMetaBar** assure le traitement bioinformatique des données de séquençage.
-- **BarCodeR** permet l'importation, l'édition, l'exploration et l'analyse des données.
-- **Le présent site** centralise la présentation du projet et les ressources de prise en main.
+- **OpenMetaBar** : traitement bioinformatique des données de séquençage.
+- **BarCodeR** : importation, édition, exploration, analyses et visualisations interactives des données.
+- **Ce site web** : présentation du projet, documentation, tutoriels et informations d'installation.
 
 ## Développement et déploiement
 
-Le site est hébergé sur **Cloudflare Pages** et publié automatiquement après une mise à jour de la branche `main`.
+Le site est hébergé sur **Cloudflare Pages**. La publication est automatisée à partir de la branche `main` du dépôt.
 
 ```text
-Développement → Vérification → Commit → Push sur main → Cloudflare Pages → Publication
+Développement → Tests et vérifications → Commit → Push sur main → Cloudflare Pages
+                                                                  │
+                                                                  ▼
+                                                             Publication
 ```
 
-Les modifications sont vérifiées avant leur intégration. Après publication, le rendu du site, la navigation et les liens doivent être contrôlés.
+Les modifications sont développées et contrôlées avant leur intégration dans `main`. Après le déploiement, le rendu des pages, la navigation et les liens sont vérifiés.
 
-La documentation, les captures d'écran et les liens de téléchargement doivent rester cohérents avec les versions publiées de BarCodeR et d'OpenMetaBar.
+La documentation, les captures d'écran et les liens de téléchargement sont maintenus en cohérence avec les versions publiées de BarCodeR et d'OpenMetaBar.
 
 ## Signaler un problème
 
-Les erreurs de contenu, d'affichage ou de navigation peuvent être signalées dans les *Issues* de ce dépôt, si elles sont activées. Les problèmes concernant les analyses ou le traitement des séquences doivent être signalés dans les dépôts des logiciels concernés.
+Les erreurs de contenu, d'affichage ou de navigation peuvent être signalées dans les *Issues* de ce dépôt, lorsqu'elles sont activées. Les problèmes relatifs au fonctionnement de BarCodeR ou au traitement des séquences par OpenMetaBar doivent être adressés dans les dépôts correspondants.
 
 ## Licences
 
-Le code source du **site web** et les contenus documentaires originaux sont distribués sous deux licences distinctes :
+Le code source du site et ses contenus documentaires originaux relèvent de licences distinctes :
 
 | Élément | Licence | Conditions principales |
 | :--- | :--- | :--- |
-| **Code source du site** | [MIT](LICENSE) | Réutilisation, modification et redistribution autorisées, avec conservation des mentions requises. |
-| **Contenus documentaires originaux** | [CC BY 4.0](LICENSE-CONTENT.md) | Réutilisation, adaptation et usage commercial autorisés, avec attribution et indication des modifications. |
+| **Code source original du site** | [MIT](LICENSE) | Utilisation, modification et redistribution autorisées sous réserve de conserver les mentions de copyright et de licence. |
+| **Contenus documentaires originaux** | [Creative Commons CC BY 4.0](LICENSE-CONTENT.md) | Reproduction, adaptation et exploitation commerciale autorisées avec attribution et indication des modifications. |
 
-Les **logos, marques, ressources tierces et autres éléments explicitement exclus** ne sont pas automatiquement couverts par ces licences. Leur statut est précisé dans [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md) ou dans leurs mentions propres.
+Les logos, marques, ressources tierces et éléments relevant d'une licence particulière ne sont pas automatiquement couverts par ces autorisations. Le périmètre et les exceptions sont détaillés dans [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md).
 
-La diffusion des éléments originaux sous ces licences suppose l'autorisation des titulaires de droits concernés. Les licences du site web, de l'application **BarCodeR (R/Shiny)** et du pipeline **OpenMetaBar (Nextflow)** sont indépendantes.
+**Titulaire des droits :** INRAE  
+**Conception et développement du site :** Matéo Léger-Pigout  
+**Année :** 2026
+
+La diffusion sous ces licences doit être autorisée par les titulaires des droits et, le cas échéant, par les services institutionnels compétents. Ces licences concernent uniquement le site web ; celles de l'application **BarCodeR** et du pipeline **OpenMetaBar** sont indépendantes.
 
 ---
 
