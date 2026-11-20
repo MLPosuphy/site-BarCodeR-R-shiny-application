@@ -65,9 +65,18 @@ La documentation, les captures d'écran et les liens de téléchargement doivent
 
 Les erreurs de contenu, d'affichage ou de navigation peuvent être signalées dans les *Issues* de ce dépôt, si elles sont activées. Les problèmes concernant les analyses ou le traitement des séquences doivent être signalés dans les dépôts des logiciels concernés.
 
-## Licence
+## Licences
 
-Les conditions de réutilisation du code du site sont celles définies dans la licence de ce dépôt, lorsqu'elle est publiée. BarCodeR et OpenMetaBar peuvent relever de licences distinctes.
+Le code source du **site web** et les contenus documentaires originaux sont distribués sous deux licences distinctes :
+
+| Élément | Licence | Conditions principales |
+| :--- | :--- | :--- |
+| **Code source du site** | [MIT](LICENSE) | Réutilisation, modification et redistribution autorisées, avec conservation des mentions requises. |
+| **Contenus documentaires originaux** | [CC BY 4.0](LICENSE-CONTENT.md) | Réutilisation, adaptation et usage commercial autorisés, avec attribution et indication des modifications. |
+
+Les **logos, marques, ressources tierces et autres éléments explicitement exclus** ne sont pas automatiquement couverts par ces licences. Leur statut est précisé dans [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md) ou dans leurs mentions propres.
+
+La diffusion des éléments originaux sous ces licences suppose l'autorisation des titulaires de droits concernés. Les licences du site web, de l'application **BarCodeR (R/Shiny)** et du pipeline **OpenMetaBar (Nextflow)** sont indépendantes.
 
 ---
 
