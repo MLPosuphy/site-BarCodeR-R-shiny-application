@@ -1,49 +1,78 @@
 
+<div align="center">
+
 # BarCodeR — Site web
 
-Ce dépôt contient le code source du [site web de BarCodeR](https://site-barcoder-r-shiny-application.pages.dev/), une application développée avec R et Shiny pour l'exploration, la visualisation et l'analyse de données de métabarcoding.
+**Présentation · Documentation · Ressources**
 
-Le site présente le logiciel, ses principales fonctionnalités, ses modalités d'utilisation et les ressources nécessaires à sa prise en main.
+Site officiel de présentation de **BarCodeR**, une application R/Shiny dédiée à l'exploration, à l'analyse et à la visualisation interactive de données de métabarcoding.
 
-## Contenu du site
+[**Consulter le site web**](https://site-barcoder-r-shiny-application.pages.dev/)
 
-Le site regroupe les informations suivantes :
-
-- **Présentation de BarCodeR** : objectifs, organisation et principaux cas d'utilisation.
-- **Fonctionnement** : importation et analyse d'objets `phyloseq`, ou traitement de fichiers FASTQ avec le pipeline OpenMetaBar.
-- **Analyses** : aperçu des outils d'édition des données, des analyses statistiques et des visualisations interactives proposés par l'application.
-- **Tutoriels** : ressources destinées à accompagner l'utilisation du logiciel.
-- **Installation** : informations relatives au téléchargement et à la mise en place de BarCodeR.
-- **FAQ** : réponses aux questions courantes.
-
-## Organisation du projet
-
-BarCodeR repose sur trois composants distincts :
-
-- **Le site web**, dont les sources sont conservées dans ce dépôt, assure la présentation du projet et l'accès à sa documentation.
-- **L'application BarCodeR**, développée avec R/Shiny, permet d'importer, de modifier et d'analyser des données de métabarcoding.
-- **OpenMetaBar**, développé avec Nextflow, prend en charge le traitement bioinformatique des données de séquençage.
-
-Le site ne réalise pas lui-même les analyses. Les évolutions de l'application et du pipeline sont suivies dans leurs dépôts respectifs.
-
-## Développement et déploiement
-
-Le site est hébergé sur **Cloudflare Pages**. Son déploiement est automatisé à partir de la branche `main` du dépôt.
-
-Les modifications sont développées et vérifiées avant leur intégration. Une fois les changements validés, les commits sont poussés sur `main`, ce qui déclenche la reconstruction et la publication du site.
-
-Après chaque déploiement, une vérification du rendu, de la navigation et des liens est effectuée.
-
-Les mises à jour du site doivent rester cohérentes avec les versions publiées de BarCodeR et d'OpenMetaBar, en particulier pour la documentation, les captures d'écran, les fonctionnalités présentées et les liens de téléchargement.
-
-## Signalement des problèmes
-
-Les erreurs concernant le site (contenu, affichage ou liens) peuvent être signalées dans les *Issues* du dépôt, lorsqu'elles sont activées. Les problèmes propres à l'application BarCodeR ou au pipeline OpenMetaBar doivent être adressés à leurs dépôts respectifs.
-
-## Licence
-
-Les conditions de réutilisation du site sont définies par la licence associée à ce dépôt, lorsqu'elle est disponible. Les licences de BarCodeR et d'OpenMetaBar sont indépendantes de celle du site.
+</div>
 
 ---
 
-**Site web :** https://site-barcoder-r-shiny-application.pages.dev/
+## À propos
+
+Ce dépôt contient les sources du site web de BarCodeR. Il présente les fonctionnalités du logiciel, ses modalités d'utilisation et les ressources destinées aux utilisateurs.
+
+Le site est distinct de l'application d'analyse et du pipeline de traitement bioinformatique, qui disposent de leurs propres dépôts.
+
+## Contenu du site
+
+| Rubrique | Description |
+| :--- | :--- |
+| **Accueil** | Présentation générale de BarCodeR et de son écosystème. |
+| **Fonctionnement** | Parcours d'utilisation à partir de fichiers FASTQ ou de données `phyloseq`. |
+| **Analyses** | Aperçu des outils d'édition des données, des analyses et des visualisations interactives. |
+| **Tutoriels** | Ressources pour découvrir et prendre en main l'application. |
+| **Installation** | Informations sur le téléchargement et l'installation de BarCodeR. |
+| **FAQ** | Réponses aux questions fréquentes. |
+
+## Écosystème logiciel
+
+BarCodeR s'inscrit dans un ensemble de composants complémentaires :
+
+```text
+Fichiers FASTQ ──► OpenMetaBar (Nextflow) ──► Données phyloseq
+                                                  │
+Objets phyloseq ───────────────────────────────────┤
+                                                  ▼
+                                         BarCodeR (R/Shiny)
+                                                  │
+                                                  ▼
+                                    Analyses et visualisations
+```
+
+- **OpenMetaBar** assure le traitement bioinformatique des données de séquençage.
+- **BarCodeR** permet l'importation, l'édition, l'exploration et l'analyse des données.
+- **Le présent site** centralise la présentation du projet et les ressources de prise en main.
+
+## Développement et déploiement
+
+Le site est hébergé sur **Cloudflare Pages** et publié automatiquement après une mise à jour de la branche `main`.
+
+```text
+Développement → Vérification → Commit → Push sur main → Cloudflare Pages → Publication
+```
+
+Les modifications sont vérifiées avant leur intégration. Après publication, le rendu du site, la navigation et les liens doivent être contrôlés.
+
+La documentation, les captures d'écran et les liens de téléchargement doivent rester cohérents avec les versions publiées de BarCodeR et d'OpenMetaBar.
+
+## Signaler un problème
+
+Les erreurs de contenu, d'affichage ou de navigation peuvent être signalées dans les *Issues* de ce dépôt, si elles sont activées. Les problèmes concernant les analyses ou le traitement des séquences doivent être signalés dans les dépôts des logiciels concernés.
+
+## Licence
+
+Les conditions de réutilisation du code du site sont celles définies dans la licence de ce dépôt, lorsqu'elle est publiée. BarCodeR et OpenMetaBar peuvent relever de licences distinctes.
+
+---
+
+<div align="center">
+
+[Site web de BarCodeR](https://site-barcoder-r-shiny-application.pages.dev/)
+
+</div>
