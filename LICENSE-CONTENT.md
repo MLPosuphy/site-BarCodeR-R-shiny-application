@@ -51,10 +51,6 @@ La licence officielle prévaut sur ce résumé.
 
 Pour une réutilisation des contenus documentaires originaux du site, la mention suivante peut être utilisée et adaptée au contexte :
 
-> Source : site web BarCodeR, conception et réalisation Matéo Léger-Pigout, © 2026 INRAE, sous licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). https://site-barcoder-r-shiny-application.pages.dev/ — Modifications : à préciser, le cas échéant.
+> Source : site web BarCodeR, conception et réalisation Matéo Léger-Pigout, © 2026 INRAE, sous licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). https://site-barcoder-r-shiny-application.pages.dev/
 
 Les obligations exactes d'attribution sont celles de la licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
-
-## Titularité des droits et autorisation de diffusion
-
-La titularité des droits d'INRAE sur les contenus et l'autorisation de les diffuser sous CC BY 4.0 doivent être confirmées par les personnes ou services habilités, conformément aux règles applicables. Ce fichier ne se substitue pas à cette validation institutionnelle.
