@@ -220,7 +220,7 @@ function Landing({ language }: { language: Language }) {
     title: <>Analysez vos données de métabarcoding de A à Z,<br /><em>de façon interactive et reproductible.</em></>,
     intro: "De vos fichiers FASTQ ou de votre objet phyloseq jusqu’aux figures et résultats statistiques, BarCodeR réunit dans une même interface la préparation, l’exploration, l’analyse et la comparaison de vos données. Ajustez chaque étape, gardez la trace de vos choix et exportez vos résultats sans reconstruire tout le workflow à la main.",
     workflowAction: "Découvrir BarCodeR",
-    downloadAction: "Installer BarCodeR · v2.12.8",
+    downloadAction: "Installer BarCodeR · v2.13.4",
     journeysK: "Commencer avec vos données",
     journeysT: "Deux points d’entrée, puis un même environnement d’analyse.",
     journeysP: "Vous partez de séquences brutes ? OpenMetaBar les transforme d’abord en données structurées. Vous disposez déjà d’un objet phyloseq ? Importez-le directement. Dans les deux cas, vos données rejoignent ensuite le même espace d’exploration et d’analyse dans BarCodeR.",
@@ -296,7 +296,7 @@ function Landing({ language }: { language: Language }) {
     finalT: "Découvrez BarCodeR avec les tutoriels, puis lancez l’application sous Windows en quelques clics.",
     finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. La distribution autonome fonctionne sous Windows ; sous macOS ou Linux, l’utilisation nécessite une machine virtuelle Windows.",
     finalInstallLabel: "Installer l’application",
-    finalInstallMeta: "BarCodeR v2.12.8 · lanceur dédié",
+    finalInstallMeta: "BarCodeR v2.13.4 · lanceur dédié",
     finalTutorialLabel: "Commencer ici",
     finalTutorialMeta: "Tutoriels guidés avec un jeu de données public",
     finalTutorial: "Voir les tutoriels",
@@ -314,7 +314,7 @@ function Landing({ language }: { language: Language }) {
     title: <>Analyse your metabarcoding data from end to end,<br /><em>interactively and reproducibly.</em></>,
     intro: "From FASTQ files or an existing phyloseq object to statistical results and figures, BarCodeR brings data preparation, exploration, analysis and comparison into one interface. Adjust each step, retain a record of your choices and export results without rebuilding the whole workflow by hand.",
     workflowAction: "Discover BarCodeR",
-    downloadAction: "Install BarCodeR · v2.12.8",
+    downloadAction: "Install BarCodeR · v2.13.4",
     journeysK: "Start with your data",
     journeysT: "Two entry points, then one analysis environment.",
     journeysP: "Starting from raw sequences? OpenMetaBar first turns them into structured data. Already have a phyloseq object? Import it directly. Either way, your data then enter the same exploration and analysis environment in BarCodeR.",
@@ -390,7 +390,7 @@ function Landing({ language }: { language: Language }) {
     finalT: "Discover BarCodeR through the tutorials, then launch the application on Windows in a few clicks.",
     finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. The standalone distribution runs on Windows; macOS and Linux users need a Windows virtual machine.",
     finalInstallLabel: "Install the application",
-    finalInstallMeta: "BarCodeR v2.12.8 · dedicated launcher",
+    finalInstallMeta: "BarCodeR v2.13.4 · dedicated launcher",
     finalTutorialLabel: "Start here",
     finalTutorialMeta: "Guided tutorials with a public dataset",
     finalTutorial: "View tutorials",
@@ -1938,7 +1938,7 @@ function ReproducibilityPage({ language }: { language: Language }) {
 
 function DownloadPage({ language }: { language: Language }) {
   const [copied, setCopied] = useState<string | null>(null);
-  const appVersion = "2.12.8";
+  const appVersion = "2.13.4";
   const documentationVersion = "1.9.0";
   const sourceCommand = 'shiny::runApp()';
   const temporaryCitation = language === "fr"
@@ -2136,7 +2136,7 @@ function Footer({ language }: { language: Language }) {
   return <footer className="site-footer">
     <div className="footer-core page-width"><div className="footer-brand-block"><Brand language={language} /><p>{c.description}</p></div><nav className="footer-nav-group"><b>{c.discover}</b><a href="#/">{language === "fr" ? "Accueil" : "Home"}</a><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">Analyses</a></nav><nav className="footer-nav-group"><b>{c.learn}</b><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/faq">FAQ</a></nav><nav className="footer-nav-group"><b>{c.project}</b><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a><a href="#/citation">Citation</a></nav></div>
     <div className="footer-signals page-width">{c.signals.map((signal, index) => <span key={signal}><i>{["▣", "R", "↗", "?"][index]}</i>{signal}</span>)}</div>
-    <div className="footer-bottom page-width"><span>BarCodeR · v2.12.8</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
+    <div className="footer-bottom page-width"><span>BarCodeR · v2.13.4</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
   </footer>;
 }
 

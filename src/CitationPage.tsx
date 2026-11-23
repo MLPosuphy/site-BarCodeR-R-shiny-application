@@ -7,7 +7,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function CitationPage({ language }: { language: Language }) {
   const [copied, setCopied] = useState<string | null>(null);
-  const appVersion = "2.12.8";
+  const appVersion = "2.13.4";
   const doiUrl = "https://doi.org/10.1093/ismejo/wrad026";
   const authorDate = `BarCodeR Consortium (2026). BarCodeR: interactive and reproducible processing, exploration and analysis of metabarcoding data (Version ${appVersion}). The ISME Journal. https://doi.org/10.1093/ismejo/wrad026`;
   const vancouver = `BarCodeR Consortium. BarCodeR: interactive and reproducible processing, exploration and analysis of metabarcoding data. The ISME Journal. 2026;20:wrad026. doi:10.1093/ismejo/wrad026. Software version ${appVersion}.`;
