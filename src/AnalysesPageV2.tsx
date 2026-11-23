@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { SiteLanguage } from "./SiteLink";
 import { useState } from "react";
 import type { Language } from "./content";
 
@@ -80,7 +82,7 @@ export default function AnalysesPageV2({ language }: { language: Language }) {
   ];
 
   const selected = goals.find(goal => goal.id === activeGoal) || goals[0];
-  const guidePath = asset(`documentation/${language}/analyse/guides-methodologiques.html`);
+  const guidePath = asset(`documentation/${useContext(SiteLanguage)}/analyse/guides-methodologiques`);
   const mosaic = language === "fr" ? [
     ["app-previews/barplot.png", "Composition taxonomique"],
     ["app-previews/alpha_diversite.png", "Alpha-diversité"],

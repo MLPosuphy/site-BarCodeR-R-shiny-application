@@ -70,6 +70,8 @@ flowchart TB
 
 ## Développement et déploiement
 
+La [procédure de prépublication et de référencement](docs/PRELAUNCH_SEO.md) détaille le contrôle du ZIP Windows, les tests et la configuration de Google Search Console.
+
 Le site est hébergé sur **Cloudflare Pages**. La publication est automatisée à partir de la branche `main` du dépôt.
 
 ```mermaid

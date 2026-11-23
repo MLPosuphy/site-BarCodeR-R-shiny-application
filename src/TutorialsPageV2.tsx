@@ -27,7 +27,7 @@ const tutorials: Tutorial[] = [
   {
     id: "install", category: "install", duration: "5 min",
     title: { fr: "Installer et lancer BarCodeR", en: "Install and launch BarCodeR" },
-    summary: { fr: "Télécharger le dossier de l’application, lancer l’exécutable puis vérifier que l’interface s’ouvre correctement.", en: "Download the application folder, launch the executable and check that the interface opens correctly." },
+    summary: { fr: "Après la mise à disposition de BarCodeR, télécharger l’archive, lancer l’exécutable et vérifier que l’interface s’ouvre.", en: "Once BarCodeR is available, download the archive, launch the executable and check that the interface opens." },
     result: { fr: "Une application prête à être utilisée, sans installation de R ou de RStudio.", en: "An application ready to use, without installing R or RStudio." },
     steps: [
       { fr: "Télécharger la version de BarCodeR adaptée au système pris en charge.", en: "Download the BarCodeR version for the supported operating system." },

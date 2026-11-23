@@ -1,5 +1,7 @@
-
 import { useState } from "react";
+import { ReleaseButton, ReleaseNotice, useRelease } from "./release";
+import { SiteLink } from "./SiteLink";
+import { siteOrigin } from "./routes";
 import type { Language } from "./content";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -8,10 +10,8 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function InstallerPageV2({ language }: { language: Language }) {
   const [copied, setCopied] = useState(false);
-  const appVersion = "2.13.4";
-  const citation = language === "fr"
-    ? `Équipe BarCodeR (${new Date().getFullYear()}). BarCodeR v${appVersion} : plateforme pour l’exploration et l’analyse reproductible de données de métabarcoding.`
-    : `BarCodeR team (${new Date().getFullYear()}). BarCodeR v${appVersion}: a platform for reproducible exploration and analysis of metabarcoding data.`;
+  const { release } = useRelease();
+  const citation = `BarCodeR. ${release.released ? `v${release.version}. ` : ""}${siteOrigin}/`;
 
   const copyCitation = async () => {
     try {
@@ -25,17 +25,17 @@ export default function InstallerPageV2({ language }: { language: Language }) {
 
   const c = language === "fr" ? {
     k: "Installer BarCodeR",
-    title: "Télécharger, ouvrir, analyser.",
-    p: "BarCodeR est distribué sous Windows comme une application autonome. L’environnement nécessaire est préparé dans le dossier téléchargé : l’utilisation quotidienne ne demande ni R, ni RStudio, ni maintenance manuelle des packages.",
-    release: "Distribution actuelle",
+    title: "Installer BarCodeR sous Windows",
+    p: "BarCodeR est conçu comme une application autonome pour Windows. L’archive contient l’environnement d’exécution complet, sans installation séparée de R, de RStudio ou des packages.",
+    release: "Distribution Windows",
     system: "Windows",
     status: "Version locale",
     ready: "Application autonome",
     processK: "Installation",
     processT: "Trois actions suffisent pour lancer BarCodeR.",
-    processP: "Le dossier téléchargé contient l’application et son environnement d’exécution. Il doit rester complet : aucun fichier interne n’a besoin d’être ouvert ou modifié.",
+    processP: "Suivez ces étapes une fois l’archive disponible. Gardez le dossier complet pour que l’application retrouve son environnement d’exécution.",
     process: [
-      ["↓", "Télécharger le dossier", "Récupérer la dernière version publiée de BarCodeR."],
+      ["↓", "Télécharger le dossier", "Enregistrez l’archive ZIP proposée sur cette page lorsqu’elle est disponible."],
       ["↗", "Ouvrir le dossier", "Décompresser l’archive dans un emplacement accessible."],
       ["▶", "Double-cliquer sur BarCodeR", "L’application initialise son environnement puis ouvre l’interface."]
     ],
@@ -45,7 +45,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     included: "Préparé dans la distribution",
     includedItems: ["Environnement R utilisé par BarCodeR", "Packages et dépendances compatibles", "Application Shiny et ressources associées", "Lanceur ouvrant l’interface"],
     user: "Ce qui reste à faire",
-    userItems: ["Télécharger la version récente", "Conserver le dossier complet", "Double-cliquer sur l’application", "Télécharger une nouvelle version lors d’une mise à jour"],
+    userItems: ["Télécharger l’archive une fois publiée", "Conserver le dossier complet", "Double-cliquer sur l’application", "Télécharger une nouvelle version lors d’une mise à jour"],
     noNeed: "Aucune maintenance technique à assurer",
     noNeedItems: [["R", "Aucune installation locale de R"], ["RStudio", "Aucun environnement de développement"], ["Packages", "Aucune mise à jour manuelle"], ["Compatibilité", "Aucune résolution de dépendances"]],
     updateK: "Mises à jour",
@@ -57,21 +57,20 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     copy: "Copier la citation",
     copied: "Citation copiée",
     citationPage: "Ouvrir la page Citation",
-    download: "Télécharger BarCodeR pour Windows (.zip)",
     seeProcess: "Voir les trois étapes"
   } : {
     k: "Install BarCodeR",
-    title: "Download, open, analyse.",
-    p: "BarCodeR is distributed for Windows as a standalone application. The required environment is prepared inside the downloaded folder: daily use requires neither R nor RStudio nor manual package maintenance.",
-    release: "Current distribution",
+    title: "Install BarCodeR on Windows",
+    p: "BarCodeR is designed as a standalone Windows application. The archive bundles the runtime, so R, RStudio and the packages require no separate installation.",
+    release: "Windows distribution",
     system: "Windows",
     status: "Local version",
     ready: "Standalone application",
     processK: "Installation",
     processT: "Three actions are enough to launch BarCodeR.",
-    processP: "The downloaded folder contains the application and its runtime environment. It must remain complete: no internal file needs to be opened or changed.",
+    processP: "Follow these steps once the archive is available. Keep the entire folder so the application can find its runtime.",
     process: [
-      ["↓", "Download the folder", "Get the latest published BarCodeR version."],
+      ["↓", "Download the folder", "Save the ZIP archive from this page once it is available."],
       ["↗", "Open the folder", "Extract the archive to an accessible location."],
       ["▶", "Double-click BarCodeR", "The application initialises its environment and opens the interface."]
     ],
@@ -81,7 +80,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     included: "Prepared in the distribution",
     includedItems: ["R environment used by BarCodeR", "Compatible packages and dependencies", "Shiny application and associated resources", "Launcher that opens the interface"],
     user: "What remains to do",
-    userItems: ["Download the recent version", "Keep the complete folder", "Double-click the application", "Download a new version when an update is released"],
+    userItems: ["Download the archive once released", "Keep the complete folder", "Double-click the application", "Download a new version when an update is released"],
     noNeed: "No technical maintenance required",
     noNeedItems: [["R", "No local R installation"], ["RStudio", "No development environment"], ["Packages", "No manual updates"], ["Compatibility", "No dependency resolution"]],
     updateK: "Updates",
@@ -93,12 +92,11 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     copy: "Copy citation",
     copied: "Citation copied",
     citationPage: "Open the Citation page",
-    download: "Download BarCodeR for Windows (.zip)",
     seeProcess: "View the three steps"
   };
 
   return <main className="installer-v2-page">
-    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><div className="installer-v2-hero-actions"><a className="button primary" href="/api/download/barcoder">{c.download}<span>↓</span></a><a className="button secondary" href="#installer-process">{c.seeProcess}<span>↓</span></a></div></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR <em>v{appVersion}</em></h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
+    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><div className="installer-v2-hero-actions"><ReleaseButton className="button primary" /><a className="button secondary" href="#installer-process">{c.seeProcess}<span>↓</span></a></div><ReleaseNotice className="release-notice" /></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR {release.released && <em>v{release.version}</em>}</h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
 
     <section className="installer-v2-process" id="installer-process"><div className="page-width"><div className="installer-v2-heading"><Eyebrow>{c.processK}</Eyebrow><h2>{c.processT}</h2><p>{c.processP}</p></div><div className="installer-v2-process-flow">{c.process.map(([icon, title, text], index) => <article className="reveal" key={title}><span>{icon}</span><small>0{index + 1}</small><h3>{title}</h3><p>{text}</p>{index < c.process.length - 1 && <i><em /></i>}</article>)}</div></div></section>
 
@@ -106,6 +104,6 @@ export default function InstallerPageV2({ language }: { language: Language }) {
 
     <section className="installer-v2-update"><div className="page-width"><div className="installer-v2-heading reveal"><Eyebrow>{c.updateK}</Eyebrow><h2>{c.updateT}</h2><p>{c.updateP}</p></div><div className="installer-v2-update-flow">{c.updateSteps.map(([number, title, text]) => <article className="reveal" key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
 
-    <section className="installer-v2-citation"><div className="page-width"><div><Eyebrow>{c.citeK}</Eyebrow><h2>{c.citeT}</h2></div><blockquote>{citation}</blockquote><div className="installer-v2-citation-actions"><button type="button" onClick={copyCitation}>{copied ? c.copied : c.copy}</button><a href="#/citation">{c.citationPage}<span>→</span></a></div></div></section>
+    <section className="installer-v2-citation"><div className="page-width"><div><Eyebrow>{c.citeK}</Eyebrow><h2>{c.citeT}</h2></div><blockquote>{citation}</blockquote><div className="installer-v2-citation-actions"><button type="button" onClick={copyCitation}>{copied ? c.copied : c.copy}</button><SiteLink to="/citation">{c.citationPage}<span>→</span></SiteLink></div></div></section>
   </main>;
 }

@@ -15,3 +15,7 @@
 
 /showcase/*
   Cache-Control: public, max-age=3600, must-revalidate
+  X-Robots-Tag: noindex
+
+/documentation/manifest.json
+  X-Robots-Tag: noindex

@@ -553,6 +553,21 @@ h1 em { color: var(--violet); font-style: normal; }
 
 .reveal { opacity: 0; transform: translateY(12px); transition: opacity .42s ease var(--delay, 0ms), transform .42s cubic-bezier(.2,.8,.2,1) var(--delay, 0ms); }
 .reveal.visible { opacity: 1; transform: none; }
+.site-shell:not(.animations-ready) .reveal { opacity: 1; transform: none; }
+
+.button.release-unavailable:disabled {
+  cursor: not-allowed;
+  opacity: .78;
+  transform: none;
+}
+
+.release-notice,
+.installer-v2-hero header > .release-notice {
+  font-size: .92rem;
+  margin: .65rem 0 0;
+}
+
+.citation-actions .release-notice { flex-basis: 100%; margin-top: 0; }
 .delay-1 { --delay: 80ms; }
 
 @media (max-width: 1120px) {

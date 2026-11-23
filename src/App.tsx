@@ -7,7 +7,10 @@ import TutorialsPageV2 from "./TutorialsPageV2";
 import InstallerPageV2 from "./InstallerPageV2";
 import CitationPage from "./CitationPage";
 import FaqPage from "./FaqPage";
-import { languageOptions, observeTranslations, updateDocumentMetadata } from "./siteI18n";
+import { languageOptions, observeTranslations } from "./siteI18n";
+import { SiteLanguage, SiteLink } from "./SiteLink";
+import { ReleaseButton, ReleaseNotice, ReleaseProvider, useRelease } from "./release";
+import type { Route } from "./routes";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const moduleHref = (key: string) => key === "exploration" || key === "analyse" ? "#/analyses" : key === "documentation" ? "#/documentation" : "#/functioning";
@@ -19,41 +22,22 @@ const HOME_SCREENSHOT_PATH: string | null = "app-previews/screen-home-current.pn
 
 const groupOrder: AppModule["group"][] = ["orient", "input", "prepare", "analyse", "report"];
 
-function useHashRoute() {
-  const current = () => window.location.hash.replace(/^#/, "") || "/";
-  const [route, setRoute] = useState(current);
-
-  useEffect(() => {
-    const update = () => setRoute(current());
-    window.addEventListener("hashchange", update);
-    return () => window.removeEventListener("hashchange", update);
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [route]);
-
-  return route;
-}
-
 function Brand({ language }: { language: Language }) {
   return (
-    <a className="brand" href="#/" aria-label={language === "fr" ? "BarCodeR — accueil du site" : "BarCodeR — website home"}>
+    <SiteLink className="brand" to="/" aria-label={language === "fr" ? "BarCodeR — accueil du site" : "BarCodeR — website home"}>
       <span className="brand-mark" style={{ backgroundImage: `url(${asset("app-previews/barcoder-logo.png")})` }} aria-hidden="true" />
       <span className="brand-wordmark"><strong>BarCodeR</strong></span>
-    </a>
+    </SiteLink>
   );
 }
 
 function Header({ language, setLanguage, route }: { language: Language; setLanguage: (language: Language) => void; route: string }) {
   const [open, setOpen] = useState(false);
   const c = language === "fr" ? {
-    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", citation: "Citation", download: "Installer", faq: "FAQ"
+    home: "Accueil", functioning: "Fonctionnement", analyses: "Analyses", tutorials: "Tutoriels", citation: "Citation", download: "Installation", faq: "FAQ"
   } : {
-    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", citation: "Citation", download: "Install", faq: "FAQ"
+    home: "Home", functioning: "How it works", analyses: "Analyses", tutorials: "Tutorials", citation: "Citation", download: "Installation", faq: "FAQ"
   };
-
-  useEffect(() => setOpen(false), [route]);
 
   return (
     <header className="site-header">
@@ -62,13 +46,13 @@ function Header({ language, setLanguage, route }: { language: Language; setLangu
         <span /><span />
       </button>
       <nav className={open ? "primary-nav open" : "primary-nav"} aria-label={language === "fr" ? "Navigation principale" : "Main navigation"}>
-        <a className={route === "/" ? "active" : ""} href="#/">{c.home}</a>
-        <a className={route === "/functioning" || route.startsWith("/application") ? "active" : ""} href="#/functioning">{c.functioning}</a>
-        <a className={route === "/analyses" || route === "/showcase" ? "active" : ""} href="#/analyses">{c.analyses}</a>
-        <a className={route === "/tutorials" || route === "/evidence" ? "active" : ""} href="#/tutorials">{c.tutorials}</a>
-        <a className={route === "/citation" ? "active" : ""} href="#/citation">{c.citation}</a>
-        <a className={`nav-install ${route === "/download" || route === "/availability" ? "active" : ""}`} href="#/download">{c.download}</a>
-        <a className={route === "/faq" ? "active" : ""} href="#/faq">{c.faq}</a>
+        <SiteLink className={route === "/" ? "active" : ""} to="/">{c.home}</SiteLink>
+        <SiteLink className={route === "/functioning" ? "active" : ""} to="/functioning">{c.functioning}</SiteLink>
+        <SiteLink className={route === "/analyses" ? "active" : ""} to="/analyses">{c.analyses}</SiteLink>
+        <SiteLink className={route === "/tutorials" ? "active" : ""} to="/tutorials">{c.tutorials}</SiteLink>
+        <SiteLink className={route === "/citation" ? "active" : ""} to="/citation">{c.citation}</SiteLink>
+        <SiteLink className={`nav-install ${route === "/download" ? "active" : ""}`} to="/download">{c.download}</SiteLink>
+        <SiteLink className={route === "/faq" ? "active" : ""} to="/faq">{c.faq}</SiteLink>
         <label className="language-switch">
           <span className="language-switch-code" aria-hidden="true">{languageOptions.find((option) => option.code === language)?.short}</span>
           <select aria-label={language === "fr" ? "Langue" : "Language"} value={language} onChange={(event) => { setLanguage(event.target.value as Language); setOpen(false); }}>
@@ -220,7 +204,6 @@ function Landing({ language }: { language: Language }) {
     title: <>Analysez vos données de métabarcoding de A à Z,<br /><em>de façon interactive et reproductible.</em></>,
     intro: "De vos fichiers FASTQ ou de votre objet phyloseq jusqu’aux figures et résultats statistiques, BarCodeR réunit dans une même interface la préparation, l’exploration, l’analyse et la comparaison de vos données. Ajustez chaque étape, gardez la trace de vos choix et exportez vos résultats sans reconstruire tout le workflow à la main.",
     workflowAction: "Découvrir BarCodeR",
-    downloadAction: "Installer BarCodeR · v2.13.4",
     journeysK: "Commencer avec vos données",
     journeysT: "Deux points d’entrée, puis un même environnement d’analyse.",
     journeysP: "Vous partez de séquences brutes ? OpenMetaBar les transforme d’abord en données structurées. Vous disposez déjà d’un objet phyloseq ? Importez-le directement. Dans les deux cas, vos données rejoignent ensuite le même espace d’exploration et d’analyse dans BarCodeR.",
@@ -293,14 +276,14 @@ function Landing({ language }: { language: Language }) {
     ],
     projectNote: "Partage entre collègues · archivage d’une analyse · reprise sur une autre installation",
     finalK: "Se former puis installer",
-    finalT: "Découvrez BarCodeR avec les tutoriels, puis lancez l’application sous Windows en quelques clics.",
-    finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. La distribution autonome fonctionne sous Windows ; sous macOS ou Linux, l’utilisation nécessite une machine virtuelle Windows.",
-    finalInstallLabel: "Installer l’application",
-    finalInstallMeta: "BarCodeR v2.13.4 · lanceur dédié",
+    finalT: "Découvrez BarCodeR avec les tutoriels et préparez son installation sous Windows.",
+    finalP: "Commencez par un parcours guidé pour comprendre l’interface et les principales étapes d’une analyse. La distribution autonome est conçue pour Windows. Sous macOS ou Linux, elle nécessite une machine virtuelle Windows.",
+    finalInstallLabel: "Installation Windows",
+    finalInstallMeta: "Distribution autonome et prérequis",
+    finalDownload: "Consulter les étapes",
     finalTutorialLabel: "Commencer ici",
     finalTutorialMeta: "Tutoriels guidés avec un jeu de données public",
     finalTutorial: "Voir les tutoriels",
-    finalDownload: "Installer BarCodeR",
     platforms: [
       ["Disponible", "Windows", "Distribution autonome et lanceur dédié générés avec executablePackeR"],
       ["Via Windows", "macOS", "Utilisation possible dans une machine virtuelle exécutant Windows"],
@@ -314,7 +297,6 @@ function Landing({ language }: { language: Language }) {
     title: <>Analyse your metabarcoding data from end to end,<br /><em>interactively and reproducibly.</em></>,
     intro: "From FASTQ files or an existing phyloseq object to statistical results and figures, BarCodeR brings data preparation, exploration, analysis and comparison into one interface. Adjust each step, retain a record of your choices and export results without rebuilding the whole workflow by hand.",
     workflowAction: "Discover BarCodeR",
-    downloadAction: "Install BarCodeR · v2.13.4",
     journeysK: "Start with your data",
     journeysT: "Two entry points, then one analysis environment.",
     journeysP: "Starting from raw sequences? OpenMetaBar first turns them into structured data. Already have a phyloseq object? Import it directly. Either way, your data then enter the same exploration and analysis environment in BarCodeR.",
@@ -387,14 +369,14 @@ function Landing({ language }: { language: Language }) {
     ],
     projectNote: "Colleague-to-colleague sharing · analysis archiving · continuation on another installation",
     finalK: "Learn, then install",
-    finalT: "Discover BarCodeR through the tutorials, then launch the application on Windows in a few clicks.",
-    finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. The standalone distribution runs on Windows; macOS and Linux users need a Windows virtual machine.",
-    finalInstallLabel: "Install the application",
-    finalInstallMeta: "BarCodeR v2.13.4 · dedicated launcher",
+    finalT: "Explore BarCodeR through the tutorials and prepare to install it on Windows.",
+    finalP: "Start with a guided workflow to understand the interface and the main stages of an analysis. The standalone application is designed for Windows. On macOS or Linux, it requires a Windows virtual machine.",
+    finalInstallLabel: "Windows installation",
+    finalInstallMeta: "Standalone application and requirements",
+    finalDownload: "View the installation steps",
     finalTutorialLabel: "Start here",
     finalTutorialMeta: "Guided tutorials with a public dataset",
     finalTutorial: "View tutorials",
-    finalDownload: "Install BarCodeR",
     platforms: [
       ["Available", "Windows", "Standalone distribution and dedicated launcher generated with executablePackeR"],
       ["Through Windows", "macOS", "Available through a virtual machine running Windows"],
@@ -446,9 +428,10 @@ function Landing({ language }: { language: Language }) {
         <h1>{c.title}</h1>
         <p className="lead">{c.intro}</p>
         <div className="hero-actions">
-          <a className="button primary" href="#/functioning">{c.workflowAction}<span>→</span></a>
-          <a className="button secondary" href="#/download">{c.downloadAction}<span>↓</span></a>
+          <SiteLink className="button primary" to="/functioning">{c.workflowAction}<span>→</span></SiteLink>
+          <ReleaseButton className="button secondary" />
         </div>
+        <ReleaseNotice className="release-notice" />
       </div>
       <div className="hero-media reveal reveal-scale delay-1">
         <HomeApplicationVisual language={language} />
@@ -458,7 +441,7 @@ function Landing({ language }: { language: Language }) {
     <section className="home-value-section" id="home-value"><div className="page-width">
       <div className="section-heading home-value-heading reveal reveal-left"><div><Eyebrow>{c.strengthsK}</Eyebrow><h2>{c.strengthsT}</h2></div></div>
       <div className="home-value-cards">{c.strengths.map(([number, icon, title, text, proof], index) => <article className="home-value-card reveal reveal-pop" style={{ "--delay": `${index * 70}ms` } as React.CSSProperties} key={title}><div className="home-value-card-head"><span>{number}</span><i>{icon}</i></div><h3>{title}</h3><p>{text}</p><small>{proof}</small></article>)}</div>
-      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visuals"><figure className="home-proof-visual home-proof-library"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Bibliothèque de figures sauvegardées dans MultiView" : "Saved figure library in MultiView"} /><figcaption>{c.proofLibrary}</figcaption></figure><figure className="home-proof-visual home-proof-composition"><img src={asset("app-previews/screen-multiview-composition.png")} alt={language === "fr" ? "Composition MultiView réunissant plusieurs résultats" : "MultiView composition combining several results"} /><figcaption>{c.proofComposition}</figcaption></figure></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><a className="button secondary" href="#/functioning">{c.proofAction}<span>↗</span></a></div></div></div>
+      <div className="home-value-proof reveal reveal-scale"><div className="home-proof-visuals"><figure className="home-proof-visual home-proof-library"><img src={asset("app-previews/screen-multiview-current.png")} alt={language === "fr" ? "Bibliothèque de figures sauvegardées dans MultiView" : "Saved figure library in MultiView"} /><figcaption>{c.proofLibrary}</figcaption></figure><figure className="home-proof-visual home-proof-composition"><img src={asset("app-previews/screen-multiview-composition.png")} alt={language === "fr" ? "Composition MultiView réunissant plusieurs résultats" : "MultiView composition combining several results"} /><figcaption>{c.proofComposition}</figcaption></figure></div><div className="home-value-proof-copy"><Eyebrow>{c.proofK}</Eyebrow><h3>{c.proofT}</h3><p>{c.proofP}</p><div className="home-proof-actions"><SiteLink className="button secondary" to="/functioning">{c.proofAction}<span>↗</span></SiteLink></div></div></div>
     </div></section>
 
     <section className="section home-journeys page-width" id="home-data">
@@ -469,13 +452,13 @@ function Landing({ language }: { language: Language }) {
           <span className="pathway-route-two" onPointerEnter={() => setActivePath(2)}><b>{language === "fr" ? "Voie 2" : "Path 2"}</b>{language === "fr" ? "J’importe un objet phyloseq" : "I import a phyloseq object"}</span>
         </div>
         <div className="pathway-stage pathway-inputs">
-          <a className="pathway-node pathway-fastq pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/functioning"><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></a>
-          <a className="pathway-node pathway-existing pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/functioning"><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></a>
+          <SiteLink className="pathway-node pathway-fastq pathway-route-one" onPointerEnter={() => setActivePath(1)} to="/functioning"><small>{c.componentsTag}</small><h3>FASTQ</h3><p>{language === "fr" ? "Séquences brutes issues du séquenceur" : "Raw sequences from the sequencer"}</p></SiteLink>
+          <SiteLink className="pathway-node pathway-existing pathway-route-two" onPointerEnter={() => setActivePath(2)} to="/functioning"><small>{c.phyloseqTag}</small><h3>{language === "fr" ? "Objet phyloseq existant" : "Existing phyloseq object"}</h3><p>{language === "fr" ? "Séquences déjà traitées et données déjà structurées" : "Sequences already processed and data already structured"}</p></SiteLink>
         </div>
         <div className="pathway-lane-links" aria-hidden="true"><i className="pathway-route-one" /><i className="pathway-route-two" /></div>
         <div className="pathway-stage pathway-actions">
-          <a className="pathway-node pathway-openmetabar pathway-route-one" onPointerEnter={() => setActivePath(1)} href="#/functioning"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></a>
-          <a className="pathway-node pathway-import pathway-route-two" onPointerEnter={() => setActivePath(2)} href="#/functioning"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></a>
+          <SiteLink className="pathway-node pathway-openmetabar pathway-route-one" onPointerEnter={() => setActivePath(1)} to="/functioning"><small>{language === "fr" ? "Traitement des séquences" : "Sequence processing"}</small><div className="pathway-openmetabar-brand"><img src={asset("app-previews/openmetabar-logo.png")} alt="" /><h3>OpenMetaBar</h3></div><p>{language === "fr" ? "Prépare les séquences et produit les tables nécessaires" : "Prepares sequences and produces the required tables"}</p><b>{c.componentsAction}<span>↗</span></b></SiteLink>
+          <SiteLink className="pathway-node pathway-import pathway-route-two" onPointerEnter={() => setActivePath(2)} to="/functioning"><small>{language === "fr" ? "Données déjà préparées" : "Data already prepared"}</small><h3>{language === "fr" ? "Import direct" : "Direct import"}</h3><p>{language === "fr" ? "Ajoute l’objet existant au projet sans retraiter les séquences" : "Adds the existing object to the project without reprocessing sequences"}</p><b>{c.phyloseqAction}<span>↗</span></b></SiteLink>
         </div>
         <div className="pathway-merge" aria-hidden="true">
           <svg viewBox="0 0 1000 120" preserveAspectRatio="none">
@@ -499,11 +482,11 @@ function Landing({ language }: { language: Language }) {
       </div>
     </section>
 
-    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">⚡</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><a className="button primary" href="#/analyses">{c.questionsAction}<span>→</span></a></div></div></section>
+    <section className="section section-tint home-questions" id="home-questions"><div className="page-width"><div className="section-heading home-question-heading reveal reveal-left"><div><Eyebrow>{c.questionsK}</Eyebrow><h2>{c.questionsT}</h2></div></div><div className="question-grid">{c.questions.map(([label, question, detail, analyses], index) => <article className="question-card reveal reveal-pop" onPointerMove={trackQuestionGlow} style={{ "--delay": `${(index % 3) * 65}ms`, "--question-hue": `${248 + (index % 6) * 8}` } as React.CSSProperties} key={question}><span>{String(index + 1).padStart(2, "0")} · {label}</span><i className="question-card-arrow" aria-hidden="true">⚡</i><h3>{question}</h3><p>{detail}</p><div className="question-analysis"><small>{language === "fr" ? "Analyses proposées" : "Suggested analyses"}</small><div>{analyses.map((analysis, analysisIndex) => <b style={{ "--tag-delay": `${analysisIndex * 35}ms` } as React.CSSProperties} key={analysis}>{analysis}</b>)}</div></div></article>)}</div><div className="section-action question-actions reveal"><SiteLink className="button primary" to="/analyses">{c.questionsAction}<span>→</span></SiteLink></div></div></section>
 
     <section className="home-project-section"><div className="page-width home-project-shell reveal reveal-scale"><div className="home-project-copy"><div><Eyebrow>{c.projectK}</Eyebrow><h2>{c.projectT}</h2></div><div><p>{c.projectP}</p><small>{c.projectNote}</small></div></div><div className="home-project-flow">{c.projectSteps.map(([number, title, text], index) => <Fragment key={title}><article><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>{index < c.projectSteps.length - 1 && <i aria-hidden="true"><b /></i>}</Fragment>)}</div></div></section>
 
-    <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><span className="home-start-number" aria-hidden="true">04</span><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><a className="featured training" href="#/tutorials"><span className="home-start-step">01</span><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></a><a className="installation" href="#/download"><span className="home-start-step">02</span><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>↓</span></strong></a></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small><i aria-hidden="true" />{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
+    <section className="home-start-band" id="home-start"><div className="page-width home-start-inner"><span className="home-start-number" aria-hidden="true">04</span><div className="home-start-copy reveal reveal-left"><Eyebrow>{c.finalK}</Eyebrow><h2>{c.finalT}</h2><p>{c.finalP}</p></div><div className="home-start-options"><SiteLink className="featured training" to="/tutorials"><span className="home-start-step">01</span><small>{c.finalTutorialLabel}</small><b>{c.finalTutorialMeta}</b><strong>{c.finalTutorial}<span>→</span></strong></SiteLink><SiteLink className="installation" to="/download"><span className="home-start-step">02</span><small>{c.finalInstallLabel}</small><b>{c.finalInstallMeta}</b><strong>{c.finalDownload}<span>→</span></strong></SiteLink></div><div className="home-platform-grid">{c.platforms.map(([status, platform, detail], index) => <article className="reveal reveal-pop" style={{ "--delay": `${index * 90}ms` } as React.CSSProperties} key={platform}><small><i aria-hidden="true" />{status}</small><h3>{platform}</h3><p>{detail}</p></article>)}</div></div></section>
   </main>;
 }
 function ModuleGrid({ language, limit }: { language: Language; limit?: number }) {
@@ -1938,7 +1921,8 @@ function ReproducibilityPage({ language }: { language: Language }) {
 
 function DownloadPage({ language }: { language: Language }) {
   const [copied, setCopied] = useState<string | null>(null);
-  const appVersion = "2.13.4";
+  const { release } = useRelease();
+  const appVersion = release.released ? release.version : "—";
   const documentationVersion = "1.9.0";
   const sourceCommand = 'shiny::runApp()';
   const temporaryCitation = language === "fr"
@@ -2123,6 +2107,7 @@ function DownloadPage({ language }: { language: Language }) {
 }
 
 function Footer({ language }: { language: Language }) {
+  const { release } = useRelease();
   const c = language === "fr" ? {
     description: "Un environnement interactif pour préparer, explorer, analyser et restituer des données de métabarcoding tout en conservant le contexte du travail.",
     discover: "Découvrir", learn: "Prendre en main", project: "Utiliser et citer",
@@ -2134,53 +2119,58 @@ function Footer({ language }: { language: Language }) {
   };
 
   return <footer className="site-footer">
-    <div className="footer-core page-width"><div className="footer-brand-block"><Brand language={language} /><p>{c.description}</p></div><nav className="footer-nav-group"><b>{c.discover}</b><a href="#/">{language === "fr" ? "Accueil" : "Home"}</a><a href="#/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</a><a href="#/analyses">Analyses</a></nav><nav className="footer-nav-group"><b>{c.learn}</b><a href="#/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</a><a href="#/faq">FAQ</a></nav><nav className="footer-nav-group"><b>{c.project}</b><a href="#/download">{language === "fr" ? "Installer" : "Install"}</a><a href="#/citation">Citation</a></nav></div>
+    <div className="footer-core page-width"><div className="footer-brand-block"><Brand language={language} /><p>{c.description}</p></div><nav className="footer-nav-group"><b>{c.discover}</b><SiteLink to="/">{language === "fr" ? "Accueil" : "Home"}</SiteLink><SiteLink to="/functioning">{language === "fr" ? "Fonctionnement" : "How it works"}</SiteLink><SiteLink to="/analyses">Analyses</SiteLink></nav><nav className="footer-nav-group"><b>{c.learn}</b><SiteLink to="/tutorials">{language === "fr" ? "Tutoriels" : "Tutorials"}</SiteLink><SiteLink to="/faq">FAQ</SiteLink><a href="/documentation/">Documentation</a></nav><nav className="footer-nav-group"><b>{c.project}</b><SiteLink to="/download">Installation</SiteLink><SiteLink to="/citation">Citation</SiteLink></nav></div>
     <div className="footer-signals page-width">{c.signals.map((signal, index) => <span key={signal}><i>{["▣", "R", "↗", "?"][index]}</i>{signal}</span>)}</div>
-    <div className="footer-bottom page-width"><span>BarCodeR · v2.13.4</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
+    <div className="footer-bottom page-width"><span>BarCodeR{release.released && ` · v${release.version}`}</span><span>Institut Sophia Agrobiotech · PHYBAC</span></div>
   </footer>;
 }
 
-export default function App() {
-  const route = useHashRoute();
-  const [language, setLanguageState] = useState<Language>(() => {
-    const stored = localStorage.getItem("barcoder-site-language");
-    if (stored === "fr" || stored === "en" || stored === "es" || stored === "zh" || stored === "hi") return stored;
-    return "en";
-  });
-  const contentLanguage = getBaseLanguage(language);
+const notFound = {
+  en: ["Page not found", "Return to BarCodeR"],
+  fr: ["Page introuvable", "Revenir à BarCodeR"],
+  es: ["Página no encontrada", "Volver a BarCodeR"],
+  zh: ["找不到页面", "返回 BarCodeR"],
+  hi: ["पेज नहीं मिला", "BarCodeR पर लौटें"],
+} satisfies Record<Language, string[]>;
 
-  const setLanguage = (next: Language) => { localStorage.setItem("barcoder-site-language", next); setLanguageState(next); };
-  useLayoutEffect(() => {
-    document.documentElement.lang = language;
-    updateDocumentMetadata(route, language);
-  }, [language, route]);
+export default function App({ route, language, setLanguage }: {
+  route: Route | null;
+  language: Language;
+  setLanguage: (language: Language) => void;
+}) {
+  const contentLanguage = getBaseLanguage(language);
 
   useLayoutEffect(() => {
     const observer = observeTranslations(document.body, language);
     return () => observer?.disconnect();
-  }, [language, route]);
+  }, [language]);
 
-  useEffect(() => {
-    if (route === "/documentation") window.location.hash = "#/tutorials";
-    else if (route === "/showcase" || route === "/reproducibility") window.location.hash = "#/analyses";
-  }, [route]);
-
-  useEffect(() => {
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { nodes.forEach(node => node.classList.add("visible")); return; }
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); } }), { threshold: 0.08, rootMargin: "0px 0px -30px" });
-    nodes.forEach(node => observer.observe(node));
-    return () => observer.disconnect();
-  }, [route, language]);
+  useLayoutEffect(() => {
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const shell = document.querySelector(".site-shell")!;
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    }), { threshold: 0.08, rootMargin: "0px 0px -30px" });
+    shell.classList.add("animations-ready");
+    shell.querySelectorAll(".reveal").forEach(node => observer.observe(node));
+    return () => {
+      shell.classList.remove("animations-ready");
+      observer.disconnect();
+    };
+  }, []);
 
   let page: React.ReactNode;
-  if (route === "/functioning" || route.startsWith("/application")) page = <FunctioningPageV2 language={contentLanguage} />;
-  else if (route === "/analyses" || route === "/showcase" || route === "/reproducibility") page = <AnalysesPageV2 language={contentLanguage} />;
-  else if (route === "/tutorials" || route === "/evidence" || route === "/documentation") page = <TutorialsPageV2 language={contentLanguage} />;
+  if (route === "/functioning") page = <FunctioningPageV2 language={contentLanguage} />;
+  else if (route === "/analyses") page = <AnalysesPageV2 language={contentLanguage} />;
+  else if (route === "/tutorials") page = <TutorialsPageV2 language={contentLanguage} />;
   else if (route === "/citation") page = <CitationPage language={contentLanguage} />;
-  else if (route === "/download" || route === "/availability") page = <InstallerPageV2 language={contentLanguage} />;
+  else if (route === "/download") page = <InstallerPageV2 language={contentLanguage} />;
   else if (route === "/faq") page = <FaqPage language={contentLanguage} />;
-  else page = <Landing language={contentLanguage} />;
+  else if (route === "/") page = <Landing language={contentLanguage} />;
+  else page = <main className="section page-width" data-i18n-skip><h1>{notFound[language][0]}</h1><SiteLink to="/">{notFound[language][1]}</SiteLink></main>;
 
-  return <div className="site-shell" key={language}><Header language={language} setLanguage={setLanguage} route={route} /><SiteScrollProgress route={route} />{page}<Footer language={contentLanguage} /></div>;
+  return <SiteLanguage.Provider value={language}><ReleaseProvider><div className="site-shell"><Header language={language} setLanguage={setLanguage} route={route ?? ""} /><SiteScrollProgress route={route ?? ""} />{page}<Footer language={contentLanguage} /></div></ReleaseProvider></SiteLanguage.Provider>;
 }

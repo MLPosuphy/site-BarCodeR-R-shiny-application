@@ -1,3 +1,4 @@
+import { useRelease } from "./release";
 import { useState } from "react";
 import type { Language } from "./content";
 
@@ -9,6 +10,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function FaqPage({ language }: { language: Language }) {
   const [filter, setFilter] = useState("all");
+  const { release, text } = useRelease();
   const c = language === "fr" ? {
     k: "FAQ BarCodeR", title: "Toutes vos questions sur BarCodeR.", p: "Retrouvez toutes les réponses aux questions que vous vous posez à propos de l’utilisation de BarCodeR. Une documentation méthodologique et technique détaillée est également disponible directement dans l’application, depuis les onglets concernés.",
     topics: [["all", "Toutes"], ["installation", "Installation"], ["system", "Systèmes"], ["data", "Données"], ["openmeta", "OpenMetaBar"], ["projects", "Projets"], ["analysis", "Analyses"], ["repro", "Reproductibilité"], ["help", "Dépannage"]],
@@ -16,7 +18,7 @@ export default function FaqPage({ language }: { language: Language }) {
     items: [
       ["Faut-il installer R ou RStudio ?", "Non. La distribution autonome contient l’environnement nécessaire au lancement et à l’utilisation de BarCodeR.", "Installation", "installation"],
       ["Faut-il maintenir les packages R à jour ?", "Non. Les packages et leurs versions compatibles sont assemblés et testés lors de la fabrication de chaque distribution.", "Installation", "installation"],
-      ["Comment installer BarCodeR ?", "Télécharger l’archive, la décompresser entièrement, puis double-cliquer sur l’application présente dans le dossier.", "Installation", "installation"],
+      ["Comment installer BarCodeR ?", "Une fois l’archive disponible, téléchargez-la, décompressez-la entièrement, puis double-cliquez sur l’application dans le dossier.", "Installation", "installation"],
       ["Des droits administrateur sont-ils nécessaires ?", "En principe non lorsque l’application est placée dans un dossier accessible en écriture. Une politique de sécurité institutionnelle peut toutefois demander l’intervention du service informatique.", "Installation", "installation"],
       ["Pourquoi Windows affiche-t-il parfois un avertissement ?", "Windows peut demander une confirmation pour un programme téléchargé. Vérifier l’origine officielle de l’archive avant de poursuivre.", "Installation", "installation"],
       ["Comment mettre BarCodeR à jour ?", "Télécharger la nouvelle archive et ouvrir la nouvelle version. R, RStudio et les packages ne sont pas mis à jour séparément.", "Installation", "installation"],
@@ -29,7 +31,7 @@ export default function FaqPage({ language }: { language: Language }) {
       ["BarCodeR peut-il être utilisé sous macOS ?", "Il n’existe pas de distribution macOS native. L’utilisation nécessite une machine virtuelle exécutant Windows, dans laquelle l’archive BarCodeR est téléchargée, décompressée et lancée.", "Systèmes", "system"],
       ["BarCodeR peut-il être utilisé sous Linux ?", "Il n’existe pas de distribution Linux native. L’utilisation nécessite une machine virtuelle Windows disposant de suffisamment de mémoire, d’espace disque et de processeurs pour les analyses envisagées.", "Systèmes", "system"],
       ["Faut-il partager un dossier entre la machine virtuelle et le système hôte ?", "Ce n’est pas obligatoire, mais un dossier partagé facilite l’import des objets phyloseq et la récupération des exports. Les permissions de lecture et d’écriture doivent être vérifiées depuis Windows.", "Systèmes", "system"],
-      ["Le téléchargement proposé sur ce site est-il actuellement l’application complète ?", "Non dans cette version de démonstration du site. Le bouton télécharge un petit fichier ZIP de test destiné uniquement à vérifier le fonctionnement du téléchargement. Il sera remplacé par la distribution officielle.", "Systèmes", "system"],
+      ["Où télécharger BarCodeR pour Windows ?", release.released ? "L’archive officielle est proposée sur la page Installation." : text.explanation, "Systèmes", "system"],
       ["Quelle puissance faut-il attribuer à une machine virtuelle ?", "Il n’existe pas de valeur unique : la mémoire, le nombre de processeurs et l’espace disque nécessaires dépendent du nombre d’échantillons, de taxons, de séquences et de la méthode utilisée. Prévoir une marge pour Windows, BarCodeR, les objets intermédiaires et les exports.", "Systèmes", "system"],
       ["Peut-on utiliser BarCodeR depuis un dossier réseau ou synchronisé ?", "Cela peut fonctionner, mais les droits, la latence, la synchronisation concurrente ou le verrouillage de fichiers peuvent perturber les projets volumineux. Pour diagnostiquer un problème, reproduire d’abord l’action depuis un dossier local accessible en écriture.", "Systèmes", "system"],
       ["Quels formats phyloseq peuvent être importés ?", "Les objets phyloseq compatibles peuvent être chargés depuis des fichiers .rds ou .RData. L’application vérifie ensuite leur structure.", "Données", "data"],
@@ -116,7 +118,7 @@ export default function FaqPage({ language }: { language: Language }) {
     items: [
       ["Do I need to install R or RStudio?", "No. The standalone distribution contains the environment required to launch and use BarCodeR.", "Installation", "installation"],
       ["Do I need to maintain R packages?", "No. Compatible package versions are assembled and tested when each distribution is built.", "Installation", "installation"],
-      ["How do I install BarCodeR?", "Download the archive, extract it completely, then double-click the application inside the folder.", "Installation", "installation"],
+      ["How do I install BarCodeR?", "Once the archive is available, download it, extract it completely, then double-click the application inside the folder.", "Installation", "installation"],
       ["Are administrator rights required?", "Usually not when the application is placed in a writable folder. Institutional security policies may still require IT assistance.", "Installation", "installation"],
       ["Why can Windows display a warning?", "Windows may ask for confirmation before running downloaded software. Check that the archive came from the official source first.", "Installation", "installation"],
       ["How do I update BarCodeR?", "Download the new archive and open the new version. R, RStudio and packages are not updated separately.", "Installation", "installation"],
@@ -129,7 +131,7 @@ export default function FaqPage({ language }: { language: Language }) {
       ["Can BarCodeR be used on macOS?", "There is no native macOS distribution. A Windows virtual machine is required, and the BarCodeR archive must be downloaded, extracted and launched inside that virtual machine.", "Systems", "system"],
       ["Can BarCodeR be used on Linux?", "There is no native Linux distribution. A Windows virtual machine with enough memory, disk space and processors for the intended analyses is required.", "Systems", "system"],
       ["Should a folder be shared between the virtual machine and host system?", "It is not required, but a shared folder makes phyloseq imports and output retrieval easier. Read and write permissions must be checked from Windows.", "Systems", "system"],
-      ["Is the current website download the complete application?", "No, not in this demonstration build of the website. The button downloads a small test ZIP used only to check that downloads work. It will later be replaced by the official distribution.", "Systems", "system"],
+      ["Where can I download BarCodeR for Windows?", release.released ? "The official archive is available on the Installation page." : text.explanation, "Systems", "system"],
       ["How many resources should be allocated to a virtual machine?", "There is no single value: required memory, processors and disk space depend on sample, taxon and sequence counts and on the selected method. Leave capacity for Windows, BarCodeR, intermediate objects and exports.", "Systems", "system"],
       ["Can BarCodeR run from a network or synchronised folder?", "It may work, but permissions, latency, concurrent synchronisation or file locking can disrupt large projects. To diagnose a problem, first reproduce the action from a writable local folder.", "Systems", "system"],
       ["Which phyloseq formats can be imported?", "Compatible phyloseq objects can be loaded from .rds or .RData files. The application then checks their structure.", "Data", "data"],
