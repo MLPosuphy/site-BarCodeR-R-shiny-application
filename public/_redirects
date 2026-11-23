@@ -1,3 +1,6 @@
+# Serve the Search Console verification file at the exact .html URL (HTTP 200).
+/google94bfcbe8afda6b4f.html /google94bfcbe8afda6b4f 200
+
 # Compatibility with the former GitHub Pages subpath.
 /site-BarCodeR-R-shiny-application / 301
 /site-BarCodeR-R-shiny-application/* /:splat 301
