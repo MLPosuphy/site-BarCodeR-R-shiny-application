@@ -1,7 +1,6 @@
+
 import { useState } from "react";
 import type { Language } from "./content";
-
-const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="eyebrow"><span />{children}</p>;
@@ -9,7 +8,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function InstallerPageV2({ language }: { language: Language }) {
   const [copied, setCopied] = useState(false);
-  const appVersion = "2.12.8";
+  const appVersion = "2.13.4";
   const citation = language === "fr"
     ? `Équipe BarCodeR (${new Date().getFullYear()}). BarCodeR v${appVersion} : plateforme pour l’exploration et l’analyse reproductible de données de métabarcoding.`
     : `BarCodeR team (${new Date().getFullYear()}). BarCodeR v${appVersion}: a platform for reproducible exploration and analysis of metabarcoding data.`;
@@ -58,7 +57,7 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     copy: "Copier la citation",
     copied: "Citation copiée",
     citationPage: "Ouvrir la page Citation",
-    download: "Tester le téléchargement (.zip)",
+    download: "Télécharger BarCodeR pour Windows (.zip)",
     seeProcess: "Voir les trois étapes"
   } : {
     k: "Install BarCodeR",
@@ -94,12 +93,12 @@ export default function InstallerPageV2({ language }: { language: Language }) {
     copy: "Copy citation",
     copied: "Citation copied",
     citationPage: "Open the Citation page",
-    download: "Test the download (.zip)",
+    download: "Download BarCodeR for Windows (.zip)",
     seeProcess: "View the three steps"
   };
 
   return <main className="installer-v2-page">
-    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><div className="installer-v2-hero-actions"><a className="button primary" href={asset("downloads/BarCodeR_telechargement_test.zip")} download>{c.download}<span>↓</span></a><a className="button secondary" href="#installer-process">{c.seeProcess}<span>↓</span></a></div></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR <em>v{appVersion}</em></h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
+    <section className="installer-v2-hero"><div className="page-width"><header><Eyebrow>{c.k}</Eyebrow><h1>{c.title}</h1><p>{c.p}</p><div className="installer-v2-hero-actions"><a className="button primary" href="/api/download/barcoder">{c.download}<span>↓</span></a><a className="button secondary" href="#installer-process">{c.seeProcess}<span>↓</span></a></div></header><aside><div className="installer-v2-app-icon"><span>B</span><i /></div><small>{c.release}</small><h2>BarCodeR <em>v{appVersion}</em></h2><dl><div><dt>{c.system}</dt><dd>Windows</dd></div><div><dt>{c.status}</dt><dd>EXE</dd></div><div><dt>{c.ready}</dt><dd>✓</dd></div></dl></aside></div></section>
 
     <section className="installer-v2-process" id="installer-process"><div className="page-width"><div className="installer-v2-heading"><Eyebrow>{c.processK}</Eyebrow><h2>{c.processT}</h2><p>{c.processP}</p></div><div className="installer-v2-process-flow">{c.process.map(([icon, title, text], index) => <article className="reveal" key={title}><span>{icon}</span><small>0{index + 1}</small><h3>{title}</h3><p>{text}</p>{index < c.process.length - 1 && <i><em /></i>}</article>)}</div></div></section>
 
